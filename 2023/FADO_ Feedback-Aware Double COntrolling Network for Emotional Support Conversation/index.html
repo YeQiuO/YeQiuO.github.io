@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Title: Feedback-Aware Double COntrolling Network for Emotional Support Conversation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feedback-Aware Double">
+<meta property="og:url" content="https://yeqiuo.github.io/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="Title: Feedback-Aware Double COntrolling Network for Emotional Support Conversation">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png">
+<meta property="article:published_time" content="2023-09-19T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-23T09:13:04.062Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="情绪支持对话">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/","path":"2023/FADO_ Feedback-Aware Double COntrolling Network for Emotional Support Conversation/","title":"Feedback-Aware Double"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Feedback-Aware Double | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%80%9F%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text"> 论文速览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.2.</span> <span class="nav-text"> Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#related-work"><span class="nav-number">1.3.</span> <span class="nav-text"> Related Work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problem-formulation"><span class="nav-number">1.4.</span> <span class="nav-text"> Problem Formulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#approach"><span class="nav-number">1.5.</span> <span class="nav-text"> Approach</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiment"><span class="nav-number">1.6.</span> <span class="nav-text"> Experiment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experimental-results"><span class="nav-number">1.7.</span> <span class="nav-text"> Experimental Results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#analyses"><span class="nav-number">1.8.</span> <span class="nav-text"> Analyses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">1.9.</span> <span class="nav-text"> conclusion</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text"> 关注的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text"> 解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9-%E6%9C%AC%E6%96%87%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">4.</span> <span class="nav-text"> 创新点 &#x2F; 本文的优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E8%AE%BA"><span class="nav-number">5.</span> <span class="nav-text"> 实验结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%89%E5%BE%85%E6%8F%90%E5%8D%87%E7%9A%84%E9%83%A8%E5%88%86"><span class="nav-number">6.</span> <span class="nav-text"> 有待提升的部分</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Feedback-Aware Double | 闻">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Feedback-Aware Double
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-09-19 12:00:00" itemprop="dateCreated datePublished" datetime="2023-09-19T12:00:00+08:00">2023-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-23 17:13:04" itemprop="dateModified" datetime="2024-04-23T17:13:04+08:00">2024-04-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%A7%91%E7%A0%94/" itemprop="url" rel="index"><span itemprop="name">科研</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><strong>Title:</strong> Feedback-Aware Double COntrolling Network for Emotional Support Conversation</p>
+<img src="/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png" class="" title="img">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>双层反馈策略选择器：通过反馈信息预测策略</li>
+<li>双层控制阅读器：通过策略约束上下文响应</li>
+<li>策略词典：丰富策略的语义信息</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<h2 id="problem-formulation"><a class="markdownIt-Anchor" href="#problem-formulation"></a> Problem Formulation</h2>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
+<ul>
+<li>上下文编码器
+<ul>
+<li>BlenderBot预训练编码器编码上下文历史对话U，得到Ht</li>
+</ul>
+</li>
+<li>双层反馈策略选择器
+<ul>
+<li>策略选择
+<ul>
+<li>输入
+<ul>
+<li>BlenderBot Encoder 编码上下文历史对话U，得到隐状态Ht</li>
+<li>BlenderBot Encoder 编码策略S</li>
+<li>EmoBERTa Encoder 编码上下文对话U</li>
+</ul>
+</li>
+<li>公式
+<ul>
+<li>上下文编码器（策略S同理）：$$\boldsymbol{H}=\operatorname{Enc}<em>{cxt}\left(\boldsymbol{[CLS]}, \boldsymbol{u}</em>{1}, \boldsymbol{[SEP]}, \boldsymbol{u}<em>{2}, …, \boldsymbol{u}</em>{M}\right)$$，M为对话数
+<ul>
+<li>
+\boldsymbol{H}=\left(\boldsymbol{u}_{1},..., \boldsymbol{u}_{T}\right)$$，T为Token数
+
+</li>
+<li>
+\boldsymbol{E}=\left(\boldsymbol{e}_{1},..., \boldsymbol{e}_{T}\right)$$，T为Token数
+
+</li>
+<li>s、c、r 为策略S、上下文H、情感分类E。编码+平均池化操作后得到</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双层反馈
+<ul>
+<li>回合级反馈：局部变量，当前用户的感受。包含每轮对话Seeker情感Δe和Seeker评分变化Δr</li>
+<li>对话级反馈：全局变量Δc，用户的全局状态。包含Seeker在谈话后的情绪压力、Supporter对话题的回应的相关性、Supporter对Seeker感受的理解和共情</li>
+<li>融合adapter：整合回合级和会话级反馈的两类语义信息。Δs = Δe + Δr + uΔc【计算损失时，给予正向或负向的反馈】</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双控读取器（模仿情感聊天机器ECM）
+<ul>
+<li>context-to-strategy：利用上下文信息来选择上下文相关的策略
+<ul>
+<li>
+\boldsymbol{g}^{c} = \operatorname{sigmoid}\left(
+
+</li>
+</ul>
+\right)$$</li>
+<li>strategy-to-context：编码阶段可以关注与策略相关的上下文，从而生成策略约束的响应
+<ul>
+<li>
+\boldsymbol{g}^{o} = \operatorname{sigmoid}\left(
+
+</li>
+</ul>
+\right)$$</li>
+<li>残差连接：在原始信息和更新信息之间进行权衡
+<ul>
+<li>
+\begin{array}{r}
+
+</li>
+</ul>
+h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
+\end{array}$$</li>
+</ul>
+</li>
+<li>策略字典
+<ul>
+<li>输入策略令牌的描述， 而不是策略令牌，以便模型对策略进行更深入的理解</li>
+<li>Encoder-Decoder 之间的状态传输类似于MISC，采用cross-attention代替self-attention<a target="_blank" rel="noopener" href="https://www.yuque.com/jinzang/lnx420/wrq82cgnp6p47q59?view=doc_embed">MISC: A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</a></li>
+</ul>
+</li>
+<li>响应生成
+<ul>
+<li>BlenderBot Decoder：$$\boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}<em>{&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)=\text { Generator }\left(\boldsymbol{W}<em>{y&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)$$</li>
+</ul>
+</li>
+<li>联合训练
+<ul>
+<li>策略预测：反馈感知负对数似然 feedback-aware negative log-likelihood
+<ul>
+<li>
+\mathcal{L}_{1}=\left\{\begin{array}{ccc}
+
+</li>
+</ul>
+-\hat{o} \log \left(1-\operatorname{softmax}\left(\boldsymbol{o}^{\prime}\right)\right) &amp; \text { if } &amp; \Delta s \leq 0<br />
+\end{array}\right.\$$</li>
+<li>响应生成：标准交叉熵损失优化 cross-entropy
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mn>2</mn></msub><mo>=</mo><mo>−</mo><munderover><mo>∑</mo><mrow><mi>z</mi><mo>=</mo><mn>1</mn></mrow><mi>Z</mi></munderover><mi>log</mi><mo>⁡</mo><mi mathvariant="bold-italic">p</mi><mrow><mo fence="true">(</mo><msub><mi>y</mi><mi>z</mi></msub><mo>∣</mo><msub><mi mathvariant="bold-italic">y</mi><mrow><mo>&lt;</mo><mi>z</mi></mrow></msub><mo separator="true">,</mo><msubsup><mi mathvariant="bold-italic">h</mi><mi mathvariant="bold-italic">t</mi><mo mathvariant="normal">′</mo></msubsup><mo separator="true">,</mo><mi mathvariant="bold-italic">V</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{2}=-\sum_{z=1}^{Z} \log \boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}_{&lt;z}, \boldsymbol{h}_{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.0954490000000003em;vertical-align:-1.267113em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283360000000002em;"><span style="top:-1.882887em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3000050000000005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">Z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.267113em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">p</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">y</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.13323000000000002em;"><span style="top:-2.45586em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mrel mtight">&lt;</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.27151em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.836232em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight">t</span></span></span></span></span></span><span style="top:-3.1473400000000002em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.25555em;">V</span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiment"><a class="markdownIt-Anchor" href="#experiment"></a> Experiment</h2>
+<ul>
+<li>采用EmoBERTa-base作为特征提取器，以获取Seeker的情感得分和情感表征，情感得分由softmax函数使用EmoBERTa-base的[CLS]表示获得</li>
+</ul>
+<h2 id="experimental-results"><a class="markdownIt-Anchor" href="#experimental-results"></a> Experimental Results</h2>
+<h2 id="analyses"><a class="markdownIt-Anchor" href="#analyses"></a> Analyses</h2>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> conclusion</h2>
+<h1 id="关注的问题"><a class="markdownIt-Anchor" href="#关注的问题"></a> 关注的问题</h1>
+<ol>
+<li>预测策略只依靠对话历史，而不考虑求助者反馈，导致预测的结果与用户无关</li>
+<li>建模过程只关注上下文到策略，而不关注策略到上下文和与策略相关的上下文</li>
+</ol>
+<h1 id="解决方法"><a class="markdownIt-Anchor" href="#解决方法"></a> 解决方法</h1>
+<ol>
+<li>双层反馈策略选择器：利用回合级和会话级反馈信息来激励或惩罚策略</li>
+<li>双层控制阅读器：策略到上下文流来生成策略约束响应</li>
+</ol>
+<h1 id="创新点-本文的优势"><a class="markdownIt-Anchor" href="#创新点-本文的优势"></a> 创新点 / 本文的优势</h1>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%83%85%E7%BB%AA%E6%94%AF%E6%8C%81%E5%AF%B9%E8%AF%9D/" rel="tag"># 情绪支持对话</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/" rel="prev" title="DQ-HGAN">
+                  <i class="fa fa-angle-left"></i> DQ-HGAN
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/" rel="next" title="HEAL">
+                  HEAL <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+
+
+
+</body>
+</html>

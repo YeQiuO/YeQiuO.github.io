@@ -313,7 +313,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.pdocjhxxfwew{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="pdocjhxxfwew" alt="image-20240415164535374">
+<style>.cxfnqvhexzss{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="cxfnqvhexzss" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>
@@ -490,36 +490,6 @@
       </categories>
       <tags>
         <tag>Java 算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LLM应用开发</title>
-    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
-    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
-<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
-<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
-<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
-<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
-<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
-<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型     更加麻烦，但是便于整体项目的开发、调用和维护。</p>
-<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
-<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
-<p>离线私有数据不能直接作为语料库训练模型，因此 LLM 无法直接返回有关私有数据的响应</p>
-<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
-<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
-<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
-<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
-<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
-<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
-<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
-<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
-]]></content>
-      <categories>
-        <category>大语言模型应用开发</category>
-      </categories>
-      <tags>
-        <tag>Langchain</tag>
-        <tag>向量数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -746,6 +716,36 @@
       </tags>
   </entry>
   <entry>
+    <title>LLM应用开发</title>
+    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
+<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
+<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
+<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
+<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
+<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
+<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型     更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
+<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
+<p>离线私有数据不能直接作为语料库训练模型，因此 LLM 无法直接返回有关私有数据的响应</p>
+<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
+<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
+<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
+<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
+<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
+<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
+<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
+<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
+]]></content>
+      <categories>
+        <category>大语言模型应用开发</category>
+      </categories>
+      <tags>
+        <tag>Langchain</tag>
+        <tag>向量数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RAG架构和Langchain框架</title>
     <url>/RAG%E6%9E%B6%E6%9E%84/</url>
     <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，主要还是学习检索增强生成（RAG架构）方向</p>
@@ -870,59 +870,6 @@
       </tags>
   </entry>
   <entry>
-    <title>实习笔试题汇总</title>
-    <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
-    <content><![CDATA[<h1 id="2024416-携程笔试"><a class="markdownIt-Anchor" href="#2024416-携程笔试"></a> 2024.4.16 携程笔试</h1>
-<p>前两道签到题，后面一个半小时纯折磨</p>
-<p>第三题</p>
-<p>游游拿到了一个数组，她每次操作可以将相邻的两个素数元素进山314行合并，合并后的新数为原来的两个数之和，并删除原来两个数。游游希望最终数组的元素数量尽可能少，你能帮帮她吗?</p>
-<blockquote>
-<p>第一行输入一个正整数n，代表数组的大小。<br />
-第二行输入几个正整数a_i，代表数组的元素<br />
-1 ≤ n &lt; 10^5<br />
-1 ≤ a_i &lt; 10^6</p>
-</blockquote>
-<p>返回合并结束后的元素的数量</p>
-<p>**题目分析：**素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了 2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
-<p>因此只要先把所有 2 和素数合并，后续只需要判断还有多少相邻的素数即可。</p>
-<p>做题的时候没有考虑到 <code>7 2 2 3</code> 这种情况，即素数和 2 合并完的结果如果是素数，还需要和判断他的左边还有没有 2，有的话还要合并，即代码中的 <code>i--</code> 部分。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PrimeMerge</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">        List&lt;Integer&gt; numbers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取数组元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            numbers.add(scanner.nextInt());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并素数，优先处理2</span></span><br><span class="line">        mergePrimesWithPriorityToTwo(numbers);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出最终数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : numbers) &#123;</span><br><span class="line">            System.out.print(num + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查一个数是否是素数的辅助函数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPrime</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (num &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i * i &lt;= num; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num % i == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">mergePrimesWithPriorityToTwo</span><span class="params">(List&lt;Integer&gt; numbers)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并2与其相邻的素数，得到一个新的素数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size(); ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers.get(i) == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="comment">// 检查左边是否有素数可以合并</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    numbers.set(i - <span class="number">1</span>, numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>);</span><br><span class="line">                    numbers.remove(i);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; numbers.size() - <span class="number">1</span> &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 检查右边是否有素数可以合并</span></span><br><span class="line">                    numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                    numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 没有可以合并的素数，继续下一个数</span></span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并剩余的素数对</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size() - <span class="number">1</span>; ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isPrime(numbers.get(i)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>))) &#123;</span><br><span class="line">                numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第四题</p>
-<p>定义一棵树的直径为：任意两个节点的距离的最大值。现在定义f(i)：对i号节点上再连接一个新的子叶节点后，树的直径长度。现在要求f(1)到f(n)的值。</p>
-<p>输入描述：第一行输入一个正整数n，代表树的节点数量。</p>
-<p>接下来的n-1行，每行输入两个正整数u和v，代表u号节点和v号节点之间有一条长度为1的边连接。</p>
-<p>变量的范围：1≤n≤10的五次方，1≤u，v≤n。</p>
-<p><strong>题目分析：</strong> 树的直径引出树形 dp 算法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    List&lt;TreeNode&gt; children;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TreeNode</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">        children = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeDiameter</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] f; <span class="comment">// 存储每个节点的最大直径</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt(); <span class="comment">// 树的节点数量</span></span><br><span class="line"></span><br><span class="line">        f = <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        TreeNode[] nodes = <span class="keyword">new</span> <span class="title class_">TreeNode</span>[n + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            nodes[i] = <span class="keyword">new</span> <span class="title class_">TreeNode</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 连接节点之间的关系</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">u</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            nodes[u].children.add(nodes[v]);</span><br><span class="line">            nodes[v].children.add(nodes[u]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历每个节点，添加一个新的子叶节点，计算f(i)</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="comment">// 添加新的子叶节点</span></span><br><span class="line">            nodes[i].children.add(<span class="keyword">new</span> <span class="title class_">TreeNode</span>(-<span class="number">1</span>));</span><br><span class="line">            <span class="comment">// 计算当前最大直径</span></span><br><span class="line">            dfs(nodes[i], <span class="literal">null</span>, i);</span><br><span class="line">            <span class="comment">// 删除添加的子叶节点</span></span><br><span class="line">            nodes[i].children.remove(nodes[i].children.size()-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            System.out.print(f[i] + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 递归计算以当前节点为根的子树的直径</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, TreeNode parent, <span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth1</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 最大深度</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth2</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 次大深度</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历当前节点的子节点</span></span><br><span class="line">        <span class="keyword">for</span> (TreeNode child : node.children) &#123;</span><br><span class="line">            <span class="keyword">if</span> (child == parent) <span class="keyword">continue</span>; <span class="comment">// 不访问父节点，防止死循环</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">childDepth</span> <span class="operator">=</span> dfs(child, node, i) + <span class="number">1</span>; <span class="comment">// 递归计算子节点的深度</span></span><br><span class="line">            <span class="keyword">if</span> (childDepth &gt; maxDepth1) &#123;</span><br><span class="line">                maxDepth2 = maxDepth1;</span><br><span class="line">                maxDepth1 = childDepth;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDepth &gt; maxDepth2) &#123;</span><br><span class="line">                maxDepth2 = childDepth;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新当前状态的最大直径</span></span><br><span class="line">        f[i] = Math.max(f[i], maxDepth1 + maxDepth2);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxDepth1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="202449-恒生笔试"><a class="markdownIt-Anchor" href="#202449-恒生笔试"></a> 2024.4.9 恒生笔试</h1>
-<ol>
-<li>下列代码的返回值</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5</span>/<span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>*<span class="number">3</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html#jls-14.20.2">根据Java语言规范文档规定</a>。在 try-catch-finally 语句块中，finally 语句块中的 return/抛出异常（立即结束语句）的优先级最高，程序会优先返回 finally 语句块中的立即结束语句的结果，此时 try-catch 语句块中的 return/抛出异常（立即结束语句）的结果就会被丢弃掉。</p>
-<ol start="2">
-<li>SQL 语句</li>
-</ol>
-<p>联结语法、INNER JOIN 语法</p>
-<ol start="3">
-<li>初始资金 M，N 天价格信息，K 次交易后，能赚多少钱？（动态规划）</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 根据输入计算最大收益</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> M double浮点型 初始资金</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> N int整型 历史价格天数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> historyPrices double浮点型一维数组 N天历史价格</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> K int整型 最大允许交易次数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> double浮点型</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">get_max_profit</span> <span class="params">(<span class="type">double</span> M, <span class="type">int</span> N, <span class="type">double</span>[] historyPrices, <span class="type">int</span> K)</span> &#123;</span><br><span class="line">    <span class="type">double</span>[][] dp = <span class="keyword">new</span> <span class="title class_">double</span>[K+<span class="number">1</span>][N];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">        dp[<span class="number">0</span>][j] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">max</span> <span class="operator">=</span> dp[i][j-<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> t=<span class="number">0</span>; t&lt;j; t++) &#123;</span><br><span class="line">                <span class="type">double</span> <span class="variable">rest</span> <span class="operator">=</span> dp[i-<span class="number">1</span>][t]%historyPrices[t], buy = (dp[i-<span class="number">1</span>][t]-rest)/historyPrices[t];</span><br><span class="line">                max = Math.max(max, buy*historyPrices[j]+rest);</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[K][N-<span class="number">1</span>]-dp[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="2024331-腾讯笔试"><a class="markdownIt-Anchor" href="#2024331-腾讯笔试"></a> 2024.3.31 腾讯笔试</h1>
-<p>没做好记录，只记了没做出来的第四题，其他四道题 AC 了三道，还有一道通过 97% 我怀疑是样例有问题[手动狗头]</p>
-<ol start="4">
-<li>给你 n 个数，这 n 个数要被拆成 k 份，对每份中的数字求异或，求各份异或总和的最大值（和恒生第二题的思路基本一样）</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">long</span>[][] dp = <span class="keyword">new</span> <span class="title class_">long</span>[k + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[<span class="number">1</span>][i + <span class="number">1</span>] = in.nextInt() ^ dp[<span class="number">1</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span>[] prefix = dp[<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// 拆分为 i 份</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= k; i++) &#123;</span><br><span class="line">        <span class="comment">// 从头到尾遍历：将第 1~j 个元素拆成 i 份</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 将第 [1,s] 个元素拆成 i-1 份，(s,j] 是最后一份</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> j - <span class="number">1</span>; s &gt;= i - <span class="number">1</span>; s--) &#123;</span><br><span class="line">                <span class="comment">// 异或的优先级小于加减法</span></span><br><span class="line">                max = Math.max(max, dp[i - <span class="number">1</span>][s] + (prefix[j] ^ prefix[s]));</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(dp[k][n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>找工作</category>
-      </categories>
-      <tags>
-        <tag>笔试记录</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Rpc 框架</title>
     <url>/Rpc-frame/</url>
     <content><![CDATA[<h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>
@@ -1035,6 +982,59 @@
       </categories>
       <tags>
         <tag>分布式通讯框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>实习笔试题汇总</title>
+    <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<h1 id="2024416-携程笔试"><a class="markdownIt-Anchor" href="#2024416-携程笔试"></a> 2024.4.16 携程笔试</h1>
+<p>前两道签到题，后面一个半小时纯折磨</p>
+<p>第三题</p>
+<p>游游拿到了一个数组，她每次操作可以将相邻的两个素数元素进山314行合并，合并后的新数为原来的两个数之和，并删除原来两个数。游游希望最终数组的元素数量尽可能少，你能帮帮她吗?</p>
+<blockquote>
+<p>第一行输入一个正整数n，代表数组的大小。<br />
+第二行输入几个正整数a_i，代表数组的元素<br />
+1 ≤ n &lt; 10^5<br />
+1 ≤ a_i &lt; 10^6</p>
+</blockquote>
+<p>返回合并结束后的元素的数量</p>
+<p>**题目分析：**素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了 2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
+<p>因此只要先把所有 2 和素数合并，后续只需要判断还有多少相邻的素数即可。</p>
+<p>做题的时候没有考虑到 <code>7 2 2 3</code> 这种情况，即素数和 2 合并完的结果如果是素数，还需要和判断他的左边还有没有 2，有的话还要合并，即代码中的 <code>i--</code> 部分。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PrimeMerge</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">        List&lt;Integer&gt; numbers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取数组元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            numbers.add(scanner.nextInt());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并素数，优先处理2</span></span><br><span class="line">        mergePrimesWithPriorityToTwo(numbers);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出最终数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : numbers) &#123;</span><br><span class="line">            System.out.print(num + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查一个数是否是素数的辅助函数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPrime</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (num &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i * i &lt;= num; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num % i == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">mergePrimesWithPriorityToTwo</span><span class="params">(List&lt;Integer&gt; numbers)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并2与其相邻的素数，得到一个新的素数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size(); ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers.get(i) == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="comment">// 检查左边是否有素数可以合并</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    numbers.set(i - <span class="number">1</span>, numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>);</span><br><span class="line">                    numbers.remove(i);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; numbers.size() - <span class="number">1</span> &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 检查右边是否有素数可以合并</span></span><br><span class="line">                    numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                    numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 没有可以合并的素数，继续下一个数</span></span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并剩余的素数对</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size() - <span class="number">1</span>; ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isPrime(numbers.get(i)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>))) &#123;</span><br><span class="line">                numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第四题</p>
+<p>定义一棵树的直径为：任意两个节点的距离的最大值。现在定义f(i)：对i号节点上再连接一个新的子叶节点后，树的直径长度。现在要求f(1)到f(n)的值。</p>
+<p>输入描述：第一行输入一个正整数n，代表树的节点数量。</p>
+<p>接下来的n-1行，每行输入两个正整数u和v，代表u号节点和v号节点之间有一条长度为1的边连接。</p>
+<p>变量的范围：1≤n≤10的五次方，1≤u，v≤n。</p>
+<p><strong>题目分析：</strong> 树的直径引出树形 dp 算法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    List&lt;TreeNode&gt; children;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TreeNode</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">        children = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeDiameter</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] f; <span class="comment">// 存储每个节点的最大直径</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt(); <span class="comment">// 树的节点数量</span></span><br><span class="line"></span><br><span class="line">        f = <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        TreeNode[] nodes = <span class="keyword">new</span> <span class="title class_">TreeNode</span>[n + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            nodes[i] = <span class="keyword">new</span> <span class="title class_">TreeNode</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 连接节点之间的关系</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">u</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            nodes[u].children.add(nodes[v]);</span><br><span class="line">            nodes[v].children.add(nodes[u]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历每个节点，添加一个新的子叶节点，计算f(i)</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="comment">// 添加新的子叶节点</span></span><br><span class="line">            nodes[i].children.add(<span class="keyword">new</span> <span class="title class_">TreeNode</span>(-<span class="number">1</span>));</span><br><span class="line">            <span class="comment">// 计算当前最大直径</span></span><br><span class="line">            dfs(nodes[i], <span class="literal">null</span>, i);</span><br><span class="line">            <span class="comment">// 删除添加的子叶节点</span></span><br><span class="line">            nodes[i].children.remove(nodes[i].children.size()-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            System.out.print(f[i] + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 递归计算以当前节点为根的子树的直径</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, TreeNode parent, <span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth1</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 最大深度</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth2</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 次大深度</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历当前节点的子节点</span></span><br><span class="line">        <span class="keyword">for</span> (TreeNode child : node.children) &#123;</span><br><span class="line">            <span class="keyword">if</span> (child == parent) <span class="keyword">continue</span>; <span class="comment">// 不访问父节点，防止死循环</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">childDepth</span> <span class="operator">=</span> dfs(child, node, i) + <span class="number">1</span>; <span class="comment">// 递归计算子节点的深度</span></span><br><span class="line">            <span class="keyword">if</span> (childDepth &gt; maxDepth1) &#123;</span><br><span class="line">                maxDepth2 = maxDepth1;</span><br><span class="line">                maxDepth1 = childDepth;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDepth &gt; maxDepth2) &#123;</span><br><span class="line">                maxDepth2 = childDepth;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新当前状态的最大直径</span></span><br><span class="line">        f[i] = Math.max(f[i], maxDepth1 + maxDepth2);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxDepth1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="202449-恒生笔试"><a class="markdownIt-Anchor" href="#202449-恒生笔试"></a> 2024.4.9 恒生笔试</h1>
+<ol>
+<li>下列代码的返回值</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5</span>/<span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>*<span class="number">3</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html#jls-14.20.2">根据Java语言规范文档规定</a>。在 try-catch-finally 语句块中，finally 语句块中的 return/抛出异常（立即结束语句）的优先级最高，程序会优先返回 finally 语句块中的立即结束语句的结果，此时 try-catch 语句块中的 return/抛出异常（立即结束语句）的结果就会被丢弃掉。</p>
+<ol start="2">
+<li>SQL 语句</li>
+</ol>
+<p>联结语法、INNER JOIN 语法</p>
+<ol start="3">
+<li>初始资金 M，N 天价格信息，K 次交易后，能赚多少钱？（动态规划）</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 根据输入计算最大收益</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> M double浮点型 初始资金</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> N int整型 历史价格天数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> historyPrices double浮点型一维数组 N天历史价格</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> K int整型 最大允许交易次数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> double浮点型</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">get_max_profit</span> <span class="params">(<span class="type">double</span> M, <span class="type">int</span> N, <span class="type">double</span>[] historyPrices, <span class="type">int</span> K)</span> &#123;</span><br><span class="line">    <span class="type">double</span>[][] dp = <span class="keyword">new</span> <span class="title class_">double</span>[K+<span class="number">1</span>][N];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">        dp[<span class="number">0</span>][j] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">max</span> <span class="operator">=</span> dp[i][j-<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> t=<span class="number">0</span>; t&lt;j; t++) &#123;</span><br><span class="line">                <span class="type">double</span> <span class="variable">rest</span> <span class="operator">=</span> dp[i-<span class="number">1</span>][t]%historyPrices[t], buy = (dp[i-<span class="number">1</span>][t]-rest)/historyPrices[t];</span><br><span class="line">                max = Math.max(max, buy*historyPrices[j]+rest);</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[K][N-<span class="number">1</span>]-dp[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2024331-腾讯笔试"><a class="markdownIt-Anchor" href="#2024331-腾讯笔试"></a> 2024.3.31 腾讯笔试</h1>
+<p>没做好记录，只记了没做出来的第四题，其他四道题 AC 了三道，还有一道通过 97% 我怀疑是样例有问题[手动狗头]</p>
+<ol start="4">
+<li>给你 n 个数，这 n 个数要被拆成 k 份，对每份中的数字求异或，求各份异或总和的最大值（和恒生第二题的思路基本一样）</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">long</span>[][] dp = <span class="keyword">new</span> <span class="title class_">long</span>[k + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[<span class="number">1</span>][i + <span class="number">1</span>] = in.nextInt() ^ dp[<span class="number">1</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span>[] prefix = dp[<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// 拆分为 i 份</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= k; i++) &#123;</span><br><span class="line">        <span class="comment">// 从头到尾遍历：将第 1~j 个元素拆成 i 份</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 将第 [1,s] 个元素拆成 i-1 份，(s,j] 是最后一份</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> j - <span class="number">1</span>; s &gt;= i - <span class="number">1</span>; s--) &#123;</span><br><span class="line">                <span class="comment">// 异或的优先级小于加减法</span></span><br><span class="line">                max = Math.max(max, dp[i - <span class="number">1</span>][s] + (prefix[j] ^ prefix[s]));</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(dp[k][n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>找工作</category>
+      </categories>
+      <tags>
+        <tag>笔试记录</tag>
       </tags>
   </entry>
   <entry>
@@ -1171,6 +1171,143 @@
       <tags>
         <tag>情绪支持对话</tag>
         <tag>对话数据集增强</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Control Globally, Understand Locally</title>
+    <url>/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation.</p>
+<p>论文的创新点在于在Encoder和Decoder之间加了一层 GCNConv 和 RGCNConv</p>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/image-20240414083742062-17138602623661-17138606243731.png" class="" title="image-20240414083742062-17138602623661">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>目前研究的缺陷
+<ul>
+<li>关注序列上下文信息，忽略了全局原因和局部心理意图与其的层次关系</li>
+</ul>
+</li>
+<li>本文
+<ul>
+<li>提出了一个全局到局部的<strong>层次图网络</strong>来捕获多源信息(全局原因、局部意图和对话历史)并建模它们之间的层次关系，该网络由一个多源编码器、一个层次图推理器和一个全局引导解码器组成</li>
+<li>设计了一个新的训练目标来监测全局的语义信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>探索求助者情绪问题的原因：<strong>全局</strong>地控制情感支持对话的整个流程</li>
+<li>了解求助者的心理意图：帮助系统<strong>局部</strong>了解求助者当前时的心理状态</li>
+<li>本文目标
+<ul>
+<li>捕获全局原因和局部心理意图</li>
+<li>建模全局与局部之间的关系</li>
+</ul>
+</li>
+<li>解决方法【全局到局部层次图网络GLHG】
+<ul>
+<li>多源编码器：COMET提取局部心理意图</li>
+<li>层次图推理机：全局原因(对话级)、局部心理意图(句子级)和对话历史之间的层次关系进行建模</li>
+<li>解码器中设计了一个新的训练目标来监控全局原因的语义信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>图建模对话
+<ul>
+<li>GCN 利用自我和对话者间依赖性来模拟会话上下文</li>
+<li>EGAE 使用图网络捕获面向任务对话中的对话模式</li>
+</ul>
+</li>
+<li>常识性知识
+<ul>
+<li>与本人有关的心理状态：xReact、xIntent</li>
+</ul>
+</li>
+</ul>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
+<ul>
+<li>问题定义</li>
+<li>多源编码器
+<ul>
+<li>BlenderBot Encoder + Max-pooling</li>
+<li>上下文 + 全局原因 + 局部原因</li>
+</ul>
+</li>
+<li>分层图推理机
+<ul>
+<li>GAT 图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png" class="" title="img">注意力函数（2017出版)
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp" class="" title="image.png"> <img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png" class="" title="img">注意力机制
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png" class="" title="img">
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png" class="" title="img">注意力机制
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png" class="" title="img">
+</li>
+</ul>
+</li>
+<li>Global-guide 解码器
+<ul>
+<li>响应生成
+<ul>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">，v表示图神经网络得到的全局变量
+</li>
+</ul>
+</li>
+<li>监督全局语义信息：预测问题类型
+<ul>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img">
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>联合训练
+<ul>
+<li>对数似然损失+交叉熵损失</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png" class="" title="img"><img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png" class="" title="img">
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>指标：plexity (PPL), BLEU-n (B-n), ROUGE-L (R-L), Distinct-1(D-1), and Distinct-2 (D-2)</li>
+<li>由于有了意图特征，提出建议更具体有效</li>
+</ul>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<ul>
+<li>全局到局部的层次图网络(Global-to-Local Hierarchical Graph network, GLHG)来捕获多源信息并从全局到局部的角度建模层次关系</li>
+<li>新的训练目标“预测Seeker遇到问题的类型”</li>
+</ul>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<ul>
+<li><strong>多源编码器</strong>利用情境信息并将心理意图与COMET结合，捕获全局原因和局部意图</li>
+<li><strong>分层图推理机</strong>在全局原因、局部心理意图和对话历史之间进行交互，建模不同层次的关系（hierarchical graph reasoner）</li>
+</ul>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>异构图神经网络</tag>
       </tags>
   </entry>
   <entry>
@@ -1339,143 +1476,6 @@
 Conclusion</p>
 <h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
 <h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
-<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
-<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>异构图神经网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Control Globally, Understand Locally</title>
-    <url>/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation.</p>
-<p>论文的创新点在于在Encoder和Decoder之间加了一层 GCNConv 和 RGCNConv</p>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/image-20240414083742062-17138602623661-17138606243731.png" class="" title="image-20240414083742062-17138602623661">
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>目前研究的缺陷
-<ul>
-<li>关注序列上下文信息，忽略了全局原因和局部心理意图与其的层次关系</li>
-</ul>
-</li>
-<li>本文
-<ul>
-<li>提出了一个全局到局部的<strong>层次图网络</strong>来捕获多源信息(全局原因、局部意图和对话历史)并建模它们之间的层次关系，该网络由一个多源编码器、一个层次图推理器和一个全局引导解码器组成</li>
-<li>设计了一个新的训练目标来监测全局的语义信息</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>探索求助者情绪问题的原因：<strong>全局</strong>地控制情感支持对话的整个流程</li>
-<li>了解求助者的心理意图：帮助系统<strong>局部</strong>了解求助者当前时的心理状态</li>
-<li>本文目标
-<ul>
-<li>捕获全局原因和局部心理意图</li>
-<li>建模全局与局部之间的关系</li>
-</ul>
-</li>
-<li>解决方法【全局到局部层次图网络GLHG】
-<ul>
-<li>多源编码器：COMET提取局部心理意图</li>
-<li>层次图推理机：全局原因(对话级)、局部心理意图(句子级)和对话历史之间的层次关系进行建模</li>
-<li>解码器中设计了一个新的训练目标来监控全局原因的语义信息</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>图建模对话
-<ul>
-<li>GCN 利用自我和对话者间依赖性来模拟会话上下文</li>
-<li>EGAE 使用图网络捕获面向任务对话中的对话模式</li>
-</ul>
-</li>
-<li>常识性知识
-<ul>
-<li>与本人有关的心理状态：xReact、xIntent</li>
-</ul>
-</li>
-</ul>
-<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
-<ul>
-<li>问题定义</li>
-<li>多源编码器
-<ul>
-<li>BlenderBot Encoder + Max-pooling</li>
-<li>上下文 + 全局原因 + 局部原因</li>
-</ul>
-</li>
-<li>分层图推理机
-<ul>
-<li>GAT 图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png" class="" title="img">注意力函数（2017出版)
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp" class="" title="image.png"> <img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png" class="" title="img">注意力机制
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png" class="" title="img">
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png" class="" title="img">注意力机制
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png" class="" title="img">
-</li>
-</ul>
-</li>
-<li>Global-guide 解码器
-<ul>
-<li>响应生成
-<ul>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">，v表示图神经网络得到的全局变量
-</li>
-</ul>
-</li>
-<li>监督全局语义信息：预测问题类型
-<ul>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img">
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>联合训练
-<ul>
-<li>对数似然损失+交叉熵损失</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png" class="" title="img"><img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png" class="" title="img">
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
-<ul>
-<li>指标：plexity (PPL), BLEU-n (B-n), ROUGE-L (R-L), Distinct-1(D-1), and Distinct-2 (D-2)</li>
-<li>由于有了意图特征，提出建议更具体有效</li>
-</ul>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
-<ul>
-<li>全局到局部的层次图网络(Global-to-Local Hierarchical Graph network, GLHG)来捕获多源信息并从全局到局部的角度建模层次关系</li>
-<li>新的训练目标“预测Seeker遇到问题的类型”</li>
-</ul>
-<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
-<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
-<ul>
-<li><strong>多源编码器</strong>利用情境信息并将心理意图与COMET结合，捕获全局原因和局部意图</li>
-<li><strong>分层图推理机</strong>在全局原因、局部心理意图和对话历史之间进行交互，建模不同层次的关系（hierarchical graph reasoner）</li>
-</ul>
 <h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
 <h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
 ]]></content>

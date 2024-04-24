@@ -342,7 +342,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.cxfnqvhexzss{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="cxfnqvhexzss" alt="image-20240415164535374">
+<style>.lkmxettkmptc{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="lkmxettkmptc" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>

@@ -313,7 +313,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.cxfnqvhexzss{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="cxfnqvhexzss" alt="image-20240415164535374">
+<style>.lkmxettkmptc{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="lkmxettkmptc" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>
@@ -490,6 +490,36 @@
       </categories>
       <tags>
         <tag>Java 算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LLM应用开发</title>
+    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
+<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
+<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
+<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
+<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
+<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
+<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型     更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
+<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
+<p>离线私有数据不能直接作为语料库训练模型，因此 LLM 无法直接返回有关私有数据的响应</p>
+<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
+<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
+<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
+<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
+<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
+<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
+<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
+<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
+]]></content>
+      <categories>
+        <category>大语言模型应用开发</category>
+      </categories>
+      <tags>
+        <tag>Langchain</tag>
+        <tag>向量数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -716,73 +746,6 @@
       </tags>
   </entry>
   <entry>
-    <title>LLM应用开发</title>
-    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
-    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
-<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
-<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
-<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
-<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
-<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
-<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型     更加麻烦，但是便于整体项目的开发、调用和维护。</p>
-<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
-<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
-<p>离线私有数据不能直接作为语料库训练模型，因此 LLM 无法直接返回有关私有数据的响应</p>
-<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
-<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
-<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
-<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
-<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
-<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
-<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
-<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
-]]></content>
-      <categories>
-        <category>大语言模型应用开发</category>
-      </categories>
-      <tags>
-        <tag>Langchain</tag>
-        <tag>向量数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RAG架构和Langchain框架</title>
-    <url>/RAG%E6%9E%B6%E6%9E%84/</url>
-    <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，主要还是学习检索增强生成（RAG架构）方向</p>
-<h1 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h1>
-<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP 任务的检索增强生成</a>中提出的新思想。LLM 通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的 RAG 应用程序有两个主要组件：</p>
-<ul>
-<li>索引：用于引入源数据并对其进行<strong>索引</strong>的管道，通常离线运行。
-<ul>
-<li>加载：将数据库中的大段文本读入系统</li>
-<li>拆分：因为大块数据更难搜索，并且不适合模型的有限上下文窗口，因此需要拆分数据。</li>
-<li>存储：采用向量数据库和索引存储数据</li>
-</ul>
-</li>
-<li>检索和生成：实际的 RAG 链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
-<ul>
-<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前 k 个数据。</li>
-<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型 (LLM) 中，以生成所需的输出。</li>
-</ul>
-</li>
-</ul>
-<p>从原始数据到答案最常见的完整序列如下所示：</p>
-<h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
-<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：聊天历史 Memory、提示工程 Prompt、输出解析 Parase</p>
-<h2 id="chain模块"><a class="markdownIt-Anchor" href="#chain模块"></a> Chain模块</h2>
-<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、内存和回调等功能；</p>
-<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
-<p>Chain支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
-<p>模块化设计也促进了代码维护、扩展和重用；</p>
-]]></content>
-      <categories>
-        <category>大语言模型应用开发</category>
-      </categories>
-      <tags>
-        <tag>RAG架构</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hexo 使用指南</title>
     <url>/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<blockquote>
@@ -867,6 +830,43 @@
       </categories>
       <tags>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RAG架构和Langchain框架</title>
+    <url>/RAG%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，主要还是学习检索增强生成（RAG架构）方向</p>
+<h1 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h1>
+<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP 任务的检索增强生成</a>中提出的新思想。LLM 通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的 RAG 应用程序有两个主要组件：</p>
+<ul>
+<li>索引：用于引入源数据并对其进行<strong>索引</strong>的管道，通常离线运行。
+<ul>
+<li>加载：将数据库中的大段文本读入系统</li>
+<li>拆分：因为大块数据更难搜索，并且不适合模型的有限上下文窗口，因此需要拆分数据。</li>
+<li>存储：采用向量数据库和索引存储数据</li>
+</ul>
+</li>
+<li>检索和生成：实际的 RAG 链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
+<ul>
+<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前 k 个数据。</li>
+<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型 (LLM) 中，以生成所需的输出。</li>
+</ul>
+</li>
+</ul>
+<p>从原始数据到答案最常见的完整序列如下所示：</p>
+<h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
+<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：聊天历史 Memory、提示工程 Prompt、输出解析 Parase</p>
+<h2 id="chain模块"><a class="markdownIt-Anchor" href="#chain模块"></a> Chain模块</h2>
+<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、内存和回调等功能；</p>
+<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
+<p>Chain支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
+<p>模块化设计也促进了代码维护、扩展和重用；</p>
+]]></content>
+      <categories>
+        <category>大语言模型应用开发</category>
+      </categories>
+      <tags>
+        <tag>RAG架构</tag>
       </tags>
   </entry>
   <entry>
@@ -998,7 +998,7 @@
 1 ≤ a_i &lt; 10^6</p>
 </blockquote>
 <p>返回合并结束后的元素的数量</p>
-<p>**题目分析：**素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了 2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
+<p><strong>题目分析</strong>：素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了 2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
 <p>因此只要先把所有 2 和素数合并，后续只需要判断还有多少相邻的素数即可。</p>
 <p>做题的时候没有考虑到 <code>7 2 2 3</code> 这种情况，即素数和 2 合并完的结果如果是素数，还需要和判断他的左边还有没有 2，有的话还要合并，即代码中的 <code>i--</code> 部分。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PrimeMerge</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">        List&lt;Integer&gt; numbers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取数组元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            numbers.add(scanner.nextInt());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并素数，优先处理2</span></span><br><span class="line">        mergePrimesWithPriorityToTwo(numbers);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出最终数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : numbers) &#123;</span><br><span class="line">            System.out.print(num + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查一个数是否是素数的辅助函数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPrime</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (num &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i * i &lt;= num; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num % i == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">mergePrimesWithPriorityToTwo</span><span class="params">(List&lt;Integer&gt; numbers)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并2与其相邻的素数，得到一个新的素数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size(); ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers.get(i) == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="comment">// 检查左边是否有素数可以合并</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    numbers.set(i - <span class="number">1</span>, numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>);</span><br><span class="line">                    numbers.remove(i);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; numbers.size() - <span class="number">1</span> &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 检查右边是否有素数可以合并</span></span><br><span class="line">                    numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                    numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 没有可以合并的素数，继续下一个数</span></span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并剩余的素数对</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size() - <span class="number">1</span>; ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isPrime(numbers.get(i)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>))) &#123;</span><br><span class="line">                numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

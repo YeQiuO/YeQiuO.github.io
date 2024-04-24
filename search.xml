@@ -1,0 +1,2552 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Git 文档阅读</title>
+    <url>/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/</url>
+    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
+<blockquote>
+<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
+</blockquote>
+<span id="more"></span>
+<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
+<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
+<ol>
+<li>
+<p>集中化版本控制（CVCS）缺点</p>
+<ol>
+<li>中央服务器的单点故障就无法协同工作</li>
+<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
+</ol>
+</li>
+<li>
+<p>分布式版本控制（DVCS）优点</p>
+<ol>
+<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
+<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
+<li>可以指定和若干不同的远端代码仓库进行交互</li>
+</ol>
+</li>
+</ol>
+<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
+<ol>
+<li>并行开发</li>
+<li>完全分布式</li>
+<li>速度快</li>
+<li>数据量大</li>
+</ol>
+<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
+<ol>
+<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
+<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
+<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
+<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
+<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
+</ol>
+<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
+<blockquote>
+<p>git config --list --show-origin</p>
+</blockquote>
+<ol>
+<li>/etc/gitconfig 系统通用配置 git config --system</li>
+<li>~/.gitconfig 当前用户配置 git config --global</li>
+<li>.git/config 当前项目配置 git config --local</li>
+</ol>
+<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
+<blockquote>
+<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
+</blockquote>
+<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
+<ol>
+<li>git init
+<ol>
+<li>初始化仓库</li>
+</ol>
+</li>
+<li>git clone
+<ol>
+<li>克隆仓库</li>
+</ol>
+</li>
+<li>git status
+<ol>
+<li>查看文件状态</li>
+<li>[-s] 简要文件状态信息</li>
+</ol>
+</li>
+<li>git add
+<ol>
+<li>[&lt;file&gt;] 跟踪新文件</li>
+<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
+<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
+</ol>
+</li>
+<li>git diff
+<ol>
+<li>已修改文件与已暂存文件的内容差异</li>
+<li>[–staged] 已暂存与分支HEAD的内容差异</li>
+</ol>
+</li>
+<li>git rm
+<ol>
+<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
+<li>[-f] 强制移除存在未暂存修改的文件</li>
+<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
+</ol>
+</li>
+<li>git commit
+<ol>
+<li>提交文件</li>
+<li>[-m] 提交备注</li>
+<li>[–amend] 追加提交</li>
+<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
+</ol>
+</li>
+<li>git mv
+<ol>
+<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
+</ol>
+</li>
+<li>git log
+<ol>
+<li>回顾提交历史</li>
+<li>[–stat] 显示每次提交的简要信息</li>
+<li>[-p ] 显示每次提交的详细信息</li>
+<li>[–pretty=format:“xxx”] 自定义信息格式</li>
+<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
+<li>[–since] 限制时间</li>
+</ol>
+</li>
+<li>git reset
+<ol>
+<li>[HEAD &lt;file&gt;] 取消暂存</li>
+</ol>
+</li>
+<li>git checkout
+<ol>
+<li>[-- &lt;filename&gt;] 撤销修改</li>
+<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
+<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
+</ol>
+</li>
+<li>git remote
+<ol>
+<li>[-v] 列出远程仓库</li>
+<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
+<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
+<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
+<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
+</ol>
+</li>
+<li>git fetch
+<ol>
+<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
+</ol>
+</li>
+<li>git push
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
+<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
+<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
+<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
+<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
+</ol>
+</li>
+<li>git pull
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
+</ol>
+</li>
+<li>git tag
+<ol>
+<li>列出已有的标签</li>
+<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
+<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
+<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
+<li>[-d] 删除标签</li>
+</ol>
+</li>
+<li>git show
+<ol>
+<li>标签信息和与之对应的提交信息</li>
+</ol>
+</li>
+<li>git restore
+<ol>
+<li>[&lt;filename&gt;] 丢弃工作区修改</li>
+<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
+</ol>
+</li>
+<li>git merge
+<ol>
+<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
+</ol>
+</li>
+<li>git branch
+<ol>
+<li>[-d &lt;branchname&gt;] 删除分支</li>
+<li>[-v] 每个分支的最后一次提交</li>
+<li>[-vv] 跟踪信息</li>
+<li>(–set-upstream-to=&lt;upstream&gt; | -u &lt;upstream&gt;) [&lt;branchname&gt;] 跟踪上游分支</li>
+<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
+</ol>
+</li>
+<li>git stash
+<ol>
+<li>贮藏工作</li>
+<li>[list] 列出所有贮藏</li>
+<li>[apply] 恢复贮藏</li>
+</ol>
+</li>
+<li>git rebase
+<ol>
+<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
+</ol>
+</li>
+</ol>
+<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
+<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
+<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
+<blockquote>
+<p>相关命令合并到 Chapter2 中</p>
+</blockquote>
+<ol>
+<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
+<li>git mergetool 图形化冲突解决工具</li>
+<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
+</ol>
+<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
+<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
+<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
+<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>版本管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java 并发锁</title>
+    <url>/JUC-Lock/</url>
+    <content><![CDATA[<p>Java.util.concurrent 中有很多 Java 并发相关工具，例如 锁 <code>ReentrantLock</code>、线程 <code>Callable</code> <code>FutureTask</code>、信号量 <code>Semaphore</code>、共享锁 <code>CountDownLatch</code></p>
+<p>此外 Java 原生的 <code>volatile</code> 和 <code>synchronized</code> 关键字也是并发编程的关键。</p>
+<span id="more"></span>
+<h1 id="synchronized-关键字"><a class="markdownIt-Anchor" href="#synchronized-关键字"></a> synchronized 关键字</h1>
+<p>通过对象监视器 <code>monitor</code> 实现加锁和解锁</p>
+<p>锁升级策略：偏向锁 —&gt; 轻量级锁（CAS自旋） —&gt; 重量级锁</p>
+<p>作用域：</p>
+<ol>
+<li>修饰实例方法，锁当前对象实例</li>
+<li>修饰静态方法，锁当前类，会作用于所有实例</li>
+<li>修饰代码块，程序指定锁什么</li>
+</ol>
+<h1 id="reentrantlock-类"><a class="markdownIt-Anchor" href="#reentrantlock-类"></a> ReentrantLock 类</h1>
+<p>属性：可重入锁、独占锁、公平锁/非公平锁</p>
+<p>特点：可限时等待、可响应中断、可实现选择性通知</p>
+<p>使用场景：阻塞队列 <code>ArrayBlockingQueue</code> <code>LinkedBlockingDeque</code></p>
+<p>源码结构：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReentrantLock</span> <span class="keyword">implements</span> <span class="title class_">Lock</span> &#123;</span><br><span class="line">    <span class="comment">// 同步控制器（指向公平锁或非公平锁）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Sync sync;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Sync</span> <span class="keyword">extends</span> <span class="title class_">AbstractQueuedSynchronizer</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">nonfairTryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryRelease</span><span class="params">(<span class="type">int</span> releases)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">NonfairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 实现 Lock 接口</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.lock();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> sync.nonfairTryAcquire(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.release(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ReentrantLock</code>独占锁运行过程（可重入锁的 <code>state</code> 表示<mark>重入的次数</mark>，会大于1）</p>
+<img data-src="aqs-exclusive-mode-acquire-lock.png" alt="AQS 独占模式获取锁" style="zoom:80%;" />
+<p><strong>加锁失败阻塞</strong>的场景：<code>ReentrantLock</code>在CAS加锁失败之后会封装成一个<code>Node</code>类型的对象加入<code>CLH</code>队列中，然后调用<code>LockSupport.park(this)</code>进行阻塞。<code>LockSupport</code>是一个native方法实现的工具类，在hotspot源码中也是通过<code>mutex</code>来实现的。</p>
+<p>与<code>synchronized</code>对比：</p>
+<table>
+<thead>
+<tr>
+<th>比较</th>
+<th style="text-align:left">ReentrantLock</th>
+<th>synchronized</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>如何实现等待-唤醒？</td>
+<td style="text-align:left">Condition 类 await/signal</td>
+<td>Object 的 wait/notify</td>
+</tr>
+<tr>
+<td>如何释放锁？</td>
+<td style="text-align:left">需要手动释放锁</td>
+<td>出代码块后自动释放</td>
+</tr>
+<tr>
+<td>底层如何实现？</td>
+<td style="text-align:left">API 实现</td>
+<td>JVM 内部锁升级策略</td>
+</tr>
+<tr>
+<td>是否可中断？</td>
+<td style="text-align:left">可中断锁</td>
+<td>不可中断锁</td>
+</tr>
+<tr>
+<td>占用资源大不大？</td>
+<td style="text-align:left">通过自旋<code>CAS</code>和<code>Unsafe.park/unpark</code>挂起唤醒线程</td>
+<td>锁升级策略：轻量级锁自旋<code>CAS</code>不会阻塞挂起；重量级锁才会和<code>ReentrantLock</code>一样<code>park/unpark</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="abstractqueuedsynchronizer-抽象类"><a class="markdownIt-Anchor" href="#abstractqueuedsynchronizer-抽象类"></a> AbstractQueuedSynchronizer 抽象类</h1>
+<p>利用 <mark>FIFO 双端队列</mark>和 <mark>Node 节点</mark>结构来维护等待获取资源的线程队列，确保了线程间的公平性和互斥性。闭锁、读锁、信号量</p>
+<p>AQS 底层封装了线程的入队与出队、状态更新以及阻塞与唤醒等底层细节，实现类可以实现具体的资源控制逻辑（<code>tryAcquire(int)</code>、<code>tryRelease(int)</code>等方法）。</p>
+<p><code>AbstractQueuedSynchronizer</code>（抽象队列同步器）源码结构</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractQueuedSynchronizer</span> <span class="keyword">extends</span> <span class="title class_">AbstractOwnableSynchronizer</span> &#123;</span><br><span class="line">    <span class="comment">// 表示锁的持有数量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="type">int</span> state;</span><br><span class="line">    <span class="comment">// 双向队列（链表实现）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node head;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node tail;</span><br><span class="line">    <span class="comment">// 本地方法 eg:unsafe.compareAndSwapInt</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Unsafe</span> <span class="variable">unsafe</span> <span class="operator">=</span> Unsafe.getUnsafe();</span><br><span class="line">    <span class="comment">// 封装线程的节点</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">        <span class="comment">// 标识当前节点对应的等待状态（不非负数时，仅作为普通标识，下文有详细介绍）</span></span><br><span class="line">        <span class="keyword">volatile</span> <span class="type">int</span> waitStatus;</span><br><span class="line">        <span class="keyword">volatile</span> Node prev;</span><br><span class="line">        <span class="keyword">volatile</span> Node next;</span><br><span class="line">        <span class="keyword">volatile</span> Thread thread;</span><br><span class="line">        <span class="comment">// 共享锁：Semaphore、CountDownLatch</span></span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Node</span> <span class="variable">SHARED</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>();</span><br><span class="line">        <span class="comment">// 独占锁：ReentrantLock</span></span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Node</span> <span class="variable">EXCLUSIVE</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="comment">// 条件队列中，表示下一个节点</span></span><br><span class="line">        <span class="comment">// 同步队列中，表示当前节点想要获取的是排他锁还是共享锁</span></span><br><span class="line">        Node nextWaiter;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 条件队列，保存有触发条件的 Node，实现选择性通知</span></span><br><span class="line">    <span class="comment">// 作用类似于 Object 内置的监视器方法：wait notify notifyAll</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConditionObject</span> <span class="keyword">implements</span> <span class="title class_">Condition</span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">transient</span> Node firstWaiter;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">transient</span> Node lastWaiter;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 超时中断</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">spinForTimeoutThreshold</span> <span class="operator">=</span> <span class="number">1000L</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>父类 AbstractOwnableSynchronizer 代码结构</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractOwnableSynchronizer</span> &#123;</span><br><span class="line">    <span class="comment">// 持有独占锁的线程</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Thread exclusiveOwnerThread;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>等待队列中不直接存储线程对象，而是封装线程为 Node 类的对象，每个 Node 代表一个等待线程</li>
+<li>waitStatus 状态枚举值（初始值为 0，表示初始化状态）【使用情况】
+<ul>
+<li><code>CANCELLED</code> 表示线程已经被<u>取消</u>【响应中断】</li>
+<li><code>SIGNAL</code> 表示后继节点的线程需要被唤醒【同步队列】</li>
+<li><code>CONDITION</code> 表示线程在条件队列中等待某个<u>条件</u>满足【条件队列】</li>
+<li><code>PROPAGATE</code> 表示共享模式下的资源传播【共享锁】</li>
+</ul>
+</li>
+<li>独占 / 共享锁
+<ul>
+<li>独占锁 tryAcquire-tryRelease</li>
+<li>共享锁 tryAcquireShared-tryReleaseShared</li>
+</ul>
+</li>
+</ul>
+<p><strong>线程调度逻辑：</strong><br />
+当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
+<style>.pdocjhxxfwew{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="pdocjhxxfwew" alt="image-20240415164535374">
+<p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
+<p>采用<strong>模板方法设计模式：</strong></p>
+<p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>
+<p>自定义 <code>Synchronizer</code> 时需要重写几个 AQS 提供的钩子方法（通过钩子方法控制 <code>state</code> 为何值时代表加锁成功/失败、解锁成功/失败）：tryAcquire-tryRelease、tryAcquireShared-tryReleaseShared、isHeldExclusively</p>
+<h2 id="clh-锁"><a class="markdownIt-Anchor" href="#clh-锁"></a> CLH 锁</h2>
+<blockquote>
+<p>Craig, Landin, and Hagersten locks 实现线程<u>阻塞等待</u>以及<u>被唤醒时锁分配</u>的机制</p>
+</blockquote>
+<img data-src="/JUC-Lock/clh-queue-state.png" class="" title="CLH 队列">
+<h2 id="locksupport"><a class="markdownIt-Anchor" href="#locksupport"></a> LockSupport</h2>
+<p>操作 Node 中的 thread，实现线程的阻塞 <code>park</code> 和解除阻塞 <code>unpark</code> 。<a href="https://juejin.cn/post/7023021536231555086">Link</a></p>
+<p>具体来说，操作”许可“（多次 unpark 也只能获取一次许可，不可叠加），底层通过<code>mutex</code>（互斥量）和<code>condition</code>（条件变量）实现。【<code>mutex</code>存在用户态和内核态的切换】</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>Java 线程中断方法</th>
+<th>方法意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Thread.currentThread().interrupt()</code></td>
+<td>将线程的状态置为&quot;中断&quot;</td>
+</tr>
+<tr>
+<td><code>Thread.interrupted()</code></td>
+<td>获取当前线程的中断状态，并且会清除线程的状态标记，静态方法</td>
+</tr>
+<tr>
+<td><code>Thread.isInterrupted()</code></td>
+<td>获取调用该方法的对象所表示的线程，不会清除线程的状态标记，实例方法阻塞和中断的区别？</td>
+</tr>
+</tbody>
+</table>
+<p>阻塞和中断的区别？</p>
+</blockquote>
+<h2 id="实现方法"><a class="markdownIt-Anchor" href="#实现方法"></a> 实现方法</h2>
+<p>Lock 接口（ReentrantLock 通过 Sync 实现接口）</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lock(): void</td>
+<td>加锁（ReentrantLock 默认不可响应中断）</td>
+</tr>
+<tr>
+<td>lockInterruptibly(): void</td>
+<td>加锁，阻塞等待锁的过程中，可以相应中断</td>
+</tr>
+<tr>
+<td>tryLock(): boolean</td>
+<td>非阻塞获取锁</td>
+</tr>
+<tr>
+<td>tryLock(long, TimeUnit): boolean</td>
+<td>时间段内获取锁</td>
+</tr>
+<tr>
+<td>unlock(): void</td>
+<td>解锁</td>
+</tr>
+<tr>
+<td>newCondition(): Condition</td>
+<td>获取条件等待队列</td>
+</tr>
+</tbody>
+</table>
+<h2 id="如何区分公平锁和非公平锁"><a class="markdownIt-Anchor" href="#如何区分公平锁和非公平锁"></a> 如何区分公平锁和非公平锁</h2>
+<p><code>AbstractQueuedSynchronizer.hasQueuedPredecessors()</code> 线程在获取锁前，先判断一下自己在不在队列的首位，只有队首线程能被运行</p>
+<h1 id="semaphore"><a class="markdownIt-Anchor" href="#semaphore"></a> Semaphore</h1>
+<p>信号量，可选择公平 / 非公平锁。</p>
+<p>通常用于那些资源有明确访问数量限制的场景，比如限流（仅限于单机模式，实际项目中推荐使用 Redis +Lua 来做限流）</p>
+<h1 id="countdownlatch"><a class="markdownIt-Anchor" href="#countdownlatch"></a> CountDownLatch</h1>
+<p>倒计时器：<code>await()</code>阻塞当前线程，当 <code>count</code>为零（即 state）时，唤醒所有被阻塞的线程。</p>
+<p><code>CountDownLatch</code> 是一次性的，计数器的值只能在构造方法中初始化一次，之后没有任何机制再次对其设置值，当 <code>CountDownLatch</code> 使用完毕后，它不能再次被使用</p>
+<h1 id="cyclicbarrier"><a class="markdownIt-Anchor" href="#cyclicbarrier"></a> CyclicBarrier</h1>
+<p>循环栅栏：让<mark>一组线程</mark>到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程都会继续干活。</p>
+]]></content>
+      <categories>
+        <category>Java学习</category>
+      </categories>
+      <tags>
+        <tag>Java并发</tag>
+        <tag>Java并发锁</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java 算法汇总</title>
+    <url>/Java-Algorithm/</url>
+    <content><![CDATA[<h1 id="算法"><a class="markdownIt-Anchor" href="#算法"></a> 算法</h1>
+<h2 id="动态规划"><a class="markdownIt-Anchor" href="#动态规划"></a> 动态规划</h2>
+<h3 id="树形-dp"><a class="markdownIt-Anchor" href="#树形-dp"></a> 树形 dp</h3>
+<p>题型：<strong>树的直径</strong></p>
+<p>思路：可以看作是再求树的深度，在求深度的同时“更新树的最长直径”。</p>
+<p>代码模板</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LongestPath</span> &#123;</span><br><span class="line">    List&lt;Integer&gt;[] g;</span><br><span class="line">    <span class="type">int</span> <span class="variable">longestPath</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">        <span class="comment">// 两种思路：1.记录最大和次大长的路径；2.记录最大长 max，max+当前结果 和 result 比大小</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> child:g[x]) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">cur</span> <span class="operator">=</span> dfs(child) + <span class="number">1</span>;</span><br><span class="line">            longestPath = Math.max(longestPath, max + cur);</span><br><span class="line">            max = Math.max(max, cur);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">solve</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] relate = &#123;-<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;  <span class="comment">// 边的关系(题目给出)</span></span><br><span class="line">        <span class="comment">// 构建关系，List 存儿子节点，可以拓展到一般树的情况</span></span><br><span class="line">        g = <span class="keyword">new</span> <span class="title class_">ArrayList</span>[relate.length];</span><br><span class="line">        Arrays.setAll(g, e -&gt; <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i&lt;relate.length; i++) &#123;</span><br><span class="line">            g[relate[i]].add(i);</span><br><span class="line">        &#125;</span><br><span class="line">        dfs(<span class="number">0</span>);</span><br><span class="line">        System.out.println(longestPath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>拓展：</p>
+<ul>
+<li>【124】求二叉树中最大的路径和。改左右子树的深度为节点值的和，若和为负数则返回 0</li>
+<li>【2245】一般树的最长路径。遍历所有邻居（过滤掉父节点），取最长、次长两条路径相加，结果为最长路径。此外，根据题意还要去除父子结点相同的情况。</li>
+</ul>
+<p>题型：<strong>树上最大独立集</strong>（从图中选择尽量多的点，使得这些点互不相邻）</p>
+<p>题型：<strong>树上最小支配集</strong>（从图中选择尽量少的点，使得这些点和其父子结点包括了整棵树）</p>
+<h3 id="二维-dp"><a class="markdownIt-Anchor" href="#二维-dp"></a> 二维 dp</h3>
+<p>题型：最长公共子序列</p>
+<p>思路：定义 <code>dp[i][j]</code> 表示 <code>text1[0:i-1]</code> 和 <code>text2[0:j-1]</code> 的最长公共子序列</p>
+<h1 id="java-技巧"><a class="markdownIt-Anchor" href="#java-技巧"></a> Java 技巧</h1>
+<p>强制类型转换</p>
+<ul>
+<li>向零截断，直接保留整数位 <code>1/2 == -1/2 == 0</code></li>
+</ul>
+<p>基本数据类型的默认值</p>
+<ul>
+<li>int \ double：0</li>
+<li>boolean：false</li>
+</ul>
+<p>常量池</p>
+<ul>
+<li>包装类型常量池：Byte, Short, Integer [-128,127], Long, Character, Boolean</li>
+<li>字符串常量池</li>
+</ul>
+<p>初始化</p>
+<ul>
+<li>成员变量（定义在类里方法外的变量）一定要进行初始化的，如果不显式的进行初始化，那么虚拟机会进行默认的初始化
+<ul>
+<li>基本数据类型一般是给予默认值</li>
+<li>引用类型初始值为 null</li>
+</ul>
+</li>
+<li>局部变量不会自动初始化，所以在声明局部变量时要注意，可以不在声明时初始化，但在使用之前一定要进行初始化，否则会报编译错误</li>
+</ul>
+<h2 id="数组-列表快速初始化"><a class="markdownIt-Anchor" href="#数组-列表快速初始化"></a> 数组、列表快速初始化</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] array = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[] array = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[][] array = &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">3</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);  <span class="comment">// 返回的是Arrays的内部类无法增删</span></span><br><span class="line">List&lt;&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()&#123;&#123;</span><br><span class="line">    add(<span class="number">1</span>);</span><br><span class="line">    add(<span class="number">2</span>);</span><br><span class="line">    add(<span class="number">3</span>);</span><br><span class="line">&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="初始化小根堆"><a class="markdownIt-Anchor" href="#初始化小根堆"></a> 初始化小根堆</h2>
+<p>使用优先级队列 <code>PriorityQueue</code> 实现小根堆</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">PriorityQueue&lt;<span class="type">int</span>[]&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((pair1,pair2) -&gt; pair1[<span class="number">1</span>]-pair2[<span class="number">1</span>]);  <span class="comment">// 数组</span></span><br><span class="line">PriorityQueue&lt;ListNode&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((o1, o2) -&gt; o1.val-o2.val);  <span class="comment">// 节点</span></span><br><span class="line"></span><br><span class="line">queue.offer(data)  <span class="comment">// 节点入堆</span></span><br><span class="line">data = queue.poll()  <span class="comment">// 头节点出堆</span></span><br></pre></td></tr></table></figure>
+<h2 id="list-转数组"><a class="markdownIt-Anchor" href="#list-转数组"></a> List 转数组</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动拆箱</span></span><br><span class="line"><span class="type">int</span>[] array = list.stream().mapToInt(Integer::valueOf).toArray();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 流式</span></span><br><span class="line">String[] array = list.stream().toArray(String[]::<span class="keyword">new</span>);</span><br><span class="line"><span class="comment">// 串行</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[list.size()]); <span class="comment">// 规定好数组大小，速度更快</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+<h2 id="数组转-list"><a class="markdownIt-Anchor" href="#数组转-list"></a> 数组转 List</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动装箱</span></span><br><span class="line"><span class="type">int</span>[] arr = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.stream(arr).boxed().collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer[] integers = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">3</span>,<span class="number">8</span>,<span class="number">20</span>,<span class="number">7</span>,<span class="number">11</span>,<span class="number">25</span>&#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.asList(integers); </span><br><span class="line"><span class="comment">// ArrayList&lt;Object&gt; list = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">// Collections.addAll(list, a);</span></span><br></pre></td></tr></table></figure>
+<h2 id="原地交换"><a class="markdownIt-Anchor" href="#原地交换"></a> 原地交换</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ch[a] ^= ch[b];</span><br><span class="line">ch[b] ^= ch[a];</span><br><span class="line">ch[a] ^= ch[b];</span><br></pre></td></tr></table></figure>
+<h2 id="泛型占位符"><a class="markdownIt-Anchor" href="#泛型占位符"></a> 泛型&amp;占位符</h2>
+<p>泛型：T E K V</p>
+<blockquote>
+<p>泛型的初衷就是为了能在编译器检查出类型安全问题，并通过编译错误提示程序员</p>
+</blockquote>
+<ul>
+<li>泛型必须是引用类型，不能是基本类型</li>
+<li>泛型通过类型擦除实现</li>
+</ul>
+<p>占位符：?</p>
+<p>TODO lambda stream 流式计算 详解</p>
+<h2 id="判断奇偶"><a class="markdownIt-Anchor" href="#判断奇偶"></a> 判断奇偶</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">num &amp; <span class="number">1</span> == <span class="number">0</span> 则为奇数</span><br></pre></td></tr></table></figure>
+<h2 id="十进制数转-char"><a class="markdownIt-Anchor" href="#十进制数转-char"></a> 十进制数转 char</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> <span class="variable">t</span> <span class="operator">=</span> Character.forDigit(i, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="collection-转-list的方法"><a class="markdownIt-Anchor" href="#collection-转-list的方法"></a> Collection 转 List的方法</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Collection&lt;T&gt; collection = map.values();</span><br><span class="line">List&lt;T&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;(collection);</span><br></pre></td></tr></table></figure>
+<h2 id="map-遍历方法"><a class="markdownIt-Anchor" href="#map-遍历方法"></a> Map 遍历方法</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (Map.Entry&lt;Key.class, Value.class&gt; entry : map.entrySet()) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;key= &quot;</span> + entry.getKey() + <span class="string">&quot; and value= &quot;</span> + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>Java 算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LLM应用开发</title>
+    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
+<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
+<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
+<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
+<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
+<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
+<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型     更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
+<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
+<p>离线私有数据不能直接作为语料库训练模型，因此 LLM 无法直接返回有关私有数据的响应</p>
+<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
+<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
+<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
+<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
+<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
+<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
+<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
+<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
+]]></content>
+      <categories>
+        <category>大语言模型应用开发</category>
+      </categories>
+      <tags>
+        <tag>Langchain</tag>
+        <tag>向量数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CompletableFuture 和 CompletableFuture实践</title>
+    <url>/JUC-ThreadPool/</url>
+    <content><![CDATA[<p>池化思想，维护一个池子，减少创建/销毁的开销，合理分配系统资源，但会增加调度开销。<a href="https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html">参考美团技术博客</a>：底层设计思想、业务实现</p>
+<h1 id="threadpoolexecutor-线程池实现类"><a class="markdownIt-Anchor" href="#threadpoolexecutor-线程池实现类"></a> ThreadPoolExecutor 线程池实现类</h1>
+<h2 id="执行流程图"><a class="markdownIt-Anchor" href="#执行流程图"></a> 执行流程图</h2>
+
+<p><strong>线程池生命周期</strong></p>
+<img data-src="/JUC-ThreadPool/582d1606d57ff99aa0e5f8fc59c7819329028.png" class="" title="图3 线程池生命周期">
+<p><strong>任务调度流程</strong></p>
+<p>所有任务的调度都是由execute方法完成的，这部分完成的工作是：检查现在线程池的运行状态、运行线程数、运行策略，决定接下来执行的流程，是直接申请线程执行，或是缓冲到队列中执行，亦或是直接拒绝该任务。其执行过程如下：</p>
+<ol>
+<li>首先检测线程池运行状态，如果不是RUNNING，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。</li>
+<li>如果workerCount &lt; corePoolSize，则创建并启动一个线程来执行新提交的任务。</li>
+<li>如果workerCount &gt;= corePoolSize，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。</li>
+<li>如果workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。</li>
+<li>如果workerCount &gt;= maximumPoolSize，并且线程池内的阻塞队列已满, 则根据<u>拒绝策略</u>来处理该任务, 默认的处理方式是直接抛异常。</li>
+</ol>
+<img data-src="/JUC-ThreadPool/31bad766983e212431077ca8da92762050214.png" class="" title="图4 任务调度流程">
+<h2 id="底层结构"><a class="markdownIt-Anchor" href="#底层结构"></a> 底层结构</h2>
+<p><strong>ThreadPoolExecutor 构造函数</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="type">int</span> corePoolSize,  //线程池的核心线程数量</span></span><br><span class="line"><span class="params">    <span class="type">int</span> maximumPoolSize,  //线程池的最大线程数</span></span><br><span class="line"><span class="params">    <span class="type">long</span> keepAliveTime,  //当线程数大于核心线程数时，多余的空闲线程存活的最长时间</span></span><br><span class="line"><span class="params">    TimeUnit unit,  //时间单位</span></span><br><span class="line"><span class="params">    BlockingQueue&lt;Runnable&gt; workQueue,  //任务队列，用来储存等待执行任务的队列</span></span><br><span class="line"><span class="params">    ThreadFactory threadFactory,  //线程工厂，用来创建线程，一般默认即可</span></span><br><span class="line"><span class="params">    RejectedExecutionHandler handler  //拒绝策略，当提交的任务过多而不能及时处理时，我们可以定制策略来处理任务</span></span><br><span class="line"><span class="params">)</span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>阻塞队列 <a href="https://juejin.cn/post/6999798721269465102">BlockingQueue</a></strong></p>
+<p>BlockingQueue 不同于普通的 Queue 的区别主要是：</p>
+<ul>
+<li>通过在入队和出队时进行加锁，保证了队列线程安全</li>
+<li>支持阻塞的入队和出队方法：当队列满时，会阻塞入队的线程，直到队列不满；当队列为空时，会阻塞出队的线程，直到队列中有元素。</li>
+</ul>
+<p>底层实现</p>
+<ul>
+<li>采用 ReentrantLock 同步队列实现加锁解锁、阻塞释放</li>
+<li>队列为空或已满的情况，采用条件队列 Condition</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>阻塞队列</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArrayBlockingQueue</td>
+<td>有界队列</td>
+</tr>
+<tr>
+<td>LinkedBlockingQueue</td>
+<td>不设置大小的话，默认无界队列</td>
+</tr>
+</tbody>
+</table>
+<p><strong>创建线程工厂类 <u>ThreadFactory</u></strong></p>
+<blockquote>
+<p>参数可以设定线程名</p>
+</blockquote>
+<ul>
+<li>java rt包：原生 ThreadFactory 类</li>
+<li>hutool： ThreadFactoryBuilder</li>
+<li>google guava.jar： ThreadFactoryBuilder</li>
+</ul>
+<p>自定义线程工厂</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">testThreadPoolFactory</span> <span class="keyword">implements</span> <span class="title class_">ThreadFactory</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">AtomicInteger</span> <span class="variable">threadIdx</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String threadNamePrefix;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">testThreadPoolFactory</span><span class="params">(String Prefix)</span> &#123;</span><br><span class="line">        threadNamePrefix = Prefix;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Thread <span class="title function_">newThread</span><span class="params">(Runnable r)</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(r);</span><br><span class="line">        thread.setName(threadNamePrefix + <span class="string">&quot;-xxljob-&quot;</span> + threadIdx.getAndIncrement());</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>任务拒绝策略</strong></p>
+<blockquote>
+<p>在使用线程池并且使用有界队列的时候，如果队列满了，任务添加到线程池的时候就会拒绝，具体的拒绝策略可以设定</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>拒绝策略</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AbortPolicy</td>
+<td>线程池队列满了丢掉这个任务并且抛出RejectedExecutionException异常</td>
+</tr>
+<tr>
+<td>DiscardPolicy</td>
+<td>如果线程池队列满了，会直接丢掉这个任务并且不会有任何异常</td>
+</tr>
+<tr>
+<td>DiscardOldestPolicy</td>
+<td>如果队列满了，会将最早进入队列的任务删掉腾出空间，再尝试加入队列</td>
+</tr>
+<tr>
+<td>CallerRunsPolicy</td>
+<td>如果添加到线程池失败，那么主线程会自己去执行该任务</td>
+</tr>
+</tbody>
+</table>
+<p>自定义拒绝策略</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyRejectPolicy</span> <span class="keyword">implements</span> <span class="title class_">RejectedExecutionHandler</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> &#123;</span><br><span class="line">        <span class="comment">//Sender是我的Runnable类，里面有message字段</span></span><br><span class="line">        <span class="keyword">if</span> (r <span class="keyword">instanceof</span> Sender) &#123;</span><br><span class="line">            <span class="type">Sender</span> <span class="variable">sender</span> <span class="operator">=</span> (Sender) r;</span><br><span class="line">            <span class="comment">//直接打印</span></span><br><span class="line">            System.out.println(sender.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="线程池实现接口"><a class="markdownIt-Anchor" href="#线程池实现接口"></a> 线程池实现接口</h2>
+<img data-src="/JUC-ThreadPool/912883e51327e0c7a9d753d11896326511272.png" class="" title="图1 ThreadPoolExecutor UML类图">
+<p>ExecutorService接口：（1）扩充执行任务的能力，补充可以为<strong>一个或一批异步任务</strong>生成 Future 的方法；（2）提供了<strong>管控线程池</strong>的方法，比如停止线程池的运行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ExecutorService</span> <span class="keyword">extends</span> <span class="title class_">Executor</span> &#123;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//不再接受新任务，待所有任务执行完毕后关闭 ExecutorService  </span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">shutdown</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//不再接受新任务，直接关闭 ExecutorService，返回没有执行的任务列表  </span></span><br><span class="line">    List&lt;Runnable&gt; <span class="title function_">shutdownNow</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//判断ExecutorService是否关闭  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isShutdown</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//判断ExecutorService是否终止  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isTerminated</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//等待ExecutorService到达终止状态  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">awaitTermination</span><span class="params">(<span class="type">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException;  </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//当task执行成功的时候future.get()返回执行结果</span></span><br><span class="line">    &lt;T&gt; Future&lt;T&gt; <span class="title function_">submit</span><span class="params">(Callable&lt;T&gt; task)</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//当task执行成功的时候future.get()返回result  </span></span><br><span class="line">    &lt;T&gt; Future&lt;T&gt; <span class="title function_">submit</span><span class="params">(Runnable task, T result)</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//当task执行成功的时候future.get()返回null  </span></span><br><span class="line">    Future&lt;?&gt; submit(Runnable task);  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//批量提交任务并获得他们的future，Task列表与Future列表一一对应  </span></span><br><span class="line">    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; <span class="title function_">invokeAll</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</span> <span class="keyword">throws</span> InterruptedException;  </span><br><span class="line"> </span><br><span class="line">    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; <span class="title function_">invokeAll</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, <span class="type">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//批量提交任务并获得一个已经成功执行的任务的结果  </span></span><br><span class="line">    &lt;T&gt; T <span class="title function_">invokeAny</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</span> <span class="keyword">throws</span> InterruptedException, ExecutionException;  </span><br><span class="line">  </span><br><span class="line">    &lt;T&gt; T <span class="title function_">invokeAny</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, <span class="type">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException, ExecutionException, TimeoutException;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+<p>顶层接口 Executor ：<mark>将任务提交和任务执行进行解耦</mark>。用户无需关注如何创建线程，如何调度线程来执行任务，用户只需提供Runnable对象，将任务的运行逻辑提交到执行器(Executor)中，由Executor框架完成线程的调配和任务的执行部分。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Executor</span> &#123;</span><br><span class="line">    <span class="comment">// 在未来的某个时间执行 command （方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(Runnable command)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="executors-线程池工厂类"><a class="markdownIt-Anchor" href="#executors-线程池工厂类"></a> Executors 线程池工厂类</h1>
+<p><strong>FixedThreadPool 固定线程数</strong></p>
+<p>运行中的 FixedThreadPool（未执行 shutdown()或 shutdownNow()）不会拒绝任务，在任务比较多的时候会导致 OOM（内存溢出）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title function_">newFixedThreadPool</span><span class="params">(<span class="type">int</span> nThreads)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img data-src="/JUC-ThreadPool/91ghx5ru0n.jpeg" class="" title="img">
+<p><strong>SingleThreadExecutor 只有一个线程的线程池</strong>（FixedThreadPool  的特例）</p>
+<p><strong>CachedThreadPool 根据需要创建新线程的线程池</strong></p>
+<img data-src="/JUC-ThreadPool/ongsgtlllq.jpeg" class="" title="img">
+<h1 id="completablefuture-异步执行结果类"><a class="markdownIt-Anchor" href="#completablefuture-异步执行结果类"></a> CompletableFuture 异步执行结果类</h1>
+<blockquote>
+<p>RxJava、Reactor 比 CompletableFuture 增加了操作融合、延迟执行、回压等特性</p>
+</blockquote>
+<p>CompletableFuture实现 Future、CompletionStage 接口。</p>
+<p>Future表示异步<strong>计算的结果</strong>，CompletionStage用于表示异步执行过程中的一个<strong>步骤</strong>（Stage），这个步骤可能是由另外一个CompletionStage触发的，随着当前步骤的完成，也可能会触发其他一系列CompletionStage的执行。从而我们可以根据实际业务对这些步骤进行多样化的编排组合，CompletionStage接口正是定义了这样的能力，我们可以通过其提供的thenAppy、thenCompose等函数式编程方法来组合编排这些步骤。</p>
+<h2 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> 注意事项</h2>
+<ul>
+<li>Future 需要获取返回值，才能获取异常信息（即线程需要实现 <code>Callable</code> 接口，而 <code>Runnable</code> 接口创建线程不会返回结果或抛出检查异常）</li>
+<li>CompletableFuture 的 get() 方法是阻塞等待的</li>
+<li>异步调用强制传自定义线程池，做好线程池隔离</li>
+<li>自定义线程池时，仔细考虑延迟队列满时，应采取什么拒绝策略</li>
+</ul>
+<p><strong>Q1</strong>：程序执行在哪个线程上？</p>
+<p><strong>A1</strong>：</p>
+<p>同步方法（即不带Async后缀的方法）有两种情况。</p>
+<ul>
+<li>
+<p>如果注册时被依赖的操作已经执行完成，则直接由当前线程执行。</p>
+</li>
+<li>
+<p>如果注册时被依赖的操作还未执行完，则由回调线程（按照当前 CF 运行情况区分）执行。</p>
+</li>
+</ul>
+<p>异步方法（即带Async后缀的方法）：可以选择是否传递线程池参数Executor运行在指定线程池中；当不传递Executor时，会使用ForkJoinPool中的共用线程池CommonPool</p>
+<p><strong>Q2</strong>：同步回调和异步回调的区别</p>
+<p><strong>A2</strong>：</p>
+<p>同步回调：把函数 b 传递给函数 a。执行 a 的时候，回调了 b，a 要一直等到 b 执行完才能继续执行；</p>
+<p>异步回调：把函数 b 传递给函数 a。执行 a 的时候，回调了 b，然后 a 就继续往后执行，b 独自执行。</p>
+<h3 id="线程池循环引用会导致死锁"><a class="markdownIt-Anchor" href="#线程池循环引用会导致死锁"></a> 线程池循环引用会导致死锁</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">doGet</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">ExecutorService</span> <span class="variable">threadPool1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">0L</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> <span class="title class_">ArrayBlockingQueue</span>&lt;&gt;(<span class="number">100</span>));</span><br><span class="line">  <span class="type">CompletableFuture</span> <span class="variable">cf1</span> <span class="operator">=</span> CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  <span class="comment">//do sth</span></span><br><span class="line">    <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;child&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;child&quot;</span>;</span><br><span class="line">      &#125;, threadPool1).join();<span class="comment">//子任务</span></span><br><span class="line">    &#125;, threadPool1);</span><br><span class="line">  <span class="keyword">return</span> cf1.join();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>threadPool1 大小为 10，当同一时刻有 10 个请求到达，则 threadPool1 被打满，子任务请求线程时进入阻塞队列排队，但是父任务的完成又依赖于子任务，这时由于子任务得不到线程，父任务无法完成。主线程执行 cf1.join() 进入阻塞状态，并且永远无法恢复。</p>
+<h3 id="异步rpc调用注意不要阻塞io线程池"><a class="markdownIt-Anchor" href="#异步rpc调用注意不要阻塞io线程池"></a> 异步RPC调用注意不要阻塞IO线程池</h3>
+<p>如果是使用基于 NIO（比如Netty）的异步 RPC，则返回结果是由 IO 线程负责设置的，即<mark>回调方法由 IO 线程触发</mark>，CompletableFuture 同步回调（如thenApply、thenAccept等无Async后缀的方法）如果依赖的异步 RPC 调用的返回结果，那么这些<mark>同步回调将运行在IO线程</mark>上，而整个服务只有一个IO线程池，这时需要<mark>保证同步回调中不能有阻塞等耗时过长的逻辑</mark>，否则在这些逻辑执行完成前，IO线程将一直被占用，影响整个服务的响应。</p>
+<h2 id="实际使用场景"><a class="markdownIt-Anchor" href="#实际使用场景"></a> 实际使用场景</h2>
+<blockquote>
+<p><a href="https://tech.meituan.com/2022/05/12/principles-and-practices-of-completablefuture.html">美团技术博客</a></p>
+</blockquote>
+<p>服务端和客户端信息交换频繁，提升系统吞吐量</p>
+<p>I/O密集型任务，对内<strong>调度</strong>各个下游服务获取数据进行<strong>聚合</strong></p>
+<p>对业务流程进行编排，降低任务依赖导致的阻塞</p>
+<p>避免 guava 的 ListenableFuture 回调所导致的回调地狱</p>
+<h3 id="零依赖-构造方法"><a class="markdownIt-Anchor" href="#零依赖-构造方法"></a> 零依赖-构造方法</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">ExecutorService</span> <span class="variable">executor</span> <span class="operator">=</span> Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line"><span class="comment">//1、使用runAsync或supplyAsync发起异步调用</span></span><br><span class="line">CompletableFuture&lt;String&gt; cf1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result1&quot;</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line"><span class="comment">//2、CompletableFuture.completedFuture()直接创建一个已完成状态的CompletableFuture</span></span><br><span class="line">CompletableFuture&lt;String&gt; cf2 = CompletableFuture.completedFuture(<span class="string">&quot;result2&quot;</span>);</span><br><span class="line"><span class="comment">//3、先初始化一个未完成的CompletableFuture，然后通过complete()、completeExceptionally()，完成该CompletableFuture</span></span><br><span class="line">CompletableFuture&lt;String&gt; cf = <span class="keyword">new</span> <span class="title class_">CompletableFuture</span>&lt;&gt;();</span><br><span class="line">cf.complete(<span class="string">&quot;success&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="一元依赖-异步回调"><a class="markdownIt-Anchor" href="#一元依赖-异步回调"></a> 一元依赖-异步回调</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; cf3 = cf1.thenApply(result1 -&gt; &#123;</span><br><span class="line">  <span class="comment">//result1为CF1的结果</span></span><br><span class="line">  <span class="comment">//......</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result3&quot;</span>;</span><br><span class="line">&#125;);</span><br><span class="line">CompletableFuture&lt;String&gt; cf5 = cf2.thenApply(result2 -&gt; &#123;</span><br><span class="line">  <span class="comment">//result2为CF2的结果</span></span><br><span class="line">  <span class="comment">//......</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result5&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="二元依赖-多任务"><a class="markdownIt-Anchor" href="#二元依赖-多任务"></a> 二元依赖-多任务</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; cf4 = cf1.thenCombine(cf2, (result1, result2) -&gt; &#123;</span><br><span class="line">  <span class="comment">//result1和result2分别为cf1和cf2的结果</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result4&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="多元依赖"><a class="markdownIt-Anchor" href="#多元依赖"></a> 多元依赖</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; cf6 = CompletableFuture.allOf(cf3, cf4, cf5);</span><br><span class="line">CompletableFuture&lt;String&gt; result = cf6.thenApply(v -&gt; &#123;</span><br><span class="line">  <span class="comment">//这里的join并不会阻塞，因为传给thenApply的函数是在CF3、CF4、CF5全部完成时，才会执行 。</span></span><br><span class="line">  result3 = cf3.join();</span><br><span class="line">  result4 = cf4.join();</span><br><span class="line">  result5 = cf5.join();</span><br><span class="line">  <span class="comment">//根据result3、result4、result5组装最终result;</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="使用方法"><a class="markdownIt-Anchor" href="#使用方法"></a> 使用方法</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/647743286">方法汇总</a></p>
+<h3 id="构造方法"><a class="markdownIt-Anchor" href="#构造方法"></a> 构造方法</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 使用默认内置线程池ForkJoinPool.commonPool()，根据supplier构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span>  </span><br><span class="line">    </span><br><span class="line"><span class="comment">// 自定义线程池，根据supplier构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier, Executor executor)</span>  </span><br><span class="line">    </span><br><span class="line"><span class="comment">// 使用默认内置线程池ForkJoinPool.commonPool()，根据runnable构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable)</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">// 自定义线程池，根据runnable构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable, Executor executor)</span>  </span><br></pre></td></tr></table></figure>
+<h3 id="获取结果方法"><a class="markdownIt-Anchor" href="#获取结果方法"></a> 获取结果方法</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> T <span class="title function_">get</span><span class="params">()</span>  </span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">get</span><span class="params">(<span class="type">long</span> timeout, TimeUnit unit)</span>  </span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">getNow</span><span class="params">(T valueIfAbsent)</span>  </span><br><span class="line"><span class="comment">// 不抛出异常 </span></span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">join</span><span class="params">()</span>  </span><br></pre></td></tr></table></figure>
+<h3 id="异步回调方法"><a class="markdownIt-Anchor" href="#异步回调方法"></a> <strong>异步回调方法</strong></h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 执行第二个任务时，则第二个任务和第一个任务是共用同一个线程池</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenRunAsync</span><span class="params">(Runnable action)</span>;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 执行第二个任务时，使用给定的线程池</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenRunAsync</span><span class="params">(Runnable action, Executor executor)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第二个回调方法任务，会将该任务的执行结果，作为入参，传递到回调方法中，但是回调方法是没有返回值的</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenAcceptAsync</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> T&gt; action)</span>;</span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenAcceptAsync</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> T&gt; action, Executor executor)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行第二个回调方法任务，会将第一个任务的执行结果，作为入参，传递到回调方法中，并且回调方法是有返回值的</span></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenApplyAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T,? extends U&gt; fn)</span>;</span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenApplyAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T,? extends U&gt; fn, Executor executor)</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="异常处理方法"><a class="markdownIt-Anchor" href="#异常处理方法"></a> <strong>异常处理</strong>方法</h3>
+<p>由于异步执行的任务在其他线程上执行，而异常信息存储在线程栈中，因此当前线程除非阻塞等待返回结果，否则无法通过try\catch捕获异常。CompletableFuture提供了异常捕获回调exceptionally，相当于同步调用中的try\catch。使用方法如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> WmOrderAdditionInfoThriftService wmOrderAdditionInfoThriftService;<span class="comment">//内部接口</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Integer&gt; <span class="title function_">getCancelTypeAsync</span><span class="params">(<span class="type">long</span> orderId)</span> &#123;</span><br><span class="line">    CompletableFuture&lt;WmOrderOpRemarkResult&gt; remarkResultFuture = wmOrderAdditionInfoThriftService.findOrderCancelledRemarkByOrderIdAsync(orderId);<span class="comment">//业务方法，内部会发起异步rpc调用</span></span><br><span class="line">    <span class="keyword">return</span> remarkResultFuture</span><br><span class="line">          .thenApply(result -&gt; &#123;<span class="comment">//这里增加了一个回调方法thenApply，如果发生异常thenApply内部会通过new CompletionException(throwable) 对异常进行包装</span></span><br><span class="line">      <span class="comment">//这里是一些业务操作</span></span><br><span class="line">        &#125;)</span><br><span class="line">      .exceptionally(err -&gt; &#123;<span class="comment">//通过exceptionally 捕获异常，这里的err已经被thenApply包装过，因此需要通过Throwable.getCause()提取异常</span></span><br><span class="line">         log.error(<span class="string">&quot;WmOrderRemarkService.getCancelTypeAsync Exception orderId=&#123;&#125;&quot;</span>, orderId, ExceptionUtils.extractRealException(err));</span><br><span class="line">         <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">      &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ExceptionUtils</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Throwable <span class="title function_">extractRealException</span><span class="params">(Throwable throwable)</span> &#123;</span><br><span class="line">          <span class="comment">//这里判断异常类型是否为CompletionException、ExecutionException，如果是则进行提取，否则直接返回。</span></span><br><span class="line">        <span class="keyword">if</span> (throwable <span class="keyword">instanceof</span> CompletionException || throwable <span class="keyword">instanceof</span> ExecutionException) &#123;</span><br><span class="line">            <span class="keyword">if</span> (throwable.getCause() != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> throwable.getCause();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> throwable;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当 CompletableFuture 的任务不论是正常完成还是出现异常它都会调用 <code>whenComplete</code> 这回调函数。</p>
+<ul>
+<li>正常完成：<code>whenComplete</code> 返回结果和上级任务一致，异常为 null；</li>
+<li>出现异常：<code>whenComplete</code> 返回结果为 null，异常为上级任务的异常；</li>
+</ul>
+<h3 id="多任务组合回调方法"><a class="markdownIt-Anchor" href="#多任务组合回调方法"></a> <strong>多任务组合回调方法</strong></h3>
+<p>thenCompose 可以用于组合多个CompletableFuture，将前一个任务的返回结果作为下一个任务的参数，它们之间存在着<strong>业务逻辑</strong>上的先后顺序，前后线程执行是同步的，前面阻塞后面不会执行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenCompose</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span>;</span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenComposeAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span> ;</span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenComposeAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn, Executor executor)</span> ;</span><br></pre></td></tr></table></figure>
+<p>thenCombine 第一个入参 CompletionStage 是异步的，合并结果的BiFunction是同步的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U,V&gt; CompletionStage&lt;V&gt; <span class="title function_">thenCombine</span> <span class="params">(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? <span class="built_in">super</span> T,? <span class="built_in">super</span> U,? extends V&gt; fn)</span>;</span><br></pre></td></tr></table></figure>
+<p>applyToEither方法返回一个新的CompletionStage，当此阶段或另一个给定阶段正常完成时，将使用相应的结果作为所提供函数的参数来执行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletionStage&lt;U&gt; <span class="title function_">applyToEither</span> <span class="params">(CompletionStage&lt;? extends T&gt; other, Function&lt;? <span class="built_in">super</span> T, U&gt; fn)</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="底层代码"><a class="markdownIt-Anchor" href="#底层代码"></a> 底层代码</h2>
+<img data-src="/JUC-ThreadPool/82aa288ea62d74c03afcd2308d302b6910425.png" class="" title="图10 CF基本结构">
+<p>result 用于存储当前CF的结果，stack（Completion）表示当前CF完成后需要触发的依赖动作（Dependency Actions），去触发依赖它的CF的计算，依赖动作可以有多个（表示有多个依赖它的CF），以栈（Treiber stack）的形式存储，stack表示栈顶元素。</p>
+<p><strong>观察者模式</strong>：依赖动作（Dependency Action）都封装在一个单独Completion子类中。CompletableFuture 中的每个方法都对应了图中的一个 Completion 的子类，Completion本身是<strong>观察者</strong>的基类。</p>
+<img data-src="/JUC-ThreadPool/5a889b90d0f2c2a0f6a4f294b9094194112106.png" class="" title="图11 CF类图">
+<p>一元依赖中的 thenApply 为例，举例“观察者模式”的设计思想</p>
+<img data-src="/JUC-ThreadPool/f45b271b656f3ae243875fcb2af36a1141224.png" class="" title="图12 thenApply简图">
+<p><strong>被观察者</strong></p>
+<ol>
+<li>每个CompletableFuture都可以被看作一个被观察者，其内部有一个Completion类型的链表成员变量stack，用来存储注册到其中的所有观察者。当被观察者执行完成后会弹栈stack属性，依次通知注册到其中的观察者。上面例子中步骤fn2就是作为观察者被封装在UniApply中。</li>
+<li>被观察者CF中的result属性，用来存储返回结果数据。这里可能是一次RPC调用的返回值，也可能是任意对象，在上面的例子中对应步骤fn1的执行结果。</li>
+</ol>
+<p><strong>观察者</strong></p>
+<p>CompletableFuture支持很多回调方法，例如thenAccept、thenApply、exceptionally等，这些方法接收一个函数类型的参数 f，生成一个 Completion 类型的对象（即观察者），并将入参函数 f 赋值给 Completion 的成员变量 fn，然后检查当前 CF 是否已处于完成状态（即result != null），如果已完成直接触发 fn，否则将观察者 Completion 加入到 CF 的观察者链 stack 中，再次尝试触发，如果被观察者未执行完则其执行完毕之后通知触发。</p>
+<ol>
+<li>观察者中的 dep 属性：指向其对应的 CompletableFuture，在上面的例子中 dep 指向 CF2。</li>
+<li>观察者中的 src 属性：指向其依赖的 CompletableFuture，在上面的例子中 src 指向 CF1。</li>
+<li>观察者 Completion 中的 fn 属性：用来存储具体的等待被回调的函数。这里需要注意的是<u>不同的回调方法</u>（thenAccept、thenApply、exceptionally等）<u>接收的函数类型也不同</u>，即fn的类型有很多种，在上面的例子中fn指向fn2。</li>
+</ol>
+<p><strong>Q1</strong>：为什么要在入栈前和入栈后都检查<code>result == null</code></p>
+<p><strong>A1</strong>：因为查 result 和判断 result==null 是两个操作，CompletableFuture 没有对其加锁，若被观察者在这两个操作数之间完成，会导致观察者得不到通知</p>
+<p><strong>Q2</strong>：当依赖多个CF时，观察者会被压入所有依赖的CF的栈中，每个CF完成的时候都会进行，那么会不会导致一个操作被多次执行呢 ？如下图所示，即当CF1、CF2同时完成时，如何避免CF3被多次触发。</p>
+<img data-src="/JUC-ThreadPool/316ff338f8dab2826a5d32dfb75ffede4158.png" class="" title="图15 多次触发">
+<p><strong>A2</strong>：CompletableFuture的实现是这样解决该问题的：观察者在执行之前会先通过CAS操作设置一个状态位，将status由0改为1。如果观察者已经执行过了，那么CAS操作将会失败，取消执行。</p>
+<p>CompletableFuture 处理并行问题的整体流程图：</p>
+<img data-src="/JUC-ThreadPool/606323a07fb7e31cb91f46c879d99b8d735272.gif" class="" title="图16 完整流程">
+<p><strong>二元依赖</strong></p>
+<p>thenCombine 操作表示依赖两个 CompletableFuture。其观察者实现类为 BiApply，如上图所示，BiApply 通过 src 和 snd 两个属性关联被依赖的两个 CF，fn 属性的类型为 BiFunction。与单个依赖不同的是，在依赖的CF未完成的情况下，thenCombine 会尝试将 BiApply 压入这两个被依赖的 CF 的栈中，每个被依赖的 CF 成时都会尝试触发观察者 BiApply，BiApply 会检查两个依赖是否都完成，如果完成则开始执行。这里为了解决重复触发的问题，同样用的是上一章节提到的 CAS 操作，执行时会先通过 CAS 设置状态位，避免重复触发。</p>
+<img data-src="/JUC-ThreadPool/b969e49a7eedbd52b014f86e86dcd3fc49634.png" class="" title="图17 二元依赖数据结构">
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 状态位 Status 定义于 ForkJoinTask 类中</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Completion</span> <span class="keyword">extends</span> <span class="title class_">ForkJoinTask</span>&lt;Void&gt; <span class="keyword">implements</span> <span class="title class_">Runnable</span>, AsynchronousCompletionTask&#123;...&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">ForkJoinTask</span>&lt;V&gt; <span class="keyword">implements</span> <span class="title class_">Future</span>&lt;V&gt;&#123;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> status;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>多元依赖</strong></p>
+<p>依赖多个CompletableFuture的回调方法包括<code>allOf</code>、<code>anyOf</code>，区别在于<code>allOf</code>观察者实现类为BiRelay，需要所有被依赖的CF完成后才会执行回调；而<code>anyOf</code>观察者实现类为OrRelay，任意一个被依赖的CF完成后就会触发。二者的实现方式都是将多个被依赖的CF构建成一棵平衡二叉树，执行结果层层通知，直到根节点，触发回调监听。</p>
+<img data-src="/JUC-ThreadPool/cef5469b5ec2e67ecca1b99a07260e4e22003.png" class="" title="图18 多元依赖结构树">
+]]></content>
+      <categories>
+        <category>Java学习</category>
+      </categories>
+      <tags>
+        <tag>Java并发</tag>
+        <tag>Java线程池</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RAG架构和Langchain框架</title>
+    <url>/RAG%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，主要还是学习检索增强生成（RAG架构）方向</p>
+<h1 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h1>
+<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP 任务的检索增强生成</a>中提出的新思想。LLM 通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的 RAG 应用程序有两个主要组件：</p>
+<ul>
+<li>索引：用于引入源数据并对其进行<strong>索引</strong>的管道，通常离线运行。
+<ul>
+<li>加载：将数据库中的大段文本读入系统</li>
+<li>拆分：因为大块数据更难搜索，并且不适合模型的有限上下文窗口，因此需要拆分数据。</li>
+<li>存储：采用向量数据库和索引存储数据</li>
+</ul>
+</li>
+<li>检索和生成：实际的 RAG 链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
+<ul>
+<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前 k 个数据。</li>
+<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型 (LLM) 中，以生成所需的输出。</li>
+</ul>
+</li>
+</ul>
+<p>从原始数据到答案最常见的完整序列如下所示：</p>
+<h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
+<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：聊天历史 Memory、提示工程 Prompt、输出解析 Parase</p>
+<h2 id="chain模块"><a class="markdownIt-Anchor" href="#chain模块"></a> Chain模块</h2>
+<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、内存和回调等功能；</p>
+<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
+<p>Chain支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
+<p>模块化设计也促进了代码维护、扩展和重用；</p>
+]]></content>
+      <categories>
+        <category>大语言模型应用开发</category>
+      </categories>
+      <tags>
+        <tag>RAG架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo 使用指南</title>
+    <url>/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://hexo.io/docs/">官方文档</a></p>
+</blockquote>
+<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>快速部署</td>
+<td>hexo g -d</td>
+</tr>
+<tr>
+<td>清除缓存</td>
+<td>hexo clean</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>hexo s</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>hexo d</td>
+</tr>
+<tr>
+<td>生成静态页面</td>
+<td>hexo generate</td>
+</tr>
+</tbody>
+</table>
+<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
+<p>初始化项目结构</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<p>新增标签页，设置属性（type: “tags”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>新增分类，设置属性（type: “categories”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<p>配置 next 主题设置</p>
+<ul>
+<li>设置 menu 菜单栏</li>
+<li>打开 code 代码复制</li>
+</ul>
+<p>Debug</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
+<p><strong>Git 上传插件</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p><strong>latex 公式</strong></p>
+<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p><strong>本地图片</strong></p>
+<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
+<p><strong>Markdown 文字高亮</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
+<p>_config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
+<p><strong>添加Sitemap</strong></p>
+<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
+<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
+<p><strong>改 blockquote 颜色</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
+<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
+<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
+<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
+<blockquote>
+<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
+</blockquote>
+<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>实习笔试题汇总</title>
+    <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<h1 id="2024416-携程笔试"><a class="markdownIt-Anchor" href="#2024416-携程笔试"></a> 2024.4.16 携程笔试</h1>
+<p>前两道签到题，后面一个半小时纯折磨</p>
+<p>第三题</p>
+<p>游游拿到了一个数组，她每次操作可以将相邻的两个素数元素进山314行合并，合并后的新数为原来的两个数之和，并删除原来两个数。游游希望最终数组的元素数量尽可能少，你能帮帮她吗?</p>
+<blockquote>
+<p>第一行输入一个正整数n，代表数组的大小。<br />
+第二行输入几个正整数a_i，代表数组的元素<br />
+1 ≤ n &lt; 10^5<br />
+1 ≤ a_i &lt; 10^6</p>
+</blockquote>
+<p>返回合并结束后的元素的数量</p>
+<p>**题目分析：**素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了 2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
+<p>因此只要先把所有 2 和素数合并，后续只需要判断还有多少相邻的素数即可。</p>
+<p>做题的时候没有考虑到 <code>7 2 2 3</code> 这种情况，即素数和 2 合并完的结果如果是素数，还需要和判断他的左边还有没有 2，有的话还要合并，即代码中的 <code>i--</code> 部分。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PrimeMerge</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">        List&lt;Integer&gt; numbers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取数组元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            numbers.add(scanner.nextInt());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并素数，优先处理2</span></span><br><span class="line">        mergePrimesWithPriorityToTwo(numbers);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出最终数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : numbers) &#123;</span><br><span class="line">            System.out.print(num + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查一个数是否是素数的辅助函数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPrime</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (num &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i * i &lt;= num; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num % i == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">mergePrimesWithPriorityToTwo</span><span class="params">(List&lt;Integer&gt; numbers)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并2与其相邻的素数，得到一个新的素数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size(); ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers.get(i) == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="comment">// 检查左边是否有素数可以合并</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    numbers.set(i - <span class="number">1</span>, numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>);</span><br><span class="line">                    numbers.remove(i);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; numbers.size() - <span class="number">1</span> &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 检查右边是否有素数可以合并</span></span><br><span class="line">                    numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                    numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 没有可以合并的素数，继续下一个数</span></span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并剩余的素数对</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size() - <span class="number">1</span>; ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isPrime(numbers.get(i)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>))) &#123;</span><br><span class="line">                numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第四题</p>
+<p>定义一棵树的直径为：任意两个节点的距离的最大值。现在定义f(i)：对i号节点上再连接一个新的子叶节点后，树的直径长度。现在要求f(1)到f(n)的值。</p>
+<p>输入描述：第一行输入一个正整数n，代表树的节点数量。</p>
+<p>接下来的n-1行，每行输入两个正整数u和v，代表u号节点和v号节点之间有一条长度为1的边连接。</p>
+<p>变量的范围：1≤n≤10的五次方，1≤u，v≤n。</p>
+<p><strong>题目分析：</strong> 树的直径引出树形 dp 算法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    List&lt;TreeNode&gt; children;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TreeNode</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">        children = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeDiameter</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] f; <span class="comment">// 存储每个节点的最大直径</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt(); <span class="comment">// 树的节点数量</span></span><br><span class="line"></span><br><span class="line">        f = <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        TreeNode[] nodes = <span class="keyword">new</span> <span class="title class_">TreeNode</span>[n + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            nodes[i] = <span class="keyword">new</span> <span class="title class_">TreeNode</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 连接节点之间的关系</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">u</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            nodes[u].children.add(nodes[v]);</span><br><span class="line">            nodes[v].children.add(nodes[u]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历每个节点，添加一个新的子叶节点，计算f(i)</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="comment">// 添加新的子叶节点</span></span><br><span class="line">            nodes[i].children.add(<span class="keyword">new</span> <span class="title class_">TreeNode</span>(-<span class="number">1</span>));</span><br><span class="line">            <span class="comment">// 计算当前最大直径</span></span><br><span class="line">            dfs(nodes[i], <span class="literal">null</span>, i);</span><br><span class="line">            <span class="comment">// 删除添加的子叶节点</span></span><br><span class="line">            nodes[i].children.remove(nodes[i].children.size()-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            System.out.print(f[i] + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 递归计算以当前节点为根的子树的直径</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, TreeNode parent, <span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth1</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 最大深度</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth2</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 次大深度</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历当前节点的子节点</span></span><br><span class="line">        <span class="keyword">for</span> (TreeNode child : node.children) &#123;</span><br><span class="line">            <span class="keyword">if</span> (child == parent) <span class="keyword">continue</span>; <span class="comment">// 不访问父节点，防止死循环</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">childDepth</span> <span class="operator">=</span> dfs(child, node, i) + <span class="number">1</span>; <span class="comment">// 递归计算子节点的深度</span></span><br><span class="line">            <span class="keyword">if</span> (childDepth &gt; maxDepth1) &#123;</span><br><span class="line">                maxDepth2 = maxDepth1;</span><br><span class="line">                maxDepth1 = childDepth;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDepth &gt; maxDepth2) &#123;</span><br><span class="line">                maxDepth2 = childDepth;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新当前状态的最大直径</span></span><br><span class="line">        f[i] = Math.max(f[i], maxDepth1 + maxDepth2);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxDepth1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="202449-恒生笔试"><a class="markdownIt-Anchor" href="#202449-恒生笔试"></a> 2024.4.9 恒生笔试</h1>
+<ol>
+<li>下列代码的返回值</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5</span>/<span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>*<span class="number">3</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html#jls-14.20.2">根据Java语言规范文档规定</a>。在 try-catch-finally 语句块中，finally 语句块中的 return/抛出异常（立即结束语句）的优先级最高，程序会优先返回 finally 语句块中的立即结束语句的结果，此时 try-catch 语句块中的 return/抛出异常（立即结束语句）的结果就会被丢弃掉。</p>
+<ol start="2">
+<li>SQL 语句</li>
+</ol>
+<p>联结语法、INNER JOIN 语法</p>
+<ol start="3">
+<li>初始资金 M，N 天价格信息，K 次交易后，能赚多少钱？（动态规划）</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 根据输入计算最大收益</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> M double浮点型 初始资金</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> N int整型 历史价格天数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> historyPrices double浮点型一维数组 N天历史价格</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> K int整型 最大允许交易次数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> double浮点型</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">get_max_profit</span> <span class="params">(<span class="type">double</span> M, <span class="type">int</span> N, <span class="type">double</span>[] historyPrices, <span class="type">int</span> K)</span> &#123;</span><br><span class="line">    <span class="type">double</span>[][] dp = <span class="keyword">new</span> <span class="title class_">double</span>[K+<span class="number">1</span>][N];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">        dp[<span class="number">0</span>][j] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">max</span> <span class="operator">=</span> dp[i][j-<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> t=<span class="number">0</span>; t&lt;j; t++) &#123;</span><br><span class="line">                <span class="type">double</span> <span class="variable">rest</span> <span class="operator">=</span> dp[i-<span class="number">1</span>][t]%historyPrices[t], buy = (dp[i-<span class="number">1</span>][t]-rest)/historyPrices[t];</span><br><span class="line">                max = Math.max(max, buy*historyPrices[j]+rest);</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[K][N-<span class="number">1</span>]-dp[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2024331-腾讯笔试"><a class="markdownIt-Anchor" href="#2024331-腾讯笔试"></a> 2024.3.31 腾讯笔试</h1>
+<p>没做好记录，只记了没做出来的第四题，其他四道题 AC 了三道，还有一道通过 97% 我怀疑是样例有问题[手动狗头]</p>
+<ol start="4">
+<li>给你 n 个数，这 n 个数要被拆成 k 份，对每份中的数字求异或，求各份异或总和的最大值（和恒生第二题的思路基本一样）</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">long</span>[][] dp = <span class="keyword">new</span> <span class="title class_">long</span>[k + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[<span class="number">1</span>][i + <span class="number">1</span>] = in.nextInt() ^ dp[<span class="number">1</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span>[] prefix = dp[<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// 拆分为 i 份</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= k; i++) &#123;</span><br><span class="line">        <span class="comment">// 从头到尾遍历：将第 1~j 个元素拆成 i 份</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 将第 [1,s] 个元素拆成 i-1 份，(s,j] 是最后一份</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> j - <span class="number">1</span>; s &gt;= i - <span class="number">1</span>; s--) &#123;</span><br><span class="line">                <span class="comment">// 异或的优先级小于加减法</span></span><br><span class="line">                max = Math.max(max, dp[i - <span class="number">1</span>][s] + (prefix[j] ^ prefix[s]));</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(dp[k][n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>找工作</category>
+      </categories>
+      <tags>
+        <tag>笔试记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Rpc 框架</title>
+    <url>/Rpc-frame/</url>
+    <content><![CDATA[<h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>
+<p><strong>服务发现流程</strong>：使用远程服务的时候首先需要配置一个dubbo xml文件或者在使用的地方加上<code>@Reference</code>，二者都是用来对dubbo消费者引用服务进行一些配置，然后应用在启动的时候会将配置信息转化为一个<code>ReferenceBean</code>对象，并调用<code>createProxy</code>方法创建一个远程服务接口的代理对象。</p>
+<p>代理对象的 <strong>invoke 创建</strong>：启动时主动订阅注册中心，会显示地调用一次<code>notify</code>接口，这个接口会尝试将远程服务注册的<code>url</code>转换成一个本地的<code>invoker</code>。</p>
+<ul>
+<li>转换过程中会根据具体的 <code>protocol</code> 创建对应的 <code>invoker</code>，如 Rest 和 Dubbo 需要解析不同的参数。</li>
+</ul>
+<p>服务注册地址发生改变时：会通知给消费者，注意这个地方 dubbo 协议里面明确讲到全量更新</p>
+<h1 id="dubbo-上线问题"><a class="markdownIt-Anchor" href="#dubbo-上线问题"></a> Dubbo 上线问题</h1>
+<p>记录、学习、汇总实习和技术博客中看到的 Dubbo 实战遇到的问题</p>
+<h2 id="服务端接口不指定通讯协议导致-oom"><a class="markdownIt-Anchor" href="#服务端接口不指定通讯协议导致-oom"></a> 服务端接口不指定通讯协议导致 OOM</h2>
+<p>问题背景：</p>
+<ul>
+<li>开发人员使用方没有配置接口的 protocol 字段，而是写在接口实现类上</li>
+</ul>
+<p>问题描述：</p>
+<ul>
+<li><code>dubbo-3.0.4</code> 框架：
+<ul>
+<li>若没有指定 protocol 字段，会创建服务端提供的所有协议的 invoker</li>
+<li>EasyREST 包<code>createClientInvoker</code>创建 REST 协议的 invoker 时需要 HttpMethod 参数</li>
+<li>由于注解写在实现类而不是接口上面，导致消费端无法共享相应的 REST 配置信息，即 HttpMethod 为 null，因此 RESTClient 创建失败</li>
+<li>在服务更新过程中，客户端每次都是全量更新注册中心的服务端信息，这个过程中如果 invoker 一直注册失败，会不断将失败的<code>Client</code>存到<code>List&lt;ResteasyClient&gt;</code>中，如果有 n 台机器需要依次更新，这时客户端的数组中会存 n*n 个失败的连接实例，从而导致 OOM</li>
+</ul>
+</li>
+</ul>
+<p>解决方法（针对框架，开发人员需要牢记 Dubbo 配置必须在接口上）：</p>
+<ul>
+<li>ResteasyClient 对象由 RestProtocol 协议对象持有，针对没有创建成功 invoker 的场景应把其对应的 ResteasyClient <u>销毁</u>掉</li>
+</ul>
+<p>销毁方法</p>
+<ul>
+<li>用<code>Map&lt;String,ResteasyClient&gt;</code>代替 <code>List&lt;ResteasyClient&gt;</code>，同一个服务端只存一次</li>
+<li>用<code>WeakHashMap&lt;String,ResteasyClient&gt;</code>自动回收不用的 ResteasyClient（参考<a href="https://github.com/apache/dubbo/pull/4629">pr</a>）</li>
+</ul>
+<p><a href="https://tech.youzan.com/ji-ci-dubbofu-wu-fa-xian-dao-zhi-de-oom/">参考</a></p>
+<h2 id="父子线程并发-rpc-调用死锁"><a class="markdownIt-Anchor" href="#父子线程并发-rpc-调用死锁"></a> 父子线程并发 RPC 调用死锁</h2>
+<p>问题描述：</p>
+<ul>
+<li>直接通过 <code>Executors</code> 构造 固定数量+无限长等待队列 线程池，该线程池在共享的无界队列上操作的固定数量的线程。在任何时候，最多nThreads线程将处于活动处理任务状态。如果在所有线程都处于活动状态时提交额外的任务，它们将在队列中等待，直到有线程可用。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title function_">newFixedThreadPool</span><span class="params">(<span class="type">int</span> nThreads)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>并发调用 Rpc 接口获取返回值</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;String&gt; future = executor.submit(()-&gt;&#123;</span><br><span class="line">    <span class="keyword">return</span> 数据查询任务;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据查询任务中存在父子调用关系，数据查询任务同步调用 Redis 查询缓存和 Rpc 调用微服务获得数据。如果本地 Redis 缓存中能获得数据，就直接返回缓存值并取消 Rpc 调用 <code>future.cancel(true)</code>。</li>
+</ul>
+<p>解决办法</p>
+<ul>
+<li>父子任务分开并发执行，耗时的异步线程应做好线程池隔离</li>
+<li><code>CompletableFuture.anyOf(task1,tsak2)</code> 优先取先完成的那个任务的返回值</li>
+</ul>
+<p><a href="https://heapdump.cn/article/646639">参考</a></p>
+<h1 id="尝试开发基础版-rpc-中间件"><a class="markdownIt-Anchor" href="#尝试开发基础版-rpc-中间件"></a> 尝试开发基础版 Rpc 中间件</h1>
+<p>学习过程中看到了网上的一些教程，自己跟着学着玩儿</p>
+<h2 id="netty-数据传输"><a class="markdownIt-Anchor" href="#netty-数据传输"></a> Netty 数据传输</h2>
+<blockquote>
+<p>在网络通信中，序列化和编码通常是结合使用的。<strong>序列化将对象转换为字节流，编码将字节流转换为网络传输所需的格式</strong>（如按照协议规定的格式进行编码）。在接收端，<strong>解码将网络传输的数据解析为原始的格式（如解码成对象）</strong>，以便进行进一步的处理和使用。</p>
+</blockquote>
+<p>Netty 提供了 ByteBuf 容器，更方便地处理数据。<code>ByteBuf</code> 在重写编解码器的 encoder/decoder 方法中作为参数传入。</p>
+<p>编码：先序列化，再压缩，最后写进 ByteBuf 对象中</p>
+<p>解码：从 ByteBuf 对象中读，然后转成我们需要的对象</p>
+<h2 id="代理模式"><a class="markdownIt-Anchor" href="#代理模式"></a> 代理模式</h2>
+<p><strong>静态代理</strong></p>
+<blockquote>
+<p>静态代理中，我们对目标对象的每个方法的增强都是手动完成的（后面会具体演示代码），非常不灵活（比如接口一旦新增加方法，目标对象和代理对象都要进行修改）且麻烦(需要对每个目标类都单独写一个代理类)。 实际应用场景非常非常少，日常开发几乎看不到使用静态代理的场景。</p>
+</blockquote>
+<p>从 JVM 层面来说， 静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。</p>
+<p>静态代理的步骤</p>
+<ul>
+<li>定义一个接口及其实现类；</li>
+<li>创建一个代理类同样实现这个接口</li>
+<li>将目标对象注入进代理类，然后在代理类的对应方法调用目标类中的对应方法。这样的话，我们就可以通过代理类屏蔽对目标对象的访问，并且可以在目标方法执行前后做一些自己想做的事情。</li>
+</ul>
+<h2 id="jdk-动态代理"><a class="markdownIt-Anchor" href="#jdk-动态代理"></a> JDK 动态代理</h2>
+<ul>
+<li>定义一个接口及其实现类；</li>
+<li>自定义 InvocationHandler 并重写 invoke 方法，在 invoke 方法中我们会调用原生方法（被代理类的方法）并自定义一些处理逻辑；</li>
+<li>通过 <code>Proxy.newProxyInstance(ClassLoader loader,Class&lt;?&gt;[] interfaces,InvocationHandler h)</code> 方法创建代理对象；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcClientProxy</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="comment">// 在代理类内，根据传入的类 clazz，获得代理对象</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">getProxy</span><span class="params">(Class&lt;T&gt; clazz)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(clazz.getClassLoader(), <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[]&#123;clazz&#125;, <span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 当通过代理类调用的所有方法，实际上调用的是这个invoke（传入的只是服务接口，具体的实现在服务端实现类中）</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么是如何调用服务端实现类的代码的呢？<strong>注入</strong></p>
+<ol>
+<li>在实例化 bean 之后，postProcessAfterInitialization 方法被调用。</li>
+<li>对于每个 bean 类的字段，检查是否标记了 @RpcReference 注解。</li>
+<li>如果发现标记了 @RpcReference 注解的字段，根据注解中的信息创建相应的 RpcServiceConfig 对象。</li>
+<li>通过 RpcClientProxy 创建了一个代理对象 clientProxy，这个代理对象实现了 declaredField.getType() 所表示的接口，这个接口可能就是 HelloService 接口或其它接口，取决于 helloService 字段的类型。</li>
+<li>这个代理对象 clientProxy 会在方法调用时委托给 RpcClientProxy 的 invoke 方法，该方法负责处理远程调用的逻辑。</li>
+<li>通过反射设置 clientProxy 到 HelloController 类的 helloService 字段上，替换了原来的字段值。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">clientProxy</span> <span class="operator">=</span> rpcClientProxy.getProxy(declaredField.getType());</span><br><span class="line">declaredField.setAccessible(<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    declaredField.set(bean, clientProxy);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="传输协议"><a class="markdownIt-Anchor" href="#传输协议"></a> 传输协议</h2>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">*   0     1     2     3     4        5     6     7     8         9        10     11     12   13   14 15 16</span><br><span class="line">*   +-----+-----+-----+-----+--------+----+----+----+------+-----------+-------+-------+-----+---+-----+----+</span><br><span class="line">*   |   magic   code        |version | full length         | messageType| codec|compress|    RequestId       |</span><br><span class="line">*   +-----------------------+--------+---------------------+-----------+-----------+-----------+------------+</span><br><span class="line">*   |                                         body                                                            |</span><br><span class="line">*   +-------------------------------------------------------------------------------------------------------+</span><br><span class="line">* 4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型）</span><br><span class="line">* 1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id）</span><br></pre></td></tr></table></figure>
+<h2 id="注册中心"><a class="markdownIt-Anchor" href="#注册中心"></a> 注册中心</h2>
+<p>服务注册：在 zk 里面创建一个对应的持久节点</p>
+<p>当我们的服务被<strong>注册进 zookeeper</strong> 的时候，我们将完整的服务名称 rpcServiceName （class name+group+version）作为根节点 ，子节点是对应的服务地址（ip+端口号）。相关代码在 <code>ZkServiceProviderImpl.publishService()</code> 中。</p>
+<p>如果我们要<strong>获得某个服务对应的地址</strong>的话，就直接根据完整的服务名称来获取到其下的所有子节点，然后通过具体的负载均衡策略取出一个就可以了。相关代码在 <code>ZkServiceDiscoveryImpl.lookupService()</code> 中。</p>
+<h3 id="zookeeper-客户端"><a class="markdownIt-Anchor" href="#zookeeper-客户端"></a> Zookeeper 客户端</h3>
+<blockquote>
+<p>Curator 是 Netflix 公司开源的一套zookeeper客户端框架，解决了很多Zookeeper客户端非常底层的细节开发工作，包括连接重连、反复注册Watcher和NodeExistsException异常等等。项目内采用 CuratorUtils 类调用 Curator。</p>
+</blockquote>
+<p>重试策略：ExponentialBackoffRetry是指数退避重试策略</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// zk的对外接口，后面我们要干什么只需要通过单例模式获得这个类，然后用这个类的方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ServiceProvider</span> &#123;</span><br><span class="line">    <span class="comment">// 添加到本地 serviceMap 中（远程Rpc调用，获取本地的调用类）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">    Object <span class="title function_">getService</span><span class="params">(String rpcServiceName)</span>;</span><br><span class="line">    <span class="comment">// 注册服务到 zookeeper 中（服务发现与注册）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">publishService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>项目开发</category>
+      </categories>
+      <tags>
+        <tag>分布式通讯框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>实习面试题汇总</title>
+    <url>/%E5%AE%9E%E4%B9%A0%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<h1 id="2024410-恒生一面"><a class="markdownIt-Anchor" href="#2024410-恒生一面"></a> 2024.4.10 恒生一面</h1>
+<p>虽然面试只有 17min，但感觉再长一点我真的要蚌埠住了，哭（在杭电十二教线下面的）</p>
+<p>反思：自我介绍准备不足，都要开始面试了还在考虑怎么改（其实也怪他们面试通知太晚了，不怪我嘻嘻）平时学的不扎实，说不出 AQS 的底层实现原理我可以接受，但连 AQS 都没提到实在是太蠢了，果然还是准备的不够充分。谢谢恒生一巴掌拍醒了我，认清了自己还是个小菜鸡。摆正心态，继续努力！！！</p>
+<ol>
+<li>自我介绍</li>
+</ol>
+<p>面试官看了简历，说“不愧是软件工程内容比别人多多了”，面试官真的是很认真的把简历从头看到尾（泪目）</p>
+<ol start="2">
+<li>Rpc 项目具体是什么</li>
+</ol>
+<p>因为自我介绍里说了为什么要做 RPC 项目，面试官顺势问了。</p>
+<p>简单说了上段实习中用到了自定义 Cluster 集群策略，因为 Dubbo 自带的 ClusterRules（广播、失败立刻返回）没有涉及到轮询检查离线任务是否完成的功能，所以 Leader 让我利用 Dubbo 的 SPI 机制做了一个查询微服务的计算过程是否完成的方法，然后挂载在 META-INF/dubbo 下就 Dubbo 框架就可以直接调用该集群执行方式（当时说的并没有这么清晰，还是太菜了呜呜）</p>
+<ol start="3">
+<li>如何分析 dump 文件</li>
+</ol>
+<p>感觉简历里唯一吸引面试官的就是如何处理 OOM Crash 了。</p>
+<p>测试报服务异常，线程池等待队列过长；Leader 带我用 jstack 获得线程的状态；发现该线程池中的所有线程都处在阻塞状态，并且都阻塞在父线程；查看父子线程调用关系和 Executors.<em>newFixedThreadPool</em>(25) 底层原理，发现 FixedThreadPool 使用了无限长的阻塞队列，父线程未执行完成，且子线程只能在队列中等待，造成死锁所以队列一直在变长</p>
+<ol start="4">
+<li>synchronized Reentrantlock 的具体使用场景有什么不同</li>
+</ol>
+<p>只知道底层实现原理不同且都是可重入锁，并不知道具体使用场景的区别（哪来的这么真实业务多场景啊喂）</p>
+<ol start="5">
+<li>MySQL 调优</li>
+</ol>
+<p>愚蠢的我只知道构建索引、优化表结构和增大 BufferPool，好在后续上网也没找到什么很好的方法。或许<mark>预编译 SQL 语句</mark>是个不错的想法，根据 MySQL 运行过程推出的优化方法。</p>
+]]></content>
+      <categories>
+        <category>找工作</category>
+      </categories>
+      <tags>
+        <tag>面试记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>AugESC</title>
+    <url>/2023/AugESC_%20Large-scale%20Data%20Augmentation%20for%20Emotional%20Support%20Conversation%20with%20Pre-trained%20Language%20Models/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
+<blockquote>
+<p>开放式对话数据增强的研究</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前工作的缺陷
+<ul>
+<li>成本高、耗时长</li>
+<li>预算限制，所收集的对话规模小，主题少</li>
+</ul>
+</li>
+<li>本文主要贡献
+<ul>
+<li>关键发现</li>
+<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
+<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>预训练模型</li>
+<li>预训练模型的数据增强</li>
+</ul>
+<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
+<ul>
+<li>语言模型优于对话模型
+<ul>
+<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
+<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
+</ul>
+</li>
+<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
+<li>提示GPT不如微调GPT模型
+<ul>
+<li>提示型GPT-3生成可控性差</li>
+<li>只有微调才能掌握任务场景和所需特征</li>
+</ul>
+</li>
+<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
+<ul>
+<li>保持语言模型的内在知识</li>
+<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
+<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
+</ul>
+</li>
+<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
+<ul>
+<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
+</ul>
+</li>
+</ul>
+<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
+<ul>
+<li>主干模型：GPT-3，微调后的GPT-J</li>
+<li>提示模板：对话场景+情感支持</li>
+<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
+<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
+<li>触发Query
+<ul>
+<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
+<li>保留带有负面情绪的Query</li>
+</ul>
+</li>
+<li>过滤结果，删除非法对话</li>
+</ul>
+<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
+<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
+<ul>
+<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
+<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
+<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
+</ul>
+<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
+<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
+<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
+<blockquote>
+<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
+</blockquote>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>对话数据集增强</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DQ-HGAN</title>
+    <url>/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>关注的问题
+<ul>
+<li>动态建模对用户状态，包含个体的意图和情感</li>
+<li>综合各类因素选择最合适的支持策略</li>
+</ul>
+</li>
+<li>提出的方法【基于异构图注意力网络的深度Q-learning情感支持对话生成】
+<ul>
+<li>为了捕获用户意图、情感和历史对话之间的交互关系，基于意图词典和情感分类器，构建了异构图注意力网络</li>
+<li>采用基于DQN的最优响应策略以指导响应生成，优于传统的基于规则或启发式方法</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前研究
+<ul>
+<li>ESC任务要求能够确定求助者的心理意图和情绪状态，以便提供适当的支持。因此整合意图识别和情感识别对于提高情感支持对话的质量至关重要，且目前的方法对用户状态建模不充分。</li>
+</ul>
+</li>
+<li>关注的问题
+<ul>
+<li>建模用户状态</li>
+<li>选择最优策略，以产生有效的保障响应</li>
+</ul>
+</li>
+<li>提出的方法
+<ul>
+<li>设计了基于注意力的<strong>异构图网络</strong>，与用户的意图、情感和历史对话交互，可以有效地捕获和建模图中不同类型的节点和边</li>
+<li>构建<strong>意图词典</strong>和<strong>情感分类器</strong>来捕捉求助者在语境中的细微情感表达</li>
+<li><strong>DQN算法</strong>对用户未来反馈的期望值进行估计，帮助系统选择获得最优长期值的策略。其允许系统从用户的反馈中学习，调整其策略，以提供最有效的支持响应。</li>
+</ul>
+</li>
+<li>主要贡献
+<ul>
+<li>提出了一种新的方法DQ-HGAN，将<strong>意图和情感识别与策略生成相结合</strong>，以提高情感支持对话系统的质量和个性化</li>
+<li>构建<strong>意图词典和情感分类器</strong>，捕捉求助者在语境中的细微情感表达并跟踪其状态</li>
+<li>设计了一种基于注意力机制的<strong>异构图网络</strong>，与用户的意图、情感和历史对话进行交互，并选择最优的支持策略以生成有效的支持响应</li>
+<li>ESC生成中使用ESC生成中使用<strong>强化学习</strong>，具体来说，使用DQN算法（Deep Q-Network）估计用户未来反馈的期望值，动态调整策略以提供最有效的支持响应</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>对话中的意图和情感识别【在模型中融合了“意图”这个特征】
+<ul>
+<li>多头注意力机制
+<ul>
+<li>多头注意力机制来捕捉用户的意图和情感。缺点：缺乏有效捕捉用户细微情感表达的能力</li>
+<li>使用预训练模型，增强PLM对话相关性，识别对话意图、推断对话情感。缺点：不是专门为ESC任务定制的，性能差</li>
+</ul>
+</li>
+<li>词典
+<ul>
+<li>词典包含特定意图或情感相关的词汇和短语，利用基于规则的算法将context与意图词典进行匹配，并分配相应的意图标签。缺点：只将单个单词与标签匹配，可能会忽略整个句子的意图或情感含义</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>图建模【捕获会话系统中用户意图、情感和对话历史之间的复杂关系】
+<ul>
+<li>同构图【忽略了用户意图和情感的异构性】
+<ul>
+<li>GAT 图注意力网络，利用自注意力机制来捕获对话图中意图和情感节点之间的交互</li>
+<li>GCN 图卷积网络，利用图结构在节点之间传播信息，并捕获对话数据中的上下文依赖</li>
+</ul>
+</li>
+<li><strong>异构图注意力网络是专为表示图中不同类型的节点和边而设计的</strong>，它擅长对<strong>不同的节点</strong>类型进行建模，如用户话语、系统响应、情感状态和意图，从而更全面地了解用户的情感状态；还擅长捕捉<strong>不同类型的边</strong>，包括顺序依赖、自依赖和状态依赖，从而能够更准确地表示用户的情感状态。此外，它还包含了一种<strong>注意力机制</strong>来进行重要性加权，允许它在聚合过程中专注于最相关的信息，从而更全面地了解用户的状态。</li>
+</ul>
+</li>
+<li>策略选择
+<ul>
+<li>基于规则或启发式方法</li>
+<li>强化学习方法（如：Q-learning）
+<ul>
+<li>采用DQN估计不同对话动作的期望值，并学习了一种最大化该值的策略。从用户反馈中学习，并生成更有吸引力和信息量的响应</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>响应生成
+<ul>
+<li>目前流行的Encoder-Decoder模型往往专注于根据对话历史生成回复，而没有考虑用户的意图、情感以及合适的支持策略</li>
+</ul>
+</li>
+</ul>
+<h1 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h1>
+<ul>
+<li>ESConv：标记对话，并将其转换为词嵌入，以将其输入到模型中</li>
+<li>COMET：使用COMET初始化模型的词嵌入，并在ESConv数据集上进行微调，以提高其构建意图词典的有效性</li>
+<li>ATOMIC：得到意图或目的（xIntent）</li>
+<li>NRC VAD 词典：得到情感词典，每个单词对应的效价-觉醒-支配（Valence-Arousal-Dominance）</li>
+<li>问题定义：上下文+策略+Query =&gt;响应Yt。最优策略基于当前状态和期望的长期回报（通过Q-learning预测）</li>
+</ul>
+<h2 id="method"><a class="markdownIt-Anchor" href="#method"></a> Method</h2>
+<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484543763-403c4648-68f4-4644-bf00-e2356c06841c.jpg" class="" title="88c61f5be72a795a087441904fcd0ad9_3_Figure_2_780332990.png">
+<ul>
+<li>
+<p>多源编码器</p>
+<ul>
+<li>
+<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484574764-c5051f60-2b3c-40cf-a161-5848c1d67bc2.png" class="" title="img">
+</li>
+<li>
+<p>transformer编码器（TransformerEncoder）</p>
+<ul>
+<li>ht = TransformerEncoder(Ht)</li>
+</ul>
+</li>
+<li>
+<p>意图词典（COMET）：通过对ATOMIC 微调，同去意图关键词，构建意图词典（意图关键词，对应的词嵌入）</p>
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>t</mi></msub><mo>=</mo><mi>T</mi><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>f</mi><mi>o</mi><mi>r</mi><mi>m</mi><mi>e</mi><mi>r</mi><mi>E</mi><mi>n</mi><mi>c</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>r</mi><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>∈</mo><mi mathvariant="script">F</mi></mrow></munder><mi mathvariant="normal">softmax</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>T</mi></msubsup><msub><mi>h</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><msub><mi>c</mi><mi>i</mi></msub><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">g_{t}=TransformerEncoder\left(\sum_{w_{i}\in\mathscr{F}}\operatorname{softmax}\left(c_{i}^{T} h_{t}\right)c_{i}\right) 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.156105em;vertical-align:-1.406105em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault">n</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0500050000000003em;"><span style="top:-1.843995em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathscr mtight" style="margin-right:0.13634em;">F</span></span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.406105em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">s</span><span class="mord mathrm">o</span><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">t</span><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">x</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+<li>
+<p>情感分类器（NRC VAD词典）</p>
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>e</mi><mi>t</mi></msub><mo>=</mo><mtext>TransformerEncoder</mtext><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mrow><msub><mi>w</mi><mi>k</mi></msub><mo>∈</mo><mi mathvariant="script">Z</mi></mrow></munder><mi mathvariant="normal">softmax</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msubsup><mi>z</mi><mi>k</mi><mi>T</mi></msubsup><msub><mi>h</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><msub><mi>g</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">e_{t}=\text{TransformerEncoder}\left(\sum_{w_{k} \in \mathscr{Z}}\operatorname{softmax}\left(z_{k}^{T} h_{t}\right) g_{t}\right) \text { }
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.1618649999999997em;vertical-align:-1.411865em;"></span><span class="mord text"><span class="mord">TransformerEncoder</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.050005em;"><span style="top:-1.843995em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathscr mtight" style="margin-right:0.24037em;">Z</span></span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.411865em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">s</span><span class="mord mathrm">o</span><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">t</span><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">x</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord"> </span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>基于异构图的用户状态跟踪</p>
+<ul>
+<li>
+<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258dd.png" class="" title="img">
+</li>
+</ul>
+</li>
+<li>
+<p>DQN策略规划</p>
+<ul>
+<li>
+<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7.png" class="" title="img">
+</li>
+</ul>
+</li>
+<li>
+<p>响应生成解码器</p>
+<ul>
+<li>
+<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762.png" class="" title="img">
+</li>
+</ul>
+</li>
+</ul>
+<p>Experiments<br />
+Conclusion</p>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>异构图神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Control Globally, Understand Locally</title>
+    <url>/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation.</p>
+<p>论文的创新点在于在Encoder和Decoder之间加了一层 GCNConv 和 RGCNConv</p>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/image-20240414083742062-17138602623661-17138606243731.png" class="" title="image-20240414083742062-17138602623661">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>目前研究的缺陷
+<ul>
+<li>关注序列上下文信息，忽略了全局原因和局部心理意图与其的层次关系</li>
+</ul>
+</li>
+<li>本文
+<ul>
+<li>提出了一个全局到局部的<strong>层次图网络</strong>来捕获多源信息(全局原因、局部意图和对话历史)并建模它们之间的层次关系，该网络由一个多源编码器、一个层次图推理器和一个全局引导解码器组成</li>
+<li>设计了一个新的训练目标来监测全局的语义信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>探索求助者情绪问题的原因：<strong>全局</strong>地控制情感支持对话的整个流程</li>
+<li>了解求助者的心理意图：帮助系统<strong>局部</strong>了解求助者当前时的心理状态</li>
+<li>本文目标
+<ul>
+<li>捕获全局原因和局部心理意图</li>
+<li>建模全局与局部之间的关系</li>
+</ul>
+</li>
+<li>解决方法【全局到局部层次图网络GLHG】
+<ul>
+<li>多源编码器：COMET提取局部心理意图</li>
+<li>层次图推理机：全局原因(对话级)、局部心理意图(句子级)和对话历史之间的层次关系进行建模</li>
+<li>解码器中设计了一个新的训练目标来监控全局原因的语义信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>图建模对话
+<ul>
+<li>GCN 利用自我和对话者间依赖性来模拟会话上下文</li>
+<li>EGAE 使用图网络捕获面向任务对话中的对话模式</li>
+</ul>
+</li>
+<li>常识性知识
+<ul>
+<li>与本人有关的心理状态：xReact、xIntent</li>
+</ul>
+</li>
+</ul>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
+<ul>
+<li>问题定义</li>
+<li>多源编码器
+<ul>
+<li>BlenderBot Encoder + Max-pooling</li>
+<li>上下文 + 全局原因 + 局部原因</li>
+</ul>
+</li>
+<li>分层图推理机
+<ul>
+<li>GAT 图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png" class="" title="img">注意力函数（2017出版)
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp" class="" title="image.png"> <img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png" class="" title="img">注意力机制
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png" class="" title="img">
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png" class="" title="img">注意力机制
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png" class="" title="img">
+</li>
+</ul>
+</li>
+<li>Global-guide 解码器
+<ul>
+<li>响应生成
+<ul>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">，v表示图神经网络得到的全局变量
+</li>
+</ul>
+</li>
+<li>监督全局语义信息：预测问题类型
+<ul>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img">
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>联合训练
+<ul>
+<li>对数似然损失+交叉熵损失</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png" class="" title="img"><img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png" class="" title="img">
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>指标：plexity (PPL), BLEU-n (B-n), ROUGE-L (R-L), Distinct-1(D-1), and Distinct-2 (D-2)</li>
+<li>由于有了意图特征，提出建议更具体有效</li>
+</ul>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<ul>
+<li>全局到局部的层次图网络(Global-to-Local Hierarchical Graph network, GLHG)来捕获多源信息并从全局到局部的角度建模层次关系</li>
+<li>新的训练目标“预测Seeker遇到问题的类型”</li>
+</ul>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<ul>
+<li><strong>多源编码器</strong>利用情境信息并将心理意图与COMET结合，捕获全局原因和局部意图</li>
+<li><strong>分层图推理机</strong>在全局原因、局部心理意图和对话历史之间进行交互，建模不同层次的关系（hierarchical graph reasoner）</li>
+</ul>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>异构图神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Feedback-Aware Double</title>
+    <url>/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Feedback-Aware Double COntrolling Network for Emotional Support Conversation</p>
+<img data-src="/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png" class="" title="img">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>双层反馈策略选择器：通过反馈信息预测策略</li>
+<li>双层控制阅读器：通过策略约束上下文响应</li>
+<li>策略词典：丰富策略的语义信息</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<h2 id="problem-formulation"><a class="markdownIt-Anchor" href="#problem-formulation"></a> Problem Formulation</h2>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
+<ul>
+<li>上下文编码器
+<ul>
+<li>BlenderBot预训练编码器编码上下文历史对话U，得到Ht</li>
+</ul>
+</li>
+<li>双层反馈策略选择器
+<ul>
+<li>策略选择
+<ul>
+<li>输入
+<ul>
+<li>BlenderBot Encoder 编码上下文历史对话U，得到隐状态Ht</li>
+<li>BlenderBot Encoder 编码策略S</li>
+<li>EmoBERTa Encoder 编码上下文对话U</li>
+</ul>
+</li>
+<li>公式
+<ul>
+<li>上下文编码器（策略S同理）：$$\boldsymbol{H}=\operatorname{Enc}<em>{cxt}\left(\boldsymbol{[CLS]}, \boldsymbol{u}</em>{1}, \boldsymbol{[SEP]}, \boldsymbol{u}<em>{2}, …, \boldsymbol{u}</em>{M}\right)$$，M为对话数
+<ul>
+<li>
+\boldsymbol{H}=\left(\boldsymbol{u}_{1},..., \boldsymbol{u}_{T}\right)$$，T为Token数
+
+</li>
+<li>
+\boldsymbol{E}=\left(\boldsymbol{e}_{1},..., \boldsymbol{e}_{T}\right)$$，T为Token数
+
+</li>
+<li>s、c、r 为策略S、上下文H、情感分类E。编码+平均池化操作后得到</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双层反馈
+<ul>
+<li>回合级反馈：局部变量，当前用户的感受。包含每轮对话Seeker情感Δe和Seeker评分变化Δr</li>
+<li>对话级反馈：全局变量Δc，用户的全局状态。包含Seeker在谈话后的情绪压力、Supporter对话题的回应的相关性、Supporter对Seeker感受的理解和共情</li>
+<li>融合adapter：整合回合级和会话级反馈的两类语义信息。Δs = Δe + Δr + uΔc【计算损失时，给予正向或负向的反馈】</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双控读取器（模仿情感聊天机器ECM）
+<ul>
+<li>context-to-strategy：利用上下文信息来选择上下文相关的策略
+<ul>
+<li>
+\boldsymbol{g}^{c} = \operatorname{sigmoid}\left(
+
+</li>
+</ul>
+\right)$$</li>
+<li>strategy-to-context：编码阶段可以关注与策略相关的上下文，从而生成策略约束的响应
+<ul>
+<li>
+\boldsymbol{g}^{o} = \operatorname{sigmoid}\left(
+
+</li>
+</ul>
+\right)$$</li>
+<li>残差连接：在原始信息和更新信息之间进行权衡
+<ul>
+<li>
+\begin{array}{r}
+
+</li>
+</ul>
+h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
+\end{array}$$</li>
+</ul>
+</li>
+<li>策略字典
+<ul>
+<li>输入策略令牌的描述， 而不是策略令牌，以便模型对策略进行更深入的理解</li>
+<li>Encoder-Decoder 之间的状态传输类似于MISC，采用cross-attention代替self-attention<a href="https://www.yuque.com/jinzang/lnx420/wrq82cgnp6p47q59?view=doc_embed">MISC: A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</a></li>
+</ul>
+</li>
+<li>响应生成
+<ul>
+<li>BlenderBot Decoder：$$\boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}<em>{&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)=\text { Generator }\left(\boldsymbol{W}<em>{y&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)$$</li>
+</ul>
+</li>
+<li>联合训练
+<ul>
+<li>策略预测：反馈感知负对数似然 feedback-aware negative log-likelihood
+<ul>
+<li>
+\mathcal{L}_{1}=\left\{\begin{array}{ccc}
+
+</li>
+</ul>
+-\hat{o} \log \left(1-\operatorname{softmax}\left(\boldsymbol{o}^{\prime}\right)\right) &amp; \text { if } &amp; \Delta s \leq 0<br />
+\end{array}\right.\$$</li>
+<li>响应生成：标准交叉熵损失优化 cross-entropy
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mn>2</mn></msub><mo>=</mo><mo>−</mo><munderover><mo>∑</mo><mrow><mi>z</mi><mo>=</mo><mn>1</mn></mrow><mi>Z</mi></munderover><mi>log</mi><mo>⁡</mo><mi mathvariant="bold-italic">p</mi><mrow><mo fence="true">(</mo><msub><mi>y</mi><mi>z</mi></msub><mo>∣</mo><msub><mi mathvariant="bold-italic">y</mi><mrow><mo>&lt;</mo><mi>z</mi></mrow></msub><mo separator="true">,</mo><msubsup><mi mathvariant="bold-italic">h</mi><mi mathvariant="bold-italic">t</mi><mo mathvariant="normal">′</mo></msubsup><mo separator="true">,</mo><mi mathvariant="bold-italic">V</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{2}=-\sum_{z=1}^{Z} \log \boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}_{&lt;z}, \boldsymbol{h}_{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.0954490000000003em;vertical-align:-1.267113em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283360000000002em;"><span style="top:-1.882887em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3000050000000005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">Z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.267113em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">p</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">y</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.13323000000000002em;"><span style="top:-2.45586em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mrel mtight">&lt;</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.27151em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.836232em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight">t</span></span></span></span></span></span><span style="top:-3.1473400000000002em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.25555em;">V</span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiment"><a class="markdownIt-Anchor" href="#experiment"></a> Experiment</h2>
+<ul>
+<li>采用EmoBERTa-base作为特征提取器，以获取Seeker的情感得分和情感表征，情感得分由softmax函数使用EmoBERTa-base的[CLS]表示获得</li>
+</ul>
+<h2 id="experimental-results"><a class="markdownIt-Anchor" href="#experimental-results"></a> Experimental Results</h2>
+<h2 id="analyses"><a class="markdownIt-Anchor" href="#analyses"></a> Analyses</h2>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> conclusion</h2>
+<h1 id="关注的问题"><a class="markdownIt-Anchor" href="#关注的问题"></a> 关注的问题</h1>
+<ol>
+<li>预测策略只依靠对话历史，而不考虑求助者反馈，导致预测的结果与用户无关</li>
+<li>建模过程只关注上下文到策略，而不关注策略到上下文和与策略相关的上下文</li>
+</ol>
+<h1 id="解决方法"><a class="markdownIt-Anchor" href="#解决方法"></a> 解决方法</h1>
+<ol>
+<li>双层反馈策略选择器：利用回合级和会话级反馈信息来激励或惩罚策略</li>
+<li>双层控制阅读器：策略到上下文流来生成策略约束响应</li>
+</ol>
+<h1 id="创新点-本文的优势"><a class="markdownIt-Anchor" href="#创新点-本文的优势"></a> 创新点 / 本文的优势</h1>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HEAL</title>
+    <url>/2023/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A Knowledge Graph for Distress Management Conversations</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>相比于seq2seq的不确定性，聊天机器人利用知识图谱进行推理，被视为端到端模型的高效、万无一失的解决方案</li>
+<li>提出HEAL知识图谱
+<ul>
+<li>基于1M痛苦叙述及其相应的安慰回应而开发的知识图谱</li>
+<li>图谱可视化：表现了对话双方的情绪动态和帮助缓解情绪的有效方法</li>
+<li>组成部分
+<ul>
+<li>22k Node 节点：识别不同类型的stressors, speaker expectations, responses, feedback types</li>
+<li>104k Edge 连接：不同类型的节点之间的关系</li>
+<li>每个节点和41种情绪状态相关联</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>神经网络架构模型缺乏可控性和黑箱性质，导致其并不可靠</li>
+<li>使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应</li>
+<li>相关工作
+<ul>
+<li>ConceptNet、ATOMIC主要是通过捕获事实知识，在开放对话中嵌入常识推理辅助对话，不适用于移情对话</li>
+</ul>
+</li>
+<li>本文，通过子Reddit精心选择的对压力事件叙述和回应，生成了一个压力对话管理知识图谱HEAL
+<ul>
+<li>五类节点：压力源、期望、回应类型、反馈类型、情感状态</li>
+<li>可以准确描述以痛苦为导向对话的潜在背景，使对话模型可以检索到更具体的上下文响应。提取响应会导致的反馈类型和是否能达到期望等信息，从而产生更为合适的反应</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>知识图谱可以帮助NLP理解用户的输入，拓展用户输入中的事实和常识性知识</li>
+<li>目前工作关注于知识感知和推理对话，不会捕捉情感推理和移情反应</li>
+</ul>
+<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
+<ul>
+<li>数据集管理
+<ul>
+<li>采用reddit数据集，通过Pushshift API，收集和处理8个子reddit对话主题：mentalhealthsupport、offmychest、sad、anxietyhelp、depression、suicidewatch、depressed、depressionhelp</li>
+<li>数据预处理</li>
+</ul>
+</li>
+<li>概要
+<ul>
+<li>针对过长而超出预训练语言模型输入上限的对话，本文采用SMMRY摘要算法保留叙事本质</li>
+</ul>
+</li>
+<li>凝聚聚类
+<ul>
+<li>自动聚类：区分对话中的压力源、期望、响应和反馈类型</li>
+<li>凝聚聚类法：递归地合并增加最小链接距离的簇对</li>
+<li>链接距离：对SentenceBERT生成的embedding使用余弦相似度计算</li>
+</ul>
+</li>
+<li>定义压力源
+<ul>
+<li>每个阈值计算了各种聚类质量指标，结果显示以0.85的相似度阈值区分压力源最合适，将压力源中的4.7%分为了4363个类。</li>
+<li>将聚类结果按照TF-IDF建模，可以明显区分压力源，表明聚类结果的可靠性。</li>
+</ul>
+</li>
+<li>期望、回复、反馈类型
+<ul>
+<li>提取带有❓的句子作为问题，以此问题提取相关的响应和反馈。使用NLTK分离响应和反馈中的单个对话，方便后续对其进行单一种类的聚类。</li>
+<li>聚类方法与压力源一致，每个集群至少有两个不同的集群元素。</li>
+</ul>
+</li>
+<li>情感状态建模
+<ul>
+<li>使用Pu提出的基于BERT的情感分类器，将每一个簇与某一情感状态相关联，共有41种情感状态。先将每一个簇下的每个文本进行分类，再按照情感出现次数和分类置信度排序，选取最相关的情感状态。</li>
+</ul>
+</li>
+</ul>
+<h2 id="statistical-analysis"><a class="markdownIt-Anchor" href="#statistical-analysis"></a> Statistical Analysis</h2>
+<ul>
+<li>HEAL知识图谱：2.2k集群节点和情感状态，104k连接</li>
+<li>反馈集群中，负面情绪明显减少，证明HEAL中存在帮助人们降低负面情感状态的有用响应</li>
+</ul>
+<h2 id="visualization-and-interpretation"><a class="markdownIt-Anchor" href="#visualization-and-interpretation"></a> Visualization and Interpretation</h2>
+<ul>
+<li>表示大多数回答都是正向积极反馈</li>
+</ul>
+<h2 id="evaluating-the-utility-of-heal-in-responding-to-distress-prompts"><a class="markdownIt-Anchor" href="#evaluating-the-utility-of-heal-in-responding-to-distress-prompts"></a> Evaluating the Utility of HEAL in Responding to Distress Prompts</h2>
+<ul>
+<li>获取共情响应
+<ul>
+<li>从测试集中选取和压力源中现有叙述相似性高于0.75的新对话</li>
+<li>根据压力源和响应之间边权的权重、响应簇大小进行排序，选择排名高的响应</li>
+</ul>
+</li>
+<li>自动评估
+<ul>
+<li>HEAL的响应更加多样化，可以根据给定的情况给出特定的响应</li>
+<li>在其他自动指标BLEU、METEOR和ROUGE方面表现不佳</li>
+</ul>
+</li>
+<li>人类评估【DOI: 10.18653/v1/d16-1230】
+<ul>
+<li>HEAL模型变现更好</li>
+</ul>
+</li>
+</ul>
+<h2 id="discussion-and-conclusion"><a class="markdownIt-Anchor" href="#discussion-and-conclusion"></a> Discussion and Conclusion</h2>
+<ul>
+<li>HEAL：利用Reddit上约1M个与痛苦相关的对话得出的知识图谱。在不同类型的压力源、说话者期望、求助者反应和求助者反馈类型之间形成联系，同时将每个节点与41种情感状态中的一种联系起来</li>
+<li></li>
+</ul>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<ul>
+<li>端到端对话经常会产生通用和重复性对话，缺乏可控性。使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应。</li>
+<li>目前的知识图谱不适用于移情对话。移情领域缺乏数据集和模型帮助产生移情反应，还缺乏具有上下文-相应之间关系的知识图谱。</li>
+</ul>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<ul>
+<li>开发大规模知识图谱HEAL，识别不同的压力源、期望、响应、反馈和该对话的情感状态</li>
+<li>统计和可视化分析，识别导致情绪强度降低的有利反应</li>
+<li>评估通过HEAL检索到的回应，在解决情感困扰问题上的共情性、多样性、可靠性</li>
+</ul>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<ul>
+<li>与RoBERTa、Blender进行比较，HEAL能够产生更多样化、更移情的反应</li>
+<li>统计和可视化分析证实了在HEAL中存在有用的反应策略，这些策略降低了遭受痛苦的人的负面情感状态</li>
+<li>使用纯生成模型来解决痛苦存在危险，HEAL通过战略性地识别与给定提示相关的特定压力源来避免不适当的反应</li>
+</ul>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+<ul>
+<li>只使用了压力源与回复的边缘权重，进一步可以通过将边缘权重与说话者的期望和反馈结合起来来开发</li>
+<li>知识图的信息可以用于增强神经反应生成模型，并为这些模型引入更多的可控性和可解释性，从而提高可靠性</li>
+<li>仅限于识别≈4K的压力源，可以从网络上获取更多数据来增强知识图谱，这将帮助其能够处理更大范围的压力源和期望</li>
+</ul>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>知识图谱</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>KEMI</title>
+    <url>/2023/Knowledge-enhanced%20Mixed-initiative%20Dialogue%20System%20for%20Emotional%20Support%20Conversations/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Knowledge-enhanced Mixed-initiative Dialogue System for Emotional Support Conversations</p>
+<img data-src="/2023/Knowledge-enhanced%20Mixed-initiative%20Dialogue%20System%20for%20Emotional%20Support%20Conversations/1699406609845-c98dd4cb-e2ae-41f2-99b8-aed67482d60d.png" class="" title="image.png">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>混和主动性：按照说话者角色和主动类型分为四类</li>
+<li>提出四个情绪支持指标</li>
+<li>提出一种用于 ESC 的知识增强混合主动框架 (KEMI)</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>ESC系统
+<ul>
+<li>在适当的时候发起讨论，目的是提出建议，并解决问题</li>
+</ul>
+</li>
+<li>相关工作
+<ul>
+<li>CIS(conversational information-seeking)可以主动发起对话，澄清交互并探索更多的信息</li>
+<li>情感推理用来生成共情反应</li>
+<li>identifying the dialogue acts of the utterances</li>
+<li>ESC 系统预测下一个对话策略</li>
+</ul>
+</li>
+<li>ESC问题的三个挑战
+<ul>
+<li>系统应该在对话过程中何时采取主动？</li>
+<li>系统发起子对话需要什么样的信息？</li>
+<li>系统如何促进混合主动交互？</li>
+</ul>
+</li>
+<li>解决方法
+<ul>
+<li>策略预测：确定下一回合混合主动策略</li>
+<li>知识选择：收集下一回合的必要知识</li>
+<li>响应生成：在适当的混合主动策略和知识下产生情感支持响应</li>
+</ul>
+</li>
+<li>提出的新东西
+<ul>
+<li>混合主动性特征
+<ul>
+<li>EAFR模式：话语注释为不同类型的说话者角色和主动类型</li>
+<li>Expression, Action, Reflection, Feedback</li>
+</ul>
+</li>
+<li>情感支持指标
+<ul>
+<li>Proactivity, Information, Repetition, Relaxation</li>
+</ul>
+</li>
+<li>KEMI
+<ul>
+<li>使用生成的常识知识作为查询图来扩展用户话语，在知识图谱上执行子图检索</li>
+<li>响应生成模块以序列到序列的方式，对策略预测和响应生成进行【多任务学习】，以生成具有外部知识的混合主动响应</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>主要贡献
+<ul>
+<li>EAFR 注释模式和四种情感支持指标</li>
+<li>使用用常识知识扩展的查询图，通过子图检索从心理健康知识图谱中检索外部知识</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-works"><a class="markdownIt-Anchor" href="#related-works"></a> Related Works</h2>
+<ul>
+<li>ESC
+<ul>
+<li>检测用户情绪</li>
+<li>将情感信号放入Respond中</li>
+<li>情绪感知反应，情感风格转移</li>
+<li>共情对话系统
+<ul>
+<li>情感推理技巧</li>
+<li>利用外部知识来提高情绪推理的建模能力：知识图、常识性模型、特定领域知识、常识性知识</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>混合主动对话</li>
+</ul>
+<h2 id="preliminary-analysis"><a class="markdownIt-Anchor" href="#preliminary-analysis"></a> Preliminary Analysis</h2>
+<ul>
+<li>EAFR
+<ul>
+<li>四种注释方法：按照角色和主动类型区分</li>
+<li>四种评价指标：【待看】</li>
+</ul>
+</li>
+<li>混合主动性分析</li>
+<li>混和主动性的挑战
+<ul>
+<li>系统何时采取主动？</li>
+<li>系统发起子对话时，需要什么信息？
+<ul>
+<li>情感识别：识别用户情感状态</li>
+<li>因果识别：导致情感状态的压力源</li>
+<li>认知识别：解决问题的过程</li>
+</ul>
+</li>
+<li>根据历史对话，系统自发判断响应的主动或被动</li>
+</ul>
+</li>
+<li>问题定义
+<ul>
+<li>给定历史对话C和用户情况s，产生相应r
+<ul>
+<li>策略预测y，细粒度主动性</li>
+<li>知识选择k</li>
+<li>使用y和k生成混合主动相应r</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="method"><a class="markdownIt-Anchor" href="#method"></a> Method</h2>
+<ul>
+<li>知识获取
+<ul>
+<li>检索心理健康知识图谱HEAL，弥补常识性知识的不足
+<ul>
+<li>COMET常识性知识扩展查询：Cp = COMET(p, ut)</li>
+<li>构造查询图：û = {ut, {Cp}}
+<ul>
+<li>expectation：ut</li>
+<li>affective：[xReact]</li>
+<li>stressor：[xIntent]</li>
+<li>responses：[xWant] [xNeed] [xEffect]</li>
+</ul>
+</li>
+<li>子图检索
+<ul>
+<li>相似度计算：sentence-BERT</li>
+<li>针对每个 ût 中的抽象描述，获取与其最相似的top-K个HEAL中的实体，基于HEAL中的边缘连接，构成候选子图</li>
+<li>针对每个 E 中的类型节点，按照子图中的每个节点相似度得分之和排序子图，选择top-N作为检索到的知识K</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>混合主动响应生成
+<ul>
+<li>使用基于上下文的编码器，编码上下文对话C和知识K</li>
+<li>X：[CLS]<context>[know.]&lt;know.&gt;；Y：[strategy]y[response]r</li>
+<li>优化损失函数，最大化负对数似然函数L</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiment"><a class="markdownIt-Anchor" href="#experiment"></a> Experiment</h2>
+<ul>
+<li>实验基础
+<ul>
+<li>数据集：ESConv、MI</li>
+<li>评估参数：流利度Perplexity (PPL)、内容保留度BLEU-n (B-n)、内容保留度ROUGE-L (R-L)</li>
+</ul>
+</li>
+<li>总体表现
+<ul>
+<li>BlenderBot优于Transformer</li>
+<li>GLHG、MISI有效地利用了常识性知识</li>
+<li>基于策略的联合学习可以提高性能</li>
+<li>KEMI明显优于其他方法：HEAL知识相比常识性知识更有效地支持了预测策略，减轻了对预训练大模型的依赖</li>
+</ul>
+</li>
+<li>人工评价
+<ul>
+<li>从流畅度、辨识度、舒适度、建议有效性、总体回应五个方面与BlenderBot-joint、MISC进行对比，MISC完胜</li>
+</ul>
+</li>
+<li>消融实验
+<ul>
+<li>HEAL可以有效提升策略预测准确度</li>
+<li>舍弃COMET，可以提高ppl准确度，因为常识性知识不是自然语句；但会降低内容保留度，因为简洁的常识性知识更为精确</li>
+<li>认知识别是最有效的</li>
+<li>对比Oracle，还有很大的提升空间</li>
+</ul>
+</li>
+<li>混和主动性分析
+<ul>
+<li>情感支持指标分析
+<ul>
+<li>KEMI有效的平衡了主动性和非主动性回复</li>
+<li>KEMI回复的信息更加丰富</li>
+<li>KEMI容易生成重复性回复</li>
+<li>KEMI有效地帮助用户解决情绪问题</li>
+</ul>
+</li>
+<li>会话进度
+<ul>
+<li>相比BlenderBot和MISC，KEMI在对话过程中，主动性和非主动性的分布更加平衡</li>
+<li>KEMI在对话中后期更能主动相应并缓解用户负面情绪</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>案例分析</li>
+</ul>
+<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
+<ul>
+<li>首次提出ESC中混和主动性的特点，并阐述其重要性</li>
+<li>KEMI框架
+<ul>
+<li>通过查询扩展和子图检索，从大规模心理健康图谱中检索实际病例知识</li>
+<li>通过检索到的知识，进行策略预测和响应生成的多任务学习</li>
+</ul>
+</li>
+<li>结合实际案例和分析指标，结果证明KEMI优于现有方法，并在混合主动交互方面具有优势</li>
+</ul>
+<h2 id="limitations"><a class="markdownIt-Anchor" href="#limitations"></a> Limitations</h2>
+<ul>
+<li>评价指标有待改进</li>
+<li>没有考虑不同知识检索方法的不同</li>
+<li>从复杂的KG图中检索知识的方法有待提高</li>
+<li>某些应用的知识图难以获取</li>
+<li>知识库的建立需要具有专业知识的人员</li>
+</ul>
+<h2 id="appendix"><a class="markdownIt-Anchor" href="#appendix"></a> Appendix</h2>
+<ul>
+<li>混和主动性
+<ul>
+<li>对话主动性分析
+<ul>
+<li>主动性分析模型：在ESConv数据集增加混合主动的类型属性，把历史对话和当前话语作为二元输入，判断主动性。微调RoBERTTalarge，分别训练两个模型，判断用户和系统的主动性</li>
+<li>情绪强度预测模型：根据用户话语预测负面情绪强度</li>
+<li>用户模拟并注释四种评价指标 ：【待看】</li>
+</ul>
+</li>
+<li>对话流分析
+<ul>
+<li>ESC在对话中充当主动角色；ED在对话中充当被动角色</li>
+</ul>
+</li>
+<li>对话过程
+<ul>
+<li>研究内容：主动性和情绪强度变化的关系</li>
+<li>结论
+<ul>
+<li>交互时间很重要</li>
+<li>情绪缓解后才更有利于解决问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ES指标</li>
+</ul>
+</li>
+<li>COMET
+<ul>
+<li>常识性关系</li>
+</ul>
+</li>
+<li>HEAL
+<ul>
+<li>情绪压力和安慰回应之间的知识图谱</li>
+<li>表现了对话双方的情绪动态，确定缓解情绪的方法</li>
+</ul>
+</li>
+</ul>
+<h1 id="解决了什么问题"><a class="markdownIt-Anchor" href="#解决了什么问题"></a> 解决了什么问题</h1>
+<ul>
+<li>常识性知识是相当抽象的，没有详细的信息，因此它对ESC系统产生有意义和信息丰富的响应的帮助不大。在这项工作中，我们采用<strong>生成式常识模型</strong>进行查询扩展，从外部知识图中检索实际案例知识。</li>
+</ul>
+<h1 id="怎么解决的-该方法的优势"><a class="markdownIt-Anchor" href="#怎么解决的-该方法的优势"></a> 怎么解决的 / 该方法的优势</h1>
+<ol>
+<li>常识知识生成器 COMET：</li>
+<li>常识性知识获取 HEAL：</li>
+</ol>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<ol>
+<li>提出ESC知识增强混合主动框架
+<ol>
+<li>人类和系统都可以主动引导交互方向</li>
+<li>通过子图检索从心理健康知识图谱中检索外部知识</li>
+</ol>
+</li>
+<li>新的分析方法</li>
+</ol>
+<blockquote>
+<p>保留评估 和 混合主动性分析 方面均有效优于现有方法</p>
+</blockquote>
+<ol>
+<li>按照说话者角色和主动类型将话语注释为不同类型
+<ol>
+<li>Expression：用户主动</li>
+<li>Action：系统主动</li>
+<li>Feedback：用户非主动</li>
+<li>Reflection：系统非主动</li>
+</ol>
+</li>
+<li>提出四个情感支持指标来衡量ESC中主动性和非主动性交互的特征
+<ol>
+<li>Proactivity：系统主动的对话占系统对话的比例</li>
+<li>Information：系统首次提出的频繁词占比</li>
+<li>Repetition：系统重复用户提出的术语的频次占比</li>
+<li>Relaxation：情绪强度的改善</li>
+</ol>
+</li>
+</ol>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MISC</title>
+    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
+<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>先前工作的局限性
+<ul>
+<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
+<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
+</ul>
+</li>
+<li>本文提出了MISC
+<ul>
+<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
+<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前的工作不适用于ESC
+<ul>
+<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
+<li>只有移情反应，而不考虑解决求助者的情感问题</li>
+</ul>
+</li>
+<li>本文提出的解决方法
+<ul>
+<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
+<li>混合策略，而不是预测单一策略</li>
+<li>设计一套注意力机制</li>
+</ul>
+</li>
+<li>实验分析
+<ul>
+<li>回答策略建模的重要性，能够提高模型的共情能力</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>情绪感知响应生成</li>
+<li>NLP中的常识性知识</li>
+<li>策略感知对话模型</li>
+</ul>
+<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
+<ul>
+<li>ESConv数据集</li>
+<li>问题设定
+<ul>
+<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
+</ul>
+</li>
+</ul>
+<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
+<ul>
+<li>情感状态增强Encoder
+<ul>
+<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
+</ul>
+</li>
+</ul>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
+<ul>
+<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
+<li>将历史对话c输入Encoder得到C</li>
+<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
+<ul>
+<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
+<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
+<ul>
+<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>多因素感知Decoder
+<ul>
+<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>ESConv中的每十个话语作为一个样本</li>
+<li>评价指标
+<ul>
+<li>策略预测精度：Acc</li>
+<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
+<li>相应多样性：Distinct</li>
+<li>人类评估</li>
+</ul>
+</li>
+<li>基准模型
+<ul>
+<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
+</ul>
+</li>
+<li>具体实现</li>
+<li>实验结果
+<ul>
+<li>动态细粒度情感标签更能准确给予用户回应</li>
+<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
+<li>策略作为单独的任务进行预测比单一预测更有利</li>
+<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
+</ul>
+</li>
+</ul>
+<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
+<ul>
+<li>消融实验</li>
+<li>案例研究</li>
+<li>细粒度情感理解
+<ul>
+<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
+</ul>
+</li>
+<li>混合策略感知移情反应
+<ul>
+<li>混合策略有利于平滑的情感支持</li>
+<li>混合策略比单一策略更有效</li>
+<li>混合策略适用于ESC框架</li>
+</ul>
+</li>
+</ul>
+<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
+<ul>
+<li>引入COMET来捕捉用户的即时心理状态</li>
+<li>设计了一个混合策略感知解码器来产生支持响应</li>
+</ul>
+<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
+<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
+<ul>
+<li>长对话中的过度更加顺畅</li>
+</ul>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<ul>
+<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
+<li>提出了不同的策略模型并在对话中给予提示</li>
+</ul>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<ul>
+<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
+</ul>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+<ul>
+<li>以动态的方式学习混合响应策略</li>
+</ul>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>BlenderBot</title>
+    <url>/2023/Recipes%20for%20building%20an%20open-domain%20chatbot/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Recipes for building an open-domain chatbot</p>
+<blockquote>
+<p>FaceBook 在本文中提出了 BlenderBot 编解码器模型</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>开放域聊天机器人需要良好的谈话技巧：提出有吸引力的要点，倾听别人的意见，适当展示知识、同理性和个性，保持前后一致</li>
+<li>本文证实：基于适当的训练数据和生成策略，大模型可以学习上述技巧</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>研究的主要内容
+<ul>
+<li>混合技巧：模型专注于个性和吸引力、知识、同理心。采用 Blended Skill Talk 实现，具体是通过提供训练数据和初始化上下文来实现。这种方法可以减少从大语料库中学习到不良特征。</li>
+<li>生成策略：解码算法非常重要，对话长度强相关于对话质量，本文实验表明采样优于束搜索</li>
+</ul>
+</li>
+<li>本文的优势和存在的问题</li>
+</ul>
+<h2 id="model-architectures"><a class="markdownIt-Anchor" href="#model-architectures"></a> Model architectures</h2>
+<ul>
+<li>检索
+<ul>
+<li>将训练集作为候选响应集，每个可能的候选响应都参与Encoder，并做聚类【poly-encoder】</li>
+</ul>
+</li>
+<li>生成
+<ul>
+<li>使用标准的Seq2Seq Transformer架构生成响应</li>
+</ul>
+</li>
+<li>检索和提炼
+<ul>
+<li>帮助模型访问没有嵌入其模型参数的外部知识</li>
+<li>对话检索：通过检索模型生成响应，并将其附加到Decoder的输入序列中，并用分隔符分开。使用修改后的输入序列生成正常的响应</li>
+<li>知识检索：检索Wiki生成初始候选集，使用上文提到的检索模型，排序候选词并选择条件生成的句子。此外，训练一个分类器，通过上下文判断何时需要检索知识</li>
+</ul>
+</li>
+</ul>
+<h2 id="training-objectives"><a class="markdownIt-Anchor" href="#training-objectives"></a> Training Objectives</h2>
+<ul>
+<li>检索排序
+<ul>
+<li>模型训练使用本文回答作为正例，其他对话回答作为负例</li>
+</ul>
+</li>
+<li>响应生成模型的似然训练
+<ul>
+<li>建模整个序列的概率分布</li>
+</ul>
+</li>
+<li>α-混合检索和提炼
+<ul>
+<li>生成模型常常不考虑对话检索语句，为确保其被使用，将检索相应中的α%替换成真实响应，α为超参数</li>
+<li>知识检索的数据集里，知识条件和响应之间有明确的对应关系</li>
+<li>因此训练阶段只使用知识检索的数据，充实模型参数中学到的知识</li>
+</ul>
+</li>
+<li>响应生成模型的非似然损失
+<ul>
+<li>使用高于真实数据数量的n元语法中的token作为候选负样本，修正已知的偏差</li>
+</ul>
+</li>
+</ul>
+<h2 id="decoding"><a class="markdownIt-Anchor" href="#decoding"></a> Decoding</h2>
+<p>选择解码方法对给定的历史对话的响应</p>
+<ul>
+<li>确定性解码方法
+<ul>
+<li>束搜索</li>
+<li>贪心搜索</li>
+</ul>
+</li>
+<li>采样
+<ul>
+<li>多项采样：根据预测结果概率分布，定义候选Token被选中的概率。防止采样到低概率Token，可以将采样限制在词汇表的子集内，并根据子集概率重采样</li>
+<li>平滑分布采样：Temparature+SoftMax+multinomial</li>
+<li>top-k sampling：Temparature+Top-k+SoftMax+multinomial，将top-k外的token概率置为0</li>
+<li>sample-and-rank：多次采样，取最高概率的响应</li>
+</ul>
+</li>
+<li>响应长度
+<ul>
+<li>约束最小生成长度：在实现最小序列长度之前，强制不生成结束标记</li>
+<li>预测长度：根据上下文预测相应长度，这是一个四分类问题</li>
+</ul>
+</li>
+<li>子序列分块
+<ul>
+<li>n-grams：考虑响应和输入上下文中对于n-grams的重复性</li>
+</ul>
+</li>
+</ul>
+<h2 id="training-details"><a class="markdownIt-Anchor" href="#training-details"></a> Training Details</h2>
+<ul>
+<li>预训练排序模型</li>
+<li>预训练生成模型</li>
+<li>微调
+<ul>
+<li>Fairseq-style混合精度训练</li>
+</ul>
+</li>
+</ul>
+<p>Training Data<br />
+Safety Characteristics<br />
+Evaluation Methods<br />
+Related Work<br />
+Results &amp; Analysis<br />
+Released code and models<br />
+Discussion</p>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<ul>
+<li>成对比较和人性方面优于Meena</li>
+</ul>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+<ul>
+<li>如果对话中深入询问某一方面，由于缺乏知识模型没法给出详细的回答</li>
+<li>模型倾向于简单的回答</li>
+<li>模型倾向于产生重复易混淆的句子</li>
+</ul>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ESConv</title>
+    <url>/2023/Towards%20Emotional%20Support%20Dialog%20Systems/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Towards Emotional Support Dialog Systems</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<ul>
+<li>Abstract
+<ul>
+<li>本文关注于情感支持对话，提供了一个带策略的情绪支持数据集</li>
+</ul>
+</li>
+<li>Introduction
+<ul>
+<li>情感支持应用广泛</li>
+<li>情绪支持数据集应该包括exploration、understand、suggestion三个过程，还包括有用户的情绪强度变化</li>
+<li>目前的研究模型中没有具体有效的情绪支持方法；采集数据集时需要训练有素的支持者</li>
+<li>ESC框架：三个阶段，多种策略；众包做数据集；在情绪支持方面有提升</li>
+</ul>
+</li>
+<li>Related Work
+<ul>
+<li>移情、同感对话</li>
+<li>情绪支持的数据集</li>
+<li>情绪支持对话
+<ul>
+<li>任务定义</li>
+<li>ESC框架
+<ul>
+<li>三个阶段：探索、理解、建议</li>
+<li>八种策略</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Data Collection
+<ul>
+<li>获取数据集的方法</li>
+</ul>
+</li>
+<li>Data Characteristics
+<ul>
+<li>数据展示</li>
+</ul>
+</li>
+<li>Experiments
+<ul>
+<li>基准模型：BlenderBot、DialoGPT</li>
+<li>模型变种：不带策略：Vanilla；带策略：Random、Joint、Oracle</li>
+<li>评估指标：PPL、B-2、R-L、Extrema</li>
+<li>实验结果：
+<ul>
+<li>带策略的Oracle优于不带策略的Vanilla</li>
+<li>带策略的Oracle稍微弱于不带策略的Vanilla，因为一旦策略预测错误，respond会完全不同</li>
+<li>BlenderBot 变体始终比 DialoGPT 变体表现更好</li>
+</ul>
+</li>
+<li>人类互动评价结果：
+<ul>
+<li>微调后ES能力提升</li>
+<li>带策略微调后能更加适合用户需求</li>
+<li>正确的策略更重要</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Conclusion
+<ul>
+<li>三个阶段、多种策略、ESConv</li>
+<li>道德评估</li>
+</ul>
+</li>
+</ul>
+<h1 id="解决了什么问题"><a class="markdownIt-Anchor" href="#解决了什么问题"></a> 解决了什么问题</h1>
+<ol>
+<li>目前的对话系统没有针对情感支持的任务和语料库，因此ESC方向还没有被探索到，对话场景中缺乏情感支持。</li>
+<li>情感支持（ES）旨在减少个人的情绪困扰，帮助他们理解和应对所面临的挑战。目前的模型大都只能表示共情而不能解决问题。</li>
+<li>通过社交而不是专业咨询的方式提供情感支持。</li>
+</ol>
+<h1 id="怎么解决的该方法的优势"><a class="markdownIt-Anchor" href="#怎么解决的该方法的优势"></a> 怎么解决的/该方法的优势</h1>
+<ol>
+<li>基于Hill的帮助技能理论，提出了ESC框架
+<ol>
+<li>情感支持过程
+<ol>
+<li>理解遇到的困难，exploration</li>
+<li>表达理解和同情，insight/comforting</li>
+<li>提出解决问题的方法，action</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>构建ESConv数据集，有丰富的注释（支持策略）
+<ol>
+<li>每个聊天会都会标记：
+<ol>
+<li>问题类别</li>
+<li>用户情绪类别</li>
+<li>用户情绪强度</li>
+<li>遇到困难的简介</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>ESC系统
+<ol>
+<li>选择支持策略，生成策略约束Respond</li>
+<li>情绪状态建模，跟踪用户情绪变化【待分析】</li>
+<li>提出了评估ES实验效果的新方法</li>
+</ol>
+</li>
+</ol>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<ol>
+<li>表达情感
+<ol>
+<li>ECM：情感对话，可以生成情感反应。有情商而不只是智商</li>
+<li>ES：有情绪支持的能力，可以减少用户情绪困扰</li>
+</ol>
+</li>
+<li>共情能力
+<ol>
+<li>反应出同情心，不能做情绪支持</li>
+</ol>
+</li>
+<li>数据集
+<ol>
+<li>数据集中的对话短，不适合ES任务</li>
+</ol>
+</li>
+<li>ESC系统
+<ol>
+<li>大多研究都人为预先规定好的规则和回复词典</li>
+</ol>
+</li>
+</ol>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+</search>

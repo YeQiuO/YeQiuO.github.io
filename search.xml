@@ -1,232 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Git 文档阅读</title>
-    <url>/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/</url>
-    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
-<blockquote>
-<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
-</blockquote>
-<span id="more"></span>
-<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
-<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
-<ol>
-<li>
-<p>集中化版本控制（CVCS）缺点</p>
-<ol>
-<li>中央服务器的单点故障就无法协同工作</li>
-<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
-</ol>
-</li>
-<li>
-<p>分布式版本控制（DVCS）优点</p>
-<ol>
-<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
-<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
-<li>可以指定和若干不同的远端代码仓库进行交互</li>
-</ol>
-</li>
-</ol>
-<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
-<ol>
-<li>并行开发</li>
-<li>完全分布式</li>
-<li>速度快</li>
-<li>数据量大</li>
-</ol>
-<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
-<ol>
-<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
-<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
-<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
-<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
-<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
-</ol>
-<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
-<blockquote>
-<p>git config --list --show-origin</p>
-</blockquote>
-<ol>
-<li>/etc/gitconfig 系统通用配置 git config --system</li>
-<li>~/.gitconfig 当前用户配置 git config --global</li>
-<li>.git/config 当前项目配置 git config --local</li>
-</ol>
-<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
-<blockquote>
-<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
-</blockquote>
-<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
-<ol>
-<li>git init
-<ol>
-<li>初始化仓库</li>
-</ol>
-</li>
-<li>git clone
-<ol>
-<li>克隆仓库</li>
-</ol>
-</li>
-<li>git status
-<ol>
-<li>查看文件状态</li>
-<li>[-s] 简要文件状态信息</li>
-</ol>
-</li>
-<li>git add
-<ol>
-<li>[&lt;file&gt;] 跟踪新文件</li>
-<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
-<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
-</ol>
-</li>
-<li>git diff
-<ol>
-<li>已修改文件与已暂存文件的内容差异</li>
-<li>[–staged] 已暂存与分支HEAD的内容差异</li>
-</ol>
-</li>
-<li>git rm
-<ol>
-<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
-<li>[-f] 强制移除存在未暂存修改的文件</li>
-<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
-</ol>
-</li>
-<li>git commit
-<ol>
-<li>提交文件</li>
-<li>[-m] 提交备注</li>
-<li>[–amend] 追加提交</li>
-<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
-</ol>
-</li>
-<li>git mv
-<ol>
-<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
-</ol>
-</li>
-<li>git log
-<ol>
-<li>回顾提交历史</li>
-<li>[–stat] 显示每次提交的简要信息</li>
-<li>[-p ] 显示每次提交的详细信息</li>
-<li>[–pretty=format:“xxx”] 自定义信息格式</li>
-<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
-<li>[–since] 限制时间</li>
-</ol>
-</li>
-<li>git reset
-<ol>
-<li>[HEAD &lt;file&gt;] 取消暂存</li>
-</ol>
-</li>
-<li>git checkout
-<ol>
-<li>[-- &lt;filename&gt;] 撤销修改</li>
-<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
-<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
-</ol>
-</li>
-<li>git remote
-<ol>
-<li>[-v] 列出远程仓库</li>
-<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
-<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
-<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
-<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
-</ol>
-</li>
-<li>git fetch
-<ol>
-<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
-</ol>
-</li>
-<li>git push
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
-<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
-<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
-<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
-<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
-</ol>
-</li>
-<li>git pull
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
-</ol>
-</li>
-<li>git tag
-<ol>
-<li>列出已有的标签</li>
-<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
-<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
-<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
-<li>[-d] 删除标签</li>
-</ol>
-</li>
-<li>git show
-<ol>
-<li>标签信息和与之对应的提交信息</li>
-</ol>
-</li>
-<li>git restore
-<ol>
-<li>[&lt;filename&gt;] 丢弃工作区修改</li>
-<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
-</ol>
-</li>
-<li>git merge
-<ol>
-<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
-</ol>
-</li>
-<li>git branch
-<ol>
-<li>[-d &lt;branchname&gt;] 删除分支</li>
-<li>[-v] 每个分支的最后一次提交</li>
-<li>[-vv] 跟踪信息</li>
-<li>(–set-upstream-to=&lt;upstream&gt; | -u &lt;upstream&gt;) [&lt;branchname&gt;] 跟踪上游分支</li>
-<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
-</ol>
-</li>
-<li>git stash
-<ol>
-<li>贮藏工作</li>
-<li>[list] 列出所有贮藏</li>
-<li>[apply] 恢复贮藏</li>
-</ol>
-</li>
-<li>git rebase
-<ol>
-<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
-</ol>
-</li>
-</ol>
-<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
-<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
-<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
-<blockquote>
-<p>相关命令合并到 Chapter2 中</p>
-</blockquote>
-<ol>
-<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
-<li>git mergetool 图形化冲突解决工具</li>
-<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
-</ol>
-<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
-<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
-<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
-<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>版本管理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java 并发锁</title>
     <url>/JUC-Lock/</url>
     <content><![CDATA[<p>Java.util.concurrent 中有很多 Java 并发相关工具，例如 锁 <code>ReentrantLock</code>、线程 <code>Callable</code> <code>FutureTask</code>、信号量 <code>Semaphore</code>、共享锁 <code>CountDownLatch</code></p>
@@ -313,7 +87,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.lkmxettkmptc{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="lkmxettkmptc" alt="image-20240415164535374">
+<style>.ujshbtgxljip{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="ujshbtgxljip" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>
@@ -407,138 +181,22 @@
       </tags>
   </entry>
   <entry>
-    <title>Java 算法汇总</title>
-    <url>/Java-Algorithm/</url>
-    <content><![CDATA[<h1 id="算法"><a class="markdownIt-Anchor" href="#算法"></a> 算法</h1>
-<h2 id="动态规划"><a class="markdownIt-Anchor" href="#动态规划"></a> 动态规划</h2>
-<h3 id="树形-dp"><a class="markdownIt-Anchor" href="#树形-dp"></a> 树形 dp</h3>
-<p>题型：<strong>树的直径</strong></p>
-<p>思路：可以看作是再求树的深度，在求深度的同时“更新树的最长直径”。</p>
-<p>代码模板</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LongestPath</span> &#123;</span><br><span class="line">    List&lt;Integer&gt;[] g;</span><br><span class="line">    <span class="type">int</span> <span class="variable">longestPath</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">        <span class="comment">// 两种思路：1.记录最大和次大长的路径；2.记录最大长 max，max+当前结果 和 result 比大小</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> child:g[x]) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">cur</span> <span class="operator">=</span> dfs(child) + <span class="number">1</span>;</span><br><span class="line">            longestPath = Math.max(longestPath, max + cur);</span><br><span class="line">            max = Math.max(max, cur);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">solve</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] relate = &#123;-<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;  <span class="comment">// 边的关系(题目给出)</span></span><br><span class="line">        <span class="comment">// 构建关系，List 存儿子节点，可以拓展到一般树的情况</span></span><br><span class="line">        g = <span class="keyword">new</span> <span class="title class_">ArrayList</span>[relate.length];</span><br><span class="line">        Arrays.setAll(g, e -&gt; <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i&lt;relate.length; i++) &#123;</span><br><span class="line">            g[relate[i]].add(i);</span><br><span class="line">        &#125;</span><br><span class="line">        dfs(<span class="number">0</span>);</span><br><span class="line">        System.out.println(longestPath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>拓展：</p>
-<ul>
-<li>【124】求二叉树中最大的路径和。改左右子树的深度为节点值的和，若和为负数则返回 0</li>
-<li>【2245】一般树的最长路径。遍历所有邻居（过滤掉父节点），取最长、次长两条路径相加，结果为最长路径。此外，根据题意还要去除父子结点相同的情况。</li>
-</ul>
-<p>题型：<strong>树上最大独立集</strong>（从图中选择尽量多的点，使得这些点互不相邻）</p>
-<p>题型：<strong>树上最小支配集</strong>（从图中选择尽量少的点，使得这些点和其父子结点包括了整棵树）</p>
-<h3 id="二维-dp"><a class="markdownIt-Anchor" href="#二维-dp"></a> 二维 dp</h3>
-<p>题型：最长公共子序列</p>
-<p>思路：定义 <code>dp[i][j]</code> 表示 <code>text1[0:i-1]</code> 和 <code>text2[0:j-1]</code> 的最长公共子序列</p>
-<h1 id="java-技巧"><a class="markdownIt-Anchor" href="#java-技巧"></a> Java 技巧</h1>
-<p>强制类型转换</p>
-<ul>
-<li>向零截断，直接保留整数位 <code>1/2 == -1/2 == 0</code></li>
-</ul>
-<p>基本数据类型的默认值</p>
-<ul>
-<li>int \ double：0</li>
-<li>boolean：false</li>
-</ul>
-<p>常量池</p>
-<ul>
-<li>包装类型常量池：Byte, Short, Integer [-128,127], Long, Character, Boolean</li>
-<li>字符串常量池</li>
-</ul>
-<p>初始化</p>
-<ul>
-<li>成员变量（定义在类里方法外的变量）一定要进行初始化的，如果不显式的进行初始化，那么虚拟机会进行默认的初始化
-<ul>
-<li>基本数据类型一般是给予默认值</li>
-<li>引用类型初始值为 null</li>
-</ul>
-</li>
-<li>局部变量不会自动初始化，所以在声明局部变量时要注意，可以不在声明时初始化，但在使用之前一定要进行初始化，否则会报编译错误</li>
-</ul>
-<h2 id="数组-列表快速初始化"><a class="markdownIt-Anchor" href="#数组-列表快速初始化"></a> 数组、列表快速初始化</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] array = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[] array = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[][] array = &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">3</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);  <span class="comment">// 返回的是Arrays的内部类无法增删</span></span><br><span class="line">List&lt;&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()&#123;&#123;</span><br><span class="line">    add(<span class="number">1</span>);</span><br><span class="line">    add(<span class="number">2</span>);</span><br><span class="line">    add(<span class="number">3</span>);</span><br><span class="line">&#125;&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="初始化小根堆"><a class="markdownIt-Anchor" href="#初始化小根堆"></a> 初始化小根堆</h2>
-<p>使用优先级队列 <code>PriorityQueue</code> 实现小根堆</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">PriorityQueue&lt;<span class="type">int</span>[]&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((pair1,pair2) -&gt; pair1[<span class="number">1</span>]-pair2[<span class="number">1</span>]);  <span class="comment">// 数组</span></span><br><span class="line">PriorityQueue&lt;ListNode&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((o1, o2) -&gt; o1.val-o2.val);  <span class="comment">// 节点</span></span><br><span class="line"></span><br><span class="line">queue.offer(data)  <span class="comment">// 节点入堆</span></span><br><span class="line">data = queue.poll()  <span class="comment">// 头节点出堆</span></span><br></pre></td></tr></table></figure>
-<h2 id="list-转数组"><a class="markdownIt-Anchor" href="#list-转数组"></a> List 转数组</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动拆箱</span></span><br><span class="line"><span class="type">int</span>[] array = list.stream().mapToInt(Integer::valueOf).toArray();</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 流式</span></span><br><span class="line">String[] array = list.stream().toArray(String[]::<span class="keyword">new</span>);</span><br><span class="line"><span class="comment">// 串行</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[list.size()]); <span class="comment">// 规定好数组大小，速度更快</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
-<h2 id="数组转-list"><a class="markdownIt-Anchor" href="#数组转-list"></a> 数组转 List</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动装箱</span></span><br><span class="line"><span class="type">int</span>[] arr = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.stream(arr).boxed().collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer[] integers = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">3</span>,<span class="number">8</span>,<span class="number">20</span>,<span class="number">7</span>,<span class="number">11</span>,<span class="number">25</span>&#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.asList(integers); </span><br><span class="line"><span class="comment">// ArrayList&lt;Object&gt; list = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">// Collections.addAll(list, a);</span></span><br></pre></td></tr></table></figure>
-<h2 id="原地交换"><a class="markdownIt-Anchor" href="#原地交换"></a> 原地交换</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ch[a] ^= ch[b];</span><br><span class="line">ch[b] ^= ch[a];</span><br><span class="line">ch[a] ^= ch[b];</span><br></pre></td></tr></table></figure>
-<h2 id="泛型占位符"><a class="markdownIt-Anchor" href="#泛型占位符"></a> 泛型&amp;占位符</h2>
-<p>泛型：T E K V</p>
-<blockquote>
-<p>泛型的初衷就是为了能在编译器检查出类型安全问题，并通过编译错误提示程序员</p>
-</blockquote>
-<ul>
-<li>泛型必须是引用类型，不能是基本类型</li>
-<li>泛型通过类型擦除实现</li>
-</ul>
-<p>占位符：?</p>
-<p>TODO lambda stream 流式计算 详解</p>
-<h2 id="判断奇偶"><a class="markdownIt-Anchor" href="#判断奇偶"></a> 判断奇偶</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">num &amp; <span class="number">1</span> == <span class="number">0</span> 则为奇数</span><br></pre></td></tr></table></figure>
-<h2 id="十进制数转-char"><a class="markdownIt-Anchor" href="#十进制数转-char"></a> 十进制数转 char</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> <span class="variable">t</span> <span class="operator">=</span> Character.forDigit(i, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="collection-转-list的方法"><a class="markdownIt-Anchor" href="#collection-转-list的方法"></a> Collection 转 List的方法</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Collection&lt;T&gt; collection = map.values();</span><br><span class="line">List&lt;T&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;(collection);</span><br></pre></td></tr></table></figure>
-<h2 id="map-遍历方法"><a class="markdownIt-Anchor" href="#map-遍历方法"></a> Map 遍历方法</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (Map.Entry&lt;Key.class, Value.class&gt; entry : map.entrySet()) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;key= &quot;</span> + entry.getKey() + <span class="string">&quot; and value= &quot;</span> + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>Java 算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LLM应用开发</title>
-    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
-    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
-<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
-<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
-<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
-<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
-<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
-<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型     更加麻烦，但是便于整体项目的开发、调用和维护。</p>
-<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
-<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
-<p>离线私有数据不能直接作为语料库训练模型，因此 LLM 无法直接返回有关私有数据的响应</p>
-<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
-<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
-<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
-<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
-<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
-<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
-<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
-<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
-]]></content>
-      <categories>
-        <category>大语言模型应用开发</category>
-      </categories>
-      <tags>
-        <tag>Langchain</tag>
-        <tag>向量数据库</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CompletableFuture 和 CompletableFuture实践</title>
     <url>/JUC-ThreadPool/</url>
     <content><![CDATA[<p>池化思想，维护一个池子，减少创建/销毁的开销，合理分配系统资源，但会增加调度开销。<a href="https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html">参考美团技术博客</a>：底层设计思想、业务实现</p>
 <h1 id="threadpoolexecutor-线程池实现类"><a class="markdownIt-Anchor" href="#threadpoolexecutor-线程池实现类"></a> ThreadPoolExecutor 线程池实现类</h1>
 <h2 id="执行流程图"><a class="markdownIt-Anchor" href="#执行流程图"></a> 执行流程图</h2>
-
+<img data-src="/JUC-ThreadPool/77441586f6b312a54264e3fcf5eebe2663494.png" class="" title="图2 ThreadPoolExecutor运行流程">
 <p><strong>线程池生命周期</strong></p>
 <img data-src="/JUC-ThreadPool/582d1606d57ff99aa0e5f8fc59c7819329028.png" class="" title="图3 线程池生命周期">
 <p><strong>任务调度流程</strong></p>
 <p>所有任务的调度都是由execute方法完成的，这部分完成的工作是：检查现在线程池的运行状态、运行线程数、运行策略，决定接下来执行的流程，是直接申请线程执行，或是缓冲到队列中执行，亦或是直接拒绝该任务。其执行过程如下：</p>
 <ol>
-<li>首先检测线程池运行状态，如果不是RUNNING，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。</li>
-<li>如果workerCount &lt; corePoolSize，则创建并启动一个线程来执行新提交的任务。</li>
-<li>如果workerCount &gt;= corePoolSize，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。</li>
-<li>如果workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。</li>
-<li>如果workerCount &gt;= maximumPoolSize，并且线程池内的阻塞队列已满, 则根据<u>拒绝策略</u>来处理该任务, 默认的处理方式是直接抛异常。</li>
+<li>首先检测线程池运行状态，如果不是<code>RUNNING</code>，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。</li>
+<li>如果<code>workerCount &lt; corePoolSize</code>，则创建并启动一个线程来执行新提交的任务。</li>
+<li>如果<code>workerCount &gt;= corePoolSize，且线程池内的阻塞队列未满</code>，则将任务添加到该阻塞队列中。</li>
+<li>如果<code>workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize，且线程池内的阻塞队列已满</code>，则创建并启动一个线程来执行新提交的任务。</li>
+<li>如果<code>workerCount &gt;= maximumPoolSize，并且线程池内的阻塞队列已满</code>, 则根据<u>拒绝策略</u>来处理该任务, 默认的处理方式是直接抛异常。</li>
 </ol>
 <img data-src="/JUC-ThreadPool/31bad766983e212431077ca8da92762050214.png" class="" title="图4 任务调度流程">
 <h2 id="底层结构"><a class="markdownIt-Anchor" href="#底层结构"></a> 底层结构</h2>
@@ -746,90 +404,168 @@
       </tags>
   </entry>
   <entry>
-    <title>Hexo 使用指南</title>
-    <url>/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<blockquote>
-<p><a href="https://hexo.io/docs/">官方文档</a></p>
-</blockquote>
-<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>代码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>快速部署</td>
-<td>hexo g -d</td>
-</tr>
-<tr>
-<td>清除缓存</td>
-<td>hexo clean</td>
-</tr>
-<tr>
-<td>预览</td>
-<td>hexo s</td>
-</tr>
-<tr>
-<td>部署</td>
-<td>hexo d</td>
-</tr>
-<tr>
-<td>生成静态页面</td>
-<td>hexo generate</td>
-</tr>
-</tbody>
-</table>
-<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
-<p>初始化项目结构</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-<p>新增标签页，设置属性（type: “tags”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
-<p>新增分类，设置属性（type: “categories”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
-<p>配置 next 主题设置</p>
+    <title>Java 算法汇总</title>
+    <url>/Java-Algorithm/</url>
+    <content><![CDATA[<h1 id="算法"><a class="markdownIt-Anchor" href="#算法"></a> 算法</h1>
+<h2 id="动态规划"><a class="markdownIt-Anchor" href="#动态规划"></a> 动态规划</h2>
+<h3 id="树形-dp"><a class="markdownIt-Anchor" href="#树形-dp"></a> 树形 dp</h3>
+<p>题型：<strong>树的直径</strong></p>
+<p>思路：可以看作是再求树的深度，在求深度的同时“更新树的最长直径”。</p>
+<p>代码模板</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LongestPath</span> &#123;</span><br><span class="line">    List&lt;Integer&gt;[] g;</span><br><span class="line">    <span class="type">int</span> <span class="variable">longestPath</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">        <span class="comment">// 两种思路：1.记录最大和次大长的路径；2.记录最大长 max，max+当前结果 和 result 比大小</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> child:g[x]) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">cur</span> <span class="operator">=</span> dfs(child) + <span class="number">1</span>;</span><br><span class="line">            longestPath = Math.max(longestPath, max + cur);</span><br><span class="line">            max = Math.max(max, cur);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">solve</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] relate = &#123;-<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;  <span class="comment">// 边的关系(题目给出)</span></span><br><span class="line">        <span class="comment">// 构建关系，List 存儿子节点，可以拓展到一般树的情况</span></span><br><span class="line">        g = <span class="keyword">new</span> <span class="title class_">ArrayList</span>[relate.length];</span><br><span class="line">        Arrays.setAll(g, e -&gt; <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i&lt;relate.length; i++) &#123;</span><br><span class="line">            g[relate[i]].add(i);</span><br><span class="line">        &#125;</span><br><span class="line">        dfs(<span class="number">0</span>);</span><br><span class="line">        System.out.println(longestPath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>拓展：</p>
 <ul>
-<li>设置 menu 菜单栏</li>
-<li>打开 code 代码复制</li>
+<li>【124】求二叉树中最大的路径和。改左右子树的深度为节点值的和，若和为负数则返回 0</li>
+<li>【2245】一般树的最长路径。遍历所有邻居（过滤掉父节点），取最长、次长两条路径相加，结果为最长路径。此外，根据题意还要去除父子结点相同的情况。</li>
 </ul>
-<p>Debug</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
-<p><strong>Git 上传插件</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p><strong>latex 公式</strong></p>
-<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p><strong>本地图片</strong></p>
-<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
-<p><strong>Markdown 文字高亮</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
-<p>_config.yml</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
-<p><strong>添加Sitemap</strong></p>
-<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
-<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
-<p><strong>改 blockquote 颜色</strong></p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
-<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
-<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
-<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
+<p>题型：<strong>树上最大独立集</strong>（从图中选择尽量多的点，使得这些点互不相邻）</p>
+<p>题型：<strong>树上最小支配集</strong>（从图中选择尽量少的点，使得这些点和其父子结点包括了整棵树）</p>
+<h3 id="二维-dp"><a class="markdownIt-Anchor" href="#二维-dp"></a> 二维 dp</h3>
+<p>题型：最长公共子序列</p>
+<p>思路：定义 <code>dp[i][j]</code> 表示 <code>text1[0:i-1]</code> 和 <code>text2[0:j-1]</code> 的最长公共子序列</p>
+<h1 id="java-技巧"><a class="markdownIt-Anchor" href="#java-技巧"></a> Java 技巧</h1>
+<p>强制类型转换</p>
+<ul>
+<li>向零截断，直接保留整数位 <code>1/2 == -1/2 == 0</code></li>
+</ul>
+<p>基本数据类型的默认值</p>
+<ul>
+<li>int \ double：0</li>
+<li>boolean：false</li>
+</ul>
+<p>常量池</p>
+<ul>
+<li>包装类型常量池：Byte, Short, Integer [-128,127], Long, Character, Boolean</li>
+<li>字符串常量池</li>
+</ul>
+<p>初始化</p>
+<ul>
+<li>成员变量（定义在类里方法外的变量）一定要进行初始化的，如果不显式的进行初始化，那么虚拟机会进行默认的初始化
+<ul>
+<li>基本数据类型一般是给予默认值</li>
+<li>引用类型初始值为 null</li>
+</ul>
+</li>
+<li>局部变量不会自动初始化，所以在声明局部变量时要注意，可以不在声明时初始化，但在使用之前一定要进行初始化，否则会报编译错误</li>
+</ul>
+<h2 id="数组-列表快速初始化"><a class="markdownIt-Anchor" href="#数组-列表快速初始化"></a> 数组、列表快速初始化</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] array = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[] array = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[][] array = &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">3</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);  <span class="comment">// 返回的是Arrays的内部类无法增删</span></span><br><span class="line">List&lt;&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()&#123;&#123;</span><br><span class="line">    add(<span class="number">1</span>);</span><br><span class="line">    add(<span class="number">2</span>);</span><br><span class="line">    add(<span class="number">3</span>);</span><br><span class="line">&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="初始化小根堆"><a class="markdownIt-Anchor" href="#初始化小根堆"></a> 初始化小根堆</h2>
+<p>使用优先级队列 <code>PriorityQueue</code> 实现小根堆</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">PriorityQueue&lt;<span class="type">int</span>[]&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((pair1,pair2) -&gt; pair1[<span class="number">1</span>]-pair2[<span class="number">1</span>]);  <span class="comment">// 数组</span></span><br><span class="line">PriorityQueue&lt;ListNode&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((o1, o2) -&gt; o1.val-o2.val);  <span class="comment">// 节点</span></span><br><span class="line"></span><br><span class="line">queue.offer(data)  <span class="comment">// 节点入堆</span></span><br><span class="line">data = queue.poll()  <span class="comment">// 头节点出堆</span></span><br></pre></td></tr></table></figure>
+<h2 id="list-转数组"><a class="markdownIt-Anchor" href="#list-转数组"></a> List 转数组</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动拆箱</span></span><br><span class="line"><span class="type">int</span>[] array = list.stream().mapToInt(Integer::valueOf).toArray();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 流式</span></span><br><span class="line">String[] array = list.stream().toArray(String[]::<span class="keyword">new</span>);</span><br><span class="line"><span class="comment">// 串行</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[list.size()]); <span class="comment">// 规定好数组大小，速度更快</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+<h2 id="数组转-list"><a class="markdownIt-Anchor" href="#数组转-list"></a> 数组转 List</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动装箱</span></span><br><span class="line"><span class="type">int</span>[] arr = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.stream(arr).boxed().collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer[] integers = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">3</span>,<span class="number">8</span>,<span class="number">20</span>,<span class="number">7</span>,<span class="number">11</span>,<span class="number">25</span>&#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.asList(integers); </span><br><span class="line"><span class="comment">// ArrayList&lt;Object&gt; list = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">// Collections.addAll(list, a);</span></span><br></pre></td></tr></table></figure>
+<h2 id="原地交换"><a class="markdownIt-Anchor" href="#原地交换"></a> 原地交换</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ch[a] ^= ch[b];</span><br><span class="line">ch[b] ^= ch[a];</span><br><span class="line">ch[a] ^= ch[b];</span><br></pre></td></tr></table></figure>
+<h2 id="泛型占位符"><a class="markdownIt-Anchor" href="#泛型占位符"></a> 泛型&amp;占位符</h2>
+<p>泛型：T E K V</p>
 <blockquote>
-<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
+<p>泛型的初衷就是为了能在编译器检查出类型安全问题，并通过编译错误提示程序员</p>
 </blockquote>
-<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+<ul>
+<li>泛型必须是引用类型，不能是基本类型</li>
+<li>泛型通过类型擦除实现</li>
+</ul>
+<p>占位符：?</p>
+<p>TODO lambda stream 流式计算 详解</p>
+<h2 id="判断奇偶"><a class="markdownIt-Anchor" href="#判断奇偶"></a> 判断奇偶</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">num &amp; <span class="number">1</span> == <span class="number">0</span> 则为奇数</span><br></pre></td></tr></table></figure>
+<h2 id="十进制数转-char"><a class="markdownIt-Anchor" href="#十进制数转-char"></a> 十进制数转 char</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> <span class="variable">t</span> <span class="operator">=</span> Character.forDigit(i, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="collection-转-list的方法"><a class="markdownIt-Anchor" href="#collection-转-list的方法"></a> Collection 转 List的方法</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Collection&lt;T&gt; collection = map.values();</span><br><span class="line">List&lt;T&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;(collection);</span><br></pre></td></tr></table></figure>
+<h2 id="map-遍历方法"><a class="markdownIt-Anchor" href="#map-遍历方法"></a> Map 遍历方法</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (Map.Entry&lt;Key.class, Value.class&gt; entry : map.entrySet()) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;key= &quot;</span> + entry.getKey() + <span class="string">&quot; and value= &quot;</span> + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>工具</category>
+        <category>算法</category>
       </categories>
       <tags>
-        <tag>hexo</tag>
+        <tag>Java 算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java常用数据结构的底层实现</title>
+    <url>/Java-DataStructure/</url>
+    <content><![CDATA[<h1 id="arraylist"><a class="markdownIt-Anchor" href="#arraylist"></a> ArrayList</h1>
+<p><code>ArrayList</code> 的底层是数组队列，相当于动态数组。</p>
+<ul>
+<li>与数组相比，它的容量能动态增长。</li>
+<li>与 Vector 相比，它的底层使用 Object[] 存储，适用于频繁的查找工作，线程不安全</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractList</span>&lt;E&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">set</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">get</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">    E <span class="title function_">remove</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
+<li><code>RandomAccess</code> ：这是一个标志接口，表明实现这个接口的 <code>List</code> 集合是支持 <strong>快速随机访问</strong> ,可以通过元素的序号快速获取元素对象<code>list.get(i)</code>。</li>
+<li><code>Cloneable</code> ：表明它具有拷贝能力，可以进行深拷贝或浅拷贝操作。</li>
+<li><code>Serializable</code> : 表明它可以进行序列化操作，也就是可以将对象转换为字节流进行持久化存储或网络传输，非常方便。</li>
+</ul>
+<h2 id="扩容机制"><a class="markdownIt-Anchor" href="#扩容机制"></a> 扩容机制</h2>
+<p>初始化时默认空数组 <code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>。</p>
+<p>添加元素时，先判断需要扩容的最小扩容量大小（DEFAULT_CAPACITY 默认是 10）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">calculateCapacity</span><span class="params">(Object[] elementData, <span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> minCapacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果需要扩容，就会进入扩容方法 grow()，扩容效果是小于等于 1.5 倍的（因为 int 取整）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elementData.length;</span><br><span class="line">    <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果扩容长度超过定义的数组的最大长度 <code>MAX_ARRAY_SIZE = Integer.MAX_VALUE-8</code>，就会触发最大值限制，防止 size 溢出</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">hugeCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">OutOfMemoryError</span>();</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将旧数组移动到新数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] copyOf(<span class="type">int</span>[] original, <span class="type">int</span> newLength) &#123;</span><br><span class="line">    <span class="type">int</span>[] copy = <span class="keyword">new</span> <span class="title class_">int</span>[newLength];</span><br><span class="line">    System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>, Math.min(original.length, newLength));</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>手动扩容</strong>，可以在需要插入大量数据前手动扩容</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ensureCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">minExpand</span> <span class="operator">=</span> (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) ? <span class="number">0</span> : DEFAULT_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &gt; minExpand) &#123;</span><br><span class="line">        ensureExplicitCapacity(minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="与-linkedlist-的异同"><a class="markdownIt-Anchor" href="#与-linkedlist-的异同"></a> 与 LinkedList 的异同</h2>
+<ul>
+<li>
+<p>都不保证线程安全；</p>
+</li>
+<li>
+<p><code>ArrayList</code> 底层使用的是 <code>Object[]</code> <strong>数组</strong>；<code>LinkedList</code> 底层使用的是 <strong>Node+双向链表</strong> 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环）</p>
+</li>
+<li>
+<p><strong>插入和删除是否受元素位置的影响：</strong></p>
+</li>
+<li>
+<ul>
+<li><code>ArrayList</code> 将指定的元素<strong>追加到此列表的末尾</strong>，时间复杂度 <strong>O(1)</strong>。但是如果要在<strong>指定位置 i 插入和删除元素</strong>的话（<code>add(int index, E element)</code>），时间复杂度 <strong>O(n)</strong>。</li>
+<li><code>LinkedList</code> <strong>头尾插入或者删除</strong>元素不受元素位置的影响（<code>add(E e)</code>、<code>addFirst(E e)</code>、<code>addLast(E e)</code>、<code>removeFirst()</code>、 <code>removeLast()</code>），时间复杂度 <strong>O(1)</strong>；<strong>指定位置 <code>i</code> 插入和删除元素</strong>的话（<code>add(int index, E element)</code>，<code>remove(Object o)</code>,<code>remove(int index)</code>）， 时间复杂度为 <strong>O(n)</strong> 。</li>
+</ul>
+</li>
+<li>
+<p><strong>是否支持快速随机访问：</strong> <code>LinkedList</code> 不支持高效的随机元素访问，而 <code>ArrayList</code>（实现了 <code>RandomAccess</code> 接口） 支持。</p>
+</li>
+<li>
+<p><strong>内存空间占用：</strong> <code>ArrayList</code> 的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素 Node 都需要消耗比 ArrayList 更多的空间</p>
+</li>
+</ul>
+<h1 id="linkedlist"><a class="markdownIt-Anchor" href="#linkedlist"></a> LinkedList</h1>
+<blockquote>
+<p>需要用到 <code>LinkedList</code> 的场景几乎都可以使用 <code>ArrayList</code> 来代替，而且性能会更好。头尾插入或者删除元素的时候时间复杂度近似 O(1)，其他情况增删元素的平均时间复杂度都是 O(n) 。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LinkedList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractSequentialList</span>&lt;E&gt; </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;E&gt; &#123;</span><br><span class="line">        E item;</span><br><span class="line">        Node&lt;E&gt; next;</span><br><span class="line">        Node&lt;E&gt; prev;</span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">            <span class="built_in">this</span>.item = element;</span><br><span class="line">            <span class="built_in">this</span>.next = next;</span><br><span class="line">            <span class="built_in">this</span>.prev = prev;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
+<li><code>Deque</code> ：继承自 <code>Queue</code> 接口，具有双端队列的特性，支持从两端插入和删除元素，方便实现栈和队列等数据结构。</li>
+</ul>
+<h1 id="hashmap"><a class="markdownIt-Anchor" href="#hashmap"></a> HashMap</h1>
+<blockquote>
+<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若数组长度大于 64，会将链表转化为红黑树。</p>
+</blockquote>
+<ul>
+<li>可以存储 null 的 key 和 value，但 null 作为键只能有一个，null 作为值可以有多个</li>
+<li>非线程安全的</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 通过Node的next属性遍历元素，keySet()、values()基于entrySet实现【疑问】entrySet应该未储存元素吧</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="扩容机制-2"><a class="markdownIt-Anchor" href="#扩容机制-2"></a> 扩容机制</h2>
+]]></content>
+      <categories>
+        <category>Java学习</category>
+      </categories>
+      <tags>
+        <tag>Java数据结构</tag>
       </tags>
   </entry>
   <entry>
@@ -854,19 +590,122 @@
 </li>
 </ul>
 <p>从原始数据到答案最常见的完整序列如下所示：</p>
+<img data-src="/RAG%E6%9E%B6%E6%9E%84/x7ta8v77.png" class="" title="x7ta8v77">
 <h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
-<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：聊天历史 Memory、提示工程 Prompt、输出解析 Parase</p>
-<h2 id="chain模块"><a class="markdownIt-Anchor" href="#chain模块"></a> Chain模块</h2>
-<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、内存和回调等功能；</p>
+<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：对话历史 Memory、提示工程 Prompt、输出解析 Parase、LLM链 Chain、索引 Indexes、代理 Agents。Langchain 模块化设计的中心思想是提升代码维护、扩展和重用的能力，可以快速开发多轮提示以及解析输出的应用。</p>
+<h2 id="模型链-chain"><a class="markdownIt-Anchor" href="#模型链-chain"></a> 模型链 Chain</h2>
+<blockquote>
+<p>链（Chains）通常将大语言模型（LLM）与其他组件组合在一起来构建更复杂的链。</p>
+</blockquote>
+<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、历史和回调等功能，支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
 <p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
-<p>Chain支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
-<p>模块化设计也促进了代码维护、扩展和重用；</p>
+<h2 id="对话历史-memory"><a class="markdownIt-Anchor" href="#对话历史-memory"></a> 对话历史 Memory</h2>
+<p>根据需求可以将历史存储在 SQLite、qdrant、本地内存等地方，下面代码将历史存储在缓存中：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.memory <span class="keyword">import</span> ConversationBufferMemory</span><br><span class="line">memory = ConversationBufferMemory(</span><br><span class="line">    memory_key=<span class="string">&quot;history&quot;</span>, <span class="comment"># 与 prompt 的输入变量保持一致。</span></span><br><span class="line">    return_messages=<span class="literal">True</span> <span class="comment"># 将以消息列表的形式返回聊天记录，而不是单个字符串</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="提示工程-prompt"><a class="markdownIt-Anchor" href="#提示工程-prompt"></a> 提示工程 Prompt</h2>
+<p>Prompt 很少是写明不变的，通常从多个组件构建而成的。 PromptTemplate 负责构建这个输入。</p>
+<p><strong>输出解析 Parase</strong> 是提示工程的一种：</p>
+<ul>
+<li><code>get_format_instructions() -&gt; str</code>：方法，返回一个包含有关如何格式化语言模型输出的字符串，即提示 Prompt。</li>
+<li><code>parse(str) -&gt; Any</code>：方法，接受一个字符串（假定为语言模型的响应）并将其解析为某个结构。</li>
+<li><code>parse_with_prompt(str) -&gt; Any</code>：一个方法，它接受一个字符串（假设是语言模型的响应）和一个提示（假设是生成这样的响应的提示），并将其解析为某种结构。提示在此大多数情况下是为了提供信息以便 OutputParser 重新尝试或以某种方式修复输出。</li>
+</ul>
+<h2 id="索引-indexes"><a class="markdownIt-Anchor" href="#索引-indexes"></a> 索引 Indexes</h2>
+<p>结构化文档，以便 LLM 可以与外部文档交互。 LangChain有许多模块可帮助您加载、结构化、存储和检索文档。<a href="https://yeqiuo.github.io/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/#%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93">详见</a></p>
+<h2 id="代理-agents"><a class="markdownIt-Anchor" href="#代理-agents"></a> 代理 Agents</h2>
+<p>代理使用LLM来确定采取哪些行动以及顺序。</p>
+<ul>
+<li>使用工具并观察其输出</li>
+<li>生成相应返回给用户</li>
+</ul>
 ]]></content>
       <categories>
         <category>大语言模型应用开发</category>
       </categories>
       <tags>
         <tag>RAG架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LLM应用开发</title>
+    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
+<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
+<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
+<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
+<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
+<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">OutlinePrompt = ChatPromptTemplate.from_template(<span class="string">f&#x27;请根据<span class="subst">&#123;query&#125;</span>，按照以下格式对问题提炼目录。回答内容尽量简短\n \</span></span><br><span class="line"><span class="string">            开始生成大纲:\n \</span></span><br><span class="line"><span class="string">            1. XXX\n    1.1xxx 1.2xxx 1.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            2. XXX\n    2.1xxx 2.2xxx 2.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            .......\n&#x27;</span>)</span><br><span class="line">chain = LLMChain(prompt=OutlinePrompt, llm=model1,memory=<span class="literal">None</span>, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">chat_prompt = PromptTemplate.from_template(<span class="string">f&#x27;请以<span class="subst">&#123;title&#125;</span>的<span class="subst">&#123;contexts&#125;</span>为主要内容，帮我扩写到<span class="subst">&#123;num&#125;</span>字&#x27;</span>)</span><br><span class="line">combined_prompt = PromptTemplate.from_template(<span class="string">f&#x27;写一段过渡段，从<span class="subst">&#123;title&#125;</span>自然过渡到<span class="subst">&#123;next_title&#125;</span>，内容简短&#x27;</span>)</span><br><span class="line">chat_chain = LLMChain(llm=llm, prompt=chat_prompt, output_key=<span class="string">&quot;chat&quot;</span>)</span><br><span class="line">combined_chain = LLMChain(llm=llm, prompt=combined_prompt, output_key=<span class="string">&quot;combined&quot;</span>)</span><br><span class="line">single_chain = SequentialChain(</span><br><span class="line">    chains=[chat_chain, combined_chain], </span><br><span class="line">    input_variables=[<span class="string">&quot;title&quot;</span>, <span class="string">&quot;contexts&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;next_title&quot;</span>],</span><br><span class="line">    output_variables=[<span class="string">&quot;chat&quot;</span>, <span class="string">&quot;combined&quot;</span>],</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>目前还是通过 for 循环遍历大纲，后续考虑采用路由链 <code>LLMRouterChain</code>，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">router_prompt = PromptTemplate(</span><br><span class="line">    template=router_template,</span><br><span class="line">    input_variables=[<span class="string">&quot;input&quot;</span>],</span><br><span class="line">    output_parser=RouterOutputParser(),</span><br><span class="line">)</span><br><span class="line">chain = MultiPromptChain(</span><br><span class="line">    router_chain=router_chain,    <span class="comment"># 路由链路</span></span><br><span class="line">    destination_chains=destination_chains,   <span class="comment"># 目标链路（LLmChain 数组）</span></span><br><span class="line">    default_chain=default_chain,      <span class="comment"># 默认链路</span></span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
+<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
+<p>离线私有数据不能直接作为语料库训练模型，LLM 需要具有基于私有数据返回的能力。</p>
+<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
+<p>知识库系统要包括文档加载、切分、存储、检索和存储聊天记录模块，具体通过向量表征 <code>Embeddings</code> 和向量存储 <code>Vector Store</code> 实现</p>
+<ul>
+<li>文本表征是对文本语义的向量表征，相似内容的文本具有相似的表征向量。这使我们可以在向量空间中比较文本的相似性。</li>
+<li>向量数据库<code>Vector Database</code>用来存储文档的文本块。对于给定的文档，我们首先将其分成较小的文本块<code>chunks</code>，然后获取每个小文本块的文本表征，并将这些表征储存在向量数据库中。这个流程正是创建索引<code>index</code>的过程。将文档分成小文本块的原因在于我们可能无法将整个文档传入语言模型进行处理。</li>
+</ul>
+<img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102449161.png" class="" title="image-20240424102449161">
+<p>Langchain 中文本分割器 <code>langchain.text_splitter</code> 都根据 chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行分割</p>
+<ul>
+<li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
+<li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
+</ul>
+<style>.ogfgkrtfmtdv{zoom:50%;}</style><img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102824838.png" class="ogfgkrtfmtdv" alt="langchain.text_splitter">
+<p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
+<p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
+<p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
+<p><strong>A2</strong>：通过 <code>SelfQueryRetriever</code> 参数 <code>document_content_description</code> 指定元素的不同字段（source）以及它们对应的位置（page）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">metadata_field_info_chinese = [</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;source&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章来源于 `index-浙江省财政报告`, `index-江苏省财政报告` 的其中之一&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;page&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章中的哪一页&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;integer&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p><strong>Q3</strong>：如何通过过获取到的文档得到 LLM 响应</p>
+<p><strong>A3</strong>：采用 检索式问答链 <code>RetrievalQA</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;使用以下上下文片段来回答最后的问题。如果你不知道答案，只需说不知道，不要试图编造答案。答案最多使用三个句子。尽量简明扼要地回答。在回答的最后一定要说&quot;感谢您的提问！&quot;</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：&#123;question&#125;</span></span><br><span class="line"><span class="string">有用的回答：&quot;&quot;&quot;</span></span><br><span class="line">QA_CHAIN_PROMPT = PromptTemplate.from_template(template)</span><br><span class="line"><span class="comment"># RetrievalQA 内部使用了 QA_CHAIN_PROMPT</span></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type( </span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever()</span><br><span class="line">)</span><br><span class="line">result = qa_chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>Q4</strong>：如果文档太多，无法将它们全部适配到上下文窗口中怎么办？</p>
+<p><strong>A4</strong>：采用 <code>MapReduce</code>，首先将每个独立的文档单独发送到语言模型以获取原始答案。然后，将答案通过最终对语言模型的一次调用组合成最终的答案</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">qa_chain_mr = RetrievalQA.from_chain_type(</span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever(),</span><br><span class="line">    chain_type=<span class="string">&quot;map_reduce&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>如果信息分布在两个文档之间，无法在同一上下文中获取到所有的信息，也就没法给出正确答案。为解决这个问题，可以采用 <code>Refine 检索式问答链</code> ，Refine 文档链类似于 MapReduce 链，对于每一个文档，会调用一次 LLM，但有所改进的是，我们每次发送给 LLM 的最终提示是一个序列，这个序列会将先前的响应与新数据结合在一起，并请求得到改进后的响应。这种方法类似于 RNN，我们增强了上下文，从而解决信息分布在不同文档的问题。</p>
+<p><a href="https://github.com/chatchat-space/Langchain-Chatchat">Github 参考项目链接</a></p>
+<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
+<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
+<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
+<h2 id="解决思路-3"><a class="markdownIt-Anchor" href="#解决思路-3"></a> 解决思路</h2>
+<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
+<img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424140419971.png" class="" title="image-20240424140419971">
+<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> GraphCypherQAChain</span><br><span class="line"><span class="keyword">from</span> langchain.graphs <span class="keyword">import</span> Neo4jGraph</span><br><span class="line"></span><br><span class="line">graph = Neo4jGraph(</span><br><span class="line">    url=<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">    username=<span class="string">&quot;neo4j&quot;</span>, </span><br><span class="line">    password=<span class="string">&quot;&quot;</span></span><br><span class="line">)</span><br><span class="line">chain = GraphCypherQAChain.from_llm(</span><br><span class="line">    model, graph=graph, verbose=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Langchain 底层针对图数据库对话的 Prompt</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_GENERATION_TEMPLATE = <span class="string">&quot;&quot;&quot;Task:Generate Cypher statement to query a graph database.</span></span><br><span class="line"><span class="string">Instructions:</span></span><br><span class="line"><span class="string">Use only the provided relationship types and properties in the schema.</span></span><br><span class="line"><span class="string">Do not use any other relationship types or properties that are not provided.</span></span><br><span class="line"><span class="string">Schema:</span></span><br><span class="line"><span class="string">&#123;schema&#125;</span></span><br><span class="line"><span class="string">Note: Do not include any explanations or apologies in your responses.</span></span><br><span class="line"><span class="string">Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.</span></span><br><span class="line"><span class="string">Do not include any text except the generated Cypher statement.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The question is:</span></span><br><span class="line"><span class="string">&#123;question&#125;&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Langchain 底层针对上下文问答的 Prompt</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_QA_TEMPLATE = <span class="string">&quot;&quot;&quot;You are an assistant that helps to form nice and human understandable answers.</span></span><br><span class="line"><span class="string">The information part contains the provided information that you must use to construct an answer.</span></span><br><span class="line"><span class="string">The provided information is authoritative, you must never doubt it or try to use your internal knowledge to correct it.</span></span><br><span class="line"><span class="string">Make the answer sound as a response to the question. Do not mention that you based the result on the given information.</span></span><br><span class="line"><span class="string">If the provided information is empty, say that you don&#x27;t know the answer.</span></span><br><span class="line"><span class="string">Information:</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: &#123;question&#125;</span></span><br><span class="line"><span class="string">Helpful Answer:&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 采用 qdrant 向量库保存对话历史</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomQdrantMemory</span>(<span class="title class_ inherited__">BaseChatMemory</span>):</span><br><span class="line">    <span class="comment"># 访问数据库抽取最相关联的 message_limit 条数据</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buffer</span>(<span class="params">self, inputs: <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]</span>) -&gt; <span class="type">List</span>[BaseMessage]:</span><br><span class="line">        chat_messages: <span class="type">List</span>[BaseMessage] = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inputs:</span><br><span class="line">            <span class="keyword">return</span> chat_messages</span><br><span class="line">        hits = self.qdrant.search(</span><br><span class="line">            collection_name=self.conversation_id,</span><br><span class="line">            query_vector=self.encoder.encode(inputs[<span class="string">&#x27;input&#x27;</span>]).tolist(),</span><br><span class="line">            limit=self.message_limit,</span><br><span class="line">        )</span><br><span class="line">        hits = <span class="built_in">sorted</span>(hits, key=<span class="keyword">lambda</span> x:x.<span class="built_in">id</span>)</span><br><span class="line">        <span class="keyword">for</span> hit <span class="keyword">in</span> hits:</span><br><span class="line">            chat_messages.append(HumanMessage(content=hit.payload[<span class="string">&#x27;human&#x27;</span>]))</span><br><span class="line">            chat_messages.append(AIMessage(content=hit.payload[<span class="string">&#x27;assistant&#x27;</span>]))</span><br><span class="line">        curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="comment"># 如果超出模型最长上下文，则弹出最早的对话历史</span></span><br><span class="line">        <span class="keyword">if</span> curr_buffer_length &gt; self.max_token_limit:</span><br><span class="line">            pruned_memory = []</span><br><span class="line">            <span class="keyword">while</span> curr_buffer_length &gt; self.max_token_limit <span class="keyword">and</span> chat_messages:</span><br><span class="line">                pruned_memory.append(chat_messages.pop())</span><br><span class="line">                curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="keyword">return</span> chat_messages        </span><br></pre></td></tr></table></figure>
+<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
+<p>流程</p>
+<ul>
+<li>音视频上传
+<ul>
+<li>语音转文字 FFmpeg</li>
+<li>【初始化】声纹构建</li>
+<li>台本构建</li>
+</ul>
+</li>
+<li>台本切分 + Chroma 向量库相似度匹配</li>
+<li>LLM 响应结果</li>
+</ul>
+<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github 参考项目链接</a></p>
+<h1 id="python-notes"><a class="markdownIt-Anchor" href="#python-notes"></a> Python Notes</h1>
+<p>def _call() 把这个类型的对象当作函数来使用</p>
+]]></content>
+      <categories>
+        <category>LLM应用开发</category>
+      </categories>
+      <tags>
+        <tag>Langchain</tag>
+        <tag>向量数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -978,7 +817,7 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// zk的对外接口，后面我们要干什么只需要通过单例模式获得这个类，然后用这个类的方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ServiceProvider</span> &#123;</span><br><span class="line">    <span class="comment">// 添加到本地 serviceMap 中（远程Rpc调用，获取本地的调用类）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">    Object <span class="title function_">getService</span><span class="params">(String rpcServiceName)</span>;</span><br><span class="line">    <span class="comment">// 注册服务到 zookeeper 中（服务发现与注册）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">publishService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>项目开发</category>
+        <category>Java开发</category>
       </categories>
       <tags>
         <tag>分布式通讯框架</tag>
@@ -1788,6 +1627,168 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       </tags>
   </entry>
   <entry>
+    <title>MISC</title>
+    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
+<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>先前工作的局限性
+<ul>
+<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
+<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
+</ul>
+</li>
+<li>本文提出了MISC
+<ul>
+<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
+<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前的工作不适用于ESC
+<ul>
+<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
+<li>只有移情反应，而不考虑解决求助者的情感问题</li>
+</ul>
+</li>
+<li>本文提出的解决方法
+<ul>
+<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
+<li>混合策略，而不是预测单一策略</li>
+<li>设计一套注意力机制</li>
+</ul>
+</li>
+<li>实验分析
+<ul>
+<li>回答策略建模的重要性，能够提高模型的共情能力</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>情绪感知响应生成</li>
+<li>NLP中的常识性知识</li>
+<li>策略感知对话模型</li>
+</ul>
+<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
+<ul>
+<li>ESConv数据集</li>
+<li>问题设定
+<ul>
+<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
+</ul>
+</li>
+</ul>
+<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
+<ul>
+<li>情感状态增强Encoder
+<ul>
+<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
+</ul>
+</li>
+</ul>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
+<ul>
+<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
+<li>将历史对话c输入Encoder得到C</li>
+<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
+<ul>
+<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
+<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
+<ul>
+<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>多因素感知Decoder
+<ul>
+<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>ESConv中的每十个话语作为一个样本</li>
+<li>评价指标
+<ul>
+<li>策略预测精度：Acc</li>
+<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
+<li>相应多样性：Distinct</li>
+<li>人类评估</li>
+</ul>
+</li>
+<li>基准模型
+<ul>
+<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
+</ul>
+</li>
+<li>具体实现</li>
+<li>实验结果
+<ul>
+<li>动态细粒度情感标签更能准确给予用户回应</li>
+<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
+<li>策略作为单独的任务进行预测比单一预测更有利</li>
+<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
+</ul>
+</li>
+</ul>
+<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
+<ul>
+<li>消融实验</li>
+<li>案例研究</li>
+<li>细粒度情感理解
+<ul>
+<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
+</ul>
+</li>
+<li>混合策略感知移情反应
+<ul>
+<li>混合策略有利于平滑的情感支持</li>
+<li>混合策略比单一策略更有效</li>
+<li>混合策略适用于ESC框架</li>
+</ul>
+</li>
+</ul>
+<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
+<ul>
+<li>引入COMET来捕捉用户的即时心理状态</li>
+<li>设计了一个混合策略感知解码器来产生支持响应</li>
+</ul>
+<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
+<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
+<ul>
+<li>长对话中的过度更加顺畅</li>
+</ul>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<ul>
+<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
+<li>提出了不同的策略模型并在对话中给予提示</li>
+</ul>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<ul>
+<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
+</ul>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+<ul>
+<li>以动态的方式学习混合响应策略</li>
+</ul>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>KEMI</title>
     <url>/2023/Knowledge-enhanced%20Mixed-initiative%20Dialogue%20System%20for%20Emotional%20Support%20Conversations/</url>
     <content><![CDATA[<p><strong>Title:</strong> Knowledge-enhanced Mixed-initiative Dialogue System for Emotional Support Conversations</p>
@@ -2104,168 +2105,6 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       </tags>
   </entry>
   <entry>
-    <title>MISC</title>
-    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
-<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>先前工作的局限性
-<ul>
-<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
-<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
-</ul>
-</li>
-<li>本文提出了MISC
-<ul>
-<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
-<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前的工作不适用于ESC
-<ul>
-<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
-<li>只有移情反应，而不考虑解决求助者的情感问题</li>
-</ul>
-</li>
-<li>本文提出的解决方法
-<ul>
-<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
-<li>混合策略，而不是预测单一策略</li>
-<li>设计一套注意力机制</li>
-</ul>
-</li>
-<li>实验分析
-<ul>
-<li>回答策略建模的重要性，能够提高模型的共情能力</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>情绪感知响应生成</li>
-<li>NLP中的常识性知识</li>
-<li>策略感知对话模型</li>
-</ul>
-<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
-<ul>
-<li>ESConv数据集</li>
-<li>问题设定
-<ul>
-<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
-</ul>
-</li>
-</ul>
-<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
-<ul>
-<li>情感状态增强Encoder
-<ul>
-<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
-</ul>
-</li>
-</ul>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
-<ul>
-<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
-<li>将历史对话c输入Encoder得到C</li>
-<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
-<ul>
-<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
-<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
-<ul>
-<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>多因素感知Decoder
-<ul>
-<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
-<ul>
-<li>ESConv中的每十个话语作为一个样本</li>
-<li>评价指标
-<ul>
-<li>策略预测精度：Acc</li>
-<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
-<li>相应多样性：Distinct</li>
-<li>人类评估</li>
-</ul>
-</li>
-<li>基准模型
-<ul>
-<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
-</ul>
-</li>
-<li>具体实现</li>
-<li>实验结果
-<ul>
-<li>动态细粒度情感标签更能准确给予用户回应</li>
-<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
-<li>策略作为单独的任务进行预测比单一预测更有利</li>
-<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
-</ul>
-</li>
-</ul>
-<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
-<ul>
-<li>消融实验</li>
-<li>案例研究</li>
-<li>细粒度情感理解
-<ul>
-<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
-</ul>
-</li>
-<li>混合策略感知移情反应
-<ul>
-<li>混合策略有利于平滑的情感支持</li>
-<li>混合策略比单一策略更有效</li>
-<li>混合策略适用于ESC框架</li>
-</ul>
-</li>
-</ul>
-<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
-<ul>
-<li>引入COMET来捕捉用户的即时心理状态</li>
-<li>设计了一个混合策略感知解码器来产生支持响应</li>
-</ul>
-<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
-<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
-<ul>
-<li>长对话中的过度更加顺畅</li>
-</ul>
-<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
-<ul>
-<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
-<li>提出了不同的策略模型并在对话中给予提示</li>
-</ul>
-<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
-<ul>
-<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
-</ul>
-<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
-<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
-<ul>
-<li>以动态的方式学习混合响应策略</li>
-</ul>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>BlenderBot</title>
     <url>/2023/Recipes%20for%20building%20an%20open-domain%20chatbot/</url>
     <content><![CDATA[<p><strong>Title:</strong> Recipes for building an open-domain chatbot</p>
@@ -2547,6 +2386,319 @@ Discussion</p>
       </categories>
       <tags>
         <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 文档阅读</title>
+    <url>/2024/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/</url>
+    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
+<blockquote>
+<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
+</blockquote>
+<span id="more"></span>
+<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
+<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
+<ol>
+<li>
+<p>集中化版本控制（CVCS）缺点</p>
+<ol>
+<li>中央服务器的单点故障就无法协同工作</li>
+<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
+</ol>
+</li>
+<li>
+<p>分布式版本控制（DVCS）优点</p>
+<ol>
+<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
+<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
+<li>可以指定和若干不同的远端代码仓库进行交互</li>
+</ol>
+</li>
+</ol>
+<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
+<ol>
+<li>并行开发</li>
+<li>完全分布式</li>
+<li>速度快</li>
+<li>数据量大</li>
+</ol>
+<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
+<ol>
+<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
+<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
+<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
+<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
+<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
+</ol>
+<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
+<blockquote>
+<p>git config --list --show-origin</p>
+</blockquote>
+<ol>
+<li>/etc/gitconfig 系统通用配置 git config --system</li>
+<li>~/.gitconfig 当前用户配置 git config --global</li>
+<li>.git/config 当前项目配置 git config --local</li>
+</ol>
+<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
+<blockquote>
+<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
+</blockquote>
+<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
+<ol>
+<li>git init
+<ol>
+<li>初始化仓库</li>
+</ol>
+</li>
+<li>git clone
+<ol>
+<li>克隆仓库</li>
+</ol>
+</li>
+<li>git status
+<ol>
+<li>查看文件状态</li>
+<li>[-s] 简要文件状态信息</li>
+</ol>
+</li>
+<li>git add
+<ol>
+<li>[&lt;file&gt;] 跟踪新文件</li>
+<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
+<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
+</ol>
+</li>
+<li>git diff
+<ol>
+<li>已修改文件与已暂存文件的内容差异</li>
+<li>[–staged] 已暂存与分支HEAD的内容差异</li>
+</ol>
+</li>
+<li>git rm
+<ol>
+<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
+<li>[-f] 强制移除存在未暂存修改的文件</li>
+<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
+</ol>
+</li>
+<li>git commit
+<ol>
+<li>提交文件</li>
+<li>[-m] 提交备注</li>
+<li>[–amend] 追加提交</li>
+<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
+</ol>
+</li>
+<li>git mv
+<ol>
+<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
+</ol>
+</li>
+<li>git log
+<ol>
+<li>回顾提交历史</li>
+<li>[–stat] 显示每次提交的简要信息</li>
+<li>[-p ] 显示每次提交的详细信息</li>
+<li>[–pretty=format:“xxx”] 自定义信息格式</li>
+<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
+<li>[–since] 限制时间</li>
+</ol>
+</li>
+<li>git reset
+<ol>
+<li>[HEAD &lt;file&gt;] 取消暂存</li>
+</ol>
+</li>
+<li>git checkout
+<ol>
+<li>[-- &lt;filename&gt;] 撤销修改</li>
+<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
+<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
+</ol>
+</li>
+<li>git remote
+<ol>
+<li>[-v] 列出远程仓库</li>
+<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
+<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
+<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
+<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
+</ol>
+</li>
+<li>git fetch
+<ol>
+<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
+</ol>
+</li>
+<li>git push
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
+<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
+<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
+<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
+<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
+</ol>
+</li>
+<li>git pull
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
+</ol>
+</li>
+<li>git tag
+<ol>
+<li>列出已有的标签</li>
+<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
+<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
+<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
+<li>[-d] 删除标签</li>
+</ol>
+</li>
+<li>git show
+<ol>
+<li>标签信息和与之对应的提交信息</li>
+</ol>
+</li>
+<li>git restore
+<ol>
+<li>[&lt;filename&gt;] 丢弃工作区修改</li>
+<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
+</ol>
+</li>
+<li>git merge
+<ol>
+<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
+</ol>
+</li>
+<li>git branch
+<ol>
+<li>[-d &lt;branchname&gt;] 删除分支</li>
+<li>[-v] 每个分支的最后一次提交</li>
+<li>[-vv] 跟踪信息</li>
+<li>(–set-upstream-to=&lt;upstream&gt; | -u &lt;upstream&gt;) [&lt;branchname&gt;] 跟踪上游分支</li>
+<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
+</ol>
+</li>
+<li>git stash
+<ol>
+<li>贮藏工作</li>
+<li>[list] 列出所有贮藏</li>
+<li>[apply] 恢复贮藏</li>
+</ol>
+</li>
+<li>git rebase
+<ol>
+<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
+</ol>
+</li>
+</ol>
+<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
+<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
+<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
+<blockquote>
+<p>相关命令合并到 Chapter2 中</p>
+</blockquote>
+<ol>
+<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
+<li>git mergetool 图形化冲突解决工具</li>
+<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
+</ol>
+<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
+<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
+<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
+<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>版本管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo 使用指南</title>
+    <url>/2024/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://hexo.io/docs/">官方文档</a></p>
+</blockquote>
+<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>快速部署</td>
+<td>hexo g -d</td>
+</tr>
+<tr>
+<td>清除缓存</td>
+<td>hexo clean</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>hexo s</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>hexo d</td>
+</tr>
+<tr>
+<td>生成静态页面</td>
+<td>hexo generate</td>
+</tr>
+</tbody>
+</table>
+<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
+<p>初始化项目结构</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<p>新增标签页，设置属性（type: “tags”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>新增分类，设置属性（type: “categories”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<p>配置 next 主题设置</p>
+<ul>
+<li>设置 menu 菜单栏</li>
+<li>打开 code 代码复制</li>
+</ul>
+<p>Debug</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
+<p><strong>Git 上传插件</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p><strong>latex 公式</strong></p>
+<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p><strong>本地图片</strong></p>
+<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
+<p><strong>Markdown 文字高亮</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
+<p>_config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
+<p><strong>添加Sitemap</strong></p>
+<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
+<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
+<p><strong>改 blockquote 颜色</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
+<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
+<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
+<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
+<blockquote>
+<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
+</blockquote>
+<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
 </search>

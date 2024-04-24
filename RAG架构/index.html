@@ -26,11 +26,13 @@
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="RAG架构，Langchain开发工具小记">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/RAG%E6%9E%B6%E6%9E%84/x7ta8v77.png">
 <meta property="article:published_time" content="2024-04-19T12:26:10.000Z">
-<meta property="article:modified_time" content="2024-04-23T14:20:29.224Z">
+<meta property="article:modified_time" content="2024-04-24T07:07:55.396Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="RAG架构">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/RAG%E6%9E%B6%E6%9E%84/x7ta8v77.png">
 
 
 <link rel="canonical" href="https://yeqiuo.github.io/RAG%E6%9E%B6%E6%9E%84/">
@@ -140,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text"> 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#langchain"><span class="nav-number">2.</span> <span class="nav-text"> Langchain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chain%E6%A8%A1%E5%9D%97"><span class="nav-number">2.1.</span> <span class="nav-text"> Chain模块</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text"> 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#langchain"><span class="nav-number">2.</span> <span class="nav-text"> Langchain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%93%BE-chain"><span class="nav-number">2.1.</span> <span class="nav-text"> 模型链 Chain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%AF%9D%E5%8E%86%E5%8F%B2-memory"><span class="nav-number">2.2.</span> <span class="nav-text"> 对话历史 Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B-prompt"><span class="nav-number">2.3.</span> <span class="nav-text"> 提示工程 Prompt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95-indexes"><span class="nav-number">2.4.</span> <span class="nav-text"> 索引 Indexes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86-agents"><span class="nav-number">2.5.</span> <span class="nav-text"> 代理 Agents</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,18 +155,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -232,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-23 22:20:29" itemprop="dateModified" datetime="2024-04-23T22:20:29+08:00">2024-04-23</time>
+      <time title="修改时间：2024-04-24 15:07:55" itemprop="dateModified" datetime="2024-04-24T15:07:55+08:00">2024-04-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -273,13 +275,34 @@
 </li>
 </ul>
 <p>从原始数据到答案最常见的完整序列如下所示：</p>
+<img data-src="/RAG%E6%9E%B6%E6%9E%84/x7ta8v77.png" class="" title="x7ta8v77">
 <h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
-<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：聊天历史 Memory、提示工程 Prompt、输出解析 Parase</p>
-<h2 id="chain模块"><a class="markdownIt-Anchor" href="#chain模块"></a> Chain模块</h2>
-<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、内存和回调等功能；</p>
+<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：对话历史 Memory、提示工程 Prompt、输出解析 Parase、LLM链 Chain、索引 Indexes、代理 Agents。Langchain 模块化设计的中心思想是提升代码维护、扩展和重用的能力，可以快速开发多轮提示以及解析输出的应用。</p>
+<h2 id="模型链-chain"><a class="markdownIt-Anchor" href="#模型链-chain"></a> 模型链 Chain</h2>
+<blockquote>
+<p>链（Chains）通常将大语言模型（LLM）与其他组件组合在一起来构建更复杂的链。</p>
+</blockquote>
+<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、历史和回调等功能，支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
 <p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
-<p>Chain支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
-<p>模块化设计也促进了代码维护、扩展和重用；</p>
+<h2 id="对话历史-memory"><a class="markdownIt-Anchor" href="#对话历史-memory"></a> 对话历史 Memory</h2>
+<p>根据需求可以将历史存储在 SQLite、qdrant、本地内存等地方，下面代码将历史存储在缓存中：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.memory <span class="keyword">import</span> ConversationBufferMemory</span><br><span class="line">memory = ConversationBufferMemory(</span><br><span class="line">    memory_key=<span class="string">&quot;history&quot;</span>, <span class="comment"># 与 prompt 的输入变量保持一致。</span></span><br><span class="line">    return_messages=<span class="literal">True</span> <span class="comment"># 将以消息列表的形式返回聊天记录，而不是单个字符串</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="提示工程-prompt"><a class="markdownIt-Anchor" href="#提示工程-prompt"></a> 提示工程 Prompt</h2>
+<p>Prompt 很少是写明不变的，通常从多个组件构建而成的。 PromptTemplate 负责构建这个输入。</p>
+<p><strong>输出解析 Parase</strong> 是提示工程的一种：</p>
+<ul>
+<li><code>get_format_instructions() -&gt; str</code>：方法，返回一个包含有关如何格式化语言模型输出的字符串，即提示 Prompt。</li>
+<li><code>parse(str) -&gt; Any</code>：方法，接受一个字符串（假定为语言模型的响应）并将其解析为某个结构。</li>
+<li><code>parse_with_prompt(str) -&gt; Any</code>：一个方法，它接受一个字符串（假设是语言模型的响应）和一个提示（假设是生成这样的响应的提示），并将其解析为某种结构。提示在此大多数情况下是为了提供信息以便 OutputParser 重新尝试或以某种方式修复输出。</li>
+</ul>
+<h2 id="索引-indexes"><a class="markdownIt-Anchor" href="#索引-indexes"></a> 索引 Indexes</h2>
+<p>结构化文档，以便 LLM 可以与外部文档交互。 LangChain有许多模块可帮助您加载、结构化、存储和检索文档。<a href="https://yeqiuo.github.io/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/#%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93">详见</a></p>
+<h2 id="代理-agents"><a class="markdownIt-Anchor" href="#代理-agents"></a> 代理 Agents</h2>
+<p>代理使用LLM来确定采取哪些行动以及顺序。</p>
+<ul>
+<li>使用工具并观察其输出</li>
+<li>生成相应返回给用户</li>
+</ul>
 
     </div>
 

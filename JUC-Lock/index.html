@@ -26,16 +26,18 @@
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="Java.util.concurrent 中有很多 Java 并发相关工具，例如 锁 ReentrantLock、线程 Callable FutureTask、信号量 Semaphore、共享锁 CountDownLatch 此外 Java 原生的 volatile 和 synchronized 关键字也是并发编程的关键。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/3230688-20231101142351434-473719587.png">
+<meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/1240-17140467896205.webp">
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/aqs-exclusive-mode-acquire-lock.png">
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/image-20240415164535374.png">
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/clh-queue-state.png">
 <meta property="article:published_time" content="2024-04-14T05:30:54.000Z">
-<meta property="article:modified_time" content="2024-04-23T13:47:33.099Z">
+<meta property="article:modified_time" content="2024-04-25T12:07:59.012Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="Java并发">
 <meta property="article:tag" content="Java并发锁">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeqiuo.github.io/JUC-Lock/aqs-exclusive-mode-acquire-lock.png">
+<meta name="twitter:image" content="https://yeqiuo.github.io/JUC-Lock/3230688-20231101142351434-473719587.png">
 
 
 <link rel="canonical" href="https://yeqiuo.github.io/JUC-Lock/">
@@ -158,18 +160,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -237,7 +239,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-23 21:47:33" itemprop="dateModified" datetime="2024-04-23T21:47:33+08:00">2024-04-23</time>
+      <time title="修改时间：2024-04-25 20:07:59" itemprop="dateModified" datetime="2024-04-25T20:07:59+08:00">2024-04-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -262,14 +264,22 @@
 <p>此外 Java 原生的 <code>volatile</code> 和 <code>synchronized</code> 关键字也是并发编程的关键。</p>
 <span id="more"></span>
 <h1 id="synchronized-关键字"><a class="markdownIt-Anchor" href="#synchronized-关键字"></a> synchronized 关键字</h1>
-<p>通过对象监视器 <code>monitor</code> 实现加锁和解锁</p>
-<p>锁升级策略：偏向锁 —&gt; 轻量级锁（CAS自旋） —&gt; 重量级锁</p>
+<p>每个对象都有一个 monitor 对象于之关联，通过对象监视器 <code>monitor</code> 实现加锁和解锁，被锁住的区域是<code>临界区</code>域（就是被锁保护，线程间只能串行访问的代码）</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yescode/p/14474104.html#autoid-0-0-0"><strong>锁升级策略</strong></a>：（图有误，hashcode 占 32 位）</p>
+<img data-src="/JUC-Lock/3230688-20231101142351434-473719587.png" class="" title="img">
+<p>图中是对象头中的 MarkWord，指向线程栈中锁记录的指针 = 持有锁线程的 lockRecord 的指针，指向重量级锁的指针 = 指向 monitor 的指针（MarkWord 结构之所以搞得这么复杂，是因为需要节省内存，让同一个内存区域在不同阶段有不同的用处）</p>
+<ul>
+<li>偏向锁：只有一个线程持有锁，无竞争情况时，线程可以直接获得锁，没有额外的开销。CAS 修改 Markword 头信息，该操作一般不会撤销，以避免 CAS 开销。</li>
+<li>轻量级锁：多个线程都是在不同的时间段来请求同一把锁时，JVM 会使用轻量级锁：通过 CAS 尝试获取锁，不阻塞线程。如果竞争失败直接会升级成重量级锁，升级过程会自旋尝试获取锁。</li>
+<li>重量级锁：加锁的过程中，采用自适应自旋，避免直接阻塞线程。自旋失败才会阻塞线程并入队，阻塞操作<code>LockSupport.park</code>由操作系统来实现，性能消耗高。唤醒线程的策略见下图：（waitset 环形双向链表；cxq 栈；entrylist 双向链表）</li>
+</ul>
+<img data-src="/JUC-Lock/1240-17140467896205.webp" class="" title="img">
 <p>作用域：</p>
-<ol>
-<li>修饰实例方法，锁当前对象实例</li>
+<ul>
+<li>修饰实例方法，锁当前对象实例。原理是修饰方法的时候在字节码 flag 上标记 ACC_SYNCHRONIZED，在运行时常量池中通过 ACC_SYNCHRONIZED 标志来区分，这样 JVM 就知道这个方法是被 synchronized 标记的，于是在进入方法的时候就会进行执行争锁的操作，一样只有拿到锁才能继续执行。</li>
 <li>修饰静态方法，锁当前类，会作用于所有实例</li>
 <li>修饰代码块，程序指定锁什么</li>
-</ol>
+</ul>
 <h1 id="reentrantlock-类"><a class="markdownIt-Anchor" href="#reentrantlock-类"></a> ReentrantLock 类</h1>
 <p>属性：可重入锁、独占锁、公平锁/非公平锁</p>
 <p>特点：可限时等待、可响应中断、可实现选择性通知</p>
@@ -342,7 +352,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.ujshbtgxljip{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="ujshbtgxljip" alt="image-20240415164535374">
+<style>.owjzqhpyequw{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="owjzqhpyequw" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>

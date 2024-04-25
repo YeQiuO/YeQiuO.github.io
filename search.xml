@@ -7,14 +7,22 @@
 <p>此外 Java 原生的 <code>volatile</code> 和 <code>synchronized</code> 关键字也是并发编程的关键。</p>
 <span id="more"></span>
 <h1 id="synchronized-关键字"><a class="markdownIt-Anchor" href="#synchronized-关键字"></a> synchronized 关键字</h1>
-<p>通过对象监视器 <code>monitor</code> 实现加锁和解锁</p>
-<p>锁升级策略：偏向锁 —&gt; 轻量级锁（CAS自旋） —&gt; 重量级锁</p>
+<p>每个对象都有一个 monitor 对象于之关联，通过对象监视器 <code>monitor</code> 实现加锁和解锁，被锁住的区域是<code>临界区</code>域（就是被锁保护，线程间只能串行访问的代码）</p>
+<p><a href="https://www.cnblogs.com/yescode/p/14474104.html#autoid-0-0-0"><strong>锁升级策略</strong></a>：（图有误，hashcode 占 32 位）</p>
+<img data-src="/JUC-Lock/3230688-20231101142351434-473719587.png" class="" title="img">
+<p>图中是对象头中的 MarkWord，指向线程栈中锁记录的指针 = 持有锁线程的 lockRecord 的指针，指向重量级锁的指针 = 指向 monitor 的指针（MarkWord 结构之所以搞得这么复杂，是因为需要节省内存，让同一个内存区域在不同阶段有不同的用处）</p>
+<ul>
+<li>偏向锁：只有一个线程持有锁，无竞争情况时，线程可以直接获得锁，没有额外的开销。CAS 修改 Markword 头信息，该操作一般不会撤销，以避免 CAS 开销。</li>
+<li>轻量级锁：多个线程都是在不同的时间段来请求同一把锁时，JVM 会使用轻量级锁：通过 CAS 尝试获取锁，不阻塞线程。如果竞争失败直接会升级成重量级锁，升级过程会自旋尝试获取锁。</li>
+<li>重量级锁：加锁的过程中，采用自适应自旋，避免直接阻塞线程。自旋失败才会阻塞线程并入队，阻塞操作<code>LockSupport.park</code>由操作系统来实现，性能消耗高。唤醒线程的策略见下图：（waitset 环形双向链表；cxq 栈；entrylist 双向链表）</li>
+</ul>
+<img data-src="/JUC-Lock/1240-17140467896205.webp" class="" title="img">
 <p>作用域：</p>
-<ol>
-<li>修饰实例方法，锁当前对象实例</li>
+<ul>
+<li>修饰实例方法，锁当前对象实例。原理是修饰方法的时候在字节码 flag 上标记 ACC_SYNCHRONIZED，在运行时常量池中通过 ACC_SYNCHRONIZED 标志来区分，这样 JVM 就知道这个方法是被 synchronized 标记的，于是在进入方法的时候就会进行执行争锁的操作，一样只有拿到锁才能继续执行。</li>
 <li>修饰静态方法，锁当前类，会作用于所有实例</li>
 <li>修饰代码块，程序指定锁什么</li>
-</ol>
+</ul>
 <h1 id="reentrantlock-类"><a class="markdownIt-Anchor" href="#reentrantlock-类"></a> ReentrantLock 类</h1>
 <p>属性：可重入锁、独占锁、公平锁/非公平锁</p>
 <p>特点：可限时等待、可响应中断、可实现选择性通知</p>
@@ -87,7 +95,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.ujshbtgxljip{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="ujshbtgxljip" alt="image-20240415164535374">
+<style>.owjzqhpyequw{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="owjzqhpyequw" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>
@@ -203,7 +211,7 @@
 <p><strong>ThreadPoolExecutor 构造函数</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="type">int</span> corePoolSize,  //线程池的核心线程数量</span></span><br><span class="line"><span class="params">    <span class="type">int</span> maximumPoolSize,  //线程池的最大线程数</span></span><br><span class="line"><span class="params">    <span class="type">long</span> keepAliveTime,  //当线程数大于核心线程数时，多余的空闲线程存活的最长时间</span></span><br><span class="line"><span class="params">    TimeUnit unit,  //时间单位</span></span><br><span class="line"><span class="params">    BlockingQueue&lt;Runnable&gt; workQueue,  //任务队列，用来储存等待执行任务的队列</span></span><br><span class="line"><span class="params">    ThreadFactory threadFactory,  //线程工厂，用来创建线程，一般默认即可</span></span><br><span class="line"><span class="params">    RejectedExecutionHandler handler  //拒绝策略，当提交的任务过多而不能及时处理时，我们可以定制策略来处理任务</span></span><br><span class="line"><span class="params">)</span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>阻塞队列 <a href="https://juejin.cn/post/6999798721269465102">BlockingQueue</a></strong></p>
-<p>BlockingQueue 不同于普通的 Queue 的区别主要是：</p>
+<p>阻塞队列中保存即将运行的任务，BlockingQueue 与 Queue 的主要区别是：</p>
 <ul>
 <li>通过在入队和出队时进行加锁，保证了队列线程安全</li>
 <li>支持阻塞的入队和出队方法：当队列满时，会阻塞入队的线程，直到队列不满；当队列为空时，会阻塞出队的线程，直到队列中有元素。</li>
@@ -552,20 +560,127 @@
 </ul>
 <h1 id="hashmap"><a class="markdownIt-Anchor" href="#hashmap"></a> HashMap</h1>
 <blockquote>
-<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若数组长度大于 64，会将链表转化为红黑树。</p>
+<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
 </blockquote>
+<style>.lasxvkmbclid{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="lasxvkmbclid" alt="image-20240425212527868">
 <ul>
-<li>可以存储 null 的 key 和 value，但 null 作为键只能有一个，null 作为值可以有多个</li>
+<li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
 <li>非线程安全的</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 通过Node的next属性遍历元素，keySet()、values()基于entrySet实现【疑问】entrySet应该未储存元素吧</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>.Entry&lt;K,V&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>entrySet</code> 通过<code>Node的next属性</code>遍历元素，<code>keySet()</code>、<code>values()</code>基于<code>entrySet</code>实现，用于遍历访问所有 Node 元素，还支持元素的删除操作【不确定，entrySet不存储数据，只是数据对外的操作接口】。</li>
+<li><code>TreeNode</code> 继承了 <code>LinkedHashMap.Entry</code> ，有指向前后节点的指针</li>
+</ul>
+<p>jdk 1.8 <strong>Key 计算 hash 值的方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="扩容机制-2"><a class="markdownIt-Anchor" href="#扩容机制-2"></a> 扩容机制</h2>
+<p><strong>何时触发 <code>resize()</code> 扩容</strong></p>
+<ul>
+<li>要插入数据前，发现<code>table</code> 中的 <code>bin</code> 为空</li>
+<li>要插入数据后，发现<code>HashMap</code>的 <code>size</code> 超过 <code>threshold</code></li>
+<li><code>table</code> 长度小于 <code>MIN_TREEIFY_CAPACITY</code>时，某 <code>Node</code> 上的链长度超过 <code>TREEIFY_THRESHOLD</code></li>
+</ul>
+<p><code>resize()</code> 扩容，会将 table 中的节点数量 &lt;&lt; 1，并重新 hash 映射所有节点（因为 table 变大了，每个节点对应的 bin 下标发生了变化 <code>newTab[e.hash &amp; (newCap - 1)] = e</code>，<code>newCap</code>为 table 的新大小）</p>
+<p>链表何时变成红黑树？</p>
+<ul>
+<li>该 <code>bin</code> 上的链长度<code>binCount</code>大于等于 <code>TREEIFY_THRESHOLD</code>  且 <code>table</code> 中 <code>bin</code> 数量大于等于 <code>MIN_TREEIFY_CAPACITY</code></li>
+</ul>
+<p>如果链表转红黑树的时候，又有数据要插入，会发生什么？</p>
+<ul>
+<li>线程不安全。在树结构替换链表最终阶段会校验树结构，在此过程中的插入会使该树结构不满足红黑树和双链表的特性，导致报异常 <code>assert checkInvariants(root);</code></li>
+</ul>
 ]]></content>
       <categories>
         <category>Java学习</category>
       </categories>
       <tags>
         <tag>Java数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LLM应用开发</title>
+    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
+<h1 id="何为llm应用开发"><a class="markdownIt-Anchor" href="#何为llm应用开发"></a> 何为LLM应用开发</h1>
+<p>网上不少人认为，与其去做 Prompt 应用不如去提升 LLM 的智能，Prompt 应用对于大语言模型能力提升的作用有限。但我不以为然，获得 Prompt 的加持之后，LLM 可以<strong>应用现实生活的所有工具</strong>；可以<strong>按步骤正确处理一个复杂问题</strong>（因为 LLM 不同于人类对话，只有构造出非常详细且周密的过程约束，才能得到最正确的答案，不然会出现“幻觉”现象）；可以引导 <strong>LLM 自我规划</strong>（下文的长文本对话），目前 Prompt 最常应用在 <code>Dynamic Few-Shot Examples</code> 领域中，可以快速定位与 Query 最相关的小样本，不使不相关的内容分散 LLM 的注意力，而不只局限于“聊天机器人”和“搜索引擎”这类看似没啥么太大用处的名头。</p>
+<p>一言以蔽之，应用开发就是将 LLM 聪明的大脑装上可随时替换的手脚、五官和前额叶、海马体，它可以变成任何人，使用任何工具。</p>
+<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
+<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
+<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
+<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
+<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">OutlinePrompt = ChatPromptTemplate.from_template(<span class="string">f&#x27;请根据<span class="subst">&#123;query&#125;</span>，按照以下格式对问题提炼目录。回答内容尽量简短\n \</span></span><br><span class="line"><span class="string">            开始生成大纲:\n \</span></span><br><span class="line"><span class="string">            1. XXX\n    1.1xxx 1.2xxx 1.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            2. XXX\n    2.1xxx 2.2xxx 2.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            .......\n&#x27;</span>)</span><br><span class="line">chain = LLMChain(prompt=OutlinePrompt, llm=model1, memory=<span class="literal">None</span>, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">chat_prompt = PromptTemplate.from_template(<span class="string">f&#x27;请以<span class="subst">&#123;title&#125;</span>的<span class="subst">&#123;contexts&#125;</span>为主要内容，帮我扩写到<span class="subst">&#123;num&#125;</span>字&#x27;</span>)</span><br><span class="line">combined_prompt = PromptTemplate.from_template(<span class="string">f&#x27;写一段过渡段，从<span class="subst">&#123;title&#125;</span>自然过渡到<span class="subst">&#123;next_title&#125;</span>，内容简短&#x27;</span>)</span><br><span class="line">chat_chain = LLMChain(llm=llm, prompt=chat_prompt, output_key=<span class="string">&quot;chat&quot;</span>)</span><br><span class="line">combined_chain = LLMChain(llm=llm, prompt=combined_prompt, output_key=<span class="string">&quot;combined&quot;</span>)</span><br><span class="line">single_chain = SequentialChain(</span><br><span class="line">    chains=[chat_chain, combined_chain], </span><br><span class="line">    input_variables=[<span class="string">&quot;title&quot;</span>, <span class="string">&quot;contexts&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;next_title&quot;</span>],</span><br><span class="line">    output_variables=[<span class="string">&quot;chat&quot;</span>, <span class="string">&quot;combined&quot;</span>],</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>目前还是通过 for 循环遍历大纲，后续考虑采用路由链 <code>LLMRouterChain</code>，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">router_prompt = PromptTemplate(</span><br><span class="line">    template=router_template,</span><br><span class="line">    input_variables=[<span class="string">&quot;input&quot;</span>],</span><br><span class="line">    output_parser=RouterOutputParser(),</span><br><span class="line">)</span><br><span class="line">chain = MultiPromptChain(</span><br><span class="line">    router_chain=router_chain,    <span class="comment"># 路由链路</span></span><br><span class="line">    destination_chains=destination_chains,   <span class="comment"># 目标链路（LLmChain 数组）</span></span><br><span class="line">    default_chain=default_chain,      <span class="comment"># 默认链路</span></span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
+<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
+<p>离线私有数据不能直接作为语料库训练模型，LLM 需要具有基于私有数据返回的能力。</p>
+<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
+<p>知识库系统要包括文档加载、切分、存储、检索和存储聊天记录模块，具体通过向量表征 <code>Embeddings</code> 和向量存储 <code>Vector Store</code> 实现</p>
+<ul>
+<li>文本表征是对文本语义的向量表征，相似内容的文本具有相似的表征向量。这使我们可以在向量空间中比较文本的相似性。</li>
+<li>向量数据库<code>Vector Database</code>用来存储文档的文本块。对于给定的文档，我们首先将其分成较小的文本块<code>chunks</code>，然后获取每个小文本块的文本表征，并将这些表征储存在向量数据库中。这个流程正是创建索引<code>index</code>的过程。将文档分成小文本块的原因在于我们可能无法将整个文档传入语言模型进行处理。</li>
+</ul>
+<img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102449161.png" class="" title="image-20240424102449161">
+<p>Langchain 中文本分割器 <code>langchain.text_splitter</code> 都根据 chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行分割</p>
+<ul>
+<li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
+<li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
+</ul>
+<style>.cxshuumfnskv{zoom:50%;}</style><img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102824838.png" class="cxshuumfnskv" alt="langchain.text_splitter">
+<p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
+<p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
+<p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
+<p><strong>A2</strong>：通过 <code>SelfQueryRetriever</code> 参数 <code>document_content_description</code> 指定元素的不同字段（source）以及它们对应的位置（page）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">metadata_field_info_chinese = [</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;source&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章来源于 `index-浙江省财政报告`, `index-江苏省财政报告` 的其中之一&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;page&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章中的哪一页&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;integer&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p><strong>Q3</strong>：如何通过过获取到的文档得到 LLM 响应</p>
+<p><strong>A3</strong>：采用 检索式问答链 <code>RetrievalQA</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;使用以下上下文片段来回答最后的问题。如果你不知道答案，只需说不知道，不要试图编造答案。答案最多使用三个句子。尽量简明扼要地回答。在回答的最后一定要说&quot;感谢您的提问！&quot;</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：&#123;question&#125;</span></span><br><span class="line"><span class="string">有用的回答：&quot;&quot;&quot;</span></span><br><span class="line">QA_CHAIN_PROMPT = PromptTemplate.from_template(template)</span><br><span class="line"><span class="comment"># RetrievalQA 内部使用了 QA_CHAIN_PROMPT</span></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type( </span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever()</span><br><span class="line">)</span><br><span class="line">result = qa_chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>Q4</strong>：如果文档太多，无法将它们全部适配到上下文窗口中怎么办？</p>
+<p><strong>A4</strong>：采用 <code>MapReduce</code>，首先将每个独立的文档单独发送到语言模型以获取原始答案。然后，将答案通过最终对语言模型的一次调用组合成最终的答案</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">qa_chain_mr = RetrievalQA.from_chain_type(</span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever(),</span><br><span class="line">    chain_type=<span class="string">&quot;map_reduce&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>如果信息分布在两个文档之间，无法在同一上下文中获取到所有的信息，也就没法给出正确答案。为解决这个问题，可以采用 <code>Refine 检索式问答链</code> ，Refine 文档链类似于 MapReduce 链，对于每一个文档，会调用一次 LLM，但有所改进的是，我们每次发送给 LLM 的最终提示是一个序列，这个序列会将先前的响应与新数据结合在一起，并请求得到改进后的响应。这种方法类似于 RNN，我们增强了上下文，从而解决信息分布在不同文档的问题。</p>
+<p><a href="https://github.com/chatchat-space/Langchain-Chatchat">Github 参考项目链接</a></p>
+<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
+<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
+<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
+<h2 id="解决思路-3"><a class="markdownIt-Anchor" href="#解决思路-3"></a> 解决思路</h2>
+<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
+<img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424140419971.png" class="" title="image-20240424140419971">
+<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> GraphCypherQAChain</span><br><span class="line"><span class="keyword">from</span> langchain.graphs <span class="keyword">import</span> Neo4jGraph</span><br><span class="line"></span><br><span class="line">graph = Neo4jGraph(</span><br><span class="line">    url=<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">    username=<span class="string">&quot;neo4j&quot;</span>, </span><br><span class="line">    password=<span class="string">&quot;&quot;</span></span><br><span class="line">)</span><br><span class="line">chain = GraphCypherQAChain.from_llm(</span><br><span class="line">    model, graph=graph, verbose=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Langchain 底层针对图数据库对话的 Prompt</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_GENERATION_TEMPLATE = <span class="string">&quot;&quot;&quot;Task:Generate Cypher statement to query a graph database.</span></span><br><span class="line"><span class="string">Instructions:</span></span><br><span class="line"><span class="string">Use only the provided relationship types and properties in the schema.</span></span><br><span class="line"><span class="string">Do not use any other relationship types or properties that are not provided.</span></span><br><span class="line"><span class="string">Schema:</span></span><br><span class="line"><span class="string">&#123;schema&#125;</span></span><br><span class="line"><span class="string">Note: Do not include any explanations or apologies in your responses.</span></span><br><span class="line"><span class="string">Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.</span></span><br><span class="line"><span class="string">Do not include any text except the generated Cypher statement.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The question is:</span></span><br><span class="line"><span class="string">&#123;question&#125;&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Langchain 底层针对上下文问答的 Prompt</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_QA_TEMPLATE = <span class="string">&quot;&quot;&quot;You are an assistant that helps to form nice and human understandable answers.</span></span><br><span class="line"><span class="string">The information part contains the provided information that you must use to construct an answer.</span></span><br><span class="line"><span class="string">The provided information is authoritative, you must never doubt it or try to use your internal knowledge to correct it.</span></span><br><span class="line"><span class="string">Make the answer sound as a response to the question. Do not mention that you based the result on the given information.</span></span><br><span class="line"><span class="string">If the provided information is empty, say that you don&#x27;t know the answer.</span></span><br><span class="line"><span class="string">Information:</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: &#123;question&#125;</span></span><br><span class="line"><span class="string">Helpful Answer:&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 采用 qdrant 向量库保存对话历史</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomQdrantMemory</span>(<span class="title class_ inherited__">BaseChatMemory</span>):</span><br><span class="line">    <span class="comment"># 访问数据库抽取最相关联的 message_limit 条数据</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buffer</span>(<span class="params">self, inputs: <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]</span>) -&gt; <span class="type">List</span>[BaseMessage]:</span><br><span class="line">        chat_messages: <span class="type">List</span>[BaseMessage] = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inputs:</span><br><span class="line">            <span class="keyword">return</span> chat_messages</span><br><span class="line">        hits = self.qdrant.search(</span><br><span class="line">            collection_name=self.conversation_id,</span><br><span class="line">            query_vector=self.encoder.encode(inputs[<span class="string">&#x27;input&#x27;</span>]).tolist(),</span><br><span class="line">            limit=self.message_limit,</span><br><span class="line">        )</span><br><span class="line">        hits = <span class="built_in">sorted</span>(hits, key=<span class="keyword">lambda</span> x:x.<span class="built_in">id</span>)</span><br><span class="line">        <span class="keyword">for</span> hit <span class="keyword">in</span> hits:</span><br><span class="line">            chat_messages.append(HumanMessage(content=hit.payload[<span class="string">&#x27;human&#x27;</span>]))</span><br><span class="line">            chat_messages.append(AIMessage(content=hit.payload[<span class="string">&#x27;assistant&#x27;</span>]))</span><br><span class="line">        curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="comment"># 如果超出模型最长上下文，则弹出最早的对话历史</span></span><br><span class="line">        <span class="keyword">if</span> curr_buffer_length &gt; self.max_token_limit:</span><br><span class="line">            pruned_memory = []</span><br><span class="line">            <span class="keyword">while</span> curr_buffer_length &gt; self.max_token_limit <span class="keyword">and</span> chat_messages:</span><br><span class="line">                pruned_memory.append(chat_messages.pop())</span><br><span class="line">                curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="keyword">return</span> chat_messages        </span><br></pre></td></tr></table></figure>
+<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
+<p>流程</p>
+<ul>
+<li>音视频上传
+<ul>
+<li>语音转文字 FFmpeg</li>
+<li>【初始化】声纹构建</li>
+<li>台本构建</li>
+</ul>
+</li>
+<li>台本切分 + Chroma 向量库相似度匹配</li>
+<li>LLM 响应结果</li>
+</ul>
+<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github 参考项目链接</a></p>
+<h1 id="python-notes"><a class="markdownIt-Anchor" href="#python-notes"></a> Python Notes</h1>
+<p>def _call() 方法把这个类型的对象当作函数来使用</p>
+]]></content>
+      <categories>
+        <category>LLM应用开发</category>
+      </categories>
+      <tags>
+        <tag>Langchain</tag>
+        <tag>向量数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -627,85 +742,63 @@
       </tags>
   </entry>
   <entry>
-    <title>LLM应用开发</title>
-    <url>/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/</url>
-    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
-<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
-<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
-<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
-<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
-<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">OutlinePrompt = ChatPromptTemplate.from_template(<span class="string">f&#x27;请根据<span class="subst">&#123;query&#125;</span>，按照以下格式对问题提炼目录。回答内容尽量简短\n \</span></span><br><span class="line"><span class="string">            开始生成大纲:\n \</span></span><br><span class="line"><span class="string">            1. XXX\n    1.1xxx 1.2xxx 1.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            2. XXX\n    2.1xxx 2.2xxx 2.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            .......\n&#x27;</span>)</span><br><span class="line">chain = LLMChain(prompt=OutlinePrompt, llm=model1,memory=<span class="literal">None</span>, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">chat_prompt = PromptTemplate.from_template(<span class="string">f&#x27;请以<span class="subst">&#123;title&#125;</span>的<span class="subst">&#123;contexts&#125;</span>为主要内容，帮我扩写到<span class="subst">&#123;num&#125;</span>字&#x27;</span>)</span><br><span class="line">combined_prompt = PromptTemplate.from_template(<span class="string">f&#x27;写一段过渡段，从<span class="subst">&#123;title&#125;</span>自然过渡到<span class="subst">&#123;next_title&#125;</span>，内容简短&#x27;</span>)</span><br><span class="line">chat_chain = LLMChain(llm=llm, prompt=chat_prompt, output_key=<span class="string">&quot;chat&quot;</span>)</span><br><span class="line">combined_chain = LLMChain(llm=llm, prompt=combined_prompt, output_key=<span class="string">&quot;combined&quot;</span>)</span><br><span class="line">single_chain = SequentialChain(</span><br><span class="line">    chains=[chat_chain, combined_chain], </span><br><span class="line">    input_variables=[<span class="string">&quot;title&quot;</span>, <span class="string">&quot;contexts&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;next_title&quot;</span>],</span><br><span class="line">    output_variables=[<span class="string">&quot;chat&quot;</span>, <span class="string">&quot;combined&quot;</span>],</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>目前还是通过 for 循环遍历大纲，后续考虑采用路由链 <code>LLMRouterChain</code>，</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">router_prompt = PromptTemplate(</span><br><span class="line">    template=router_template,</span><br><span class="line">    input_variables=[<span class="string">&quot;input&quot;</span>],</span><br><span class="line">    output_parser=RouterOutputParser(),</span><br><span class="line">)</span><br><span class="line">chain = MultiPromptChain(</span><br><span class="line">    router_chain=router_chain,    <span class="comment"># 路由链路</span></span><br><span class="line">    destination_chains=destination_chains,   <span class="comment"># 目标链路（LLmChain 数组）</span></span><br><span class="line">    default_chain=default_chain,      <span class="comment"># 默认链路</span></span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
-<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
-<p>离线私有数据不能直接作为语料库训练模型，LLM 需要具有基于私有数据返回的能力。</p>
-<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
-<p>知识库系统要包括文档加载、切分、存储、检索和存储聊天记录模块，具体通过向量表征 <code>Embeddings</code> 和向量存储 <code>Vector Store</code> 实现</p>
+    <title>如何保持专注</title>
+    <url>/Stay-Focused/</url>
+    <content><![CDATA[<p>磨刀不误砍柴工，弄明白如何做事比糊里糊涂的做更重要。当下的目标是通过不断<strong>实践试错</strong>并<strong>总结纠错</strong>，从而找到最适合我的高效专注的做事方法。在此，再以高中的座右铭激励自己：当你觉得为时已晚的时候，恰恰是最早的时候。从学生变成社会人、从孩子变成家庭支柱、从做事的变成管人的（总会有那天的啦），我还有很多要改进要学习的地方（如何清楚明确的表达自己的工作内容，如何高效明确的和别人沟通），这些变化不是为了适应社会的表演，而是成年人的责任。<s>（tmd这文字像是初中生写出来的，文化沙漠了属于是，有时间还是得多看看书捏）</s></p>
+<blockquote>
+<p>Thought is already is late, exactly is the earliest time.</p>
+</blockquote>
+<h1 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h1>
+<p>布置好工作环境，安排好工作内容，让自己发自内心得希望把事情完成。</p>
 <ul>
-<li>文本表征是对文本语义的向量表征，相似内容的文本具有相似的表征向量。这使我们可以在向量空间中比较文本的相似性。</li>
-<li>向量数据库<code>Vector Database</code>用来存储文档的文本块。对于给定的文档，我们首先将其分成较小的文本块<code>chunks</code>，然后获取每个小文本块的文本表征，并将这些表征储存在向量数据库中。这个流程正是创建索引<code>index</code>的过程。将文档分成小文本块的原因在于我们可能无法将整个文档传入语言模型进行处理。</li>
+<li><strong>早起，立即开始工作</strong>。早起会立即给自己一个潜意识的信号，让自己在那天努力工作。</li>
+<li><strong>制定一个行动计划</strong>。用 10 分钟来筹划接下来的几个小时要做的事情，让事情可以推动自己前进。</li>
+<li><strong>提前完成一连串的工作</strong>。清晨就处理完当天最紧要的工作，白天的时间就会显得从容，这也会产生积极的启动，这将持续一整天。</li>
 </ul>
-<img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102449161.png" class="" title="image-20240424102449161">
-<p>Langchain 中文本分割器 <code>langchain.text_splitter</code> 都根据 chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行分割</p>
+<h1 id="无干扰休息"><a class="markdownIt-Anchor" href="#无干扰休息"></a> 无干扰休息</h1>
+<p>休息可以帮助自己以新的方式思考问题，可以清醒头脑，从而重新集中注意力。无干扰的休息意味着休息不会扼杀你的动力，这样你就可以重新振作起来，而不会陷入拖延的弯路。</p>
 <ul>
-<li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
-<li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
+<li><strong>避免参与式的休息</strong>。短视频，游戏，微信等会占据头脑的东西都会打断做事的势头。</li>
+<li><strong>专注于放松</strong>。走一小段路、喝一杯水或伸展身体都是不错的选择，可以很容易地从休息中抽身出来回去工作。</li>
 </ul>
-<style>.ogfgkrtfmtdv{zoom:50%;}</style><img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102824838.png" class="ogfgkrtfmtdv" alt="langchain.text_splitter">
-<p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
-<p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
-<p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
-<p><strong>A2</strong>：通过 <code>SelfQueryRetriever</code> 参数 <code>document_content_description</code> 指定元素的不同字段（source）以及它们对应的位置（page）</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">metadata_field_info_chinese = [</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;source&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章来源于 `index-浙江省财政报告`, `index-江苏省财政报告` 的其中之一&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;page&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章中的哪一页&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;integer&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p><strong>Q3</strong>：如何通过过获取到的文档得到 LLM 响应</p>
-<p><strong>A3</strong>：采用 检索式问答链 <code>RetrievalQA</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;使用以下上下文片段来回答最后的问题。如果你不知道答案，只需说不知道，不要试图编造答案。答案最多使用三个句子。尽量简明扼要地回答。在回答的最后一定要说&quot;感谢您的提问！&quot;</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：&#123;question&#125;</span></span><br><span class="line"><span class="string">有用的回答：&quot;&quot;&quot;</span></span><br><span class="line">QA_CHAIN_PROMPT = PromptTemplate.from_template(template)</span><br><span class="line"><span class="comment"># RetrievalQA 内部使用了 QA_CHAIN_PROMPT</span></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type( </span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever()</span><br><span class="line">)</span><br><span class="line">result = qa_chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)</span><br></pre></td></tr></table></figure>
-<p><strong>Q4</strong>：如果文档太多，无法将它们全部适配到上下文窗口中怎么办？</p>
-<p><strong>A4</strong>：采用 <code>MapReduce</code>，首先将每个独立的文档单独发送到语言模型以获取原始答案。然后，将答案通过最终对语言模型的一次调用组合成最终的答案</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">qa_chain_mr = RetrievalQA.from_chain_type(</span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever(),</span><br><span class="line">    chain_type=<span class="string">&quot;map_reduce&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>如果信息分布在两个文档之间，无法在同一上下文中获取到所有的信息，也就没法给出正确答案。为解决这个问题，可以采用 <code>Refine 检索式问答链</code> ，Refine 文档链类似于 MapReduce 链，对于每一个文档，会调用一次 LLM，但有所改进的是，我们每次发送给 LLM 的最终提示是一个序列，这个序列会将先前的响应与新数据结合在一起，并请求得到改进后的响应。这种方法类似于 RNN，我们增强了上下文，从而解决信息分布在不同文档的问题。</p>
-<p><a href="https://github.com/chatchat-space/Langchain-Chatchat">Github 参考项目链接</a></p>
-<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
-<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
-<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
-<h2 id="解决思路-3"><a class="markdownIt-Anchor" href="#解决思路-3"></a> 解决思路</h2>
-<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
-<img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424140419971.png" class="" title="image-20240424140419971">
-<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> GraphCypherQAChain</span><br><span class="line"><span class="keyword">from</span> langchain.graphs <span class="keyword">import</span> Neo4jGraph</span><br><span class="line"></span><br><span class="line">graph = Neo4jGraph(</span><br><span class="line">    url=<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">    username=<span class="string">&quot;neo4j&quot;</span>, </span><br><span class="line">    password=<span class="string">&quot;&quot;</span></span><br><span class="line">)</span><br><span class="line">chain = GraphCypherQAChain.from_llm(</span><br><span class="line">    model, graph=graph, verbose=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>Langchain 底层针对图数据库对话的 Prompt</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_GENERATION_TEMPLATE = <span class="string">&quot;&quot;&quot;Task:Generate Cypher statement to query a graph database.</span></span><br><span class="line"><span class="string">Instructions:</span></span><br><span class="line"><span class="string">Use only the provided relationship types and properties in the schema.</span></span><br><span class="line"><span class="string">Do not use any other relationship types or properties that are not provided.</span></span><br><span class="line"><span class="string">Schema:</span></span><br><span class="line"><span class="string">&#123;schema&#125;</span></span><br><span class="line"><span class="string">Note: Do not include any explanations or apologies in your responses.</span></span><br><span class="line"><span class="string">Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.</span></span><br><span class="line"><span class="string">Do not include any text except the generated Cypher statement.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The question is:</span></span><br><span class="line"><span class="string">&#123;question&#125;&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Langchain 底层针对上下文问答的 Prompt</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_QA_TEMPLATE = <span class="string">&quot;&quot;&quot;You are an assistant that helps to form nice and human understandable answers.</span></span><br><span class="line"><span class="string">The information part contains the provided information that you must use to construct an answer.</span></span><br><span class="line"><span class="string">The provided information is authoritative, you must never doubt it or try to use your internal knowledge to correct it.</span></span><br><span class="line"><span class="string">Make the answer sound as a response to the question. Do not mention that you based the result on the given information.</span></span><br><span class="line"><span class="string">If the provided information is empty, say that you don&#x27;t know the answer.</span></span><br><span class="line"><span class="string">Information:</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: &#123;question&#125;</span></span><br><span class="line"><span class="string">Helpful Answer:&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 采用 qdrant 向量库保存对话历史</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomQdrantMemory</span>(<span class="title class_ inherited__">BaseChatMemory</span>):</span><br><span class="line">    <span class="comment"># 访问数据库抽取最相关联的 message_limit 条数据</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buffer</span>(<span class="params">self, inputs: <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]</span>) -&gt; <span class="type">List</span>[BaseMessage]:</span><br><span class="line">        chat_messages: <span class="type">List</span>[BaseMessage] = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inputs:</span><br><span class="line">            <span class="keyword">return</span> chat_messages</span><br><span class="line">        hits = self.qdrant.search(</span><br><span class="line">            collection_name=self.conversation_id,</span><br><span class="line">            query_vector=self.encoder.encode(inputs[<span class="string">&#x27;input&#x27;</span>]).tolist(),</span><br><span class="line">            limit=self.message_limit,</span><br><span class="line">        )</span><br><span class="line">        hits = <span class="built_in">sorted</span>(hits, key=<span class="keyword">lambda</span> x:x.<span class="built_in">id</span>)</span><br><span class="line">        <span class="keyword">for</span> hit <span class="keyword">in</span> hits:</span><br><span class="line">            chat_messages.append(HumanMessage(content=hit.payload[<span class="string">&#x27;human&#x27;</span>]))</span><br><span class="line">            chat_messages.append(AIMessage(content=hit.payload[<span class="string">&#x27;assistant&#x27;</span>]))</span><br><span class="line">        curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="comment"># 如果超出模型最长上下文，则弹出最早的对话历史</span></span><br><span class="line">        <span class="keyword">if</span> curr_buffer_length &gt; self.max_token_limit:</span><br><span class="line">            pruned_memory = []</span><br><span class="line">            <span class="keyword">while</span> curr_buffer_length &gt; self.max_token_limit <span class="keyword">and</span> chat_messages:</span><br><span class="line">                pruned_memory.append(chat_messages.pop())</span><br><span class="line">                curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="keyword">return</span> chat_messages        </span><br></pre></td></tr></table></figure>
-<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
-<p>流程</p>
+<p>休息不是为了玩得开心，这才是真正休息的目的。休息是关于战略性地恢复你的能量和注意力，以重新处理手头的工作。把电视、游戏和娱乐活动留给晚上可以无愧疚地放松的时候。</p>
+<h1 id="积极工作"><a class="markdownIt-Anchor" href="#积极工作"></a> 积极工作</h1>
+<p>被动任务比主动任务更难集中注意力。改变这种状况的关键是，或者。</p>
 <ul>
-<li>音视频上传
-<ul>
-<li>语音转文字 FFmpeg</li>
-<li>【初始化】声纹构建</li>
-<li>台本构建</li>
+<li><strong>使任务处于活动状态</strong>。将被动学习任务转换为主动学习任务，如写提纲、记录重点。</li>
+<li><strong>穿插活动任务</strong>。将被动学习与主动任务穿插在一起，以定期提高注意力，如表达自己见解、用自己的话复述一遍。</li>
 </ul>
+<blockquote>
+<p><strong><a href="https://www.youtube.com/watch?v=FrNqSLPaZLc">Feynman 学习法</a></strong></p>
+<p>Step1: choose your concept【写下你要学习的概念】</p>
+<p>Step2: Pretend You’re Teaching the ldea to a New Student【假象你在教一位不懂这件事情的人这个概念，尝试将这件事情说明白】</p>
+<p>Step3: If You Get Stuck, Go Back to the Book【如果你在这个过程中遇到了困难，回到课本和视频中进一步学习】</p>
+<p>Step4: Simplify and Create Analogies【尝试精简自己的解释，并将其与其他概念做类比，从而更好地理解概念】</p>
+<p>总结一下，当你可以教会某人一个ta完全不懂的概念的时候，说明你真正掌握了这个概念</p>
+</blockquote>
+<h1 id="固定日程安排"><a class="markdownIt-Anchor" href="#固定日程安排"></a> 固定日程安排</h1>
+<p>努力工作的最好方式就是拥有生活</p>
+<ul>
+<li>
+<p><strong>保证休息</strong>，应对大量工作任务的办法是保证自己有休息时间。如果你白天不好好工作，却逼迫自己整夜学习的话，你很容易就会筋疲力尽的。无论压力再大任务再多，都要保证休息时间，一颗清醒的大脑决定了工作的质量。</p>
 </li>
-<li>台本切分 + Chroma 向量库相似度匹配</li>
-<li>LLM 响应结果</li>
+<li>
+<p>使用时间分块法或每周/每日目标法，将工作和生活清晰地分离开，好好工作好好玩。</p>
+</li>
 </ul>
-<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github 参考项目链接</a></p>
-<h1 id="python-notes"><a class="markdownIt-Anchor" href="#python-notes"></a> Python Notes</h1>
-<p>def _call() 把这个类型的对象当作函数来使用</p>
+<blockquote>
+<p><strong>时间分块法</strong></p>
+<p>将一天分成更小的时间分块法。在每一段时间里，专注于一项任务或一组相似的任务。其重点是<strong>规划出需要完成的任务</strong>，然后<strong>划分特定的时间段专注完成这些任务</strong>。</p>
+<p>当你把一整天分成时间段后，它会让你专注于任务，并限制其他人占用你的时间。</p>
+<p>时间分块法让你每天都有一个要完成的具体任务的时间表，而不是遵循一个不断扩大的待办事项列表，你只需要关注于当下应该做的事情。</p>
+</blockquote>
+<p><a href="https://www.scotthyoung.com/blog/2011/11/28/focus-without-caffeine/">Refer</a></p>
 ]]></content>
       <categories>
-        <category>LLM应用开发</category>
+        <category>思考</category>
       </categories>
       <tags>
-        <tag>Langchain</tag>
-        <tag>向量数据库</tag>
+        <tag>保持专注</tag>
       </tags>
   </entry>
   <entry>
@@ -826,7 +919,18 @@
   <entry>
     <title>实习笔试题汇总</title>
     <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
-    <content><![CDATA[<h1 id="2024416-携程笔试"><a class="markdownIt-Anchor" href="#2024416-携程笔试"></a> 2024.4.16 携程笔试</h1>
+    <content><![CDATA[<h1 id="2024425-华为测评"><a class="markdownIt-Anchor" href="#2024425-华为测评"></a> 2024.4.25 华为测评</h1>
+<p>华子免笔试，只有测评了。看网上好多人测评挂了我都惊呆了，还好没和其他的厂一样直接做测评而是上我搜了下，其他的厂可以不去但华子我必然拿下（小心谨慎哈哈哈）</p>
+<p>华子要什么样性格的人？（前后回答要一致）</p>
+<ul>
+<li>不需要凸显自己的能力、表达自己的个性，更多的是团队合作</li>
+<li>遇到挫折要坚持，遇到问题会咨询</li>
+<li>热爱工作，吃苦耐劳，积极向上</li>
+</ul>
+<p>（准备了又好像没准备，就这样吧，希望能过！阿弥陀佛财神爷保佑！）</p>
+<p><strong>复盘</strong>：有些过于没有压力了，前面每一题都认真思考结果 40min 过完才做了一半，人家都是 40min 就做完了，实在是有些拖拉（但这个要认真选真的很难啊，得回忆自己平常的所思所想所做才然后选个答案，后续时间紧张直接主观臆断速度还是很快的）。<strong>只要时间不紧张就慢慢做，一旦时间紧张了才开始全神贯注做，这可真的是一个坏毛病，得改。</strong></p>
+<p>后续学习工作中都应该有这个意识，主动养成专注的习惯，要做就认真仔细专注的做事情！</p>
+<h1 id="2024416-携程笔试"><a class="markdownIt-Anchor" href="#2024416-携程笔试"></a> 2024.4.16 携程笔试</h1>
 <p>前两道签到题，后面一个半小时纯折磨</p>
 <p>第三题</p>
 <p>游游拿到了一个数组，她每次操作可以将相邻的两个素数元素进山314行合并，合并后的新数为原来的两个数之和，并删除原来两个数。游游希望最终数组的元素数量尽可能少，你能帮帮她吗?</p>
@@ -910,6 +1014,319 @@
       </categories>
       <tags>
         <tag>面试记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 文档阅读</title>
+    <url>/2024/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/</url>
+    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
+<blockquote>
+<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
+</blockquote>
+<span id="more"></span>
+<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
+<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
+<ol>
+<li>
+<p>集中化版本控制（CVCS）缺点</p>
+<ol>
+<li>中央服务器的单点故障就无法协同工作</li>
+<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
+</ol>
+</li>
+<li>
+<p>分布式版本控制（DVCS）优点</p>
+<ol>
+<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
+<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
+<li>可以指定和若干不同的远端代码仓库进行交互</li>
+</ol>
+</li>
+</ol>
+<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
+<ol>
+<li>并行开发</li>
+<li>完全分布式</li>
+<li>速度快</li>
+<li>数据量大</li>
+</ol>
+<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
+<ol>
+<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
+<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
+<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
+<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
+<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
+</ol>
+<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
+<blockquote>
+<p>git config --list --show-origin</p>
+</blockquote>
+<ol>
+<li>/etc/gitconfig 系统通用配置 git config --system</li>
+<li>~/.gitconfig 当前用户配置 git config --global</li>
+<li>.git/config 当前项目配置 git config --local</li>
+</ol>
+<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
+<blockquote>
+<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
+</blockquote>
+<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
+<ol>
+<li>git init
+<ol>
+<li>初始化仓库</li>
+</ol>
+</li>
+<li>git clone
+<ol>
+<li>克隆仓库</li>
+</ol>
+</li>
+<li>git status
+<ol>
+<li>查看文件状态</li>
+<li>[-s] 简要文件状态信息</li>
+</ol>
+</li>
+<li>git add
+<ol>
+<li>[&lt;file&gt;] 跟踪新文件</li>
+<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
+<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
+</ol>
+</li>
+<li>git diff
+<ol>
+<li>已修改文件与已暂存文件的内容差异</li>
+<li>[–staged] 已暂存与分支HEAD的内容差异</li>
+</ol>
+</li>
+<li>git rm
+<ol>
+<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
+<li>[-f] 强制移除存在未暂存修改的文件</li>
+<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
+</ol>
+</li>
+<li>git commit
+<ol>
+<li>提交文件</li>
+<li>[-m] 提交备注</li>
+<li>[–amend] 追加提交</li>
+<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
+</ol>
+</li>
+<li>git mv
+<ol>
+<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
+</ol>
+</li>
+<li>git log
+<ol>
+<li>回顾提交历史</li>
+<li>[–stat] 显示每次提交的简要信息</li>
+<li>[-p ] 显示每次提交的详细信息</li>
+<li>[–pretty=format:“xxx”] 自定义信息格式</li>
+<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
+<li>[–since] 限制时间</li>
+</ol>
+</li>
+<li>git reset
+<ol>
+<li>[HEAD &lt;file&gt;] 取消暂存</li>
+</ol>
+</li>
+<li>git checkout
+<ol>
+<li>[-- &lt;filename&gt;] 撤销修改</li>
+<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
+<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
+</ol>
+</li>
+<li>git remote
+<ol>
+<li>[-v] 列出远程仓库</li>
+<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
+<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
+<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
+<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
+</ol>
+</li>
+<li>git fetch
+<ol>
+<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
+</ol>
+</li>
+<li>git push
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
+<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
+<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
+<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
+<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
+</ol>
+</li>
+<li>git pull
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
+</ol>
+</li>
+<li>git tag
+<ol>
+<li>列出已有的标签</li>
+<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
+<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
+<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
+<li>[-d] 删除标签</li>
+</ol>
+</li>
+<li>git show
+<ol>
+<li>标签信息和与之对应的提交信息</li>
+</ol>
+</li>
+<li>git restore
+<ol>
+<li>[&lt;filename&gt;] 丢弃工作区修改</li>
+<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
+</ol>
+</li>
+<li>git merge
+<ol>
+<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
+</ol>
+</li>
+<li>git branch
+<ol>
+<li>[-d &lt;branchname&gt;] 删除分支</li>
+<li>[-v] 每个分支的最后一次提交</li>
+<li>[-vv] 跟踪信息</li>
+<li>(–set-upstream-to=&lt;upstream&gt; | -u &lt;upstream&gt;) [&lt;branchname&gt;] 跟踪上游分支</li>
+<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
+</ol>
+</li>
+<li>git stash
+<ol>
+<li>贮藏工作</li>
+<li>[list] 列出所有贮藏</li>
+<li>[apply] 恢复贮藏</li>
+</ol>
+</li>
+<li>git rebase
+<ol>
+<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
+</ol>
+</li>
+</ol>
+<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
+<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
+<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
+<blockquote>
+<p>相关命令合并到 Chapter2 中</p>
+</blockquote>
+<ol>
+<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
+<li>git mergetool 图形化冲突解决工具</li>
+<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
+</ol>
+<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
+<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
+<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
+<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>版本管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo 使用指南</title>
+    <url>/2024/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://hexo.io/docs/">官方文档</a></p>
+</blockquote>
+<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>快速部署</td>
+<td>hexo g -d</td>
+</tr>
+<tr>
+<td>清除缓存</td>
+<td>hexo clean</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>hexo s</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>hexo d</td>
+</tr>
+<tr>
+<td>生成静态页面</td>
+<td>hexo generate</td>
+</tr>
+</tbody>
+</table>
+<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
+<p>初始化项目结构</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<p>新增标签页，设置属性（type: “tags”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>新增分类，设置属性（type: “categories”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<p>配置 next 主题设置</p>
+<ul>
+<li>设置 menu 菜单栏</li>
+<li>打开 code 代码复制</li>
+</ul>
+<p>Debug</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
+<p><strong>Git 上传插件</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p><strong>latex 公式</strong></p>
+<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p><strong>本地图片</strong></p>
+<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
+<p><strong>Markdown 文字高亮</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
+<p>_config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
+<p><strong>添加Sitemap</strong></p>
+<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
+<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
+<p><strong>改 blockquote 颜色</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
+<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
+<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
+<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
+<blockquote>
+<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
+</blockquote>
+<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -1627,168 +2044,6 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       </tags>
   </entry>
   <entry>
-    <title>MISC</title>
-    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
-<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>先前工作的局限性
-<ul>
-<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
-<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
-</ul>
-</li>
-<li>本文提出了MISC
-<ul>
-<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
-<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前的工作不适用于ESC
-<ul>
-<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
-<li>只有移情反应，而不考虑解决求助者的情感问题</li>
-</ul>
-</li>
-<li>本文提出的解决方法
-<ul>
-<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
-<li>混合策略，而不是预测单一策略</li>
-<li>设计一套注意力机制</li>
-</ul>
-</li>
-<li>实验分析
-<ul>
-<li>回答策略建模的重要性，能够提高模型的共情能力</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>情绪感知响应生成</li>
-<li>NLP中的常识性知识</li>
-<li>策略感知对话模型</li>
-</ul>
-<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
-<ul>
-<li>ESConv数据集</li>
-<li>问题设定
-<ul>
-<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
-</ul>
-</li>
-</ul>
-<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
-<ul>
-<li>情感状态增强Encoder
-<ul>
-<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
-</ul>
-</li>
-</ul>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
-<ul>
-<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
-<li>将历史对话c输入Encoder得到C</li>
-<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
-<ul>
-<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
-<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
-<ul>
-<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>多因素感知Decoder
-<ul>
-<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
-<ul>
-<li>ESConv中的每十个话语作为一个样本</li>
-<li>评价指标
-<ul>
-<li>策略预测精度：Acc</li>
-<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
-<li>相应多样性：Distinct</li>
-<li>人类评估</li>
-</ul>
-</li>
-<li>基准模型
-<ul>
-<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
-</ul>
-</li>
-<li>具体实现</li>
-<li>实验结果
-<ul>
-<li>动态细粒度情感标签更能准确给予用户回应</li>
-<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
-<li>策略作为单独的任务进行预测比单一预测更有利</li>
-<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
-</ul>
-</li>
-</ul>
-<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
-<ul>
-<li>消融实验</li>
-<li>案例研究</li>
-<li>细粒度情感理解
-<ul>
-<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
-</ul>
-</li>
-<li>混合策略感知移情反应
-<ul>
-<li>混合策略有利于平滑的情感支持</li>
-<li>混合策略比单一策略更有效</li>
-<li>混合策略适用于ESC框架</li>
-</ul>
-</li>
-</ul>
-<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
-<ul>
-<li>引入COMET来捕捉用户的即时心理状态</li>
-<li>设计了一个混合策略感知解码器来产生支持响应</li>
-</ul>
-<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
-<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
-<ul>
-<li>长对话中的过度更加顺畅</li>
-</ul>
-<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
-<ul>
-<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
-<li>提出了不同的策略模型并在对话中给予提示</li>
-</ul>
-<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
-<ul>
-<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
-</ul>
-<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
-<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
-<ul>
-<li>以动态的方式学习混合响应策略</li>
-</ul>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>KEMI</title>
     <url>/2023/Knowledge-enhanced%20Mixed-initiative%20Dialogue%20System%20for%20Emotional%20Support%20Conversations/</url>
     <content><![CDATA[<p><strong>Title:</strong> Knowledge-enhanced Mixed-initiative Dialogue System for Emotional Support Conversations</p>
@@ -2389,316 +2644,165 @@ Discussion</p>
       </tags>
   </entry>
   <entry>
-    <title>Git 文档阅读</title>
-    <url>/2024/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/</url>
-    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
-<blockquote>
-<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
-</blockquote>
+    <title>MISC</title>
+    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
+<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
 <span id="more"></span>
-<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
-<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
-<ol>
-<li>
-<p>集中化版本控制（CVCS）缺点</p>
-<ol>
-<li>中央服务器的单点故障就无法协同工作</li>
-<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
-</ol>
-</li>
-<li>
-<p>分布式版本控制（DVCS）优点</p>
-<ol>
-<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
-<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
-<li>可以指定和若干不同的远端代码仓库进行交互</li>
-</ol>
-</li>
-</ol>
-<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
-<ol>
-<li>并行开发</li>
-<li>完全分布式</li>
-<li>速度快</li>
-<li>数据量大</li>
-</ol>
-<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
-<ol>
-<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
-<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
-<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
-<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
-<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
-</ol>
-<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
-<blockquote>
-<p>git config --list --show-origin</p>
-</blockquote>
-<ol>
-<li>/etc/gitconfig 系统通用配置 git config --system</li>
-<li>~/.gitconfig 当前用户配置 git config --global</li>
-<li>.git/config 当前项目配置 git config --local</li>
-</ol>
-<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
-<blockquote>
-<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
-</blockquote>
-<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
-<ol>
-<li>git init
-<ol>
-<li>初始化仓库</li>
-</ol>
-</li>
-<li>git clone
-<ol>
-<li>克隆仓库</li>
-</ol>
-</li>
-<li>git status
-<ol>
-<li>查看文件状态</li>
-<li>[-s] 简要文件状态信息</li>
-</ol>
-</li>
-<li>git add
-<ol>
-<li>[&lt;file&gt;] 跟踪新文件</li>
-<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
-<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
-</ol>
-</li>
-<li>git diff
-<ol>
-<li>已修改文件与已暂存文件的内容差异</li>
-<li>[–staged] 已暂存与分支HEAD的内容差异</li>
-</ol>
-</li>
-<li>git rm
-<ol>
-<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
-<li>[-f] 强制移除存在未暂存修改的文件</li>
-<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
-</ol>
-</li>
-<li>git commit
-<ol>
-<li>提交文件</li>
-<li>[-m] 提交备注</li>
-<li>[–amend] 追加提交</li>
-<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
-</ol>
-</li>
-<li>git mv
-<ol>
-<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
-</ol>
-</li>
-<li>git log
-<ol>
-<li>回顾提交历史</li>
-<li>[–stat] 显示每次提交的简要信息</li>
-<li>[-p ] 显示每次提交的详细信息</li>
-<li>[–pretty=format:“xxx”] 自定义信息格式</li>
-<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
-<li>[–since] 限制时间</li>
-</ol>
-</li>
-<li>git reset
-<ol>
-<li>[HEAD &lt;file&gt;] 取消暂存</li>
-</ol>
-</li>
-<li>git checkout
-<ol>
-<li>[-- &lt;filename&gt;] 撤销修改</li>
-<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
-<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
-</ol>
-</li>
-<li>git remote
-<ol>
-<li>[-v] 列出远程仓库</li>
-<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
-<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
-<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
-<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
-</ol>
-</li>
-<li>git fetch
-<ol>
-<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
-</ol>
-</li>
-<li>git push
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
-<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
-<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
-<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
-<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
-</ol>
-</li>
-<li>git pull
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
-</ol>
-</li>
-<li>git tag
-<ol>
-<li>列出已有的标签</li>
-<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
-<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
-<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
-<li>[-d] 删除标签</li>
-</ol>
-</li>
-<li>git show
-<ol>
-<li>标签信息和与之对应的提交信息</li>
-</ol>
-</li>
-<li>git restore
-<ol>
-<li>[&lt;filename&gt;] 丢弃工作区修改</li>
-<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
-</ol>
-</li>
-<li>git merge
-<ol>
-<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
-</ol>
-</li>
-<li>git branch
-<ol>
-<li>[-d &lt;branchname&gt;] 删除分支</li>
-<li>[-v] 每个分支的最后一次提交</li>
-<li>[-vv] 跟踪信息</li>
-<li>(–set-upstream-to=&lt;upstream&gt; | -u &lt;upstream&gt;) [&lt;branchname&gt;] 跟踪上游分支</li>
-<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
-</ol>
-</li>
-<li>git stash
-<ol>
-<li>贮藏工作</li>
-<li>[list] 列出所有贮藏</li>
-<li>[apply] 恢复贮藏</li>
-</ol>
-</li>
-<li>git rebase
-<ol>
-<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
-</ol>
-</li>
-</ol>
-<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
-<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
-<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
-<blockquote>
-<p>相关命令合并到 Chapter2 中</p>
-</blockquote>
-<ol>
-<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
-<li>git mergetool 图形化冲突解决工具</li>
-<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
-</ol>
-<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
-<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
-<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
-<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>版本管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo 使用指南</title>
-    <url>/2024/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<blockquote>
-<p><a href="https://hexo.io/docs/">官方文档</a></p>
-</blockquote>
-<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>代码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>快速部署</td>
-<td>hexo g -d</td>
-</tr>
-<tr>
-<td>清除缓存</td>
-<td>hexo clean</td>
-</tr>
-<tr>
-<td>预览</td>
-<td>hexo s</td>
-</tr>
-<tr>
-<td>部署</td>
-<td>hexo d</td>
-</tr>
-<tr>
-<td>生成静态页面</td>
-<td>hexo generate</td>
-</tr>
-</tbody>
-</table>
-<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
-<p>初始化项目结构</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-<p>新增标签页，设置属性（type: “tags”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
-<p>新增分类，设置属性（type: “categories”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
-<p>配置 next 主题设置</p>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
 <ul>
-<li>设置 menu 菜单栏</li>
-<li>打开 code 代码复制</li>
+<li>先前工作的局限性
+<ul>
+<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
+<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
 </ul>
-<p>Debug</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
-<p><strong>Git 上传插件</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p><strong>latex 公式</strong></p>
-<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p><strong>本地图片</strong></p>
-<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
-<p><strong>Markdown 文字高亮</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
-<p>_config.yml</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
-<p><strong>添加Sitemap</strong></p>
-<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
-<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
-<p><strong>改 blockquote 颜色</strong></p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
-<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
-<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
-<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
-<blockquote>
-<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
-</blockquote>
-<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+</li>
+<li>本文提出了MISC
+<ul>
+<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
+<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前的工作不适用于ESC
+<ul>
+<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
+<li>只有移情反应，而不考虑解决求助者的情感问题</li>
+</ul>
+</li>
+<li>本文提出的解决方法
+<ul>
+<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
+<li>混合策略，而不是预测单一策略</li>
+<li>设计一套注意力机制</li>
+</ul>
+</li>
+<li>实验分析
+<ul>
+<li>回答策略建模的重要性，能够提高模型的共情能力</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>情绪感知响应生成</li>
+<li>NLP中的常识性知识</li>
+<li>策略感知对话模型</li>
+</ul>
+<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
+<ul>
+<li>ESConv数据集</li>
+<li>问题设定
+<ul>
+<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
+</ul>
+</li>
+</ul>
+<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
+<ul>
+<li>情感状态增强Encoder
+<ul>
+<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
+</ul>
+</li>
+</ul>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
+<ul>
+<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
+<li>将历史对话c输入Encoder得到C</li>
+<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
+<ul>
+<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
+<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
+<ul>
+<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>多因素感知Decoder
+<ul>
+<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>ESConv中的每十个话语作为一个样本</li>
+<li>评价指标
+<ul>
+<li>策略预测精度：Acc</li>
+<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
+<li>相应多样性：Distinct</li>
+<li>人类评估</li>
+</ul>
+</li>
+<li>基准模型
+<ul>
+<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
+</ul>
+</li>
+<li>具体实现</li>
+<li>实验结果
+<ul>
+<li>动态细粒度情感标签更能准确给予用户回应</li>
+<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
+<li>策略作为单独的任务进行预测比单一预测更有利</li>
+<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
+</ul>
+</li>
+</ul>
+<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
+<ul>
+<li>消融实验</li>
+<li>案例研究</li>
+<li>细粒度情感理解
+<ul>
+<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
+</ul>
+</li>
+<li>混合策略感知移情反应
+<ul>
+<li>混合策略有利于平滑的情感支持</li>
+<li>混合策略比单一策略更有效</li>
+<li>混合策略适用于ESC框架</li>
+</ul>
+</li>
+</ul>
+<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
+<ul>
+<li>引入COMET来捕捉用户的即时心理状态</li>
+<li>设计了一个混合策略感知解码器来产生支持响应</li>
+</ul>
+<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
+<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
+<ul>
+<li>长对话中的过度更加顺畅</li>
+</ul>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<ul>
+<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
+<li>提出了不同的策略模型并在对话中给予提示</li>
+</ul>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<ul>
+<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
+</ul>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+<ul>
+<li>以动态的方式学习混合响应策略</li>
+</ul>
 ]]></content>
       <categories>
-        <category>工具</category>
+        <category>科研</category>
       </categories>
       <tags>
-        <tag>hexo</tag>
+        <tag>情绪支持对话</tag>
       </tags>
   </entry>
 </search>

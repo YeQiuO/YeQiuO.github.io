@@ -431,6 +431,13 @@
 <h3 id="二维-dp"><a class="markdownIt-Anchor" href="#二维-dp"></a> 二维 dp</h3>
 <p>题型：最长公共子序列</p>
 <p>思路：定义 <code>dp[i][j]</code> 表示 <code>text1[0:i-1]</code> 和 <code>text2[0:j-1]</code> 的最长公共子序列</p>
+<h2 id="前缀和"><a class="markdownIt-Anchor" href="#前缀和"></a> 前缀和</h2>
+<h2 id="并查集"><a class="markdownIt-Anchor" href="#并查集"></a> 并查集</h2>
+<blockquote>
+<p>应用题型：检查树是否连通；构造最小生成树。扩展：带权并查集</p>
+</blockquote>
+<p>数据结构模板</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] tab;</span><br><span class="line">    Node (<span class="type">int</span> size) &#123;</span><br><span class="line">        <span class="built_in">this</span>.tab = <span class="keyword">new</span> <span class="title class_">int</span>[size];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> i==tab[i] ? i : (tab[i] = find(tab[i]));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        tab[find(x)] = find(y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="java-技巧"><a class="markdownIt-Anchor" href="#java-技巧"></a> Java 技巧</h1>
 <p>强制类型转换</p>
 <ul>
@@ -562,7 +569,7 @@
 <blockquote>
 <p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
 </blockquote>
-<style>.lasxvkmbclid{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="lasxvkmbclid" alt="image-20240425212527868">
+<style>.lddbtoalljsw{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="lddbtoalljsw" alt="image-20240425212527868">
 <ul>
 <li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
 <li>非线程安全的</li>
@@ -590,6 +597,28 @@
 <ul>
 <li>线程不安全。在树结构替换链表最终阶段会校验树结构，在此过程中的插入会使该树结构不满足红黑树和双链表的特性，导致报异常 <code>assert checkInvariants(root);</code></li>
 </ul>
+<h1 id="concurrenthashmap"><a class="markdownIt-Anchor" href="#concurrenthashmap"></a> ConcurrentHashMap</h1>
+<blockquote>
+<p>Java7 中 ConcurrentHashMap 使用的是分段锁，每一个 Segment 上同时只有一个线程可以操作，结构上时 <code>Segment</code> <strong>数组 +</strong> <code>HashEntry</code> <strong>数组 + 链表</strong>。<code>Segment</code> 的个数一旦<strong>初始化就不能改变</strong>，默认 <code>Segment</code> 的个数是 16 个，<code>Segment</code>继承<code>ReentrantLock</code>实现分段锁。</p>
+<p>Java8 中的 ConcurrentHashMap 通过 <strong>Synchronized 锁加 CAS</strong> 保证多线程安全，结构上是 <code>Node</code> <strong>数组</strong> + <strong>链表 / 红黑树</strong>。</p>
+</blockquote>
+<p>如果链表转红黑树，又有数据要插入，会发生什么。</p>
+<ul>
+<li><code>treeifyBin</code> 通过 <code>synchronized</code> 把 <code>bin</code> 加锁，后续数据插入会因为无法竞争到资源而阻塞</li>
+<li>链表开始转红黑树前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在转换为红黑树，此时会自旋等待转换完成后插入（大概是这样的）</li>
+</ul>
+<p>如果数组扩容，又有数据要插入，会发生什么。</p>
+<ul>
+<li>扩容前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在扩容。</li>
+<li>扩容时，插入数据的线程若发现 hash 值为负，会去协助扩容，扩容完成后再插入数据。</li>
+</ul>
+<p><a href="https://blog.csdn.net/ZOKEKAI/article/details/90051567"><strong>什么时候触发扩容？</strong></a></p>
+<ul>
+<li>在调用 addCount 方法增加集合元素计数后发现当前集合元素个数到达扩容阈值时就会触发扩容</li>
+<li>扩容状态下其他线程对集合进行插入、修改、删除、合并、compute 等操作时遇到 <code>ForwardingNode</code> 节点会触发扩容（帮助扩容）</li>
+<li>putAll 批量插入或者插入节点后发现存在链表长度达到 8 个或以上，但数组长度为 64 以下时会触发扩容  。</li>
+</ul>
+<p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64 以下时只会触发扩容而不会将链表转为红黑树</p>
 ]]></content>
       <categories>
         <category>Java学习</category>
@@ -611,7 +640,7 @@
 <h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
 <p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">OutlinePrompt = ChatPromptTemplate.from_template(<span class="string">f&#x27;请根据<span class="subst">&#123;query&#125;</span>，按照以下格式对问题提炼目录。回答内容尽量简短\n \</span></span><br><span class="line"><span class="string">            开始生成大纲:\n \</span></span><br><span class="line"><span class="string">            1. XXX\n    1.1xxx 1.2xxx 1.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            2. XXX\n    2.1xxx 2.2xxx 2.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            .......\n&#x27;</span>)</span><br><span class="line">chain = LLMChain(prompt=OutlinePrompt, llm=model1, memory=<span class="literal">None</span>, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>由于需要对输出进行<strong>结构化解析</strong>和<strong>链式调用模型</strong>以处理每块数据，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<p>由于需要<strong>结构化解析</strong>输出结果并<strong>链式调用</strong>模型扩写子论点，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">chat_prompt = PromptTemplate.from_template(<span class="string">f&#x27;请以<span class="subst">&#123;title&#125;</span>的<span class="subst">&#123;contexts&#125;</span>为主要内容，帮我扩写到<span class="subst">&#123;num&#125;</span>字&#x27;</span>)</span><br><span class="line">combined_prompt = PromptTemplate.from_template(<span class="string">f&#x27;写一段过渡段，从<span class="subst">&#123;title&#125;</span>自然过渡到<span class="subst">&#123;next_title&#125;</span>，内容简短&#x27;</span>)</span><br><span class="line">chat_chain = LLMChain(llm=llm, prompt=chat_prompt, output_key=<span class="string">&quot;chat&quot;</span>)</span><br><span class="line">combined_chain = LLMChain(llm=llm, prompt=combined_prompt, output_key=<span class="string">&quot;combined&quot;</span>)</span><br><span class="line">single_chain = SequentialChain(</span><br><span class="line">    chains=[chat_chain, combined_chain], </span><br><span class="line">    input_variables=[<span class="string">&quot;title&quot;</span>, <span class="string">&quot;contexts&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;next_title&quot;</span>],</span><br><span class="line">    output_variables=[<span class="string">&quot;chat&quot;</span>, <span class="string">&quot;combined&quot;</span>],</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>目前还是通过 for 循环遍历大纲，后续考虑采用路由链 <code>LLMRouterChain</code>，</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">router_prompt = PromptTemplate(</span><br><span class="line">    template=router_template,</span><br><span class="line">    input_variables=[<span class="string">&quot;input&quot;</span>],</span><br><span class="line">    output_parser=RouterOutputParser(),</span><br><span class="line">)</span><br><span class="line">chain = MultiPromptChain(</span><br><span class="line">    router_chain=router_chain,    <span class="comment"># 路由链路</span></span><br><span class="line">    destination_chains=destination_chains,   <span class="comment"># 目标链路（LLmChain 数组）</span></span><br><span class="line">    default_chain=default_chain,      <span class="comment"># 默认链路</span></span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
@@ -630,7 +659,7 @@
 <li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
 <li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
 </ul>
-<style>.cxshuumfnskv{zoom:50%;}</style><img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102824838.png" class="cxshuumfnskv" alt="langchain.text_splitter">
+<style>.ftbxvnliflor{zoom:50%;}</style><img data-src="/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/image-20240424102824838.png" class="ftbxvnliflor" alt="langchain.text_splitter">
 <p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
 <p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
 <p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
@@ -742,75 +771,15 @@
       </tags>
   </entry>
   <entry>
-    <title>如何保持专注</title>
-    <url>/Stay-Focused/</url>
-    <content><![CDATA[<p>磨刀不误砍柴工，弄明白如何做事比糊里糊涂的做更重要。当下的目标是通过不断<strong>实践试错</strong>并<strong>总结纠错</strong>，从而找到最适合我的高效专注的做事方法。在此，再以高中的座右铭激励自己：当你觉得为时已晚的时候，恰恰是最早的时候。从学生变成社会人、从孩子变成家庭支柱、从做事的变成管人的（总会有那天的啦），我还有很多要改进要学习的地方（如何清楚明确的表达自己的工作内容，如何高效明确的和别人沟通），这些变化不是为了适应社会的表演，而是成年人的责任。<s>（tmd这文字像是初中生写出来的，文化沙漠了属于是，有时间还是得多看看书捏）</s></p>
-<blockquote>
-<p>Thought is already is late, exactly is the earliest time.</p>
-</blockquote>
-<h1 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h1>
-<p>布置好工作环境，安排好工作内容，让自己发自内心得希望把事情完成。</p>
-<ul>
-<li><strong>早起，立即开始工作</strong>。早起会立即给自己一个潜意识的信号，让自己在那天努力工作。</li>
-<li><strong>制定一个行动计划</strong>。用 10 分钟来筹划接下来的几个小时要做的事情，让事情可以推动自己前进。</li>
-<li><strong>提前完成一连串的工作</strong>。清晨就处理完当天最紧要的工作，白天的时间就会显得从容，这也会产生积极的启动，这将持续一整天。</li>
-</ul>
-<h1 id="无干扰休息"><a class="markdownIt-Anchor" href="#无干扰休息"></a> 无干扰休息</h1>
-<p>休息可以帮助自己以新的方式思考问题，可以清醒头脑，从而重新集中注意力。无干扰的休息意味着休息不会扼杀你的动力，这样你就可以重新振作起来，而不会陷入拖延的弯路。</p>
-<ul>
-<li><strong>避免参与式的休息</strong>。短视频，游戏，微信等会占据头脑的东西都会打断做事的势头。</li>
-<li><strong>专注于放松</strong>。走一小段路、喝一杯水或伸展身体都是不错的选择，可以很容易地从休息中抽身出来回去工作。</li>
-</ul>
-<p>休息不是为了玩得开心，这才是真正休息的目的。休息是关于战略性地恢复你的能量和注意力，以重新处理手头的工作。把电视、游戏和娱乐活动留给晚上可以无愧疚地放松的时候。</p>
-<h1 id="积极工作"><a class="markdownIt-Anchor" href="#积极工作"></a> 积极工作</h1>
-<p>被动任务比主动任务更难集中注意力。改变这种状况的关键是，或者。</p>
-<ul>
-<li><strong>使任务处于活动状态</strong>。将被动学习任务转换为主动学习任务，如写提纲、记录重点。</li>
-<li><strong>穿插活动任务</strong>。将被动学习与主动任务穿插在一起，以定期提高注意力，如表达自己见解、用自己的话复述一遍。</li>
-</ul>
-<blockquote>
-<p><strong><a href="https://www.youtube.com/watch?v=FrNqSLPaZLc">Feynman 学习法</a></strong></p>
-<p>Step1: choose your concept【写下你要学习的概念】</p>
-<p>Step2: Pretend You’re Teaching the ldea to a New Student【假象你在教一位不懂这件事情的人这个概念，尝试将这件事情说明白】</p>
-<p>Step3: If You Get Stuck, Go Back to the Book【如果你在这个过程中遇到了困难，回到课本和视频中进一步学习】</p>
-<p>Step4: Simplify and Create Analogies【尝试精简自己的解释，并将其与其他概念做类比，从而更好地理解概念】</p>
-<p>总结一下，当你可以教会某人一个ta完全不懂的概念的时候，说明你真正掌握了这个概念</p>
-</blockquote>
-<h1 id="固定日程安排"><a class="markdownIt-Anchor" href="#固定日程安排"></a> 固定日程安排</h1>
-<p>努力工作的最好方式就是拥有生活</p>
-<ul>
-<li>
-<p><strong>保证休息</strong>，应对大量工作任务的办法是保证自己有休息时间。如果你白天不好好工作，却逼迫自己整夜学习的话，你很容易就会筋疲力尽的。无论压力再大任务再多，都要保证休息时间，一颗清醒的大脑决定了工作的质量。</p>
-</li>
-<li>
-<p>使用时间分块法或每周/每日目标法，将工作和生活清晰地分离开，好好工作好好玩。</p>
-</li>
-</ul>
-<blockquote>
-<p><strong>时间分块法</strong></p>
-<p>将一天分成更小的时间分块法。在每一段时间里，专注于一项任务或一组相似的任务。其重点是<strong>规划出需要完成的任务</strong>，然后<strong>划分特定的时间段专注完成这些任务</strong>。</p>
-<p>当你把一整天分成时间段后，它会让你专注于任务，并限制其他人占用你的时间。</p>
-<p>时间分块法让你每天都有一个要完成的具体任务的时间表，而不是遵循一个不断扩大的待办事项列表，你只需要关注于当下应该做的事情。</p>
-</blockquote>
-<p><a href="https://www.scotthyoung.com/blog/2011/11/28/focus-without-caffeine/">Refer</a></p>
-]]></content>
-      <categories>
-        <category>思考</category>
-      </categories>
-      <tags>
-        <tag>保持专注</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Rpc 框架</title>
     <url>/Rpc-frame/</url>
     <content><![CDATA[<h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>
-<p><strong>服务发现流程</strong>：使用远程服务的时候首先需要配置一个dubbo xml文件或者在使用的地方加上<code>@Reference</code>，二者都是用来对dubbo消费者引用服务进行一些配置，然后应用在启动的时候会将配置信息转化为一个<code>ReferenceBean</code>对象，并调用<code>createProxy</code>方法创建一个远程服务接口的代理对象。</p>
-<p>代理对象的 <strong>invoke 创建</strong>：启动时主动订阅注册中心，会显示地调用一次<code>notify</code>接口，这个接口会尝试将远程服务注册的<code>url</code>转换成一个本地的<code>invoker</code>。</p>
-<ul>
-<li>转换过程中会根据具体的 <code>protocol</code> 创建对应的 <code>invoker</code>，如 Rest 和 Dubbo 需要解析不同的参数。</li>
-</ul>
-<p>服务注册地址发生改变时：会通知给消费者，注意这个地方 dubbo 协议里面明确讲到全量更新</p>
+<blockquote>
+<p>泛指调用远程的函数的方法，对编解码和网络层有特殊的优化，从而有更高的效率。</p>
+</blockquote>
+<p>RPC 协议定制化程度高，可以采用体积更小的 Protobuf 或其他序列化协议去保存结构体数据，同时也不需要像 HTTP 那样考虑各种浏览器行为，比如 302 重定向跳转啥的。因此性能也会更好一些。虽然其底层不仅可以通过 tcp udp 实现，也可以通过 http 实现。</p>
+<p>RPC 协议会建个连接池，在请求量大的时候，建立多条连接放在池内，要发数据的时候就从池里取一条连接出来，用完放回去，下次再复用，可以说非常环保。</p>
+<p>目前，对外一般用 HTTP 协议，而内部集群的微服务之间则采用 RPC 协议进行通讯。</p>
 <h1 id="dubbo-上线问题"><a class="markdownIt-Anchor" href="#dubbo-上线问题"></a> Dubbo 上线问题</h1>
 <p>记录、学习、汇总实习和技术博客中看到的 Dubbo 实战遇到的问题</p>
 <h2 id="服务端接口不指定通讯协议导致-oom"><a class="markdownIt-Anchor" href="#服务端接口不指定通讯协议导致-oom"></a> 服务端接口不指定通讯协议导致 OOM</h2>
@@ -859,7 +828,12 @@
 </ul>
 <p><a href="https://heapdump.cn/article/646639">参考</a></p>
 <h1 id="尝试开发基础版-rpc-中间件"><a class="markdownIt-Anchor" href="#尝试开发基础版-rpc-中间件"></a> 尝试开发基础版 Rpc 中间件</h1>
-<p>学习过程中看到了网上的一些教程，自己跟着学着玩儿</p>
+<p><strong>服务发现流程</strong>：使用远程服务的时候首先需要配置一个 dubbo.xml 文件或者在使用的类加上<code>@Reference</code>，二者都是用来对dubbo消费者引用服务进行一些配置，然后应用在启动的时候会将配置信息转化为一个<code>ReferenceBean</code>对象，并调用<code>createProxy</code>方法创建一个远程服务接口的代理对象。</p>
+<p>代理对象的 <strong>invoke 创建</strong>：启动时主动订阅注册中心，会显示地调用一次<code>notify</code>接口，这个接口会尝试将远程服务注册的<code>url</code>转换成一个本地的<code>invoker</code>。</p>
+<ul>
+<li>转换过程中会根据具体的 <code>protocol</code> 创建对应的 <code>invoker</code>，如 Rest 和 Dubbo 需要解析不同的参数。</li>
+</ul>
+<p>服务注册地址发生改变时：会通知给消费者，dubbo 协议里面明确讲到服务发生改变会全量更新所有客户端的缓存</p>
 <h2 id="netty-数据传输"><a class="markdownIt-Anchor" href="#netty-数据传输"></a> Netty 数据传输</h2>
 <blockquote>
 <p>在网络通信中，序列化和编码通常是结合使用的。<strong>序列化将对象转换为字节流，编码将字节流转换为网络传输所需的格式</strong>（如按照协议规定的格式进行编码）。在接收端，<strong>解码将网络传输的数据解析为原始的格式（如解码成对象）</strong>，以便进行进一步的处理和使用。</p>
@@ -919,7 +893,40 @@
   <entry>
     <title>实习笔试题汇总</title>
     <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
-    <content><![CDATA[<h1 id="2024425-华为测评"><a class="markdownIt-Anchor" href="#2024425-华为测评"></a> 2024.4.25 华为测评</h1>
+    <content><![CDATA[<h1 id="2024427-美团笔试"><a class="markdownIt-Anchor" href="#2024427-美团笔试"></a> 2024.4.27 美团笔试</h1>
+<p>和携程差不多，签到题速通，后续疯狂折磨人，过不了一点。感觉题目难度差的好大，要么我秒杀它，要么它秒杀我</p>
+<p><strong>第三题</strong></p>
+<blockquote>
+<p>回溯写了半天，结果只能过20%。看别人是用前缀和+dp，那就是和腾讯第四题类似了，当时学会了现在又忘了，真难崩。</p>
+</blockquote>
+<p>小美拿到了一个数组，她每次操作可以将两个相邻元素合并为一个元素，合并后的元素为原来两个元素之和。小美希望最终数组的最小值不小于 k。她想知道有多少种不同的合并结果?</p>
+<p>输入描述：第一行输入两个正整数n,k，代表数组大小和数组的最大值。第二行输入几个正整数q:，代表小美拿到的数组。1 ≤ n,k,ai &lt; 200</p>
+<p>输出描述：输出一个整数，代表小美可以得到多少种不同的结果。由于结果可能很大，输出对10^9+7取模的结果。</p>
+<p>eg：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">4 4</span><br><span class="line">2 3 4 5</span><br></pre></td></tr></table></figure>
+<p>输出 4</p>
+<p><strong>回溯</strong>解法，只过20%（加了dp保存过程值也没用）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution_3</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] dp;</span><br><span class="line">    <span class="type">int</span>[] a;</span><br><span class="line">    <span class="type">int</span> k;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">solve</span><span class="params">(<span class="type">int</span>[] a, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.dp = <span class="keyword">new</span> <span class="title class_">int</span>[a.length];</span><br><span class="line">        <span class="built_in">this</span>.a = a;</span><br><span class="line">        <span class="built_in">this</span>.k = k;</span><br><span class="line">        Arrays.fill(dp, -<span class="number">1</span>);</span><br><span class="line">        System.out.println(backtrack(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span> sum, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (index==a.length) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (sum==<span class="number">0</span> &amp;&amp; dp[index]!=-<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">return</span> dp[index];</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isBegin</span> <span class="operator">=</span> sum==<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=index; i&lt;a.length; i++) &#123;</span><br><span class="line">            sum += a[i];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (sum&gt;=k) &#123;</span><br><span class="line">                cnt += backtrack(<span class="number">0</span>, i+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isBegin) dp[index] = cnt;</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt(), k = in.nextInt();</span><br><span class="line">        <span class="type">int</span>[] a = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;n; i++) &#123;</span><br><span class="line">            a[i] = in.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Solution_3</span>().solve(a, k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自己试试写<strong>前缀和+dp</strong>（思路重要真的很重要，二十分钟就写出来了）</p>
+<blockquote>
+<p>dp[i] 表示<s>数字 0-i 的方案数</s>[0, i) 的字串可以拆分的种类，状态转移方程为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo>=</mo><mo>∑</mo><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">dp[i] = \sum dp[j]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">p</span><span class="mopen">[</span><span class="mord mathdefault">i</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.00001em;vertical-align:-0.25001em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">p</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">]</span></span></span></span>（j-i 大于等于 k 的数量总和，用前缀和求出）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt(), k = in.nextInt();</span><br><span class="line">        <span class="type">int</span>[] sum = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        sum[<span class="number">1</span>] = in.nextInt();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">2</span>; i&lt;=n; i++) &#123;</span><br><span class="line">            sum[i] += sum[i-<span class="number">1</span>] + in.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span>[] dp = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (sum[i] - sum[j] &gt;= k) &#123;</span><br><span class="line">                    dp[i] += dp[j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(dp[n]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Q1</strong>：前缀和算法初始化时为什么都要设置 <code>[0, 0] = 1</code> 呢？ 如: <code>dp[0] = 1</code> or <code>map.put(0,1)</code></p>
+<p><strong>A1</strong>：想不明白呢，需要对状态转移数组 dp[] 的理解非常正确才行</p>
+<p><strong>第四题</strong></p>
+<p>小美拿到了一棵树，其中有一些节点被染成红色。</p>
+<blockquote>
+<p>大佬的思路：预打表小质数，然后dfs遍历连通块，统计块内每个红点的质因子，得到结点编号的乘积的质因子分解形式，根据质因子数量计算因子个数。对于我来说，需要背一下并查集的模板。</p>
+</blockquote>
+<p>小美定义一个红色连通块的权值为:所有节点编号乘积的因子数量。小美想知道，所有红色连通块的权值之和是多少?由于答案过大，请对10^9+ 7取模。</p>
+<p><strong>输入描述</strong>：</p>
+<p>第一行输入一个正整数n，代表节点数量。<br />
+第二行输入一个长度为几的、仅由’R&quot;和&quot;W组成的字符串，第i个字符为’R’代表;号节点被染成红色，&quot;W代表未被染色。保证至少有一个节点被染成红色。</p>
+<p>接下来的n - 1行，每行输入2个正整数4,U，代表u号节点和u号节点有一条边连接。1 ≤n ≤ 10^5, 1 ≤u,v≤n</p>
+<p><strong>输出描述</strong>：</p>
+<p>一个整数，代表所有红色连通块的权值之和。</p>
+<h1 id="2024425-华为测评"><a class="markdownIt-Anchor" href="#2024425-华为测评"></a> 2024.4.25 华为测评</h1>
 <p>华子免笔试，只有测评了。看网上好多人测评挂了我都惊呆了，还好没和其他的厂一样直接做测评而是上我搜了下，其他的厂可以不去但华子我必然拿下（小心谨慎哈哈哈）</p>
 <p>华子要什么样性格的人？（前后回答要一致）</p>
 <ul>
@@ -1008,6 +1015,42 @@
 <li>MySQL 调优</li>
 </ol>
 <p>愚蠢的我只知道构建索引、优化表结构和增大 BufferPool，好在后续上网也没找到什么很好的方法。或许<mark>预编译 SQL 语句</mark>是个不错的想法，根据 MySQL 运行过程推出的优化方法。</p>
+<h1 id="面试"><a class="markdownIt-Anchor" href="#面试"></a> 面试</h1>
+<p><strong>自我介绍</strong>：</p>
+<p>面试官您好，我是来自杭州电子科技大学计算机学院的一名研究生，我叫王哲文。本科期间我加入了学校的黑胡桃实验室，参与了 Ardunio 硬件开发和时间序列预测等项目的研究，后续还参加了实验室举办的技术分享会，分享了自己项目经验。在本科毕业前，我曾在浙江华坤道威数据科技有限公司担任过 Java 开发实习生，主要负责的是调度各微服务，聚合并缓存数据。此外，还分析解决了由于错误使用 Dubbo 注解导致的 JVM 异常问题。在读研期间，我加入了大数据与城市计算实验室，主要负责三友阴极板项目的后端开发和某涉密项目的大语言模型应用开发，使用到的技术栈包括 SpringBoot、Mybatis、Redis 和 Langchain、pytorch 等。在课余时间我还独自开发了一个 Rpc 中间件，搞明白了很多实习过程中遇到的疑惑，Rpc 中间件采用 Netty 传输数据、Zookeeper 注册服务。最后，我非常希望能有个机会可以进入华为学习和实践，将自己学到的知识应用在实际工作中，谢谢。</p>
+<p>（+ LLM + blog）</p>
+<p>绩点排名</p>
+<p>华为核心价值观：以客户为中心，以奋斗者为本，长期艰苦奋斗，坚持自我批判</p>
+<p>科研&amp;项目：</p>
+<ul>
+<li>
+<p>担任角色</p>
+</li>
+<li>
+<p>创新点</p>
+</li>
+<li>
+<p>前期调研</p>
+</li>
+<li>
+<p>碰到的困难</p>
+<ul>
+<li>了解业务逻辑，架构</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>开闭原则：新增代替修改</p>
+</blockquote>
+<p>面试技巧：</p>
+<ul>
+<li>
+<p>回答问题的时候不能想到什么说什么，思维要有逻辑性，直击重点，有逻辑性的表达</p>
+</li>
+<li>
+<p>展开问题，进一步作答，不要等着面试官提问题</p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>找工作</category>
@@ -2803,6 +2846,216 @@ Discussion</p>
       </categories>
       <tags>
         <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络</title>
+    <url>/Network/</url>
+    <content><![CDATA[<blockquote>
+<p>先草率的记一下，反正记下来也背不下来，我恨八股呜呜呜</p>
+</blockquote>
+<p>HTTP/1.1 优化</p>
+<ul>
+<li>长连接，服用 TCP 连接</li>
+<li>缓存</li>
+<li>压缩</li>
+</ul>
+<p>HTTP/2 优化</p>
+<ul>
+<li>头部压缩</li>
+<li>并发传输</li>
+<li>主动推送</li>
+<li>二进制帧格式传输</li>
+</ul>
+<p>HTTP/3 优化</p>
+<ul>
+<li>提出了 QUIC 传输层协议代替 tcp。quic是基于udp实现的，在无连接的基础上实现了可靠和安全
+<ul>
+<li>更快的请求多路复用</li>
+<li>避免队头阻塞</li>
+<li>更快的建立连接</li>
+</ul>
+</li>
+</ul>
+<p>TCP ：面向连接的、可靠的、基于字节流的</p>
+]]></content>
+      <categories>
+        <category>八股</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL基础</title>
+    <url>/MySQL%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="基础概念"><a class="markdownIt-Anchor" href="#基础概念"></a> 基础概念</h1>
+<h2 id="sql-查询语句执行过程"><a class="markdownIt-Anchor" href="#sql-查询语句执行过程"></a> SQL 查询语句执行过程</h2>
+<ul>
+<li>连接器：客户端与 Server 层建立连接，管理连接、校验用户身份；</li>
+<li>查询缓存：查询语句如果命中查询缓存则直接返回，否则继续往下执行（MySQL 8.0 已删除该模块）</li>
+<li>解析 SQL：通过解析器对 SQL 查询语句进行<strong>词法分析</strong>、<strong>语法分析</strong>，然后<strong>构建语法树</strong>，方便后续模块读取表名、字段、语句类型；</li>
+<li>执行 SQL：
+<ul>
+<li>预处理阶段：检查表或字段是否存在；将 select * 中的 * 符号扩展为表上的所有列。</li>
+<li>优化阶段：基于查询成本的考虑， 选择查询成本最小的执行计划；</li>
+<li>执行阶段：根据执行计划执行 SQL 查询语句，从存储引擎读取记录，返回给客户端；</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据文件"><a class="markdownIt-Anchor" href="#数据文件"></a> 数据文件</h2>
+<ul>
+<li>db.opt，用来存储当前数据库的默认字符集和字符校验规则。</li>
+<li>table.frm ，存放<strong>表结构</strong>，在 MySQL 中建立一张表都会生成一个.frm 文件，该文件是用来保存每个表的元数据信息的，主要包含表结构定义。</li>
+<li>table.ibd，存放<strong>表数据</strong>，<s>表数据既可以存在共享表空间文件（文件名：ibdata1）里</s>，也可以存放在独占表空间文件（文件名：表名字.ibd）。这个行为是由参数 innodb_file_per_table 控制的，若设置了参数 innodb_file_per_table 为 1，则会将存储的<strong>数据、索引等信息单独存储在一个独占表空间</strong>，从 MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本之后， MySQL 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
+</ul>
+<p><strong>表空间文件的结构</strong></p>
+<style>.hodddyygsrrz{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="hodddyygsrrz" alt="img">
+<h2 id="innodb-行格式"><a class="markdownIt-Anchor" href="#innodb-行格式"></a> InnoDB 行格式</h2>
+<p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact 行格式的结构</p>
+<img data-src="/MySQL%E5%9F%BA%E7%A1%80/COMPACT.drawio.png" class="" title="img">
+<h1 id="索引"><a class="markdownIt-Anchor" href="#索引"></a> 索引</h1>
+<p>需要索引的情况</p>
+<ul>
+<li>唯一性字段，且用于 <code>WHERE</code> 、  <code>GROUP BY</code> 和 <code>ORDER BY</code> 的字段</li>
+</ul>
+<p>不需要</p>
+<ul>
+<li>大量重复数据、频繁修改的字段</li>
+</ul>
+<h1 id="事务"><a class="markdownIt-Anchor" href="#事务"></a> 事务</h1>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>READ-UNCOMMITTED 读未提交</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>READ-COMMITTED 读已提交</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>REPEATABLE-READ 可重复读</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>SERIALIZABLE 可串行化</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>读未提交：允许读取尚未提交的数据变更。直接读取最新的数据</li>
+<li>读已提交：允许读取并发事务已经提交的数据。<strong>「每个语句执行前」都会重新生成一个 Read View</strong></li>
+<li>可重复读：对同一字段的多次读取结果都是一致的。<strong>「启动事务时」生成一个 Read View，然后整个事务期间都在用这个 Read View</strong></li>
+<li>可串行化：所有的事务依次逐个执行，完全服从 ACID 的隔离级别。采用加读写锁的方式来避免并行访问</li>
+</ul>
+<blockquote>
+<p>事务是由存储引擎实现的，InnoDB 支持事务</p>
+<ul>
+<li>redo log 重做日志：保证持久性</li>
+<li>undo log 回滚日志：保证原子性</li>
+<li>MVCC + next-key lock：保证隔离性</li>
+</ul>
+</blockquote>
+<p>虽然 InnoDB 默认采用可重复读隔离级别，但基本不会出现幻读，因为其采用 next-key lock（记录锁+间隙锁）和 MVCC 来避免幻读的发生</p>
+<ul>
+<li>快照读（select）：采用 MVCC，确保事务开启后读取到的都是事务一开始的数据库快照</li>
+<li>当前读（select for update）：如果有其他事务在 Next-Key Lock 锁范围内插入了一条记录，那么这个插入语句就会被阻塞，无法成功插入</li>
+</ul>
+<p><strong>Next-Key Lock</strong></p>
+<p>在 MySQL 的 InnoDB 存储引擎中，当扫描索引记录时，Next-Key Lock 会首先对索引记录加上行锁（Record Lock），然后再对索引记录两边的间隙加上<strong>间隙锁（Gap Lock）</strong>。间隙锁确保索引记录的间隙不变，是针对事务隔离级别为可重复读或以上级别而设计的。通过同时锁定索引记录和索引之后的“间隙”，Next-Key Lock 可以有效地防止幻读现象的产生。</p>
+<h2 id="mvcc"><a class="markdownIt-Anchor" href="#mvcc"></a> MVCC</h2>
+<p><strong>Read View 字段</strong></p>
+<img data-src="/MySQL%E5%9F%BA%E7%A1%80/readview%E7%BB%93%E6%9E%84.drawio.png" class="" title="img">
+<p>使用 InnoDB 存储引擎的数据库表，它的<strong>聚簇索引</strong>记录中都包含下面两个隐藏列：</p>
+<ul>
+<li>trx_id，当一个事务对某条聚簇索引记录进行改动时，就会<strong>把该事务的事务 id 记录在 trx_id 隐藏列里</strong>；</li>
+<li>roll_pointer，每次对某条聚簇索引记录进行改动时，都会把旧版本的记录写入到 undo 日志中，然后<strong>这个隐藏列是个指针，指向每一个旧版本记录</strong>，于是就可以通过它找到修改前的记录。</li>
+</ul>
+<h1 id="日志"><a class="markdownIt-Anchor" href="#日志"></a> 日志</h1>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何保持专注</title>
+    <url>/2024/Stay-Focused/</url>
+    <content><![CDATA[<p>磨刀不误砍柴工，弄明白如何做事比糊里糊涂的做更重要。当下的目标是通过不断<strong>实践试错</strong>并<strong>总结纠错</strong>，从而找到最适合我的高效专注的做事方法。在此，再以高中的座右铭激励自己：当你觉得为时已晚的时候，恰恰是最早的时候。从学生变成社会人、从孩子变成家庭支柱、从做事的变成管人的（总会有那天的啦），我还有很多要改进要学习的地方（如何清楚明确的表达自己的工作内容，如何高效明确的和别人沟通），这些变化不是为了适应社会的表演，而是成年人的责任。<s>（tmd这文字像是初中生写出来的，文化沙漠了属于是，有时间还是得多看看书捏）</s></p>
+<blockquote>
+<p>Thought is already is late, exactly is the earliest time.</p>
+</blockquote>
+<h1 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h1>
+<p>布置好工作环境，安排好工作内容，让自己发自内心得希望把事情完成。</p>
+<ul>
+<li><strong>早起，立即开始工作</strong>。早起会立即给自己一个潜意识的信号，让自己在那天努力工作。</li>
+<li><strong>制定一个行动计划</strong>。用 10 分钟来筹划接下来的几个小时要做的事情，让事情可以推动自己前进。</li>
+<li><strong>提前完成一连串的工作</strong>。清晨就处理完当天最紧要的工作，白天的时间就会显得从容，这也会产生积极的启动，这将持续一整天。</li>
+</ul>
+<h1 id="无干扰休息"><a class="markdownIt-Anchor" href="#无干扰休息"></a> 无干扰休息</h1>
+<p>休息可以帮助自己以新的方式思考问题，可以清醒头脑，从而重新集中注意力。无干扰的休息意味着休息不会扼杀你的动力，这样你就可以重新振作起来，而不会陷入拖延的弯路。</p>
+<ul>
+<li><strong>避免参与式的休息</strong>。短视频，游戏，微信等会占据头脑的东西都会打断做事的势头。</li>
+<li><strong>专注于放松</strong>。走一小段路、喝一杯水或伸展身体都是不错的选择，可以很容易地从休息中抽身出来回去工作。</li>
+</ul>
+<p>休息不是为了玩得开心，这才是真正休息的目的。休息是关于战略性地恢复你的能量和注意力，以重新处理手头的工作。把电视、游戏和娱乐活动留给晚上可以无愧疚地放松的时候。</p>
+<h1 id="积极工作"><a class="markdownIt-Anchor" href="#积极工作"></a> 积极工作</h1>
+<p>被动任务比主动任务更难集中注意力。改变这种状况的关键是，或者。</p>
+<ul>
+<li><strong>使任务处于活动状态</strong>。将被动学习任务转换为主动学习任务，如写提纲、记录重点。</li>
+<li><strong>穿插活动任务</strong>。将被动学习与主动任务穿插在一起，以定期提高注意力，如表达自己见解、用自己的话复述一遍。</li>
+</ul>
+<blockquote>
+<p><strong><a href="https://www.youtube.com/watch?v=FrNqSLPaZLc">Feynman 学习法</a></strong></p>
+<p>Step1: choose your concept【写下你要学习的概念】</p>
+<p>Step2: Pretend You’re Teaching the ldea to a New Student【假象你在教一位不懂这件事情的人这个概念，尝试将这件事情说明白】</p>
+<p>Step3: If You Get Stuck, Go Back to the Book【如果你在这个过程中遇到了困难，回到课本和视频中进一步学习】</p>
+<p>Step4: Simplify and Create Analogies【尝试精简自己的解释，并将其与其他概念做类比，从而更好地理解概念】</p>
+<p>总结一下，当你可以教会某人一个ta完全不懂的概念的时候，说明你真正掌握了这个概念</p>
+</blockquote>
+<h1 id="固定日程安排"><a class="markdownIt-Anchor" href="#固定日程安排"></a> 固定日程安排</h1>
+<p>努力工作的最好方式就是拥有生活</p>
+<ul>
+<li>
+<p><strong>保证休息</strong>，应对大量工作任务的办法是保证自己有休息时间。如果你白天不好好工作，却逼迫自己整夜学习的话，你很容易就会筋疲力尽的。无论压力再大任务再多，都要保证休息时间，一颗清醒的大脑决定了工作的质量。</p>
+</li>
+<li>
+<p>使用时间分块法或每周/每日目标法，将工作和生活清晰地分离开，好好工作好好玩。</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>时间分块法</strong></p>
+<p>将一天分成更小的时间分块法。在每一段时间里，专注于一项任务或一组相似的任务。其重点是<strong>规划出需要完成的任务</strong>，然后<strong>划分特定的时间段专注完成这些任务</strong>。</p>
+<p>当你把一整天分成时间段后，它会让你专注于任务，并限制其他人占用你的时间。</p>
+<p>时间分块法让你每天都有一个要完成的具体任务的时间表，而不是遵循一个不断扩大的待办事项列表，你只需要关注于当下应该做的事情。</p>
+</blockquote>
+<p><a href="https://www.scotthyoung.com/blog/2011/11/28/focus-without-caffeine/">Refer</a></p>
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>保持专注</tag>
       </tags>
   </entry>
 </search>

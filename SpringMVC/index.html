@@ -19,25 +19,31 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="夜色难免黑凉 前行必有曙光">
-<meta property="og:type" content="website">
-<meta property="og:title" content="闻">
-<meta property="og:url" content="https://yeqiuo.github.io/archives/2023/index.html">
+    <meta name="description" content="复习JavaWeb开发，SpringMVC流程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC">
+<meta property="og:url" content="https://yeqiuo.github.io/SpringMVC/index.html">
 <meta property="og:site_name" content="闻">
-<meta property="og:description" content="夜色难免黑凉 前行必有曙光">
+<meta property="og:description" content="复习JavaWeb开发，SpringMVC流程">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/SpringMVC/2018120522281643.gif">
+<meta property="og:image" content="https://yeqiuo.github.io/SpringMVC/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5q2i5q2l5YmN6KGM,size_20,color_FFFFFF,t_70,g_se,x_16.png">
+<meta property="article:published_time" content="2024-05-06T05:49:01.000Z">
+<meta property="article:modified_time" content="2024-05-06T07:06:20.782Z">
 <meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="SpringMVC">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/SpringMVC/2018120522281643.gif">
 
 
-<link rel="canonical" href="https://yeqiuo.github.io/archives/2023/">
+<link rel="canonical" href="https://yeqiuo.github.io/SpringMVC/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/2023/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/SpringMVC/","path":"SpringMVC/","title":"SpringMVC"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档 | 闻</title>
+<title>SpringMVC | 闻</title>
   
 
 
@@ -70,7 +76,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">闻</h1>
+      <p class="site-title">闻</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
@@ -124,7 +130,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -137,6 +143,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tomcat"><span class="nav-number">1.</span> <span class="nav-text"> Tomcat</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#servlet"><span class="nav-number">1.1.</span> <span class="nav-text"> Servlet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#springmvc"><span class="nav-number">2.</span> <span class="nav-text"> SpringMVC</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -181,209 +188,116 @@
 
     </div>
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 26 篇日志。 继续努力。</span>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/SpringMVC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringMVC | 闻">
+      <meta itemprop="description" content="复习JavaWeb开发，SpringMVC流程">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringMVC
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
+
+      <time title="创建时间：2024-05-06 13:49:01 / 修改时间：15:06:20" itemprop="dateCreated datePublished" datetime="2024-05-06T13:49:01+08:00">2024-05-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">Java开发</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">复习JavaWeb开发，SpringMVC流程</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="tomcat"><a class="markdownIt-Anchor" href="#tomcat"></a> Tomcat</h1>
+<p>Tomcat 是基于 HTTP 协议的 Web 服务器，工作流程图 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_19782019/article/details/80292110">Link</a></p>
+<img data-src="/SpringMVC/2018120522281643.gif" class="" title="img">
+<h2 id="servlet"><a class="markdownIt-Anchor" href="#servlet"></a> Servlet</h2>
+<p>Servlet 接口定义了 Servlet 与 servlet容器 之间的契约。这个契约是：Servlet容器将Servlet类载入内存，并产生 Servlet 实例和调用它具体的方法。但是要注意的是，<strong>在一个应用程序中，每种 Servlet 类型只能有一个实例</strong>。类比 SpringMVC 中每一个 Mapping 对应一个控制层方法【不确定】</p>
+<p>对于每一个应用程序，Servlet容器还会创建一个ServletContext对象。这个对象中封装了上下文（应用程序）的环境详情。每个应用程序只有一个ServletContext。每个Servlet对象也都有一个封装Servlet配置的ServletConfig对象。</p>
+<h1 id="springmvc"><a class="markdownIt-Anchor" href="#springmvc"></a> SpringMVC</h1>
+<p>流程图</p>
+<img data-src="/SpringMVC/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5q2i5q2l5YmN6KGM,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="" title="SpringMVC流程图">
+<ul>
+<li>由<code>DispatcherServlet</code> 从<code>HandlerMappings</code>中匹配对应的<code>Handler</code>。此时只是获取到了对应的<code>Handler</code>，然后拿着这个<code>Handler</code>去寻找对应的适配器，即：<code>HandlerAdapter</code>：让固定参数的 Servlet 处理方法调用灵活的 Handler 来处理；</li>
+<li>执行 <code>Controller</code> 处理业务逻辑， 执行完成之后返回一个 <code>ModeAndView</code> 或 Json 格式数据；</li>
+</ul>
+<p>HandlerMapping/HandlerAdapter 的<strong>适配器模式</strong>：</p>
+<p>SpringMVC 的 Handler 有多种实现方式（如继承 Controller 接口、继承 HttpRequestHandler 接口、基于注解 @Controller 的控制器）。由于实现方式不一样，调用方式就不确定，就需要适配器模式将所有实现方式都统一成同一个接口。把任何一个 Handler 都适配成一个HandlerAdapter，从而可以做统一的流程处理，不用耦合具体的处理器，模糊掉具体的实现。</p>
+<p>Spring MVC会为每一个标记了 @Controller 的类创建一个控制器实例（bean），并且根据这些类中的 @RequestMapping 注解来配置 URL 到方法的映射。这些映射信息通常会被存储在一个叫做 <code>HandlerMapping</code> 的组件中</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-10-20T12:00:00+08:00"
-              content="2023-10-20">
-          10-20
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/Towards%20Emotional%20Support%20Dialog%20Systems/" itemprop="url">
-          <span itemprop="name">ESConv</span>
-        </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringMVC/" rel="tag"># SpringMVC</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Redis/" rel="prev" title="Redis">
+                  <i class="fa fa-angle-left"></i> Redis
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-10-19T12:00:00+08:00"
-              content="2023-10-19">
-          10-19
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/Recipes%20for%20building%20an%20open-domain%20chatbot/" itemprop="url">
-          <span itemprop="name">BlenderBot</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-10-09T12:00:00+08:00"
-              content="2023-10-09">
-          10-09
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/" itemprop="url">
-          <span itemprop="name">MISC</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-29T12:00:00+08:00"
-              content="2023-09-29">
-          09-29
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/Knowledge-enhanced%20Mixed-initiative%20Dialogue%20System%20for%20Emotional%20Support%20Conversations/" itemprop="url">
-          <span itemprop="name">KEMI</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-24T12:00:00+08:00"
-              content="2023-09-24">
-          09-24
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/" itemprop="url">
-          <span itemprop="name">HEAL</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-19T12:00:00+08:00"
-              content="2023-09-19">
-          09-19
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/" itemprop="url">
-          <span itemprop="name">Feedback-Aware Double</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-14T12:00:00+08:00"
-              content="2023-09-14">
-          09-14
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/" itemprop="url">
-          <span itemprop="name">DQ-HGAN</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-09T12:24:00+08:00"
-              content="2023-09-09">
-          09-09
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/" itemprop="url">
-          <span itemprop="name">Control Globally, Understand Locally</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2023-09-07T14:24:42+08:00"
-              content="2023-09-07">
-          09-07
-        </time>
-      </div>
-
-      <div class="post-title">
-        <a class="post-title-link" href="/2023/AugESC_%20Large-scale%20Data%20Augmentation%20for%20Emotional%20Support%20Conversation%20with%20Pre-trained%20Language%20Models/" itemprop="url">
-          <span itemprop="name">AugESC</span>
-        </a>
-      </div>
-
-      
-    </header>
-  </article>
+</div>
 
 
-    </div>
-  </div>
-  
-  
-  
+
+
+
 
 </div>
   </main>

@@ -34,8 +34,10 @@
 <meta property="og:image" content="https://yeqiuo.github.io/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png">
 <meta property="og:image" content="https://yeqiuo.github.io/MySQL%E5%9F%BA%E7%A1%80/binlogcache.drawio.png">
 <meta property="og:image" content="https://yeqiuo.github.io/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png">
+<meta property="og:image" content="https://yeqiuo.github.io/MySQL%E5%9F%BA%E7%A1%80/freelist.drawio.png">
+<meta property="og:image" content="https://yeqiuo.github.io/MySQL%E5%9F%BA%E7%A1%80/bufferpoll_page.png">
 <meta property="article:published_time" content="2024-04-26T07:06:16.000Z">
-<meta property="article:modified_time" content="2024-05-05T08:32:45.322Z">
+<meta property="article:modified_time" content="2024-05-05T15:10:56.543Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
@@ -149,7 +151,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text"> 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sql-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text"> SQL 查询语句执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql-%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text"> MySQL 数据文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-%E8%A1%8C%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text"> InnoDB 行格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-%E9%A1%B5%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text"> InnoDB 页格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95"><span class="nav-number">2.</span> <span class="nav-text"> 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-%E9%87%87%E7%94%A8-btree-%E4%BD%9C%E4%B8%BA%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">2.1.</span> <span class="nav-text"> Innodb 采用 B+Tree 作为索引的优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#explain-%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.2.</span> <span class="nav-text"> Explain 执行计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E7%B4%A2%E5%BC%95"><span class="nav-number">2.3.</span> <span class="nav-text"> 是否需要索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="nav-number">2.4.</span> <span class="nav-text"> 索引优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88"><span class="nav-number">2.5.</span> <span class="nav-text"> 索引失效</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text"> 事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text"> 特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">3.2.</span> <span class="nav-text"> 隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mvcc-%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text"> MVCC 多版本并发控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E4%B8%8B%E5%8F%91%E7%94%9F%E5%B9%BB%E8%AF%BB"><span class="nav-number">3.4.</span> <span class="nav-text"> 可重复读下发生幻读</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%81"><span class="nav-number">4.</span> <span class="nav-text"> 锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E7%BA%A7%E9%94%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.1.</span> <span class="nav-text"> 行级锁实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E9%94%AE%E9%94%81%E9%80%80%E5%8C%96%E6%88%90%E8%AE%B0%E5%BD%95%E9%94%81%E6%88%96%E9%97%B4%E9%9A%99%E9%94%81%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">4.1.1.</span> <span class="nav-text"> 临键锁退化成记录锁或间隙锁的情况</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">4.2.</span> <span class="nav-text"> 死锁</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E5%BF%97"><span class="nav-number">5.</span> <span class="nav-text"> 日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E6%BB%9A%E6%97%A5%E5%BF%97-undo-log"><span class="nav-number">5.1.</span> <span class="nav-text"> 回滚日志 Undo log</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97-redo-log"><span class="nav-number">5.2.</span> <span class="nav-text"> 重做日志 Redo log</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%BB%84"><span class="nav-number">5.2.1.</span> <span class="nav-text"> 重做日志文件组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97-bin-log"><span class="nav-number">5.3.</span> <span class="nav-text"> 归档日志 Bin log</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">5.3.1.</span> <span class="nav-text"> 主从复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#binlog-%E5%88%B7%E7%9B%98"><span class="nav-number">5.3.2.</span> <span class="nav-text"> binlog 刷盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4"><span class="nav-number">5.4.</span> <span class="nav-text"> 两阶段提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8-xa-%E4%BA%8B%E5%8A%A1"><span class="nav-number">5.4.1.</span> <span class="nav-text"> 内部 XA 事务</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">6.</span> <span class="nav-text"> 内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">7.</span> <span class="nav-text"> 优化</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text"> 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sql-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text"> SQL 查询语句执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql-%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text"> MySQL 数据文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-%E8%A1%8C%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text"> InnoDB 行格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-%E9%A1%B5%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text"> InnoDB 页格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95"><span class="nav-number">2.</span> <span class="nav-text"> 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#innodb-%E9%87%87%E7%94%A8-btree-%E4%BD%9C%E4%B8%BA%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">2.1.</span> <span class="nav-text"> Innodb 采用 B+Tree 作为索引的优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#explain-%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="nav-number">2.2.</span> <span class="nav-text"> Explain 执行计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E7%B4%A2%E5%BC%95"><span class="nav-number">2.3.</span> <span class="nav-text"> 是否需要索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="nav-number">2.4.</span> <span class="nav-text"> 索引优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88"><span class="nav-number">2.5.</span> <span class="nav-text"> 索引失效</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text"> 事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text"> 特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">3.2.</span> <span class="nav-text"> 隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mvcc-%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text"> MVCC 多版本并发控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E4%B8%8B%E5%8F%91%E7%94%9F%E5%B9%BB%E8%AF%BB"><span class="nav-number">3.4.</span> <span class="nav-text"> 可重复读下发生幻读</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%81"><span class="nav-number">4.</span> <span class="nav-text"> 锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E7%BA%A7%E9%94%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.1.</span> <span class="nav-text"> 行级锁实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E9%94%AE%E9%94%81%E9%80%80%E5%8C%96%E6%88%90%E8%AE%B0%E5%BD%95%E9%94%81%E6%88%96%E9%97%B4%E9%9A%99%E9%94%81%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">4.1.1.</span> <span class="nav-text"> 临键锁退化成记录锁或间隙锁的情况</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">4.2.</span> <span class="nav-text"> 死锁</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E5%BF%97"><span class="nav-number">5.</span> <span class="nav-text"> 日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E6%BB%9A%E6%97%A5%E5%BF%97-undo-log"><span class="nav-number">5.1.</span> <span class="nav-text"> 回滚日志 Undo log</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97-redo-log"><span class="nav-number">5.2.</span> <span class="nav-text"> 重做日志 Redo log</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%BB%84"><span class="nav-number">5.2.1.</span> <span class="nav-text"> 重做日志文件组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97-bin-log"><span class="nav-number">5.3.</span> <span class="nav-text"> 归档日志 Bin log</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">5.3.1.</span> <span class="nav-text"> 主从复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#binlog-%E5%88%B7%E7%9B%98"><span class="nav-number">5.3.2.</span> <span class="nav-text"> binlog 刷盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4"><span class="nav-number">5.4.</span> <span class="nav-text"> 两阶段提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8-xa-%E4%BA%8B%E5%8A%A1"><span class="nav-number">5.4.1.</span> <span class="nav-text"> 内部 XA 事务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E6%8F%90%E4%BA%A4"><span class="nav-number">5.5.</span> <span class="nav-text"> 组提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E6%A8%A1%E6%8B%9F%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">5.6.</span> <span class="nav-text"> 总结模拟一次更新流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">6.</span> <span class="nav-text"> 内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E9%AB%98%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD%E7%8E%87"><span class="nav-number">6.1.</span> <span class="nav-text"> 提高缓存命中率</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">7.</span> <span class="nav-text"> 优化</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -162,7 +164,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -173,7 +175,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -241,7 +243,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-05 16:32:45" itemprop="dateModified" datetime="2024-05-05T16:32:45+08:00">2024-05-05</time>
+      <time title="修改时间：2024-05-05 23:10:56" itemprop="dateModified" datetime="2024-05-05T23:10:56+08:00">2024-05-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -284,13 +286,13 @@
 <li>table.ibd，存放<strong>表数据</strong>，<s>表数据既可以存在共享表空间文件（文件名：ibdata1）里</s>，也可以存放在独占表空间文件（文件名：表名字.ibd）。这个行为是由参数 innodb_file_per_table 控制的，若设置了参数 innodb_file_per_table 为 1，则会将存储的<strong>数据、索引等信息单独存储在一个独占表空间</strong>，从 MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本之后， MySQL 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
 </ul>
 <p><strong>表空间文件的结构</strong></p>
-<style>.zrjyewlmqwrp{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="zrjyewlmqwrp" alt="img">
+<style>.ruuglbstiggt{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="ruuglbstiggt" alt="img">
 <h2 id="innodb-行格式"><a class="markdownIt-Anchor" href="#innodb-行格式"></a> InnoDB 行格式</h2>
 <p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact 行格式的结构</p>
 <img data-src="/MySQL%E5%9F%BA%E7%A1%80/COMPACT.drawio.png" class="" title="img">
 <h2 id="innodb-页格式"><a class="markdownIt-Anchor" href="#innodb-页格式"></a> InnoDB 页格式</h2>
 <p>InnoDB 的数据是按「数据页」为单位来读写的，数据页的默认大小是 16KB</p>
-<style>.gsjqjdoymdgn{zoom:50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="gsjqjdoymdgn" alt="243b1466779a9e107ae3ef0155604a17">
+<style>.pfpzettgloiq{zoom:50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="pfpzettgloiq" alt="243b1466779a9e107ae3ef0155604a17">
 <table>
 <thead>
 <tr>
@@ -682,7 +684,7 @@
 </ul>
 <h3 id="重做日志文件组"><a class="markdownIt-Anchor" href="#重做日志文件组"></a> 重做日志文件组</h3>
 <p>redo log 是为了防止 Buffer Pool 中的脏页丢失而设计的，<strong>只记录未被刷入磁盘的数据的物理日志</strong>。随着系统运行，Buffer Pool 的脏页刷新到了磁盘中，redo log 对应的记录也就没用了，这时候我们需要擦除这些旧记录，以腾出空间记录新的更新操作。重做日志文件组由有 2 个 redo log 文件组成，以循环写的方式工作，从头开始写，写到末尾就又回到开头，相当于一个环形。</p>
-<style>.ksmgwlghuycv{zoom: 50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/checkpoint.png" class="ksmgwlghuycv" alt="img">
+<style>.tfhodxnqjxxz{zoom: 50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/checkpoint.png" class="tfhodxnqjxxz" alt="img">
 <ul>
 <li>write pos ～ checkpoint 之间的部分（图中红色部分）：记录新的更新操作；</li>
 <li>check point ～ write pos 之间的部分（图中蓝色部分）：待落盘的脏数据页记录；</li>
@@ -695,7 +697,7 @@
 <li>binlog 是全量日志，保存了所有数据变更的情况，可以恢复整个数据库所有数据；</li>
 </ul>
 <h3 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h3>
-<style>.jufftrowxztu{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="jufftrowxztu" alt="MySQL 主从复制过程">
+<style>.hawxotmqgzqy{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="hawxotmqgzqy" alt="MySQL 主从复制过程">
 <ul>
 <li>写入 Binlog：数据修改 -&gt; 主库写 binlog 日志 -&gt; commit 事务 -&gt; 持久化本地数据 -&gt; 提交事务成功；</li>
 <li>同步 Binlog：从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。</li>
@@ -708,7 +710,7 @@
 <li>半同步复制：只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端；</li>
 </ul>
 <h3 id="binlog-刷盘"><a class="markdownIt-Anchor" href="#binlog-刷盘"></a> binlog 刷盘</h3>
-<style>.kgkljxrpuqtz{zoom: 67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/binlogcache.drawio.png" class="kgkljxrpuqtz" alt="binlog cach">
+<style>.ufqpnxdxkgem{zoom: 67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/binlogcache.drawio.png" class="ufqpnxdxkgem" alt="binlog cach">
 <ul>
 <li>图中的 write，把<strong>日志写入到 binlog 文件（文件系统的 page cache 里）</strong>，但是并没有把数据持久化到磁盘；</li>
 <li>图中的 fsync，把数据持久化到磁盘的操作，这里就会涉及磁盘 I/O，所以频繁的 fsync 会导致磁盘的 I/O 升高；</li>
@@ -723,14 +725,98 @@
 <p>binlog 主从复制和 redo log 崩溃恢复需要保持一致，不然会出现<strong>主从数据不一致、备份数据与真实数据不一致</strong>等问题。MySQL 采用两阶段提交来避免两份日志之间的逻辑不一致，两阶段提交是一种<strong>分布式事务一致性协议</strong>。</p>
 <p>两阶段提交：把单个事务的提交拆分成了 2 个阶段，分别是准备阶段和提交阶段（不是 commit 语句），每个阶段都由协调者和参与者共同完成。</p>
 <h3 id="内部-xa-事务"><a class="markdownIt-Anchor" href="#内部-xa-事务"></a> 内部 XA 事务</h3>
-<style>.whatcdiplpnf{zoom:50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="whatcdiplpnf" alt="两阶段提交">
+<style>.pwdwxkkgdcti{zoom:50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="pwdwxkkgdcti" alt="两阶段提交">
 <p>为了保证这两个日志的一致性，MySQL 使用了内部 XA 事务。内部 XA 事务由 binlog 作为协调者，存储引擎是参与者，可以实现跨数据库事务。将 redo log 的写入拆成了<strong>两个状态：prepare 和 commit</strong>，中间再穿插写入binlog。</p>
-<h1 id="内存"><a class="markdownIt-Anchor" href="#内存"></a> 内存</h1>
-<p>Buffer Pool 缓存的内容包括：索引页、数据页、Undo 页、插入缓存页、自适应哈希索引、锁信息等。</p>
-<p>减少磁盘 I/O 次数</p>
 <ul>
-<li>当读取数据时，如果数据存在于 Buffer Pool 中，客户端就会直接读取 Buffer Pool 中的数据，否则再去磁盘中读取。</li>
-<li>当修改数据时，如果数据存在于 Buffer Pool 中，那直接修改 Buffer Pool 中数据所在的页，然后将其页设置为脏页（该页的内存数据和磁盘上的数据已经不一致），为了减少磁盘I/O，不会立即将脏页写入磁盘，后续由后台线程选择一个合适的时机将脏页写入到磁盘。</li>
+<li>如果 binlog 中没有当前内部 XA 事务的 XID，说明 redolog 完成刷盘，但是 binlog 还没有刷盘，则<strong>回滚事务</strong>。对应时刻 <strong>A 崩溃恢复</strong>的情况；</li>
+<li>如果 binlog 中有当前内部 XA 事务的 XID，说明 redolog 和 binlog 都已经完成了刷盘，则<strong>提交事务</strong>。对应时刻 <strong>B 崩溃恢复</strong>的情况；</li>
+</ul>
+<p>对于处于 prepare 阶段的 redo log，即可以提交事务，也可以回滚事务，这取决于是否能在 binlog 中查找到与 redo log 相同的 XID，以 binlog 写成功为事务提交成功的标识。</p>
+<h2 id="组提交"><a class="markdownIt-Anchor" href="#组提交"></a> 组提交</h2>
+<p>采用<strong>组提交</strong>策略，减少 redolog 和 binlog 两次刷盘导致的 <strong>I/O 次数高</strong>和<strong>锁竞争激烈</strong>的问题。</p>
+<blockquote>
+<p>多事务场景下，两阶段提交会导致锁竞争激烈，因为为保证两个日志保存的数据库状态一致，需要加锁操作保证两阶段提交的原子性。</p>
+</blockquote>
+<p><strong>binlog 组提交机制</strong>：当有多个事务提交的时候，会将多个 binlog 刷盘操作合并成一个，从而减少磁盘 I/O 的次数。prepare 阶段不变，只针对 commit 阶段，将 commit 阶段拆分为三个阶段：</p>
+<ul>
+<li><strong>flush 阶段</strong>：多个事务按进入的顺序将 binlog 从 cache 写入文件（不刷盘）；5.7 之后在该阶段增加了 redo log 的组提交，即多个事务 redo log 统一刷盘；
+<ul>
+<li>类似于 XA 事务的 Prepare 阶段，如果在这一步完成后数据库崩溃，由于 binlog 中没有该组事务的记录，所以 MySQL 会在重启后回滚该组事务；</li>
+</ul>
+</li>
+<li><strong>sync 阶段</strong>：对 binlog 文件做 fsync 操作（多个事务的 binlog 合并一次刷盘）；
+<ul>
+<li>类似于 XA 事务的 Commit 阶段，如果在这一步完成后数据库崩溃，由于 binlog 中已经有了事务记录，MySQL会在重启后通过 redo log 刷盘的数据继续进行事务的提交。</li>
+</ul>
+</li>
+<li><strong>commit 阶段</strong>：各个事务按顺序做 InnoDB commit 操作；</li>
+</ul>
+<p>每个阶段都有一个队列，锁就只针对每个队列进行保护，不再锁住提交事务的整个过程。减小了锁粒度，这样就使得多个阶段可以并发执行，从而提升效率。</p>
+<h2 id="总结模拟一次更新流程"><a class="markdownIt-Anchor" href="#总结模拟一次更新流程"></a> 总结模拟一次更新流程</h2>
+<ul>
+<li>MySQL 执行器检查记录是否在 buffer pool 中
+<ul>
+<li>若不在，将数据页从磁盘读入到 buffer pool；</li>
+<li>若更新前与更新后数据不同，调用 存储引擎 执行更新操作；</li>
+</ul>
+</li>
+<li>开启事务，记录 undo log，同时将 Undo 页的修改记录存在 redo log 中；</li>
+<li>存储引擎更新数据，并标记数据页为脏页，同时将数据页的修改记录存在 redo log 中；
+<ul>
+<li>为了减少磁盘I/O，脏页选择合适时间持久化到硬盘，持久化后删除对应的 redo log；</li>
+</ul>
+</li>
+<li>记录更新完毕，记录 binlog 至 binlog cache；</li>
+<li>事务提交，将 redolog binlog 持久化到硬盘（两阶段提交；组提交）
+<ul>
+<li>prepare 阶段</li>
+<li>commit 阶段</li>
+</ul>
+</li>
+</ul>
+<p>脏页刷盘的时机</p>
+<ul>
+<li>Redo log 满了；</li>
+<li>BufferPool满了；</li>
+<li>MySQL空闲；</li>
+<li>后台线程定时 checkpoint；</li>
+<li>事务提交时（一般不选）；</li>
+</ul>
+<h1 id="内存"><a class="markdownIt-Anchor" href="#内存"></a> 内存</h1>
+<p><strong>Buffer Pool 缓存</strong>的内容包括：索引页、数据页、Undo 页、插入缓存页、自适应哈希索引、锁信息等。<code>innodb_buffer_pool_size</code>  默认 128MB。</p>
+<p>为了管理这些在 Buffer Pool 中的缓存页，InnoDB 为每一个缓存页都创建了一个<strong>控制块</strong>，控制块信息包括：缓存页的表空间、页号、缓存页地址、链表节点等等。用三种链表管理不同状态的缓存块：</p>
+<ul>
+<li>Free List （空闲页链表），管理空闲页；</li>
+<li>Flush List （脏页链表），管理脏页；</li>
+<li>LRU List，管理脏页+干净页，将经常查询或可能将要查询的数据缓存在其中，而不常查询的数据就淘汰出去；</li>
+</ul>
+<p><strong>Free 链表</strong>：使用链表结构，快速找到空闲的缓存页；</p>
+<p>每当需要从磁盘中加载一个页到 Buffer Pool 中时，就从 Free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上，然后把该缓存页对应的控制块从 Free 链表中移除</p>
+<style>.sxndnwvvyxev{zoom: 67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/freelist.drawio.png" class="sxndnwvvyxev" alt="img">
+<p><strong>Flush 链表</strong>：使用链表结构，快速找到脏页；（结构类似于 Free 链表）</p>
+<p>脏页落盘时，后台线程遍历 Flush 链表</p>
+<h2 id="提高缓存命中率"><a class="markdownIt-Anchor" href="#提高缓存命中率"></a> 提高缓存命中率</h2>
+<p>Buffer Pool 有三种页和链表用来管理数据</p>
+<style>.rziyrjhypjyb{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/bufferpoll_page.png" class="rziyrjhypjyb" alt="img">
+<ul>
+<li>Free Page（空闲页），表示此页未被使用，位于 Free 链表；</li>
+<li>Clean Page（干净页），表示此页已被使用，但是页面未发生修改，位于LRU 链表。</li>
+<li>Dirty Page（脏页），表示此页「已被使用」且「已经被修改」，其数据和磁盘上的数据已经不一致。当脏页上的数据写入磁盘后，内存数据和磁盘数据一致，那么该页就变成了干净页。脏页同时存在于 LRU 链表和 Flush 链表。</li>
+</ul>
+<p>普通的LRU 算法会出现以下<strong>两个问题</strong></p>
+<ul>
+<li>预读失效：加载访问数据页时，提前加载进来的<strong>相邻数据</strong>页，即预读页，但后续并没有访问预读页；</li>
+<li>Buffer Pool 污染：某一个 SQL 语句扫描了大量的数据时，将 Buffer Pool 里的所有页都替换出去，导致<strong>大量热数据被淘汰</strong>了，后续热数据被访问时会产生大量磁盘 I/O；
+<ul>
+<li>索引失效批量扫描的时候会出现污染</li>
+</ul>
+</li>
+</ul>
+<p><strong>解决办法</strong></p>
+<ul>
+<li>将 LRU 划分了 2 个区域：old 区域 和 young 区域。划分这两个区域后，预读的页就只需要加入到 old 区域的头部，当页被真正访问的时候，才将页插入 young 区域的头部。</li>
+<li>只有同时满足<strong>被访问</strong>与在 <strong>old 区域停留时间超过 <code>innodb_old_blocks_time</code> 秒</strong>两个条件，才会被插入到 young 区域头部</li>
+<li>young 区域优化：为了防止 young 区域节点频繁移动到头部。young 区域前面 1/4 被访问不会移动到链表头部，只有后面的 3/4被访问了才会</li>
 </ul>
 <h1 id="优化"><a class="markdownIt-Anchor" href="#优化"></a> 优化</h1>
 

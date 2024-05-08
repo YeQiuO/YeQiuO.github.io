@@ -19,16 +19,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="夜色难免黑凉 前行必有曙光">
+    <meta name="description" content="Redis 基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis">
 <meta property="og:url" content="https://yeqiuo.github.io/Redis/index.html">
 <meta property="og:site_name" content="闻">
-<meta property="og:description" content="夜色难免黑凉 前行必有曙光">
+<meta property="og:description" content="Redis 基础">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-05-02T11:10:57.000Z">
-<meta property="article:modified_time" content="2024-05-02T11:10:57.740Z">
+<meta property="article:modified_time" content="2024-05-07T13:59:28.949Z">
 <meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
 
 
@@ -126,7 +127,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -139,6 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text"> 数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text"> 持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aof-%E6%97%A5%E5%BF%97"><span class="nav-number">2.1.</span> <span class="nav-text"> AOF 日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rdb-%E5%BF%AB%E7%85%A7"><span class="nav-number">2.2.</span> <span class="nav-text"> RDB 快照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text"> 混合持久化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text"> 策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="nav-number">3.1.</span> <span class="nav-text"> 过期删除策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text"> 内存淘汰策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text"> 高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text"> 主从复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text"> 哨兵机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">4.3.</span> <span class="nav-text"> 集群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">5.</span> <span class="nav-text"> 缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9-%E5%87%BB%E7%A9%BF-%E7%A9%BF%E9%80%8F"><span class="nav-number">5.1.</span> <span class="nav-text"> 缓存雪崩、击穿、穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">5.2.</span> <span class="nav-text"> 如何保证数据库和缓存一致性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">6.</span> <span class="nav-text"> 实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">6.1.</span> <span class="nav-text"> 分布式锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97"><span class="nav-number">6.2.</span> <span class="nav-text"> 延迟队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7-key-%E9%97%AE%E9%A2%98"><span class="nav-number">6.3.</span> <span class="nav-text"> 大 Key 问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A"><span class="nav-number">6.4.</span> <span class="nav-text"> 事务回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">6.5.</span> <span class="nav-text"> 管道</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -162,7 +164,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -208,7 +210,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="Redis | 闻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Redis 基础">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -225,17 +227,84 @@
 
       <time title="创建时间：2024-05-02 19:10:57" itemprop="dateCreated datePublished" datetime="2024-05-02T19:10:57+08:00">2024-05-02</time>
     </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-05-07 21:59:28" itemprop="dateModified" datetime="2024-05-07T21:59:28+08:00">2024-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
 
   
 </div>
 
+            <div class="post-description">Redis 基础</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
+    <div class="post-body" itemprop="articleBody"><p><s>先速通一遍，底层实现后续慢慢看书学</s></p>
+<p>Redis 的特性：单线程、原子性、内存、数据结构、I/O 多路复用的非关系型数据库</p>
+<p>6.0 版本前网络 I/O 和命令处理都是单线程，6.0 版本后网络 I/O 采用多个线程处理</p>
+<ul>
+<li>大部分操作都在内存中完成。CPU 并不是制约 Redis 性能表现的瓶颈所在，而是机器的内存或者网络带宽</li>
+<li>避免了多线程之间的竞争</li>
+<li>I/O 多路复用机制</li>
+</ul>
+<h1 id="数据结构"><a class="markdownIt-Anchor" href="#数据结构"></a> 数据结构</h1>
+<p>String 字符串</p>
+<p>List 列表</p>
+<p>Set 集合</p>
+<p>Zset 有序集合</p>
+<p>Hash 哈希</p>
+<h1 id="持久化"><a class="markdownIt-Anchor" href="#持久化"></a> 持久化</h1>
+<h2 id="aof-日志"><a class="markdownIt-Anchor" href="#aof-日志"></a> AOF 日志</h2>
+<p>每执行一条写操作命令就追加到日志文件中</p>
+<p>重写机制：后台子进程共享父进程内存，AOF 重写缓冲区</p>
+<h2 id="rdb-快照"><a class="markdownIt-Anchor" href="#rdb-快照"></a> RDB 快照</h2>
+<p>某一时刻的内存数据快照</p>
+<h2 id="混合持久化"><a class="markdownIt-Anchor" href="#混合持久化"></a> 混合持久化</h2>
+<p>前半部分是 RDB 格式的全量数据，后半部分是 AOF 格式的增量数据（重写缓冲区数据）。</p>
+<h1 id="策略"><a class="markdownIt-Anchor" href="#策略"></a> 策略</h1>
+<h2 id="过期删除策略"><a class="markdownIt-Anchor" href="#过期删除策略"></a> 过期删除策略</h2>
+<p>惰性删除+定期删除</p>
+<h2 id="内存淘汰策略"><a class="markdownIt-Anchor" href="#内存淘汰策略"></a> 内存淘汰策略</h2>
+<p>仅淘汰过期数据：random、ttl、lru、lfu</p>
+<p>淘汰所有数据：lru、lfu</p>
+<h1 id="高可用"><a class="markdownIt-Anchor" href="#高可用"></a> 高可用</h1>
+<h2 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h2>
+<h2 id="哨兵机制"><a class="markdownIt-Anchor" href="#哨兵机制"></a> 哨兵机制</h2>
+<h2 id="集群"><a class="markdownIt-Anchor" href="#集群"></a> 集群</h2>
+<p>slot 槽</p>
+<h1 id="缓存"><a class="markdownIt-Anchor" href="#缓存"></a> 缓存</h1>
+<h2 id="缓存雪崩-击穿-穿透"><a class="markdownIt-Anchor" href="#缓存雪崩-击穿-穿透"></a> 缓存雪崩、击穿、穿透</h2>
+<h2 id="如何保证数据库和缓存一致性"><a class="markdownIt-Anchor" href="#如何保证数据库和缓存一致性"></a> 如何保证数据库和缓存一致性</h2>
+<p>更新数据库+删除缓存：延迟双删</p>
+<p>更新数据库+更新缓存：分布式锁</p>
+<p>更新数据库+不更新缓存：较短的缓存有效期</p>
+<p>删除缓存的时候失败了怎么办？采用异步删除的方式：</p>
+<ul>
+<li>消息队列确保缓存删除成功</li>
+<li>订阅 MySQL 的 binlog，数据修改时删除缓存</li>
+</ul>
+<h1 id="实战"><a class="markdownIt-Anchor" href="#实战"></a> 实战</h1>
+<h2 id="分布式锁"><a class="markdownIt-Anchor" href="#分布式锁"></a> 分布式锁</h2>
+<h2 id="延迟队列"><a class="markdownIt-Anchor" href="#延迟队列"></a> 延迟队列</h2>
+<h2 id="大-key-问题"><a class="markdownIt-Anchor" href="#大-key-问题"></a> 大 Key 问题</h2>
+<h2 id="事务回滚"><a class="markdownIt-Anchor" href="#事务回滚"></a> 事务回滚</h2>
+<h2 id="管道"><a class="markdownIt-Anchor" href="#管道"></a> 管道</h2>
+
     </div>
 
     
@@ -243,12 +312,15 @@
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/MySQL%E5%9F%BA%E7%A1%80/" rel="prev" title="MySQL基础">
+                <a href="/MySQL/" rel="prev" title="MySQL基础">
                   <i class="fa fa-angle-left"></i> MySQL基础
                 </a>
             </div>

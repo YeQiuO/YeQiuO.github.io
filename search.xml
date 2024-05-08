@@ -189,7 +189,7 @@
       </tags>
   </entry>
   <entry>
-    <title>CompletableFuture 和 CompletableFuture实践</title>
+    <title>ThreadPoolExecutor 和 CompletableFuture实践</title>
     <url>/JUC-ThreadPool/</url>
     <content><![CDATA[<p>池化思想，维护一个池子，减少创建/销毁的开销，合理分配系统资源，但会增加调度开销。<a href="https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html">参考美团技术博客</a>：底层设计思想、业务实现</p>
 <h1 id="threadpoolexecutor-线程池实现类"><a class="markdownIt-Anchor" href="#threadpoolexecutor-线程池实现类"></a> ThreadPoolExecutor 线程池实现类</h1>
@@ -795,127 +795,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Rpc 框架</title>
-    <url>/Rpc-frame/</url>
-    <content><![CDATA[<h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>
-<blockquote>
-<p>泛指调用远程的函数的方法，对编解码和网络层有特殊的优化，从而有更高的效率。</p>
-</blockquote>
-<p>RPC 协议定制化程度高，可以采用体积更小的 Protobuf 或其他序列化协议去保存结构体数据，同时也不需要像 HTTP 那样考虑各种浏览器行为，比如 302 重定向跳转啥的。因此性能也会更好一些。虽然其底层不仅可以通过 tcp udp 实现，也可以通过 http 实现。</p>
-<p>RPC 协议会建个连接池，在请求量大的时候，建立多条连接放在池内，要发数据的时候就从池里取一条连接出来，用完放回去，下次再复用，可以说非常环保。</p>
-<p>目前，对外一般用 HTTP 协议，而内部集群的微服务之间则采用 RPC 协议进行通讯。</p>
-<h1 id="dubbo-上线问题"><a class="markdownIt-Anchor" href="#dubbo-上线问题"></a> Dubbo 上线问题</h1>
-<p>记录、学习、汇总实习和技术博客中看到的 Dubbo 实战遇到的问题</p>
-<h2 id="服务端接口不指定通讯协议导致-oom"><a class="markdownIt-Anchor" href="#服务端接口不指定通讯协议导致-oom"></a> 服务端接口不指定通讯协议导致 OOM</h2>
-<p>问题背景：</p>
-<p>问题描述：</p>
-<ul>
-<li>
-<p>开发人员使用方没有配置接口的 protocol 字段，而是写在接口实现类上</p>
-</li>
-<li>
-<p><code>dubbo-3.0.4</code> 框架：</p>
-<ul>
-<li>若没有指定 protocol 字段，会创建服务端提供的所有协议的 invoker</li>
-<li>EasyREST 包<code>createClientInvoker</code>创建 REST 协议的 invoker 时需要 HttpMethod 参数</li>
-<li>由于注解写在实现类而不是接口上面，导致消费端无法共享相应的 REST 配置信息，即 HttpMethod 为 null，因此 RESTClient 创建失败</li>
-<li>在服务更新过程中，客户端每次都是全量更新注册中心的服务端信息，这个过程中如果 invoker 一直注册失败，会不断将失败的<code>Client</code>存到<code>List&lt;ResteasyClient&gt;</code>中，如果有 n 台机器需要依次更新，这时客户端的数组中会存 n*n 个失败的连接实例，从而导致 OOM</li>
-</ul>
-</li>
-</ul>
-<p>解决方法（针对框架，开发人员需要牢记 Dubbo 配置必须在接口上）：</p>
-<ul>
-<li>ResteasyClient 对象由 RestProtocol 协议对象持有，针对没有创建成功 invoker 的场景应把其对应的 ResteasyClient <u>销毁</u>掉</li>
-</ul>
-<p>销毁方法</p>
-<ul>
-<li>用<code>Map&lt;String, ResteasyClient&gt;</code>代替 <code>List&lt;ResteasyClient&gt;</code>，同一个服务端只存一次</li>
-<li>用<code>WeakHashMap&lt;String, ResteasyClient&gt;</code>自动回收不用的 ResteasyClient（参考<a href="https://github.com/apache/dubbo/pull/4629">pr</a>）</li>
-</ul>
-<p><a href="https://tech.youzan.com/ji-ci-dubbofu-wu-fa-xian-dao-zhi-de-oom/">参考</a></p>
-<h2 id="父子线程并发-rpc-调用死锁"><a class="markdownIt-Anchor" href="#父子线程并发-rpc-调用死锁"></a> 父子线程并发 RPC 调用死锁</h2>
-<p>问题描述：</p>
-<ul>
-<li>直接通过 <code>Executors</code> 构造 固定数量+无限长等待队列 线程池，该线程池在共享的无界队列上操作的固定数量的线程。在任何时候，最多nThreads线程将处于活动处理任务状态。如果在所有线程都处于活动状态时提交额外的任务，它们将在队列中等待，直到有线程可用。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title function_">newFixedThreadPool</span><span class="params">(<span class="type">int</span> nThreads)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>并发调用 Rpc 接口获取返回值</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;String&gt; future = executor.submit(()-&gt;&#123;</span><br><span class="line">    <span class="keyword">return</span> 数据查询任务;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>数据查询任务中存在父子调用关系，数据查询任务同步调用 Redis 查询缓存和 Rpc 调用微服务获得数据。如果本地 Redis 缓存中能获得数据，就直接返回缓存值并取消 Rpc 调用 <code>future.cancel(true)</code>。</li>
-</ul>
-<p>解决办法</p>
-<ul>
-<li>父子任务分开并发执行，耗时的异步线程应做好线程池隔离</li>
-<li><code>CompletableFuture.anyOf(task1,tsak2)</code> 优先取先完成的那个任务的返回值</li>
-</ul>
-<p><a href="https://heapdump.cn/article/646639">参考</a></p>
-<h1 id="尝试开发基础版-rpc-中间件"><a class="markdownIt-Anchor" href="#尝试开发基础版-rpc-中间件"></a> 尝试开发基础版 Rpc 中间件</h1>
-<p><strong>服务发现流程</strong>：使用远程服务的时候首先需要配置一个 dubbo.xml 文件或者在使用的类加上<code>@Reference</code>，二者都是用来对dubbo消费者引用服务进行一些配置，然后应用在启动的时候会将配置信息转化为一个<code>ReferenceBean</code>对象，并调用<code>createProxy</code>方法创建一个远程服务接口的代理对象。</p>
-<p>代理对象的 <strong>invoke 创建</strong>：启动时主动订阅注册中心，会显示地调用一次<code>notify</code>接口，这个接口会尝试将远程服务注册的<code>url</code>转换成一个本地的<code>invoker</code>。</p>
-<ul>
-<li>转换过程中会根据具体的 <code>protocol</code> 创建对应的 <code>invoker</code>，如 Rest 和 Dubbo 需要解析不同的参数。</li>
-</ul>
-<p>服务注册地址发生改变时：会通知给消费者，dubbo 协议里面明确讲到服务发生改变会全量更新所有客户端的缓存</p>
-<h2 id="netty-数据传输"><a class="markdownIt-Anchor" href="#netty-数据传输"></a> Netty 数据传输</h2>
-<blockquote>
-<p>在网络通信中，序列化和编码通常是结合使用的。<strong>序列化将对象转换为字节流，编码将字节流转换为网络传输所需的格式</strong>（如按照协议规定的格式进行编码）。在接收端，<strong>解码将网络传输的数据解析为原始的格式（如解码成对象）</strong>，以便进行进一步的处理和使用。</p>
-</blockquote>
-<p>Netty 提供了 ByteBuf 容器，更方便地处理数据。<code>ByteBuf</code> 在重写编解码器的 encoder/decoder 方法中作为参数传入。</p>
-<p>编码：先序列化，再压缩，最后写进 ByteBuf 对象中</p>
-<p>解码：从 ByteBuf 对象中读，然后转成我们需要的对象</p>
-<h2 id="代理模式"><a class="markdownIt-Anchor" href="#代理模式"></a> 代理模式</h2>
-<p><strong>静态代理</strong></p>
-<blockquote>
-<p>静态代理中，我们对目标对象的每个方法的增强都是手动完成的（后面会具体演示代码），非常不灵活（比如接口一旦新增加方法，目标对象和代理对象都要进行修改）且麻烦(需要对每个目标类都单独写一个代理类)。 实际应用场景非常非常少，日常开发几乎看不到使用静态代理的场景。</p>
-</blockquote>
-<p>从 JVM 层面来说， 静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。</p>
-<p>静态代理的步骤</p>
-<ul>
-<li>定义一个接口及其实现类；</li>
-<li>创建一个代理类同样实现这个接口</li>
-<li>将目标对象注入进代理类，然后在代理类的对应方法调用目标类中的对应方法。这样的话，我们就可以通过代理类屏蔽对目标对象的访问，并且可以在目标方法执行前后做一些自己想做的事情。</li>
-</ul>
-<h2 id="jdk-动态代理"><a class="markdownIt-Anchor" href="#jdk-动态代理"></a> JDK 动态代理</h2>
-<ul>
-<li>定义一个接口及其实现类；</li>
-<li>自定义 InvocationHandler 并重写 invoke 方法，在 invoke 方法中我们会调用原生方法（被代理类的方法）并自定义一些处理逻辑；</li>
-<li>通过 <code>Proxy.newProxyInstance(ClassLoader loader,Class&lt;?&gt;[] interfaces,InvocationHandler h)</code> 方法创建代理对象；</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcClientProxy</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="comment">// 在代理类内，根据传入的类 clazz，获得代理对象</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">getProxy</span><span class="params">(Class&lt;T&gt; clazz)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(clazz.getClassLoader(), <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[]&#123;clazz&#125;, <span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 当通过代理类调用的所有方法，实际上调用的是这个invoke（传入的只是服务接口，具体的实现在服务端实现类中）</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>那么是如何调用服务端实现类的代码的呢？<strong>注入</strong></p>
-<ol>
-<li>在实例化 bean 之后，postProcessAfterInitialization 方法被调用。</li>
-<li>对于每个 bean 类的字段，检查是否标记了 @RpcReference 注解。</li>
-<li>如果发现标记了 @RpcReference 注解的字段，根据注解中的信息创建相应的 RpcServiceConfig 对象。</li>
-<li>通过 RpcClientProxy 创建了一个代理对象 clientProxy，这个代理对象实现了 declaredField.getType() 所表示的接口，这个接口可能就是 HelloService 接口或其它接口，取决于 helloService 字段的类型。</li>
-<li>这个代理对象 clientProxy 会在方法调用时委托给 RpcClientProxy 的 invoke 方法，该方法负责处理远程调用的逻辑。</li>
-<li>通过反射设置 clientProxy 到 HelloController 类的 helloService 字段上，替换了原来的字段值。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">clientProxy</span> <span class="operator">=</span> rpcClientProxy.getProxy(declaredField.getType());</span><br><span class="line">declaredField.setAccessible(<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    declaredField.set(bean, clientProxy);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="传输协议"><a class="markdownIt-Anchor" href="#传输协议"></a> 传输协议</h2>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">*   0     1     2     3     4        5     6     7     8         9        10     11     12   13   14 15 16</span><br><span class="line">*   +-----+-----+-----+-----+--------+----+----+----+------+-----------+-------+-------+-----+---+-----+----+</span><br><span class="line">*   |   magic   code        |version | full length         | messageType| codec|compress|    RequestId       |</span><br><span class="line">*   +-----------------------+--------+---------------------+-----------+-----------+-----------+------------+</span><br><span class="line">*   |                                         body                                                            |</span><br><span class="line">*   +-------------------------------------------------------------------------------------------------------+</span><br><span class="line">* 4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型）</span><br><span class="line">* 1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id）</span><br></pre></td></tr></table></figure>
-<h2 id="注册中心"><a class="markdownIt-Anchor" href="#注册中心"></a> 注册中心</h2>
-<p>服务注册：在 zk 里面创建一个对应的持久节点</p>
-<p>当我们的服务被<strong>注册进 zookeeper</strong> 的时候，我们将完整的服务名称 rpcServiceName （class name+group+version）作为根节点 ，子节点是对应的服务地址（ip+端口号）。相关代码在 <code>ZkServiceProviderImpl.publishService()</code> 中。</p>
-<p>如果我们要<strong>获得某个服务对应的地址</strong>的话，就直接根据完整的服务名称来获取到其下的所有子节点，然后通过具体的负载均衡策略取出一个就可以了。相关代码在 <code>ZkServiceDiscoveryImpl.lookupService()</code> 中。</p>
-<h3 id="zookeeper-客户端"><a class="markdownIt-Anchor" href="#zookeeper-客户端"></a> Zookeeper 客户端</h3>
-<blockquote>
-<p>Curator 是 Netflix 公司开源的一套zookeeper客户端框架，解决了很多Zookeeper客户端非常底层的细节开发工作，包括连接重连、反复注册Watcher和NodeExistsException异常等等。项目内采用 CuratorUtils 类调用 Curator。</p>
-</blockquote>
-<p>重试策略：ExponentialBackoffRetry是指数退避重试策略</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// zk的对外接口，后面我们要干什么只需要通过单例模式获得这个类，然后用这个类的方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ServiceProvider</span> &#123;</span><br><span class="line">    <span class="comment">// 添加到本地 serviceMap 中（远程Rpc调用，获取本地的调用类）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">    Object <span class="title function_">getService</span><span class="params">(String rpcServiceName)</span>;</span><br><span class="line">    <span class="comment">// 注册服务到 zookeeper 中（服务发现与注册）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">publishService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Java开发</category>
-      </categories>
-      <tags>
-        <tag>分布式通讯框架</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>实习笔试题汇总</title>
     <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
     <content><![CDATA[<h1 id="2024427-美团笔试"><a class="markdownIt-Anchor" href="#2024427-美团笔试"></a> 2024.4.27 美团笔试</h1>
@@ -1090,9 +969,13 @@
 <li>二级索引、联合索引、最左前缀匹配原则</li>
 <li>Redis 怎么实现过期删除策略（不是内存淘汰策略）</li>
 <li>缓存穿透</li>
+</ol>
+<p>太紧张了，回答成缓存雪崩了</p>
+<ol start="13">
 <li><strong>Redis 大 Key 问题的定义，解决方法</strong></li>
 <li>线程池的核心线程池的个数是如何设置的？</li>
 </ol>
+<p>多尝试</p>
 <p>手撕算法：【300. 最长递增子序列】一开始贪心没写出来，后面用 dp 写出来的</p>
 <p><strong>总结QA</strong></p>
 <p><strong>Q</strong>：JDK 动态代理和 cglib 的底层实现的区别？</p>
@@ -1421,93 +1304,6 @@
       </categories>
       <tags>
         <tag>版本管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo 使用指南</title>
-    <url>/2024/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<blockquote>
-<p><a href="https://hexo.io/docs/">官方文档</a></p>
-</blockquote>
-<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>代码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>快速部署</td>
-<td>hexo g -d</td>
-</tr>
-<tr>
-<td>清除缓存</td>
-<td>hexo clean</td>
-</tr>
-<tr>
-<td>预览</td>
-<td>hexo s</td>
-</tr>
-<tr>
-<td>部署</td>
-<td>hexo d</td>
-</tr>
-<tr>
-<td>生成静态页面</td>
-<td>hexo generate</td>
-</tr>
-</tbody>
-</table>
-<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
-<p>初始化项目结构</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-<p>新增标签页，设置属性（type: “tags”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
-<p>新增分类，设置属性（type: “categories”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
-<p>配置 next 主题设置</p>
-<ul>
-<li>设置 menu 菜单栏</li>
-<li>打开 code 代码复制</li>
-</ul>
-<p>Debug</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
-<p><strong>Git 上传插件</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p><strong>latex 公式</strong></p>
-<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p><strong>本地图片</strong></p>
-<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
-<p><strong>Markdown 文字高亮</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
-<p>_config.yml</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
-<p><strong>添加Sitemap</strong></p>
-<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
-<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
-<p><strong>改 blockquote 颜色</strong></p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
-<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
-<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
-<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
-<blockquote>
-<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
-</blockquote>
-<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -3025,8 +2821,399 @@ Discussion</p>
       </tags>
   </entry>
   <entry>
+    <title>如何保持专注</title>
+    <url>/2024/Stay-Focused/</url>
+    <content><![CDATA[<p>磨刀不误砍柴工，弄明白如何做事比糊里糊涂的做更重要。当下的目标是通过不断<strong>实践试错</strong>并<strong>总结纠错</strong>，从而找到最适合我的高效专注的做事方法。在此，再以高中的座右铭激励自己：当你觉得为时已晚的时候，恰恰是最早的时候。从学生变成社会人、从孩子变成家庭支柱、从做事的变成管人的（总会有那天的啦），我还有很多要改进要学习的地方（如何清楚明确的表达自己的工作内容，如何高效明确的和别人沟通），这些变化不是为了适应社会的表演，而是成年人的责任。<s>（tmd这文字像是初中生写出来的，文化沙漠了属于是，有时间还是得多看看书捏）</s></p>
+<blockquote>
+<p>Thought is already is late, exactly is the earliest time.</p>
+</blockquote>
+<h1 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h1>
+<p>布置好工作环境，安排好工作内容，让自己发自内心得希望把事情完成。</p>
+<ul>
+<li><strong>早起，立即开始工作</strong>。早起会立即给自己一个潜意识的信号，让自己在那天努力工作。</li>
+<li><strong>制定一个行动计划</strong>。用 10 分钟来筹划接下来的几个小时要做的事情，让事情可以推动自己前进。</li>
+<li><strong>提前完成一连串的工作</strong>。清晨就处理完当天最紧要的工作，白天的时间就会显得从容，这也会产生积极的启动，这将持续一整天。</li>
+</ul>
+<h1 id="无干扰休息"><a class="markdownIt-Anchor" href="#无干扰休息"></a> 无干扰休息</h1>
+<p>休息可以帮助自己以新的方式思考问题，可以清醒头脑，从而重新集中注意力。无干扰的休息意味着休息不会扼杀你的动力，这样你就可以重新振作起来，而不会陷入拖延的弯路。</p>
+<ul>
+<li><strong>避免参与式的休息</strong>。短视频，游戏，微信等会占据头脑的东西都会打断做事的势头。</li>
+<li><strong>专注于放松</strong>。走一小段路、喝一杯水或伸展身体都是不错的选择，可以很容易地从休息中抽身出来回去工作。</li>
+</ul>
+<p>休息不是为了玩得开心，这才是真正休息的目的。休息是关于战略性地恢复你的能量和注意力，以重新处理手头的工作。把电视、游戏和娱乐活动留给晚上可以无愧疚地放松的时候。</p>
+<h1 id="积极工作"><a class="markdownIt-Anchor" href="#积极工作"></a> 积极工作</h1>
+<p>被动任务比主动任务更难集中注意力。改变这种状况的关键是，或者。</p>
+<ul>
+<li><strong>使任务处于活动状态</strong>。将被动学习任务转换为主动学习任务，如写提纲、记录重点。</li>
+<li><strong>穿插活动任务</strong>。将被动学习与主动任务穿插在一起，以定期提高注意力，如表达自己见解、用自己的话复述一遍。</li>
+</ul>
+<blockquote>
+<p><strong><a href="https://www.youtube.com/watch?v=FrNqSLPaZLc">Feynman 学习法</a></strong></p>
+<p>Step1: choose your concept【写下你要学习的概念】</p>
+<p>Step2: Pretend You’re Teaching the ldea to a New Student【假象你在教一位不懂这件事情的人这个概念，尝试将这件事情说明白】</p>
+<p>Step3: If You Get Stuck, Go Back to the Book【如果你在这个过程中遇到了困难，回到课本和视频中进一步学习】</p>
+<p>Step4: Simplify and Create Analogies【尝试精简自己的解释，并将其与其他概念做类比，从而更好地理解概念】</p>
+<p>总结一下，当你可以教会某人一个ta完全不懂的概念的时候，说明你真正掌握了这个概念</p>
+</blockquote>
+<h1 id="固定日程安排"><a class="markdownIt-Anchor" href="#固定日程安排"></a> 固定日程安排</h1>
+<p>努力工作的最好方式就是拥有生活</p>
+<ul>
+<li>
+<p><strong>保证休息</strong>，应对大量工作任务的办法是保证自己有休息时间。如果你白天不好好工作，却逼迫自己整夜学习的话，你很容易就会筋疲力尽的。无论压力再大任务再多，都要保证休息时间，一颗清醒的大脑决定了工作的质量。</p>
+</li>
+<li>
+<p>使用时间分块法或每周/每日目标法，将工作和生活清晰地分离开，好好工作好好玩。</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>时间分块法</strong></p>
+<p>将一天分成更小的时间分块法。在每一段时间里，专注于一项任务或一组相似的任务。其重点是<strong>规划出需要完成的任务</strong>，然后<strong>划分特定的时间段专注完成这些任务</strong>。</p>
+<p>当你把一整天分成时间段后，它会让你专注于任务，并限制其他人占用你的时间。</p>
+<p>时间分块法让你每天都有一个要完成的具体任务的时间表，而不是遵循一个不断扩大的待办事项列表，你只需要关注于当下应该做的事情。</p>
+</blockquote>
+<p><a href="https://www.scotthyoung.com/blog/2011/11/28/focus-without-caffeine/">Refer</a></p>
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>保持专注</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 虚拟机</title>
+    <url>/JVM/</url>
+    <content><![CDATA[<blockquote>
+<p>《深入理解 <a href="https://link.zhihu.com/?target=http%3A//www.shaoqun.com/s/Java.aspx">Java</a> 虚拟机 - <a href="https://link.zhihu.com/?target=http%3A//www.shaoqun.com/s/JVM.aspx">JVM</a> 高级特性与最佳实践》</p>
+</blockquote>
+<p>TODO虚拟机器执行子系统、GC、内存区域、调优</p>
+<h1 id="内存结构"><a class="markdownIt-Anchor" href="#内存结构"></a> 内存结构</h1>
+<p><a href="https://blog.csdn.net/xiaojin21cen/article/details/104267301">方法区、永久代（PermGen space）、元空间（Metaspace）的关系</a></p>
+<img data-src="/JVM/image-20240429094145753.png" class="" title="image-20240429094145753">方法区
+<ul>
+<li>主要存储类的相关信息，所以对于动态生成类的情况比较容易出现永久代的内存溢出</li>
+<li>方法区是 JVM 的规范，元空间是 HotSpot 虚拟机在 Java8 具体实现的方法区（JDK8 之前是永久代）</li>
+</ul>
+<p>Metaspace（元空间）替换 PermGen（永久代）的原因</p>
+<blockquote>
+<p>永久代存储在虚拟机堆中，元空间存储在本地内存中</p>
+</blockquote>
+<ul>
+<li>字符串存在永久代中，不方便管理维护，需要单独进行垃圾管理</li>
+<li>类及方法的信息等比较难确定其大小，因此难以指定永久代的大小，太小容易出现永久代溢出，太大则容易导致老年代溢出</li>
+<li>永久代会为 GC 带来不必要的复杂度，并且回收效率偏低</li>
+<li>和其他虚拟机架构看齐，方便合并</li>
+</ul>
+<p>静态变量和基本数据类型包装类的常量池存在哪里？</p>
+<ul>
+<li>jdk1.6 及之前静态变量和 String Table 在永久代方法区</li>
+<li>jdk1.8后 运行时常量池和静态变量在元空间，<strong>字符串常量池在堆空间</strong></li>
+</ul>
+<p>运行时常量池</p>
+<ul>
+<li>存储常量、引用、整数和浮点数等内存区域，是类加载后的第一个创建的内存区域，并且在整个 JVM 进程中共享</li>
+<li>常量池中的内容是不可变的，可以通过符号引用进行共享，从而避免内存浪费</li>
+</ul>
+<p>方法区：全局，所有栈都可以访问</p>
+<ul>
+<li>static、ClassLoader</li>
+</ul>
+<p><strong>Q1</strong>：介绍下 Java 内存区域（运行时数据区）<br />
+<strong>A1</strong>：</p>
+<p>线程私有的</p>
+<ul>
+<li>程序计数器（当前线程执行位置；依次读取代码）</li>
+<li>本地方法栈（存储栈帧：局部变量表【值、引用指针、句柄】、操作数栈、动态链接【当一个方法要调用其他方法，将常量池中指向方法的符号引用转化为其在内存地址中的直接引用】、方法返回地址）</li>
+<li>虚拟机栈</li>
+</ul>
+<p>线程共享的</p>
+<ul>
+<li>方法区（元空间、永久代）当虚拟机要使用一个类时，它需要读取并解析 Class 文件获取相关信息，再将信息存入到方法区。方法区会存储已被虚拟机加载的 类信息、字段信息、方法信息、常量、静态变量、即时编译器编译后的代码缓存等数据。（运行时常量池：即各种字面量和符号引用【解析阶段：JVM 将符号引用转为直接引用】）</li>
+<li>堆（字符串常量池【<a href="https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html">String#intern</a>】、静态变量）</li>
+<li>本地内存</li>
+</ul>
+<p><strong>Q2</strong>：Java 对象的创建过程（五步，建议能默写出来并且要知道每一步虚拟机做了什么）</p>
+<img data-src="/JVM/1161857-20200427141816383-595743373.png" class="" title="img">
+<img data-src="/JVM/1161857-20200427171615978-465618542.png" class="" title="img">
+<p><strong>Q3</strong>：对象的访问定位的两种方式（句柄和直接指针两种方式）</p>
+<ul>
+<li>Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针。</li>
+</ul>
+<style>.xynvlqniicfd{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="xynvlqniicfd" alt="image-20240429100643112">
+<ul>
+<li>直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销，HotSpot 采用的是直接指针</li>
+</ul>
+<style>.dxbrzevwwbjt{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="dxbrzevwwbjt" alt="image-20240429100908916">
+<p><strong>Q4</strong>：对象的内存布局</p>
+<p>Mark Word 是一个具有动态定义的数据结构，以便在极小的空间内存储尽量多的数据，根据对象的状态复用自己的存储空间。</p>
+<img data-src="/JVM/1161857-20200427173120968-675206595.png" class="" title="img">
+<h1 id="gc-堆"><a class="markdownIt-Anchor" href="#gc-堆"></a> GC 堆</h1>
+<p>新生代 Young Generation</p>
+<ul>
+<li>Eden 区【新建对象分配地址】</li>
+<li>两个 Survivor 区 S0 和 S1 【survivor 的阈值年龄取小（占用超过一半 s 区的年龄，MaxTenuringThreshold）】</li>
+</ul>
+<p>老生代 Old Generation</p>
+<h1 id="垃圾回收"><a class="markdownIt-Anchor" href="#垃圾回收"></a> 垃圾回收</h1>
+<h2 id="垃圾收集算法"><a class="markdownIt-Anchor" href="#垃圾收集算法"></a> 垃圾收集算法</h2>
+<table>
+<thead>
+<tr>
+<th>垃圾收集算法</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标记清除法</td>
+<td>不需要移动对象，简单高效</td>
+<td>标记效率低（访问全部内存）内存碎片</td>
+<td>老年代</td>
+</tr>
+<tr>
+<td>标记复制算法</td>
+<td>无内存碎片</td>
+<td>频繁复制；内存使用率低</td>
+<td>新生代</td>
+</tr>
+<tr>
+<td>标记整理法</td>
+<td>结合了上面两个优点</td>
+<td>移动局部对象</td>
+<td>老年代</td>
+</tr>
+<tr>
+<td>分代收集算法</td>
+<td>根据对象存活概率，选择垃圾收集算法</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="垃圾回收器"><a class="markdownIt-Anchor" href="#垃圾回收器"></a> 垃圾回收器</h2>
+<p>GCRoot：栈帧中引用的对象、静态变量、常量、本地方法栈中对象<br />
+STW：Stop the World</p>
+<table>
+<thead>
+<tr>
+<th>Young GC</th>
+<th>Old GC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial 串行、标记-复制</td>
+<td>Serial Old 标记-整理（STW）</td>
+</tr>
+<tr>
+<td>PawNew 并行、标记-复制</td>
+<td>CMS 降低单次垃圾收集时间</td>
+</tr>
+<tr>
+<td>Parallel Scavenge 吞吐率</td>
+<td>Parallel Old</td>
+</tr>
+</tbody>
+</table>
+<img data-src="/JVM/1712545820562-e5255e3e-762c-44b8-a179-1cca4068b847.png" class="" title="image.png">
+<h3 id="cms"><a class="markdownIt-Anchor" href="#cms"></a> CMS</h3>
+<blockquote>
+<p>以获得最短回收停顿时间为目标的收集器</p>
+</blockquote>
+<p>流程</p>
+<ul>
+<li>初次标记 STW：标记直接与 root 相连的对象</li>
+<li>并发标记：标记可达对象，跟踪更新记录</li>
+<li>重新标记 STW：修正并发标记的变动</li>
+<li>并发清理：标记-清理（不用 STW，但清理会产生内存碎片，复制不会）</li>
+</ul>
+<p>优点</p>
+<ul>
+<li>并发收集、低停顿</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>对 CPU 资源敏感；</li>
+<li>无法处理浮动垃圾；</li>
+<li>它使用的回收算法“标记-清除”算法会导致收集结束时会有大量空间碎片产生，过量碎片会导致 Full GC；</li>
+<li>并发失败：并发清理的时候用户线程没有足够的 JVM 内存，会导致 STW 并产生内存碎片</li>
+</ul>
+<h3 id="g1"><a class="markdownIt-Anchor" href="#g1"></a> <a href="https://github.com/sunwu51/notebook/blob/master/19.09/java_jvm%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.md">G1</a></h3>
+<blockquote>
+<p>G1 跟踪每个区域的垃圾大小，在后台维护一个优先级列表，每次根据允许的收集时间，优先回收价值最大的区域，已达到在有限时间内获取尽可能高的回收效率</p>
+</blockquote>
+<img data-src="/JVM/image-20240429095131808.png" class="" title="image-20240429095131808">
+<p>内存结构</p>
+<ul>
+<li>Region 大小 1M~32M、个数大概 2000</li>
+<li>&gt;=0.5 Region &lt;1Region：H 区（超大对象存储区）</li>
+<li>&gt;1Region：多个连续存储区</li>
+</ul>
+<p>概念</p>
+<ul>
+<li>RememberSets，又叫 Rsets 是每个 region 中都有的一份存储空间，用于存储本 region 的对象被其他 region 对象的引用记录</li>
+<li>CollectionSets，又叫 Csets 是一次 GC 中需要被清理的 regions 集合，注意G1每次 GC 不是全部 region 都参与的，可能只清理少数几个，这几个就被叫做 Csets</li>
+</ul>
+<p><a href="https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html">Young GC</a> 复制清理的过程</p>
+<img data-src="/JVM/image-20240429095142614.png" class="" title="image-20240429095142614">
+<p>MixGC（没有 Old GC 的概念，新老代一起 GC)类似于 CMS</p>
+<ul>
+<li>初次标记 STW：标记直接与 GCRoot 相连的对象，和该对象所处的 Region(RootRegion)</li>
+<li>扫描 RootRrgion：遍历 old Region，如果 rset 中存在 RootRegion，则标记（即为可达的 Region）</li>
+<li>并发标记：同 CMS，但仅遍历标记的 Region</li>
+<li>重新标记 STW：SATB 算法</li>
+<li>筛选回收 STW：局部的标记整理垃圾收集</li>
+</ul>
+<img data-src="/JVM/image-20240429095150787.png" class="" title="image-20240429095150787">
+<p>对比CMS，有哪些不同？</p>
+<ul>
+<li>region化的内存结构，采用复制清理的方式，避免了内存碎片。但是这种清理也造成了STW</li>
+<li>SATB速度更快</li>
+<li>初始标记，并发标记，重新标记，清理垃圾四个阶段很像，但是G1中有很多标记region的操作，并借助Rset进行了范围的缩小，提高了并发标记的速度。小结下就是初始标记和YGC的STW一起了，提高了效率；并发标记因为rset的设计，扫描范围缩小了，提高了效率；重新标记因为使用了SATB提高了效率；清理虽然造成了STW，但是复制使内存紧凑，避免了内存碎片。同时只清理垃圾较多的region，最大限度的降低了STW时间</li>
+</ul>
+<img data-src="/JVM/image-20240429095159588.png" class="" title="image-20240429095159588">
+<p>GC 回收，针对堆内存<br />
+GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a href="https://heapdump.cn/article/1870333">FGC</a></p>
+<h1 id="类加载过程"><a class="markdownIt-Anchor" href="#类加载过程"></a> 类加载过程</h1>
+<p>类的生命周期：加载、连接、初始化、使用、卸载</p>
+<style>.hsunbdbrppdt{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="hsunbdbrppdt" alt="image-20240429095206248">
+<h2 id="对象的创建过程"><a class="markdownIt-Anchor" href="#对象的创建过程"></a> 对象的创建过程</h2>
+<ol>
+<li>查找常量池中是否有类的符号引用</li>
+<li>分配内存：指针碰撞 OR 空闲列表（保证线程安全：CAS+失败重试 OR TLAB）</li>
+<li>初始化零值</li>
+<li>设置对象头：元数据信息、对象的哈希码、对象的 GC 分代年龄、是否启用偏向锁</li>
+<li>执行 init 方法</li>
+</ol>
+<p>对象内存信息：对象头（运行时数据、类型指针）、实例数据、对齐填充<br />
+对象访问【通过栈上的 引用指针 Reference 来操作堆上的具体对象】：句柄、直接指针</p>
+<h1 id="类加载器"><a class="markdownIt-Anchor" href="#类加载器"></a> 类加载器</h1>
+<p>负责加载类的对象，主要作用就是加载 Java 类的字节码（ .class 文件）到 JVM 中（在内存中生成一个代表该类的 Class 对象）；<br />
+将“通过类的全限定名获取描述类的二进制字节流”这件事放在虚拟机外部，由应用程序自己决定如何实现；</p>
+ <img data-src="/JVM/image-20240429095212841.png" class="" title="image-20240429095212841">（启动类加载器：虚拟机的一部分)
+<h2 id="双亲委派模型"><a class="markdownIt-Anchor" href="#双亲委派模型"></a> 双亲委派模型</h2>
+<blockquote>
+<p>决定类由哪个类加载器加载<br />
+编程思想：在面向对象编程中，有一条非常经典的设计原则：组合优于继承，多用组合少用继承（即双亲委派的实现方法）</p>
+</blockquote>
+<ul>
+<li>ClassLoader 类使用委托模型来搜索类和资源。双亲委派模型要求除了顶层的启动类加载器外，其余的类加载器都应有自己的父类加载器。
+<ul>
+<li>获取该类的类加载器getClassLoader()方法；获取父类的类加载器getParent()</li>
+</ul>
+</li>
+<li>ClassLoader 实例会在试图亲自查找类或资源之前，将搜索类或资源的任务委托给其父类加载器。</li>
+</ul>
+<p>ClassLoader 抽象类：已经加载的类会被放在 ClassLoader 中</p>
+<ul>
+<li>loadClass(String name, boolean resolve) ：父类的加载器不为空，则通过父类的loadClass来加载该类。如果要打破双亲委派机制，就重写这个方法</li>
+<li>findClass(String name)：当父类加载器无法加载时，根据类的二进制名称来加载该类</li>
+</ul>
+<p><a href="https://javaguide.cn/java/jvm/classloader.html#%E6%89%93%E7%A0%B4%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B%E6%96%B9%E6%B3%95">线程上下文类加载器</a></p>
+<ul>
+<li>类加载器保存在线程私有数据里，跟线程绑定。解决了，默认情况下一个类及其依赖类由同一个类加载器加载，而接口的类加载器和子类或实现类的加载器不是同一个加载器。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java学习</category>
+      </categories>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis</title>
+    <url>/Redis/</url>
+    <content><![CDATA[<p><s>先速通一遍，底层实现后续慢慢看书学</s></p>
+<p>Redis 的特性：单线程、原子性、内存、数据结构、I/O 多路复用的非关系型数据库</p>
+<p>6.0 版本前网络 I/O 和命令处理都是单线程，6.0 版本后网络 I/O 采用多个线程处理</p>
+<ul>
+<li>大部分操作都在内存中完成。CPU 并不是制约 Redis 性能表现的瓶颈所在，而是机器的内存或者网络带宽</li>
+<li>避免了多线程之间的竞争</li>
+<li>I/O 多路复用机制</li>
+</ul>
+<h1 id="数据结构"><a class="markdownIt-Anchor" href="#数据结构"></a> 数据结构</h1>
+<p>String 字符串</p>
+<p>List 列表</p>
+<p>Set 集合</p>
+<p>Zset 有序集合</p>
+<p>Hash 哈希</p>
+<h1 id="持久化"><a class="markdownIt-Anchor" href="#持久化"></a> 持久化</h1>
+<h2 id="aof-日志"><a class="markdownIt-Anchor" href="#aof-日志"></a> AOF 日志</h2>
+<p>每执行一条写操作命令就追加到日志文件中</p>
+<p>重写机制：后台子进程共享父进程内存，AOF 重写缓冲区</p>
+<h2 id="rdb-快照"><a class="markdownIt-Anchor" href="#rdb-快照"></a> RDB 快照</h2>
+<p>某一时刻的内存数据快照</p>
+<h2 id="混合持久化"><a class="markdownIt-Anchor" href="#混合持久化"></a> 混合持久化</h2>
+<p>前半部分是 RDB 格式的全量数据，后半部分是 AOF 格式的增量数据（重写缓冲区数据）。</p>
+<h1 id="策略"><a class="markdownIt-Anchor" href="#策略"></a> 策略</h1>
+<h2 id="过期删除策略"><a class="markdownIt-Anchor" href="#过期删除策略"></a> 过期删除策略</h2>
+<p>惰性删除+定期删除</p>
+<h2 id="内存淘汰策略"><a class="markdownIt-Anchor" href="#内存淘汰策略"></a> 内存淘汰策略</h2>
+<p>仅淘汰过期数据：random、ttl、lru、lfu</p>
+<p>淘汰所有数据：lru、lfu</p>
+<h1 id="高可用"><a class="markdownIt-Anchor" href="#高可用"></a> 高可用</h1>
+<h2 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h2>
+<h2 id="哨兵机制"><a class="markdownIt-Anchor" href="#哨兵机制"></a> 哨兵机制</h2>
+<h2 id="集群"><a class="markdownIt-Anchor" href="#集群"></a> 集群</h2>
+<p>slot 槽</p>
+<h1 id="缓存"><a class="markdownIt-Anchor" href="#缓存"></a> 缓存</h1>
+<h2 id="缓存雪崩-击穿-穿透"><a class="markdownIt-Anchor" href="#缓存雪崩-击穿-穿透"></a> 缓存雪崩、击穿、穿透</h2>
+<h2 id="如何保证数据库和缓存一致性"><a class="markdownIt-Anchor" href="#如何保证数据库和缓存一致性"></a> 如何保证数据库和缓存一致性</h2>
+<p>更新数据库+删除缓存：延迟双删</p>
+<p>更新数据库+更新缓存：分布式锁</p>
+<p>更新数据库+不更新缓存：较短的缓存有效期</p>
+<p>删除缓存的时候失败了怎么办？采用异步删除的方式：</p>
+<ul>
+<li>消息队列确保缓存删除成功</li>
+<li>订阅 MySQL 的 binlog，数据修改时删除缓存</li>
+</ul>
+<h1 id="实战"><a class="markdownIt-Anchor" href="#实战"></a> 实战</h1>
+<h2 id="分布式锁"><a class="markdownIt-Anchor" href="#分布式锁"></a> 分布式锁</h2>
+<h2 id="延迟队列"><a class="markdownIt-Anchor" href="#延迟队列"></a> 延迟队列</h2>
+<h2 id="大-key-问题"><a class="markdownIt-Anchor" href="#大-key-问题"></a> 大 Key 问题</h2>
+<h2 id="事务回滚"><a class="markdownIt-Anchor" href="#事务回滚"></a> 事务回滚</h2>
+<h2 id="管道"><a class="markdownIt-Anchor" href="#管道"></a> 管道</h2>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringMVC</title>
+    <url>/SpringMVC/</url>
+    <content><![CDATA[<h1 id="tomcat"><a class="markdownIt-Anchor" href="#tomcat"></a> Tomcat</h1>
+<p>Tomcat 是基于 HTTP 协议的 Web 服务器，工作流程图 <a href="https://blog.csdn.net/qq_19782019/article/details/80292110">Link</a></p>
+<img data-src="/SpringMVC/2018120522281643.gif" class="" title="img">
+<h2 id="servlet"><a class="markdownIt-Anchor" href="#servlet"></a> Servlet</h2>
+<p>Servlet 接口定义了 Servlet 与 servlet容器 之间的契约。这个契约是：Servlet容器将Servlet类载入内存，并产生 Servlet 实例和调用它具体的方法。但是要注意的是，<strong>在一个应用程序中，每种 Servlet 类型只能有一个实例</strong>。类比 SpringMVC 中每一个 Mapping 对应一个控制层方法【不确定】</p>
+<p>对于每一个应用程序，Servlet容器还会创建一个ServletContext对象。这个对象中封装了上下文（应用程序）的环境详情。每个应用程序只有一个ServletContext。每个Servlet对象也都有一个封装Servlet配置的ServletConfig对象。</p>
+<h1 id="springmvc"><a class="markdownIt-Anchor" href="#springmvc"></a> SpringMVC</h1>
+<p>流程图</p>
+<img data-src="/SpringMVC/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5q2i5q2l5YmN6KGM,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="" title="SpringMVC流程图">
+<ul>
+<li>由<code>DispatcherServlet</code> 从<code>HandlerMappings</code>中匹配对应的<code>Handler</code>。此时只是获取到了对应的<code>Handler</code>，然后拿着这个<code>Handler</code>去寻找对应的适配器，即：<code>HandlerAdapter</code>：让固定参数的 Servlet 处理方法调用灵活的 Handler 来处理；</li>
+<li>执行 <code>Controller</code> 处理业务逻辑， 执行完成之后返回一个 <code>ModeAndView</code> 或 Json 格式数据；</li>
+</ul>
+<p>HandlerMapping/HandlerAdapter 的<strong>适配器模式</strong>：</p>
+<p>SpringMVC 的 Handler 有多种实现方式（如继承 Controller 接口、继承 HttpRequestHandler 接口、基于注解 @Controller 的控制器）。由于实现方式不一样，调用方式就不确定，就需要适配器模式将所有实现方式都统一成同一个接口。把任何一个 Handler 都适配成一个HandlerAdapter，从而可以做统一的流程处理，不用耦合具体的处理器，模糊掉具体的实现。</p>
+<p>Spring MVC会为每一个标记了 @Controller 的类创建一个控制器实例（bean），并且根据这些类中的 @RequestMapping 注解来配置 URL 到方法的映射。这些映射信息通常会被存储在一个叫做 <code>HandlerMapping</code> 的组件中</p>
+]]></content>
+      <categories>
+        <category>Java开发</category>
+      </categories>
+      <tags>
+        <tag>SpringMVC</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL基础</title>
-    <url>/MySQL%E5%9F%BA%E7%A1%80/</url>
+    <url>/MySQL/</url>
     <content><![CDATA[<h1 id="基础"><a class="markdownIt-Anchor" href="#基础"></a> 基础</h1>
 <h2 id="sql-查询语句执行过程"><a class="markdownIt-Anchor" href="#sql-查询语句执行过程"></a> SQL 查询语句执行过程</h2>
 <ul>
@@ -3048,13 +3235,13 @@ Discussion</p>
 <li>table.ibd，存放<strong>表数据</strong>，<s>表数据既可以存在共享表空间文件（文件名：ibdata1）里</s>，也可以存放在独占表空间文件（文件名：表名字.ibd）。这个行为是由参数 innodb_file_per_table 控制的，若设置了参数 innodb_file_per_table 为 1，则会将存储的<strong>数据、索引等信息单独存储在一个独占表空间</strong>，从 MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本之后， MySQL 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
 </ul>
 <p><strong>表空间文件的结构</strong></p>
-<style>.ruuglbstiggt{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="ruuglbstiggt" alt="img">
+<img data-src="MySQL基础/表空间结构.drawio.png" alt="img" style="zoom:67%;" />
 <h2 id="innodb-行格式"><a class="markdownIt-Anchor" href="#innodb-行格式"></a> InnoDB 行格式</h2>
 <p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact 行格式的结构</p>
-<img data-src="/MySQL%E5%9F%BA%E7%A1%80/COMPACT.drawio.png" class="" title="img">
+<p><img data-src="MySQL%E5%9F%BA%E7%A1%80/COMPACT.drawio.png" alt="img" /></p>
 <h2 id="innodb-页格式"><a class="markdownIt-Anchor" href="#innodb-页格式"></a> InnoDB 页格式</h2>
 <p>InnoDB 的数据是按「数据页」为单位来读写的，数据页的默认大小是 16KB</p>
-<style>.pfpzettgloiq{zoom:50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="pfpzettgloiq" alt="243b1466779a9e107ae3ef0155604a17">
+<img data-src="MySQL基础/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" alt="243b1466779a9e107ae3ef0155604a17" style="zoom:50%;" />
 <table>
 <thead>
 <tr>
@@ -3276,7 +3463,7 @@ Discussion</p>
 <h2 id="mvcc-多版本并发控制"><a class="markdownIt-Anchor" href="#mvcc-多版本并发控制"></a> MVCC 多版本并发控制</h2>
 <p>InnoDB 事务是通过 <strong>Read View 和 聚簇索引中的两个隐藏列</strong> 实现 MVCC 的</p>
 <p><strong>Read View 字段</strong></p>
-<img data-src="/MySQL%E5%9F%BA%E7%A1%80/readview%E7%BB%93%E6%9E%84.drawio.png" class="" title="img">
+<p><img data-src="MySQL%E5%9F%BA%E7%A1%80/readview%E7%BB%93%E6%9E%84.drawio.png" alt="img" /></p>
 <p><strong>聚簇索引中的两个隐藏列</strong></p>
 <ul>
 <li>trx_id，当一个事务对某条聚簇索引记录进行改动时，就会<strong>把该事务的事务 id 记录在 trx_id 隐藏列里</strong>；</li>
@@ -3446,7 +3633,7 @@ Discussion</p>
 </ul>
 <h3 id="重做日志文件组"><a class="markdownIt-Anchor" href="#重做日志文件组"></a> 重做日志文件组</h3>
 <p>redo log 是为了防止 Buffer Pool 中的脏页丢失而设计的，<strong>只记录未被刷入磁盘的数据的物理日志</strong>。随着系统运行，Buffer Pool 的脏页刷新到了磁盘中，redo log 对应的记录也就没用了，这时候我们需要擦除这些旧记录，以腾出空间记录新的更新操作。重做日志文件组由有 2 个 redo log 文件组成，以循环写的方式工作，从头开始写，写到末尾就又回到开头，相当于一个环形。</p>
-<style>.tfhodxnqjxxz{zoom: 50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/checkpoint.png" class="tfhodxnqjxxz" alt="img">
+<img data-src="MySQL基础/checkpoint.png" alt="img" style="zoom: 50%;" />
 <ul>
 <li>write pos ～ checkpoint 之间的部分（图中红色部分）：记录新的更新操作；</li>
 <li>check point ～ write pos 之间的部分（图中蓝色部分）：待落盘的脏数据页记录；</li>
@@ -3459,7 +3646,7 @@ Discussion</p>
 <li>binlog 是全量日志，保存了所有数据变更的情况，可以恢复整个数据库所有数据；</li>
 </ul>
 <h3 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h3>
-<style>.hawxotmqgzqy{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="hawxotmqgzqy" alt="MySQL 主从复制过程">
+<img data-src="MySQL基础/主从复制过程.drawio.png" alt="MySQL 主从复制过程" style="zoom:67%;" />
 <ul>
 <li>写入 Binlog：数据修改 -&gt; 主库写 binlog 日志 -&gt; commit 事务 -&gt; 持久化本地数据 -&gt; 提交事务成功；</li>
 <li>同步 Binlog：从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。</li>
@@ -3472,7 +3659,7 @@ Discussion</p>
 <li>半同步复制：只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端；</li>
 </ul>
 <h3 id="binlog-刷盘"><a class="markdownIt-Anchor" href="#binlog-刷盘"></a> binlog 刷盘</h3>
-<style>.ufqpnxdxkgem{zoom: 67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/binlogcache.drawio.png" class="ufqpnxdxkgem" alt="binlog cach">
+<img data-src="MySQL基础/binlogcache.drawio.png" alt="binlog cach" style="zoom: 67%;" />
 <ul>
 <li>图中的 write，把<strong>日志写入到 binlog 文件（文件系统的 page cache 里）</strong>，但是并没有把数据持久化到磁盘；</li>
 <li>图中的 fsync，把数据持久化到磁盘的操作，这里就会涉及磁盘 I/O，所以频繁的 fsync 会导致磁盘的 I/O 升高；</li>
@@ -3487,7 +3674,7 @@ Discussion</p>
 <p>binlog 主从复制和 redo log 崩溃恢复需要保持一致，不然会出现<strong>主从数据不一致、备份数据与真实数据不一致</strong>等问题。MySQL 采用两阶段提交来避免两份日志之间的逻辑不一致，两阶段提交是一种<strong>分布式事务一致性协议</strong>。</p>
 <p>两阶段提交：把单个事务的提交拆分成了 2 个阶段，分别是准备阶段和提交阶段（不是 commit 语句），每个阶段都由协调者和参与者共同完成。</p>
 <h3 id="内部-xa-事务"><a class="markdownIt-Anchor" href="#内部-xa-事务"></a> 内部 XA 事务</h3>
-<style>.pwdwxkkgdcti{zoom:50%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="pwdwxkkgdcti" alt="两阶段提交">
+<img data-src="MySQL基础/两阶段提交.drawio.png" alt="两阶段提交" style="zoom:50%;" />
 <p>为了保证这两个日志的一致性，MySQL 使用了内部 XA 事务。内部 XA 事务由 binlog 作为协调者，存储引擎是参与者，可以实现跨数据库事务。将 redo log 的写入拆成了<strong>两个状态：prepare 和 commit</strong>，中间再穿插写入binlog。</p>
 <ul>
 <li>如果 binlog 中没有当前内部 XA 事务的 XID，说明 redolog 完成刷盘，但是 binlog 还没有刷盘，则<strong>回滚事务</strong>。对应时刻 <strong>A 崩溃恢复</strong>的情况；</li>
@@ -3554,12 +3741,12 @@ Discussion</p>
 </ul>
 <p><strong>Free 链表</strong>：使用链表结构，快速找到空闲的缓存页；</p>
 <p>每当需要从磁盘中加载一个页到 Buffer Pool 中时，就从 Free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上，然后把该缓存页对应的控制块从 Free 链表中移除</p>
-<style>.sxndnwvvyxev{zoom: 67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/freelist.drawio.png" class="sxndnwvvyxev" alt="img">
+<img data-src="MySQL基础/freelist.drawio.png" alt="img" style="zoom: 67%;" />
 <p><strong>Flush 链表</strong>：使用链表结构，快速找到脏页；（结构类似于 Free 链表）</p>
 <p>脏页落盘时，后台线程遍历 Flush 链表</p>
 <h2 id="提高缓存命中率"><a class="markdownIt-Anchor" href="#提高缓存命中率"></a> 提高缓存命中率</h2>
 <p>Buffer Pool 有三种页和链表用来管理数据</p>
-<style>.rziyrjhypjyb{zoom:67%;}</style><img data-src="/MySQL%E5%9F%BA%E7%A1%80/bufferpoll_page.png" class="rziyrjhypjyb" alt="img">
+<img data-src="MySQL基础/bufferpoll_page.png" alt="img" style="zoom:67%;" />
 <ul>
 <li>Free Page（空闲页），表示此页未被使用，位于 Free 链表；</li>
 <li>Clean Page（干净页），表示此页已被使用，但是页面未发生修改，位于LRU 链表。</li>
@@ -3590,338 +3777,215 @@ Discussion</p>
       </tags>
   </entry>
   <entry>
-    <title>如何保持专注</title>
-    <url>/2024/Stay-Focused/</url>
-    <content><![CDATA[<p>磨刀不误砍柴工，弄明白如何做事比糊里糊涂的做更重要。当下的目标是通过不断<strong>实践试错</strong>并<strong>总结纠错</strong>，从而找到最适合我的高效专注的做事方法。在此，再以高中的座右铭激励自己：当你觉得为时已晚的时候，恰恰是最早的时候。从学生变成社会人、从孩子变成家庭支柱、从做事的变成管人的（总会有那天的啦），我还有很多要改进要学习的地方（如何清楚明确的表达自己的工作内容，如何高效明确的和别人沟通），这些变化不是为了适应社会的表演，而是成年人的责任。<s>（tmd这文字像是初中生写出来的，文化沙漠了属于是，有时间还是得多看看书捏）</s></p>
+    <title>Rpc 框架</title>
+    <url>/Rpc/</url>
+    <content><![CDATA[<h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>
 <blockquote>
-<p>Thought is already is late, exactly is the earliest time.</p>
+<p>泛指调用远程的函数的方法，对编解码和网络层有特殊的优化，从而有更高的效率。</p>
 </blockquote>
-<h1 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h1>
-<p>布置好工作环境，安排好工作内容，让自己发自内心得希望把事情完成。</p>
-<ul>
-<li><strong>早起，立即开始工作</strong>。早起会立即给自己一个潜意识的信号，让自己在那天努力工作。</li>
-<li><strong>制定一个行动计划</strong>。用 10 分钟来筹划接下来的几个小时要做的事情，让事情可以推动自己前进。</li>
-<li><strong>提前完成一连串的工作</strong>。清晨就处理完当天最紧要的工作，白天的时间就会显得从容，这也会产生积极的启动，这将持续一整天。</li>
-</ul>
-<h1 id="无干扰休息"><a class="markdownIt-Anchor" href="#无干扰休息"></a> 无干扰休息</h1>
-<p>休息可以帮助自己以新的方式思考问题，可以清醒头脑，从而重新集中注意力。无干扰的休息意味着休息不会扼杀你的动力，这样你就可以重新振作起来，而不会陷入拖延的弯路。</p>
-<ul>
-<li><strong>避免参与式的休息</strong>。短视频，游戏，微信等会占据头脑的东西都会打断做事的势头。</li>
-<li><strong>专注于放松</strong>。走一小段路、喝一杯水或伸展身体都是不错的选择，可以很容易地从休息中抽身出来回去工作。</li>
-</ul>
-<p>休息不是为了玩得开心，这才是真正休息的目的。休息是关于战略性地恢复你的能量和注意力，以重新处理手头的工作。把电视、游戏和娱乐活动留给晚上可以无愧疚地放松的时候。</p>
-<h1 id="积极工作"><a class="markdownIt-Anchor" href="#积极工作"></a> 积极工作</h1>
-<p>被动任务比主动任务更难集中注意力。改变这种状况的关键是，或者。</p>
-<ul>
-<li><strong>使任务处于活动状态</strong>。将被动学习任务转换为主动学习任务，如写提纲、记录重点。</li>
-<li><strong>穿插活动任务</strong>。将被动学习与主动任务穿插在一起，以定期提高注意力，如表达自己见解、用自己的话复述一遍。</li>
-</ul>
-<blockquote>
-<p><strong><a href="https://www.youtube.com/watch?v=FrNqSLPaZLc">Feynman 学习法</a></strong></p>
-<p>Step1: choose your concept【写下你要学习的概念】</p>
-<p>Step2: Pretend You’re Teaching the ldea to a New Student【假象你在教一位不懂这件事情的人这个概念，尝试将这件事情说明白】</p>
-<p>Step3: If You Get Stuck, Go Back to the Book【如果你在这个过程中遇到了困难，回到课本和视频中进一步学习】</p>
-<p>Step4: Simplify and Create Analogies【尝试精简自己的解释，并将其与其他概念做类比，从而更好地理解概念】</p>
-<p>总结一下，当你可以教会某人一个ta完全不懂的概念的时候，说明你真正掌握了这个概念</p>
-</blockquote>
-<h1 id="固定日程安排"><a class="markdownIt-Anchor" href="#固定日程安排"></a> 固定日程安排</h1>
-<p>努力工作的最好方式就是拥有生活</p>
+<p>RPC 协议定制化程度高，可以采用体积更小的 Protobuf 或其他序列化协议去保存结构体数据，同时也不需要像 HTTP 那样考虑各种浏览器行为，比如 302 重定向跳转啥的。因此性能也会更好一些。虽然其底层不仅可以通过 tcp udp 实现，也可以通过 http 实现。</p>
+<p>RPC 协议会建个连接池，在请求量大的时候，建立多条连接放在池内，要发数据的时候就从池里取一条连接出来，用完放回去，下次再复用，可以说非常环保。</p>
+<p>目前，对外一般用 HTTP 协议，而内部集群的微服务之间则采用 RPC 协议进行通讯。</p>
+<h1 id="dubbo-上线问题"><a class="markdownIt-Anchor" href="#dubbo-上线问题"></a> Dubbo 上线问题</h1>
+<p>记录、学习、汇总实习和技术博客中看到的 Dubbo 实战遇到的问题</p>
+<h2 id="服务端接口不指定通讯协议导致-oom"><a class="markdownIt-Anchor" href="#服务端接口不指定通讯协议导致-oom"></a> 服务端接口不指定通讯协议导致 OOM</h2>
+<p>问题背景：</p>
+<p>问题描述：</p>
 <ul>
 <li>
-<p><strong>保证休息</strong>，应对大量工作任务的办法是保证自己有休息时间。如果你白天不好好工作，却逼迫自己整夜学习的话，你很容易就会筋疲力尽的。无论压力再大任务再多，都要保证休息时间，一颗清醒的大脑决定了工作的质量。</p>
+<p>开发人员使用方没有配置接口的 protocol 字段，而是写在接口实现类上</p>
 </li>
 <li>
-<p>使用时间分块法或每周/每日目标法，将工作和生活清晰地分离开，好好工作好好玩。</p>
+<p><code>dubbo-3.0.4</code> 框架：</p>
+<ul>
+<li>若没有指定 protocol 字段，会创建服务端提供的所有协议的 invoker</li>
+<li>EasyREST 包<code>createClientInvoker</code>创建 REST 协议的 invoker 时需要 HttpMethod 参数</li>
+<li>由于注解写在实现类而不是接口上面，导致消费端无法共享相应的 REST 配置信息，即 HttpMethod 为 null，因此 RESTClient 创建失败</li>
+<li>在服务更新过程中，客户端每次都是全量更新注册中心的服务端信息，这个过程中如果 invoker 一直注册失败，会不断将失败的<code>Client</code>存到<code>List&lt;ResteasyClient&gt;</code>中，如果有 n 台机器需要依次更新，这时客户端的数组中会存 n*n 个失败的连接实例，从而导致 OOM</li>
+</ul>
 </li>
 </ul>
+<p>解决方法（针对框架，开发人员需要牢记 Dubbo 配置必须在接口上）：</p>
+<ul>
+<li>ResteasyClient 对象由 RestProtocol 协议对象持有，针对没有创建成功 invoker 的场景应把其对应的 ResteasyClient <u>销毁</u>掉</li>
+</ul>
+<p>销毁方法</p>
+<ul>
+<li>用<code>Map&lt;String, ResteasyClient&gt;</code>代替 <code>List&lt;ResteasyClient&gt;</code>，同一个服务端只存一次</li>
+<li>用<code>WeakHashMap&lt;String, ResteasyClient&gt;</code>自动回收不用的 ResteasyClient（参考<a href="https://github.com/apache/dubbo/pull/4629">pr</a>）</li>
+</ul>
+<p><a href="https://tech.youzan.com/ji-ci-dubbofu-wu-fa-xian-dao-zhi-de-oom/">参考</a></p>
+<h2 id="父子线程并发-rpc-调用死锁"><a class="markdownIt-Anchor" href="#父子线程并发-rpc-调用死锁"></a> 父子线程并发 RPC 调用死锁</h2>
+<p>问题描述：</p>
+<ul>
+<li>直接通过 <code>Executors</code> 构造 固定数量+无限长等待队列 线程池，该线程池在共享的无界队列上操作的固定数量的线程。在任何时候，最多nThreads线程将处于活动处理任务状态。如果在所有线程都处于活动状态时提交额外的任务，它们将在队列中等待，直到有线程可用。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title function_">newFixedThreadPool</span><span class="params">(<span class="type">int</span> nThreads)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>并发调用 Rpc 接口获取返回值</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;String&gt; future = executor.submit(()-&gt;&#123;</span><br><span class="line">    <span class="keyword">return</span> 数据查询任务;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据查询任务中存在父子调用关系，数据查询任务同步调用 Redis 查询缓存和 Rpc 调用微服务获得数据。如果本地 Redis 缓存中能获得数据，就直接返回缓存值并取消 Rpc 调用 <code>future.cancel(true)</code>。</li>
+</ul>
+<p>解决办法</p>
+<ul>
+<li>父子任务分开并发执行，耗时的异步线程应做好线程池隔离</li>
+<li><code>CompletableFuture.anyOf(task1,tsak2)</code> 优先取先完成的那个任务的返回值</li>
+</ul>
+<p><a href="https://heapdump.cn/article/646639">参考</a></p>
+<h1 id="尝试开发基础版-rpc-中间件"><a class="markdownIt-Anchor" href="#尝试开发基础版-rpc-中间件"></a> 尝试开发基础版 Rpc 中间件</h1>
+<p><strong>服务发现流程</strong>：使用远程服务的时候首先需要配置一个 dubbo.xml 文件或者在使用的类加上<code>@Reference</code>，二者都是用来对dubbo消费者引用服务进行一些配置，然后应用在启动的时候会将配置信息转化为一个<code>ReferenceBean</code>对象，并调用<code>createProxy</code>方法创建一个远程服务接口的代理对象。</p>
+<p>代理对象的 <strong>invoke 创建</strong>：启动时主动订阅注册中心，会显示地调用一次<code>notify</code>接口，这个接口会尝试将远程服务注册的<code>url</code>转换成一个本地的<code>invoker</code>。</p>
+<ul>
+<li>转换过程中会根据具体的 <code>protocol</code> 创建对应的 <code>invoker</code>，如 Rest 和 Dubbo 需要解析不同的参数。</li>
+</ul>
+<p>服务注册地址发生改变时：会通知给消费者，dubbo 协议里面明确讲到服务发生改变会全量更新所有客户端的缓存</p>
+<h2 id="netty-数据传输"><a class="markdownIt-Anchor" href="#netty-数据传输"></a> Netty 数据传输</h2>
 <blockquote>
-<p><strong>时间分块法</strong></p>
-<p>将一天分成更小的时间分块法。在每一段时间里，专注于一项任务或一组相似的任务。其重点是<strong>规划出需要完成的任务</strong>，然后<strong>划分特定的时间段专注完成这些任务</strong>。</p>
-<p>当你把一整天分成时间段后，它会让你专注于任务，并限制其他人占用你的时间。</p>
-<p>时间分块法让你每天都有一个要完成的具体任务的时间表，而不是遵循一个不断扩大的待办事项列表，你只需要关注于当下应该做的事情。</p>
+<p>在网络通信中，序列化和编码通常是结合使用的。<strong>序列化将对象转换为字节流，编码将字节流转换为网络传输所需的格式</strong>（如按照协议规定的格式进行编码）。在接收端，<strong>解码将网络传输的数据解析为原始的格式（如解码成对象）</strong>，以便进行进一步的处理和使用。</p>
 </blockquote>
-<p><a href="https://www.scotthyoung.com/blog/2011/11/28/focus-without-caffeine/">Refer</a></p>
-]]></content>
-      <categories>
-        <category>思考</category>
-      </categories>
-      <tags>
-        <tag>保持专注</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JVM 虚拟机</title>
-    <url>/JVM/</url>
-    <content><![CDATA[<blockquote>
-<p>《深入理解 <a href="https://link.zhihu.com/?target=http%3A//www.shaoqun.com/s/Java.aspx">Java</a> 虚拟机 - <a href="https://link.zhihu.com/?target=http%3A//www.shaoqun.com/s/JVM.aspx">JVM</a> 高级特性与最佳实践》</p>
-</blockquote>
-<p>TODO虚拟机器执行子系统、GC、内存区域、调优</p>
-<h1 id="内存结构-jmm"><a class="markdownIt-Anchor" href="#内存结构-jmm"></a> 内存结构 JMM</h1>
-<p><a href="https://blog.csdn.net/xiaojin21cen/article/details/104267301">方法区、永久代（PermGen space）、元空间（Metaspace）的关系</a></p>
-<img data-src="/JVM/image-20240429094145753.png" class="" title="image-20240429094145753">方法区
+<p>Netty 是一个高性能<strong>事件驱动型非阻塞 IO 框架</strong>：</p>
 <ul>
-<li>主要存储类的相关信息，所以对于动态生成类的情况比较容易出现永久代的内存溢出</li>
-<li>方法区是 JVM 的规范，元空间是 HotSpot 虚拟机在 Java8 具体实现的方法区（JDK8 之前是永久代）</li>
+<li>提供了 ByteBuf 容器，更方便地处理数据。<code>ByteBuf</code> 在重写编解码器的 encoder/decoder 方法中作为参数传入。</li>
+<li>channel</li>
 </ul>
-<p>Metaspace（元空间）替换 PermGen（永久代）的原因</p>
+<p>编码：先序列化，再压缩，最后写进 ByteBuf 对象中</p>
+<p>解码：从 ByteBuf 对象中读，然后转成我们需要的对象</p>
+<h2 id="代理模式"><a class="markdownIt-Anchor" href="#代理模式"></a> 代理模式</h2>
+<p><strong>静态代理</strong></p>
 <blockquote>
-<p>永久代存储在虚拟机堆中，元空间存储在本地内存中</p>
+<p>静态代理中，我们对目标对象的每个方法的增强都是手动完成的（后面会具体演示代码），非常不灵活（比如接口一旦新增加方法，目标对象和代理对象都要进行修改）且麻烦(需要对每个目标类都单独写一个代理类)。 实际应用场景非常非常少，日常开发几乎看不到使用静态代理的场景。</p>
 </blockquote>
+<p>从 JVM 层面来说， 静态代理在编译时就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。</p>
+<p>静态代理的步骤</p>
 <ul>
-<li>字符串存在永久代中，不方便管理维护，需要单独进行垃圾管理</li>
-<li>类及方法的信息等比较难确定其大小，因此难以指定永久代的大小，太小容易出现永久代溢出，太大则容易导致老年代溢出</li>
-<li>永久代会为 GC 带来不必要的复杂度，并且回收效率偏低</li>
-<li>和其他虚拟机架构看齐，方便合并</li>
+<li>定义一个接口及其实现类；</li>
+<li>创建一个代理类同样实现这个接口</li>
+<li>将目标对象注入进代理类，然后在代理类的对应方法调用目标类中的对应方法。这样的话，我们就可以通过代理类屏蔽对目标对象的访问，并且可以在目标方法执行前后做一些自己想做的事情。</li>
 </ul>
-<p>静态变量和基本数据类型包装类的常量池存在哪里？</p>
+<h2 id="jdk-动态代理"><a class="markdownIt-Anchor" href="#jdk-动态代理"></a> JDK 动态代理</h2>
 <ul>
-<li>jdk1.6 及之前静态变量和 String Table 在永久代方法区</li>
-<li>jdk1.8后 运行时常量池和静态变量在元空间，<strong>字符串常量池在堆空间</strong></li>
+<li>定义一个接口及其实现类；</li>
+<li>自定义 InvocationHandler 并重写 invoke 方法，在 invoke 方法中我们会调用原生方法（被代理类的方法）并自定义一些处理逻辑；</li>
+<li>通过 <code>Proxy.newProxyInstance(ClassLoader loader,Class&lt;?&gt;[] interfaces,InvocationHandler h)</code> 方法创建代理对象；</li>
 </ul>
-<p>运行时常量池</p>
-<ul>
-<li>存储常量、引用、整数和浮点数等内存区域，是类加载后的第一个创建的内存区域，并且在整个 JVM 进程中共享</li>
-<li>常量池中的内容是不可变的，可以通过符号引用进行共享，从而避免内存浪费</li>
-</ul>
-<p>方法区：全局，所有栈都可以访问</p>
-<ul>
-<li>static、ClassLoader</li>
-</ul>
-<p><strong>Q1</strong>：介绍下 Java 内存区域（运行时数据区）<br />
-<strong>A1</strong>：</p>
-<p>线程私有的</p>
-<ul>
-<li>程序计数器（当前线程执行位置；依次读取代码）</li>
-<li>本地方法栈（存储栈帧：局部变量表【值、引用指针、句柄】、操作数栈、动态链接【当一个方法要调用其他方法，将常量池中指向方法的符号引用转化为其在内存地址中的直接引用】、方法返回地址）</li>
-<li>虚拟机栈</li>
-</ul>
-<p>线程共享的</p>
-<ul>
-<li>方法区（元空间、永久代）当虚拟机要使用一个类时，它需要读取并解析 Class 文件获取相关信息，再将信息存入到方法区。方法区会存储已被虚拟机加载的 类信息、字段信息、方法信息、常量、静态变量、即时编译器编译后的代码缓存等数据。（运行时常量池：即各种字面量和符号引用【解析阶段：JVM 将符号引用转为直接引用】）</li>
-<li>堆（字符串常量池【<a href="https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html">String#intern</a>】、静态变量）</li>
-<li>本地内存</li>
-</ul>
-<p><strong>Q2</strong>：Java 对象的创建过程（五步，建议能默写出来并且要知道每一步虚拟机做了什么）</p>
-<img data-src="/JVM/1161857-20200427141816383-595743373.png" class="" title="img">
-<img data-src="/JVM/1161857-20200427171615978-465618542.png" class="" title="img">
-<p><strong>Q3</strong>：对象的访问定位的两种方式（句柄和直接指针两种方式）</p>
-<ul>
-<li>Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针。</li>
-</ul>
-<style>.luoywbfkshuf{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="luoywbfkshuf" alt="image-20240429100643112">
-<ul>
-<li>直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销，HotSpot 采用的是直接指针</li>
-</ul>
-<style>.exuanrasptgg{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="exuanrasptgg" alt="image-20240429100908916">
-<p><strong>Q4</strong>：对象的内存布局</p>
-<p>Mark Word 是一个具有动态定义的数据结构，以便在极小的空间内存储尽量多的数据，根据对象的状态复用自己的存储空间。</p>
-<img data-src="/JVM/1161857-20200427173120968-675206595.png" class="" title="img">
-<h1 id="gc-堆"><a class="markdownIt-Anchor" href="#gc-堆"></a> GC 堆</h1>
-<p>新生代 Young Generation</p>
-<ul>
-<li>Eden 区【新建对象分配地址】</li>
-<li>两个 Survivor 区 S0 和 S1 【survivor 的阈值年龄取小（占用超过一半 s 区的年龄，MaxTenuringThreshold）】</li>
-</ul>
-<p>老生代 Old Generation</p>
-<h1 id="垃圾回收"><a class="markdownIt-Anchor" href="#垃圾回收"></a> 垃圾回收</h1>
-<h2 id="垃圾收集算法"><a class="markdownIt-Anchor" href="#垃圾收集算法"></a> 垃圾收集算法</h2>
-<table>
-<thead>
-<tr>
-<th>垃圾收集算法</th>
-<th>优点</th>
-<th>缺点</th>
-<th>适用范围</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>标记清除法</td>
-<td>不需要移动对象，简单高效</td>
-<td>标记效率低（访问全部内存）内存碎片</td>
-<td>老年代</td>
-</tr>
-<tr>
-<td>标记复制算法</td>
-<td>无内存碎片</td>
-<td>频繁复制；内存使用率低</td>
-<td>新生代</td>
-</tr>
-<tr>
-<td>标记整理法</td>
-<td>结合了上面两个优点</td>
-<td>移动局部对象</td>
-<td>老年代</td>
-</tr>
-<tr>
-<td>分代收集算法</td>
-<td>根据对象存活概率，选择垃圾收集算法</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="垃圾回收器"><a class="markdownIt-Anchor" href="#垃圾回收器"></a> 垃圾回收器</h2>
-<p>GCRoot：栈帧中引用的对象、静态变量、常量、本地方法栈中对象<br />
-STW：Stop the World</p>
-<table>
-<thead>
-<tr>
-<th>Young GC</th>
-<th>Old GC</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Serial 串行、标记-复制</td>
-<td>Serial Old 标记-整理（STW）</td>
-</tr>
-<tr>
-<td>PawNew 并行、标记-复制</td>
-<td>CMS 降低单次垃圾收集时间</td>
-</tr>
-<tr>
-<td>Parallel Scavenge 吞吐率</td>
-<td>Parallel Old</td>
-</tr>
-</tbody>
-</table>
-<img data-src="/JVM/1712545820562-e5255e3e-762c-44b8-a179-1cca4068b847.png" class="" title="image.png">
-<h3 id="cms"><a class="markdownIt-Anchor" href="#cms"></a> CMS</h3>
-<blockquote>
-<p>以获得最短回收停顿时间为目标的收集器</p>
-</blockquote>
-<p>流程</p>
-<ul>
-<li>初次标记 STW：标记直接与 root 相连的对象</li>
-<li>并发标记：标记可达对象，跟踪更新记录</li>
-<li>重新标记 STW：修正并发标记的变动</li>
-<li>并发清理：标记-清理（不用 STW，但清理会产生内存碎片，复制不会）</li>
-</ul>
-<p>优点</p>
-<ul>
-<li>并发收集、低停顿</li>
-</ul>
-<p>缺点</p>
-<ul>
-<li>对 CPU 资源敏感；</li>
-<li>无法处理浮动垃圾；</li>
-<li>它使用的回收算法“标记-清除”算法会导致收集结束时会有大量空间碎片产生，过量碎片会导致 Full GC；</li>
-<li>并发失败：并发清理的时候用户线程没有足够的 JVM 内存，会导致 STW 并产生内存碎片</li>
-</ul>
-<h3 id="g1"><a class="markdownIt-Anchor" href="#g1"></a> <a href="https://github.com/sunwu51/notebook/blob/master/19.09/java_jvm%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.md">G1</a></h3>
-<blockquote>
-<p>G1 跟踪每个区域的垃圾大小，在后台维护一个优先级列表，每次根据允许的收集时间，优先回收价值最大的区域，已达到在有限时间内获取尽可能高的回收效率</p>
-</blockquote>
-<img data-src="/JVM/image-20240429095131808.png" class="" title="image-20240429095131808">
-<p>内存结构</p>
-<ul>
-<li>Region 大小 1M~32M、个数大概 2000</li>
-<li>&gt;=0.5 Region &lt;1Region：H 区（超大对象存储区）</li>
-<li>&gt;1Region：多个连续存储区</li>
-</ul>
-<p>概念</p>
-<ul>
-<li>RememberSets，又叫 Rsets 是每个 region 中都有的一份存储空间，用于存储本 region 的对象被其他 region 对象的引用记录</li>
-<li>CollectionSets，又叫 Csets 是一次 GC 中需要被清理的 regions 集合，注意G1每次 GC 不是全部 region 都参与的，可能只清理少数几个，这几个就被叫做 Csets</li>
-</ul>
-<p><a href="https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html">Young GC</a> 复制清理的过程</p>
-<img data-src="/JVM/image-20240429095142614.png" class="" title="image-20240429095142614">
-<p>MixGC（没有 Old GC 的概念，新老代一起 GC)类似于 CMS</p>
-<ul>
-<li>初次标记 STW：标记直接与 GCRoot 相连的对象，和该对象所处的 Region(RootRegion)</li>
-<li>扫描 RootRrgion：遍历 old Region，如果 rset 中存在 RootRegion，则标记（即为可达的 Region）</li>
-<li>并发标记：同 CMS，但仅遍历标记的 Region</li>
-<li>重新标记 STW：SATB 算法</li>
-<li>筛选回收 STW：局部的标记整理垃圾收集</li>
-</ul>
-<img data-src="/JVM/image-20240429095150787.png" class="" title="image-20240429095150787">
-<p>对比CMS，有哪些不同？</p>
-<ul>
-<li>region化的内存结构，采用复制清理的方式，避免了内存碎片。但是这种清理也造成了STW</li>
-<li>SATB速度更快</li>
-<li>初始标记，并发标记，重新标记，清理垃圾四个阶段很像，但是G1中有很多标记region的操作，并借助Rset进行了范围的缩小，提高了并发标记的速度。小结下就是初始标记和YGC的STW一起了，提高了效率；并发标记因为rset的设计，扫描范围缩小了，提高了效率；重新标记因为使用了SATB提高了效率；清理虽然造成了STW，但是复制使内存紧凑，避免了内存碎片。同时只清理垃圾较多的region，最大限度的降低了STW时间</li>
-</ul>
-<img data-src="/JVM/image-20240429095159588.png" class="" title="image-20240429095159588">
-<p>GC 回收，针对堆内存<br />
-GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a href="https://heapdump.cn/article/1870333">FGC</a></p>
-<h1 id="类加载过程"><a class="markdownIt-Anchor" href="#类加载过程"></a> 类加载过程</h1>
-<p>类的生命周期：加载、连接、初始化、使用、卸载</p>
-<style>.unyymmmmhkji{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="unyymmmmhkji" alt="image-20240429095206248">
-<h2 id="对象的创建过程"><a class="markdownIt-Anchor" href="#对象的创建过程"></a> 对象的创建过程</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcClientProxy</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line">    <span class="comment">// 在代理类内，根据传入的类 clazz，获得代理对象</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; T <span class="title function_">getProxy</span><span class="params">(Class&lt;T&gt; clazz)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(clazz.getClassLoader(), <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[]&#123;clazz&#125;, <span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 当通过代理类调用的所有方法，实际上调用的是这个invoke（传入的只是服务接口，具体的实现在服务端实现类中）</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么是如何调用服务端实现类的代码的呢？<strong>注入</strong></p>
 <ol>
-<li>查找常量池中是否有类的符号引用</li>
-<li>分配内存：指针碰撞 OR 空闲列表（保证线程安全：CAS+失败重试 OR TLAB）</li>
-<li>初始化零值</li>
-<li>设置对象头：元数据信息、对象的哈希码、对象的 GC 分代年龄、是否启用偏向锁</li>
-<li>执行 init 方法</li>
+<li>在实例化 bean 之后，postProcessAfterInitialization 方法被调用。</li>
+<li>对于每个 bean 类的字段，检查是否标记了 @RpcReference 注解。</li>
+<li>如果发现标记了 @RpcReference 注解的字段，根据注解中的信息创建相应的 RpcServiceConfig 对象。</li>
+<li>通过 RpcClientProxy 创建了一个代理对象 clientProxy，这个代理对象实现了 declaredField.getType() 所表示的接口，这个接口可能就是 HelloService 接口或其它接口，取决于 helloService 字段的类型。</li>
+<li>这个代理对象 clientProxy 会在方法调用时委托给 RpcClientProxy 的 invoke 方法，该方法负责处理远程调用的逻辑。</li>
+<li>通过反射设置 clientProxy 到 HelloController 类的 helloService 字段上，替换了原来的字段值。</li>
 </ol>
-<p>对象内存信息：对象头（运行时数据、类型指针）、实例数据、对齐填充<br />
-对象访问【通过栈上的 引用指针 Reference 来操作堆上的具体对象】：句柄、直接指针</p>
-<h1 id="类加载器"><a class="markdownIt-Anchor" href="#类加载器"></a> 类加载器</h1>
-<p>负责加载类的对象，主要作用就是加载 Java 类的字节码（ .class 文件）到 JVM 中（在内存中生成一个代表该类的 Class 对象）；<br />
-将“通过类的全限定名获取描述类的二进制字节流”这件事放在虚拟机外部，由应用程序自己决定如何实现；</p>
- <img data-src="/JVM/image-20240429095212841.png" class="" title="image-20240429095212841">（启动类加载器：虚拟机的一部分)
-<h2 id="双亲委派模型"><a class="markdownIt-Anchor" href="#双亲委派模型"></a> 双亲委派模型</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">clientProxy</span> <span class="operator">=</span> rpcClientProxy.getProxy(declaredField.getType());</span><br><span class="line">declaredField.setAccessible(<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    declaredField.set(bean, clientProxy);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="传输协议"><a class="markdownIt-Anchor" href="#传输协议"></a> 传输协议</h2>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">*   0     1     2     3     4        5     6     7     8         9        10     11     12   13   14 15 16</span><br><span class="line">*   +-----+-----+-----+-----+--------+----+----+----+------+-----------+-------+-------+-----+---+-----+----+</span><br><span class="line">*   |   magic   code        |version | full length         | messageType| codec|compress|    RequestId       |</span><br><span class="line">*   +-----------------------+--------+---------------------+-----------+-----------+-----------+------------+</span><br><span class="line">*   |                                         body                                                            |</span><br><span class="line">*   +-------------------------------------------------------------------------------------------------------+</span><br><span class="line">* 4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型）</span><br><span class="line">* 1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id）</span><br></pre></td></tr></table></figure>
+<h2 id="注册中心"><a class="markdownIt-Anchor" href="#注册中心"></a> 注册中心</h2>
+<p>服务注册：在 zk 里面创建一个对应的持久节点</p>
+<p>当我们的服务被<strong>注册进 zookeeper</strong> 的时候，我们将完整的服务名称 rpcServiceName （class name+group+version）作为根节点 ，子节点是对应的服务地址（ip+端口号）。相关代码在 <code>ZkServiceProviderImpl.publishService()</code> 中。</p>
+<p>如果我们要<strong>获得某个服务对应的地址</strong>的话，就直接根据完整的服务名称来获取到其下的所有子节点，然后通过具体的负载均衡策略取出一个就可以了。相关代码在 <code>ZkServiceDiscoveryImpl.lookupService()</code> 中。</p>
+<h3 id="zookeeper-客户端"><a class="markdownIt-Anchor" href="#zookeeper-客户端"></a> Zookeeper 客户端</h3>
 <blockquote>
-<p>决定类由哪个类加载器加载<br />
-编程思想：在面向对象编程中，有一条非常经典的设计原则：组合优于继承，多用组合少用继承（即双亲委派的实现方法）</p>
+<p>Curator 是 Netflix 公司开源的一套zookeeper客户端框架，解决了很多Zookeeper客户端非常底层的细节开发工作，包括连接重连、反复注册Watcher和NodeExistsException异常等等。项目内采用 CuratorUtils 类调用 Curator。</p>
 </blockquote>
-<ul>
-<li>ClassLoader 类使用委托模型来搜索类和资源。双亲委派模型要求除了顶层的启动类加载器外，其余的类加载器都应有自己的父类加载器。
-<ul>
-<li>获取该类的类加载器getClassLoader()方法；获取父类的类加载器getParent()</li>
-</ul>
-</li>
-<li>ClassLoader 实例会在试图亲自查找类或资源之前，将搜索类或资源的任务委托给其父类加载器。</li>
-</ul>
-<p>ClassLoader 抽象类：已经加载的类会被放在 ClassLoader 中</p>
-<ul>
-<li>loadClass(String name, boolean resolve) ：父类的加载器不为空，则通过父类的loadClass来加载该类。如果要打破双亲委派机制，就重写这个方法</li>
-<li>findClass(String name)：当父类加载器无法加载时，根据类的二进制名称来加载该类</li>
-</ul>
-<p><a href="https://javaguide.cn/java/jvm/classloader.html#%E6%89%93%E7%A0%B4%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B%E6%96%B9%E6%B3%95">线程上下文类加载器</a></p>
-<ul>
-<li>类加载器保存在线程私有数据里，跟线程绑定。解决了，默认情况下一个类及其依赖类由同一个类加载器加载，而接口的类加载器和子类或实现类的加载器不是同一个加载器。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java学习</category>
-      </categories>
-      <tags>
-        <tag>JVM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis</title>
-    <url>/Redis/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>SpringMVC</title>
-    <url>/SpringMVC/</url>
-    <content><![CDATA[<h1 id="tomcat"><a class="markdownIt-Anchor" href="#tomcat"></a> Tomcat</h1>
-<p>Tomcat 是基于 HTTP 协议的 Web 服务器，工作流程图 <a href="https://blog.csdn.net/qq_19782019/article/details/80292110">Link</a></p>
-<img data-src="/SpringMVC/2018120522281643.gif" class="" title="img">
-<h2 id="servlet"><a class="markdownIt-Anchor" href="#servlet"></a> Servlet</h2>
-<p>Servlet 接口定义了 Servlet 与 servlet容器 之间的契约。这个契约是：Servlet容器将Servlet类载入内存，并产生 Servlet 实例和调用它具体的方法。但是要注意的是，<strong>在一个应用程序中，每种 Servlet 类型只能有一个实例</strong>。类比 SpringMVC 中每一个 Mapping 对应一个控制层方法【不确定】</p>
-<p>对于每一个应用程序，Servlet容器还会创建一个ServletContext对象。这个对象中封装了上下文（应用程序）的环境详情。每个应用程序只有一个ServletContext。每个Servlet对象也都有一个封装Servlet配置的ServletConfig对象。</p>
-<h1 id="springmvc"><a class="markdownIt-Anchor" href="#springmvc"></a> SpringMVC</h1>
-<p>流程图</p>
-<img data-src="/SpringMVC/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5q2i5q2l5YmN6KGM,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="" title="SpringMVC流程图">
-<ul>
-<li>由<code>DispatcherServlet</code> 从<code>HandlerMappings</code>中匹配对应的<code>Handler</code>。此时只是获取到了对应的<code>Handler</code>，然后拿着这个<code>Handler</code>去寻找对应的适配器，即：<code>HandlerAdapter</code>：让固定参数的 Servlet 处理方法调用灵活的 Handler 来处理；</li>
-<li>执行 <code>Controller</code> 处理业务逻辑， 执行完成之后返回一个 <code>ModeAndView</code> 或 Json 格式数据；</li>
-</ul>
-<p>HandlerMapping/HandlerAdapter 的<strong>适配器模式</strong>：</p>
-<p>SpringMVC 的 Handler 有多种实现方式（如继承 Controller 接口、继承 HttpRequestHandler 接口、基于注解 @Controller 的控制器）。由于实现方式不一样，调用方式就不确定，就需要适配器模式将所有实现方式都统一成同一个接口。把任何一个 Handler 都适配成一个HandlerAdapter，从而可以做统一的流程处理，不用耦合具体的处理器，模糊掉具体的实现。</p>
-<p>Spring MVC会为每一个标记了 @Controller 的类创建一个控制器实例（bean），并且根据这些类中的 @RequestMapping 注解来配置 URL 到方法的映射。这些映射信息通常会被存储在一个叫做 <code>HandlerMapping</code> 的组件中</p>
+<p>重试策略：ExponentialBackoffRetry是指数退避重试策略</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// zk的对外接口，后面我们要干什么只需要通过单例模式获得这个类，然后用这个类的方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ServiceProvider</span> &#123;</span><br><span class="line">    <span class="comment">// 添加到本地 serviceMap 中（远程Rpc调用，获取本地的调用类）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">    Object <span class="title function_">getService</span><span class="params">(String rpcServiceName)</span>;</span><br><span class="line">    <span class="comment">// 注册服务到 zookeeper 中（服务发现与注册）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">publishService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Java开发</category>
       </categories>
       <tags>
-        <tag>SpringMVC</tag>
+        <tag>分布式通讯框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo 使用指南</title>
+    <url>/2023/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://hexo.io/docs/">官方文档</a></p>
+</blockquote>
+<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>快速部署</td>
+<td>hexo g -d</td>
+</tr>
+<tr>
+<td>清除缓存</td>
+<td>hexo clean</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>hexo s</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>hexo d</td>
+</tr>
+<tr>
+<td>生成静态页面</td>
+<td>hexo generate</td>
+</tr>
+</tbody>
+</table>
+<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
+<p>初始化项目结构</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<p>新增标签页，设置属性（type: “tags”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>新增分类，设置属性（type: “categories”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<p>配置 next 主题设置</p>
+<ul>
+<li>设置 menu 菜单栏</li>
+<li>打开 code 代码复制</li>
+</ul>
+<p>Debug</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
+<p><strong>Git 上传插件</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p><strong>latex 公式</strong></p>
+<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p><strong>本地图片</strong></p>
+<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
+<p><strong>Markdown 文字高亮</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
+<p>_config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
+<p><strong>添加Sitemap</strong></p>
+<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
+<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
+<p><strong>改 blockquote 颜色</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
+<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
+<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
+<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
+<blockquote>
+<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
+</blockquote>
+<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
 </search>

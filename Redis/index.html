@@ -26,11 +26,16 @@
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="Redis 基础">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/Redis/ea4f7e86baf2435af3999e5cd38b6a26.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Redis/a6286053c6884cf58bf397d01674fe80.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Redis/fdd5f695bb3643258662886f9fba0aab.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png">
 <meta property="article:published_time" content="2024-05-02T11:10:57.000Z">
-<meta property="article:modified_time" content="2024-05-07T13:59:28.949Z">
+<meta property="article:modified_time" content="2024-05-09T02:23:53.724Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/Redis/ea4f7e86baf2435af3999e5cd38b6a26.png">
 
 
 <link rel="canonical" href="https://yeqiuo.github.io/Redis/">
@@ -140,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text"> 数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text"> 持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aof-%E6%97%A5%E5%BF%97"><span class="nav-number">2.1.</span> <span class="nav-text"> AOF 日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rdb-%E5%BF%AB%E7%85%A7"><span class="nav-number">2.2.</span> <span class="nav-text"> RDB 快照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text"> 混合持久化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text"> 策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="nav-number">3.1.</span> <span class="nav-text"> 过期删除策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text"> 内存淘汰策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text"> 高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text"> 主从复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text"> 哨兵机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">4.3.</span> <span class="nav-text"> 集群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">5.</span> <span class="nav-text"> 缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9-%E5%87%BB%E7%A9%BF-%E7%A9%BF%E9%80%8F"><span class="nav-number">5.1.</span> <span class="nav-text"> 缓存雪崩、击穿、穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">5.2.</span> <span class="nav-text"> 如何保证数据库和缓存一致性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">6.</span> <span class="nav-text"> 实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">6.1.</span> <span class="nav-text"> 分布式锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97"><span class="nav-number">6.2.</span> <span class="nav-text"> 延迟队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7-key-%E9%97%AE%E9%A2%98"><span class="nav-number">6.3.</span> <span class="nav-text"> 大 Key 问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A"><span class="nav-number">6.4.</span> <span class="nav-text"> 事务回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">6.5.</span> <span class="nav-text"> 管道</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text"> 数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text"> 持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aof-%E6%97%A5%E5%BF%97"><span class="nav-number">2.1.</span> <span class="nav-text"> AOF 日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rdb-%E5%BF%AB%E7%85%A7"><span class="nav-number">2.2.</span> <span class="nav-text"> RDB 快照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text"> 混合持久化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text"> 策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="nav-number">3.1.</span> <span class="nav-text"> 过期删除策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text"> 内存淘汰策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text"> 高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text"> 主从复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text"> 哨兵机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E8%BD%AE%E6%8A%95%E7%A5%A8%E5%88%A4%E6%96%AD%E4%B8%BB%E8%8A%82%E7%82%B9%E4%B8%8B%E7%BA%BF"><span class="nav-number">4.2.1.</span> <span class="nav-text"> 第一轮投票：判断主节点下线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E8%BD%AE%E6%8A%95%E7%A5%A8%E9%80%89%E5%87%BA%E5%93%A8%E5%85%B5-leader"><span class="nav-number">4.2.2.</span> <span class="nav-text"> 第二轮投票：选出哨兵 leader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B1%E5%93%A8%E5%85%B5-leader-%E8%BF%9B%E8%A1%8C%E4%B8%BB%E4%BB%8E%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">4.2.3.</span> <span class="nav-text"> 由哨兵 leader 进行主从故障转移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">4.3.</span> <span class="nav-text"> 集群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">5.</span> <span class="nav-text"> 缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9-%E5%87%BB%E7%A9%BF-%E7%A9%BF%E9%80%8F"><span class="nav-number">5.1.</span> <span class="nav-text"> 缓存雪崩、击穿、穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">5.2.</span> <span class="nav-text"> 如何保证数据库和缓存一致性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">6.</span> <span class="nav-text"> 实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">6.1.</span> <span class="nav-text"> 分布式锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97"><span class="nav-number">6.2.</span> <span class="nav-text"> 延迟队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7-key-%E9%97%AE%E9%A2%98"><span class="nav-number">6.3.</span> <span class="nav-text"> 大 Key 问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%80%85%E8%AE%A2%E9%98%85%E8%80%85"><span class="nav-number">6.4.</span> <span class="nav-text"> 发布者&#x2F;订阅者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A"><span class="nav-number">6.5.</span> <span class="nav-text"> 事务回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">6.6.</span> <span class="nav-text"> 管道</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,18 +158,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -232,7 +237,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-07 21:59:28" itemprop="dateModified" datetime="2024-05-07T21:59:28+08:00">2024-05-07</time>
+      <time title="修改时间：2024-05-09 10:23:53" itemprop="dateModified" datetime="2024-05-09T10:23:53+08:00">2024-05-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,7 +260,7 @@
     
     
     <div class="post-body" itemprop="articleBody"><p><s>先速通一遍，底层实现后续慢慢看书学</s></p>
-<p>Redis 的特性：单线程、原子性、内存、数据结构、I/O 多路复用的非关系型数据库</p>
+<p>Redis 的特性：单线程、原子性、内存、数据结构、I/O 多路复用的非关系型数据库；总体设计思路遵循高性能、可扩展性、简单性和安全性</p>
 <p>6.0 版本前网络 I/O 和命令处理都是单线程，6.0 版本后网络 I/O 采用多个线程处理</p>
 <ul>
 <li>大部分操作都在内存中完成。CPU 并不是制约 Redis 性能表现的瓶颈所在，而是机器的内存或者网络带宽</li>
@@ -269,6 +274,7 @@
 <p>Zset 有序集合</p>
 <p>Hash 哈希</p>
 <h1 id="持久化"><a class="markdownIt-Anchor" href="#持久化"></a> 持久化</h1>
+<p>保证即使在服务器重启的情况下也不会丢失数据（或少量损失）</p>
 <h2 id="aof-日志"><a class="markdownIt-Anchor" href="#aof-日志"></a> AOF 日志</h2>
 <p>每执行一条写操作命令就追加到日志文件中</p>
 <p>重写机制：后台子进程共享父进程内存，AOF 重写缓冲区</p>
@@ -284,12 +290,68 @@
 <p>淘汰所有数据：lru、lfu</p>
 <h1 id="高可用"><a class="markdownIt-Anchor" href="#高可用"></a> 高可用</h1>
 <h2 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h2>
+<p>全量复制</p>
+<img data-src="/Redis/ea4f7e86baf2435af3999e5cd38b6a26.png" class="" title="图片">
+<ul>
+<li>bgsave 命令是产生了一个子进程来做生成 RDB 文件的工作，是异步工作的</li>
+</ul>
+<p>基于长连接的命令传播</p>
+<p>连接恢复时可以采用<strong>增量复制</strong>：repl_backlog_buffer 环形缓冲区保存了最近传播的写命令，若其中存着从服务器请求的 offset，就采用增量复制，否则采用全量复制</p>
+<p><strong>如何应对异步复制导致的主从数据不一致？</strong></p>
+<p>外部程序来监控主从节点间的复制进度</p>
+<p><strong>主从切换如何减少数据丢失？</strong></p>
+<ul>
+<li>设置复制延迟限制 <code>min-slaves-max-lag</code></li>
+<li>客户端降级措施，当 master 不可写，就把数据存到本地或 kafka 中等待主节点正常后再消费</li>
+</ul>
+<p><strong>集群脑裂导致数据丢失</strong></p>
+<p>主节点必须要有至少 <code>min-slaves-to-write</code> 个从节点连接，主从数据复制和同步的延迟不能超过 <code>min-slaves-max-lag</code> 秒。否则原主节点就会被限制接收客户端写请求，客户端也就不能在原主节点中写入新数据，等到新的主节点上线一切恢复正常。</p>
 <h2 id="哨兵机制"><a class="markdownIt-Anchor" href="#哨兵机制"></a> 哨兵机制</h2>
+<blockquote>
+<p>自动完成故障发现和故障转移，并通知给应用方，从而实现高可用性</p>
+</blockquote>
+<p>哨兵之间建立连接</p>
+<style>.qridoevjkqqr{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="qridoevjkqqr" alt="img">
+<p>哨兵与从节点建立连接</p>
+<style>.hfacrnfdgmnp{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="hfacrnfdgmnp" alt="img">
+<h3 id="第一轮投票判断主节点下线"><a class="markdownIt-Anchor" href="#第一轮投票判断主节点下线"></a> 第一轮投票：判断主节点下线</h3>
+<p>主观下线：主节点或者从节点没有在规定的时间内响应哨兵的 PING 命令</p>
+<p>客观下线：一个哨兵判断主节点为「主观下线」后，就会向其他哨兵发起命令，通过多个哨兵节点一起判断主节点是否下线。哨兵的赞同票数达到哨兵配置文件中的 quorum 配置项设定的值则判断主节点客观下线</p>
+<h3 id="第二轮投票选出哨兵-leader"><a class="markdownIt-Anchor" href="#第二轮投票选出哨兵-leader"></a> 第二轮投票：选出哨兵 leader</h3>
+<ul>
+<li>哪个哨兵节点判断主节点为「客观下线」，这个哨兵节点就是候选者，所谓的候选者就是想当 Leader 的哨兵。</li>
+<li>候选者会向其他哨兵发送命令，表明希望成为 Leader 来执行主从切换，并让所有其他哨兵对它进行投票。选择哨兵 Leader：
+<ul>
+<li>第一，拿到半数以上的赞成票；</li>
+<li>第二，拿到的票数同时还需要大于等于哨兵配置文件中的 quorum 值。</li>
+</ul>
+</li>
+</ul>
+<h3 id="由哨兵-leader-进行主从故障转移"><a class="markdownIt-Anchor" href="#由哨兵-leader-进行主从故障转移"></a> 由哨兵 leader 进行主从故障转移</h3>
+<ul>
+<li>第一步：在已下线主节点（旧主节点）属下的所有「从节点」里面，挑选出一个从节点，并将其转换为主节点，选择的规则：
+<ul>
+<li>过滤掉已经离线的从节点；</li>
+<li>过滤掉历史网络连接状态不好的从节点；</li>
+<li>将剩下的从节点，进行三轮考察：优先级、复制进度、ID 号。在每一轮考察过程中，如果找到了一个胜出的从节点，就将其作为新主节点。</li>
+</ul>
+</li>
+<li>第二步：让已下线主节点属下的所有「从节点」修改复制目标，修改为复制「新主节点」；</li>
+<li>第三步：将新主节点的 IP 地址和信息，通过「发布者/订阅者机制」通知给客户端；</li>
+<li>第四步：继续监视旧主节点，当这个旧主节点重新上线时，将它设置为新主节点的从节点；</li>
+</ul>
 <h2 id="集群"><a class="markdownIt-Anchor" href="#集群"></a> 集群</h2>
-<p>slot 槽</p>
+<p>CRC16 算法 + 16384 取模，每个模数代表一个相应编号的哈希槽</p>
+<p>切片 slot 槽，将数据分布在多个Redis节点上，每个节点负责一部分 slot 槽</p>
 <h1 id="缓存"><a class="markdownIt-Anchor" href="#缓存"></a> 缓存</h1>
 <h2 id="缓存雪崩-击穿-穿透"><a class="markdownIt-Anchor" href="#缓存雪崩-击穿-穿透"></a> 缓存雪崩、击穿、穿透</h2>
 <h2 id="如何保证数据库和缓存一致性"><a class="markdownIt-Anchor" href="#如何保证数据库和缓存一致性"></a> 如何保证数据库和缓存一致性</h2>
+<blockquote>
+<p>采用 Cache Aside 旁路缓存策略：以数据库中的数据为准，缓存中的数据是按需加载的</p>
+<ul>
+<li>缺点：数据写入频繁时，缓存中的数据会被频繁的清理，降低缓存命中率</li>
+</ul>
+</blockquote>
 <p>更新数据库+删除缓存：延迟双删</p>
 <p>更新数据库+更新缓存：分布式锁</p>
 <p>更新数据库+不更新缓存：较短的缓存有效期</p>
@@ -300,10 +362,37 @@
 </ul>
 <h1 id="实战"><a class="markdownIt-Anchor" href="#实战"></a> 实战</h1>
 <h2 id="分布式锁"><a class="markdownIt-Anchor" href="#分布式锁"></a> 分布式锁</h2>
+<blockquote>
+<p>Redis + Lua 脚本，可以以原子性的方式执行一组命令，可用于保证锁释放操作的原子性（Lua 脚本执行期间 Redis 不会执行其他命令），但无法用于事务执行失败的回滚</p>
+</blockquote>
+<p>SET 命令的 NX 参数可以实现：key不存在才插入，可以用于实现分布式锁</p>
+<p>优点：性能高效、实现方便、分布式高可用</p>
+<p>缺点：不好设置超时时间（守护线程定期续约）、主从异步复制可能导致不可靠性</p>
+<p>提高可靠性：客户端和多个独立的 Redis 节点依次请求申请加锁，如果客户端能够和半数以上的节点成功地完成加锁操作，那么就认为，客户端成功地获得分布式锁，否则加锁失败</p>
 <h2 id="延迟队列"><a class="markdownIt-Anchor" href="#延迟队列"></a> 延迟队列</h2>
+<p>有序集合 Zset，score 存储延迟执行的时间</p>
 <h2 id="大-key-问题"><a class="markdownIt-Anchor" href="#大-key-问题"></a> 大 Key 问题</h2>
+<p>会导致的问题</p>
+<ul>
+<li>由于 Redis 单线程处理，大 Key 的增删改查都很耗时，会导致工作线程阻塞、客户响应超时</li>
+<li>内存分布不均匀，集群场景下 slot 槽数据量不均</li>
+<li>阻塞网络传输</li>
+</ul>
+<p>解决办法</p>
+<ul>
+<li>拆分大 key</li>
+<li>及时清理大 key，异步删除 unlink</li>
+</ul>
+<h2 id="发布者订阅者"><a class="markdownIt-Anchor" href="#发布者订阅者"></a> 发布者/订阅者</h2>
+<blockquote>
+<p>订阅命令：subscribe channel  [channel … ]</p>
+</blockquote>
+<style>.rhwioracfsft{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="rhwioracfsft" alt="img">
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/w15558056319/article/details/121490953">Link</a></p>
 <h2 id="事务回滚"><a class="markdownIt-Anchor" href="#事务回滚"></a> 事务回滚</h2>
+<p>Redis 不支持回滚，事务没有原子性（要么全部成功要么全部失败）</p>
 <h2 id="管道"><a class="markdownIt-Anchor" href="#管道"></a> 管道</h2>
+<p>批处理技术，可以一次处理多个 Redis 命令，减少多个命令执行时的网络等待</p>
 
     </div>
 

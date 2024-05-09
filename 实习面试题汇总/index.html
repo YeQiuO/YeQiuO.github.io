@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/%E5%AE%9E%E4%B9%A0%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5.jpg">
 <meta property="article:published_time" content="2024-04-10T05:34:40.000Z">
-<meta property="article:modified_time" content="2024-05-07T06:41:45.155Z">
+<meta property="article:modified_time" content="2024-05-09T05:30:01.581Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="面试记录">
 <meta name="twitter:card" content="summary">
@@ -155,18 +155,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -234,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-07 14:41:45" itemprop="dateModified" datetime="2024-05-07T14:41:45+08:00">2024-05-07</time>
+      <time title="修改时间：2024-05-09 13:30:01" itemprop="dateModified" datetime="2024-05-09T13:30:01+08:00">2024-05-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -337,7 +337,11 @@
 <li><strong>Redis 大 Key 问题的定义，解决方法</strong></li>
 <li>线程池的核心线程池的个数是如何设置的？</li>
 </ol>
-<p>多尝试</p>
+<p><s>多尝试</s> <strong>根据线程池处理任务的类型</strong>进行选择，IO密集型增大线程数，CPU密集型减少线程数</p>
+<ul>
+<li>CPU密集型任务，最好是CPU核心数的1~2倍</li>
+<li>IO密集型任务，尽可能提升线程数</li>
+</ul>
 <p>手撕算法：【300. 最长递增子序列】一开始贪心没写出来，后面用 dp 写出来的</p>
 <p><strong>总结QA</strong></p>
 <p><strong>Q</strong>：JDK 动态代理和 cglib 的底层实现的区别？</p>
@@ -364,7 +368,7 @@
 <p>造成的不良影响：</p>
 <ul>
 <li>应用服务：Redis 是单线程的，大 Key 写入和删除会阻塞其他命令；内存分布不均，失去内存时空局部性特性；网络阻塞，IO 压力大；</li>
-<li>持久化：</li>
+<li>持久化：Always 参数下数据同步到硬盘时会阻塞主线程；经常性触发AOF 重写机制；AOF 重写机制和 RDB 快照（bgsave 命令）的过程，都会分别通过 fork() 函数创建一个子进程来处理任务，会导致阻塞父进程（主线程）；集群模式下内存分布不均</li>
 </ul>
 <h1 id="2024410-恒生一面"><a class="markdownIt-Anchor" href="#2024410-恒生一面"></a> 2024.4.10 恒生一面</h1>
 <p>虽然面试只有 17min，但感觉再长一点我真的要蚌埠住了，哭（在杭电十二教线下面的）</p>
@@ -395,13 +399,17 @@
 <blockquote>
 <p>由于错误使用 Dubbo 注解导致的 JVM 异常问题</p>
 <p>Rpc 中间件采用 Netty 传输数据、Zookeeper 注册服务</p>
+<p>调度各微服务，聚合并缓存数据</p>
+<p>我还和同事一起分析解决了线上告警事故。</p>
+<p>此外，我学习掌握了 SpringBoot、MySQL、Redis 和 Langchain、pytorch、milvus 等技术栈。</p>
+<p>此外，我还搭建了个人博客网站，用以记录学习笔记和反思总结，沉淀所学的知识。在学习过程中，我不断沉淀自己的学习成果和技术经验记录，并分享在个人博客网站上。</p>
+<p>为了沉淀自己的技术经验</p>
 </blockquote>
 <p><strong>自我介绍</strong>：</p>
-<p>面试官您好，我是来自杭州电子科技大学计算机学院的一名研究生，我叫王哲文，来自浙江杭州。</p>
-<p>本科期间我加入了学校的黑胡桃实验室，参与了 Ardunio 硬件开发和时间序列预测等项目的研究，后续还参加了实验室举办的技术分享会，分享了自己项目经验。</p>
-<p>在本科毕业前，我在浙江华坤道威数据科技有限公司担任过 Java 开发实习生，主要负责的是调度各微服务，聚合并缓存数据。此外，我还和同事一起分析解决了线上告警事故。</p>
-<p>在读研期间，我加入了大数据与城市计算实验室，主要负责三友阴极板项目的后端开发和某涉密项目的大语言模型应用开发，使用到的技术栈包括 SpringBoot、MySQL、Redis 和 Langchain、pytorch、milvus 等。在课余时间我还独自开发了一个 Rpc 中间件，搞明白了很多实习过程中遇到的疑惑。此外，我还搭建了自己的博客网站，将自己的学习笔记和反思总结记录在博客中。</p>
-<p>最后，我非常希望能有个机会可以进入小红书工作和实践，将自己学到的知识应用在实际工作中，谢谢。</p>
+<p>面试官您好，很荣幸能来参加华为的面试，我叫王哲文，目前在杭州电子科技大学读研，本科就读于浙大城市学院。</p>
+<p>本科期间我加入了黑胡桃实验室，参与了智慧实验室和时间序列预测等项目，还在实验室举办的 2020 年谷歌开发者大会上分享了自己的项目经验。在本科毕业前，我曾在浙江华坤道威数据科技有限公司实习，主要负责日志切面和运维大屏的开发，在这期间我积累了企业级分布式微服务项目的开发经验。</p>
+<p>在读研期间，我加入了大数据与城市计算实验室，主要负责三友阴极板项目的后端开发和某涉密项目的大语言模型应用开发。在项目开发过程中，我不仅更加深入掌握了 SpringBoot、MySQL、Redis 等主流技术，还了解了 Langchain、PyTorch、Milvus 等前沿技术。在工作之余，我还学习了 Rpc 中间件的架构和设计思想，并开发了一个简易的轻量级 Rpc 中间件。此外，我还搭建了个人博客网站，定期发布学习笔记和技术总结，不断沉淀自己的开发经验。</p>
+<p>最后，我非常希望能有机会加入华为，将所学知识应用到实际工作中，并与优秀的团队一起共同成长。谢谢！</p>
 <p>绩点排名</p>
 <p>华为核心价值观：以客户为中心，以奋斗者为本，长期艰苦奋斗，坚持自我批判</p>
 <p>科研&amp;项目：</p>

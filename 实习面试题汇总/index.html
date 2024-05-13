@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/%E5%AE%9E%E4%B9%A0%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5.jpg">
 <meta property="article:published_time" content="2024-04-10T05:34:40.000Z">
-<meta property="article:modified_time" content="2024-05-10T04:33:31.855Z">
+<meta property="article:modified_time" content="2024-05-13T12:16:14.096Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="面试记录">
 <meta name="twitter:card" content="summary">
@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2024430-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E4%B8%80%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text"> 2024.4.30 小红书一面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2024410-%E6%81%92%E7%94%9F%E4%B8%80%E9%9D%A2"><span class="nav-number">2.</span> <span class="nav-text"> 2024.4.10 恒生一面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%9B%B0%E9%9A%BE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text"> 项目困难&#x2F;解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text"> 面试</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2024510-%E5%8D%8E%E4%B8%BA%E4%B8%80%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text"> 2024.5.10 华为一面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2024430-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E4%B8%80%E9%9D%A2"><span class="nav-number">2.</span> <span class="nav-text"> 2024.4.30 小红书一面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2024410-%E6%81%92%E7%94%9F%E4%B8%80%E9%9D%A2"><span class="nav-number">3.</span> <span class="nav-text"> 2024.4.10 恒生一面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%9B%B0%E9%9A%BE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text"> 项目困难&#x2F;解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text"> 面试</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -234,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-10 12:33:31" itemprop="dateModified" datetime="2024-05-10T12:33:31+08:00">2024-05-10</time>
+      <time title="修改时间：2024-05-13 20:16:14" itemprop="dateModified" datetime="2024-05-13T20:16:14+08:00">2024-05-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -256,7 +256,64 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="2024430-小红书一面"><a class="markdownIt-Anchor" href="#2024430-小红书一面"></a> 2024.4.30 小红书一面</h1>
+    <div class="post-body" itemprop="articleBody"><h1 id="2024510-华为一面"><a class="markdownIt-Anchor" href="#2024510-华为一面"></a> 2024.5.10 华为一面</h1>
+<ul>
+<li>让我调了下摄像头，好展示我的颜，然后自我介绍</li>
+<li>手撕算法（由于太紧张写代码一直在絮絮叨叨）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">业务发送数据到对端，由于网络原因会出现概率丢包；现发送1W条数据到对端，指定输入N为丢包数量，随后列出丢包数据的具体位置；你有机会进行补包，M为可补包的数量，请返回补包后最大可连续发送数据的数量</span><br><span class="line"></span><br><span class="line">无需实现交互式输入，只需实现如下函数</span><br><span class="line"><span class="type">int</span> <span class="title function_">maxContinuousPackages</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span>[] lostPackages, <span class="type">int</span> m)</span></span><br></pre></td></tr></table></figure>
+<p>测试样例</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">示例1：</span><br><span class="line">3</span><br><span class="line">1 5 10</span><br><span class="line">1</span><br><span class="line">-----</span><br><span class="line">9995</span><br><span class="line">本示例中，丢包数量N为3，丢包位置分布为第1、5、10三个位置，补包数量M为1；在第10个位置补包后可连续发包数量最大，为10000 - 5 = 9995</span><br><span class="line"></span><br><span class="line">示例2：</span><br><span class="line">4</span><br><span class="line">4 6 20 9990</span><br><span class="line">2</span><br><span class="line">-----</span><br><span class="line">9994</span><br><span class="line"></span><br><span class="line">示例3：</span><br><span class="line">4</span><br><span class="line">1500 4100 5000 8000</span><br><span class="line">2</span><br><span class="line">---</span><br><span class="line">6499</span><br><span class="line"></span><br><span class="line">示例4：</span><br><span class="line">4</span><br><span class="line">4 699 700 9990</span><br><span class="line">2</span><br><span class="line">---</span><br><span class="line">9985</span><br><span class="line"></span><br><span class="line">示例5：</span><br><span class="line">6</span><br><span class="line">100 2700 5100 7498 7499 7500</span><br><span class="line">2</span><br><span class="line">---</span><br><span class="line">7397</span><br></pre></td></tr></table></figure>
+<p>AC 代码，中途写错了还考虑了动态规划，导致三十分钟用满了，说是最多 30 min 再满一点我就 GG 了</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">maxContinuousPackages</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span>[] lostPackages, <span class="type">int</span> m)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> lostPackages.length, ans = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span>[] data = <span class="keyword">new</span> <span class="title class_">int</span>[len+<span class="number">1</span>];</span><br><span class="line">    data[<span class="number">0</span>] = lostPackages[<span class="number">0</span>]-<span class="number">1</span>;</span><br><span class="line">    data[data.length-<span class="number">1</span>] = <span class="number">10000</span> - lostPackages[len-<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>; i&lt;data.length-<span class="number">1</span>; i++) &#123;</span><br><span class="line">        data[i] = lostPackages[i] - lostPackages[i-<span class="number">1</span>] - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    m++;</span><br><span class="line">    <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;m; i++) &#123;</span><br><span class="line">        sum += data[i];</span><br><span class="line">    &#125;</span><br><span class="line">    ans = sum;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=m; i&lt;data.length; i++) &#123;</span><br><span class="line">        sum -= data[i-m];</span><br><span class="line">        sum += data[i];</span><br><span class="line">        ans = Math.max(ans, sum);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ans+m-<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>算法思路讲一遍，中间做错了删掉的代码也要讲为什么做错了，然后把代码截了个图</li>
+<li>说一下自己的技术栈</li>
+</ul>
+<p>Java基础、JUC、JVM、SpringBoot、MySQL</p>
+<ul>
+<li>挑一个自己熟悉的讲一讲，选了 MySQL 索引</li>
+</ul>
+<p>B+ 树结构，聚簇索引、二级索引、和 B 树的对比</p>
+<ul>
+<li>如果让你建一张表，你会如何设计索引</li>
+</ul>
+<p>联合索引、覆盖索引、前缀索引</p>
+<ul>
+<li>IOC 容器的理解</li>
+</ul>
+<p>代理所有单例的创建，防止频 GC</p>
+<ul>
+<li>那为什么不直接用单例模式而用 IOC 容器的 Bean</li>
+</ul>
+<p>还能实现 Bean 的生命周期管理，可以实现 AOP</p>
+<ul>
+<li>用 Python 能否实现 AOP</li>
+</ul>
+<p>我说不能，AOP 实现需要操作字节码，他说行，我道歉</p>
+<ul>
+<li>设计模式讲一下</li>
+</ul>
+<p>讲了 SpringMVC 中 HanderAdapter 用到的适配器模式</p>
+<ul>
+<li>Rest 和 Rpc 有什么区别</li>
+</ul>
+<p>首先说了实习的时候 Rpc 底层有用到 Rest 传输数据包，而这没有本质区别</p>
+<p>http 头部冗余，效率低；但 http3 效率挺好但没普及</p>
+<p>Rpc 更适合后台内部调用，效率高；Rest 适合所有场景，适配做的好</p>
+<ul>
+<li>OS 为什么需要虚拟地址</li>
+</ul>
+<p>没复习到的八股，说了下虚拟地址映射到物理地址，页的映射，道歉</p>
+<ul>
+<li>会什么语言</li>
+</ul>
+<p>还会点 Python，不懂 C</p>
+<ul>
+<li>反问，进去需要什么技术栈</li>
+</ul>
+<p>Java 微服务开发等</p>
+<h1 id="2024430-小红书一面"><a class="markdownIt-Anchor" href="#2024430-小红书一面"></a> 2024.4.30 小红书一面</h1>
 <blockquote>
 <p>以后有机会的话可以问问 HR 这个部门是干什么的，再做相应的准备，不然临时抱佛脚可能抱错佛了。</p>
 </blockquote>
@@ -335,12 +392,12 @@
 <p>太紧张了，回答成缓存雪崩了</p>
 <ol start="13">
 <li><strong>Redis 大 Key 问题的定义，解决方法</strong></li>
-<li>线程池的核心线程池的个数是如何设置的？</li>
+<li><strong>线程池的核心线程池的个数是如何设置的？</strong></li>
 </ol>
-<p><s>多尝试</s> <strong>根据线程池处理任务的类型</strong>进行选择，IO密集型增大线程数，CPU密集型减少线程数</p>
+<p>线程等待时间所占比例越高，需要越多线程；线程计算时间所占比例越高，需要越少线程；</p>
 <ul>
-<li>CPU密集型任务，最好是CPU核心数的1~2倍</li>
-<li>IO密集型任务，尽可能提升线程数</li>
+<li>CPU密集型任务：N+1</li>
+<li>IO密集型任务：2N</li>
 </ul>
 <p>手撕算法：【300. 最长递增子序列】一开始贪心没写出来，后面用 dp 写出来的</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line"><span class="type">int</span>[] data = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;n; i++) &#123;</span><br><span class="line">    data[i] = in.nextInt();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span>[] dp = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;n; i++) &#123;</span><br><span class="line">    dp[i] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">0</span>; j&lt;i; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (data[j]&lt;data[i]) &#123;</span><br><span class="line">            dp[i] = Math.max(dp[i], dp[j]+<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ans = Math.max(ans, dp[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">System.out.println(ans);</span><br></pre></td></tr></table></figure>
@@ -422,43 +479,34 @@
 </ul>
 <h1 id="面试"><a class="markdownIt-Anchor" href="#面试"></a> 面试</h1>
 <blockquote>
-<p>由于错误使用 Dubbo 注解导致的 JVM 异常问题</p>
-<p>Rpc 中间件采用 Netty 传输数据、Zookeeper 注册服务</p>
-<p>调度各微服务，聚合并缓存数据</p>
-<p>我还和同事一起分析解决了线上告警事故。</p>
-<p>此外，我学习掌握了 SpringBoot、MySQL、Redis 和 Langchain、pytorch、milvus 等技术栈。</p>
-<p>此外，我还搭建了个人博客网站，用以记录学习笔记和反思总结，沉淀所学的知识。在学习过程中，我不断沉淀自己的学习成果和技术经验记录，并分享在个人博客网站上。</p>
-<p>为了沉淀自己的技术经验</p>
+<p>由于错误使用 Dubbo 注解导致的 JVM 异常问题；Rpc 中间件采用 Netty 传输数据、Zookeeper 注册服务;调度各微服务，聚合并缓存数据；我还和同事一起分析解决了线上告警事故；</p>
 </blockquote>
 <p><strong>自我介绍</strong>：</p>
 <p>面试官您好，很荣幸能来参加华为的面试，我叫王哲文，目前在杭州电子科技大学读研，本科就读于浙大城市学院。</p>
-<p>本科期间我加入了黑胡桃实验室，参与了智慧实验室和时间序列预测等项目，还在实验室举办的 2020 年谷歌开发者大会上分享了自己的项目经验。在本科毕业前，我曾在浙江华坤道威数据科技有限公司实习，主要负责日志切面和运维大屏的开发，在这期间我积累了企业级分布式微服务项目的开发经验。</p>
+<p>本科期间我加入了黑胡桃实验室，参与了智慧实验室和时间序列预测等项目，还在实验室举办的 2020 年谷歌开发者大会上分享了自己的项目经验。我在浙江华坤道威数据科技有限公司实习期间，主要负责日志切面和运维大屏的开发，在这期间我积累了企业级分布式微服务项目的开发经验。</p>
 <p>在读研期间，我加入了大数据与城市计算实验室，主要负责三友阴极板项目的后端开发和某涉密项目的大语言模型应用开发。在项目开发过程中，我不仅更加深入掌握了 SpringBoot、MySQL、Redis 等主流技术，还了解了 Langchain、PyTorch、Milvus 等前沿技术。在工作之余，我还学习了 Rpc 中间件的架构和设计思想，并开发了一个简易的轻量级 Rpc 中间件。此外，我还搭建了个人博客网站，定期发布学习笔记和技术总结，不断沉淀自己的开发经验。</p>
 <p>最后，我非常希望能有机会加入华为，将所学知识应用到实际工作中，并与优秀的团队一起共同成长。谢谢！</p>
-<p>绩点排名</p>
 <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv13183086/#:~:text=%EF%BC%88%E7%AE%80%E5%8C%96%E7%89%88%EF%BC%89,%E5%8D%8E%E4%B8%BA%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC%E8%A7%82%E6%9C%89%E5%9B%9B%E4%B8%AA%E6%96%B9%E9%9D%A2%EF%BC%9A1%E3%80%81%E4%BB%A5%E5%AE%A2%E6%88%B7%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E7%A1%AE%E5%AE%9A%E5%A5%8B%E6%96%97%E7%9A%84%E6%96%B9%E5%90%91%3B2%E3%80%81%E4%BB%A5%E5%A5%8B%E6%96%97%E8%80%85%E4%B8%BA%E6%9C%AC%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E6%8F%90%E4%BE%9B%E6%B4%BB%E5%8A%9B%E7%9A%84%E6%BA%90%E6%B3%89%3B3%E3%80%81%E9%95%BF%E6%9C%9F%E8%89%B0%E8%8B%A6%E5%A5%8B%E6%96%97%EF%BC%8C%E8%BF%99%E6%98%AF%E5%AF%B9%E4%BA%BA%E4%BF%AE%E8%BA%AB%E7%9A%84%E4%B8%80%E4%B8%AA%E8%BF%87%E7%A8%8B%3B4%E3%80%81%E5%9D%9A%E6%8C%81%E8%87%AA%E6%88%91%E6%89%B9%E5%88%A4%EF%BC%8C%E5%9C%A8%E6%89%B9%E5%88%A4%E4%B8%AD%E8%83%BD%E5%A4%9F%E5%BE%97%E5%88%B0%E4%BF%AE%E5%BF%83%E3%80%82">华为核心价值观</a>：以客户为中心，以奋斗者为本，长期艰苦奋斗，坚持自我批判</p>
 <p>科研&amp;项目：</p>
 <ul>
 <li>
-<p>担任角色</p>
+<p>担任角色；项目背景；前期调研；创新点</p>
 </li>
 <li>
-<p>创新点</p>
+<p>项目有哪些难点</p>
 </li>
 <li>
-<p>前期调研</p>
+<p>开发过程中遇到问题如何解决</p>
 </li>
-<li>
-<p>碰到的困难</p>
+</ul>
+<p>未来职业规划</p>
 <ul>
-<li>了解业务逻辑，架构</li>
+<li>为了达成这些规划具体会做些行动</li>
 </ul>
-</li>
-</ul>
-<blockquote>
-<p>开闭原则：新增代替修改</p>
-</blockquote>
-<p>面试技巧：</p>
+<p>绩点排名</p>
+<p>如何看待华为公司？为什么想来华为公司进行实习？</p>
+<p>能够实习多长时间？半年，立刻到岗</p>
+<p>面试技巧</p>
 <ul>
 <li>
 <p>回答问题的时候不能想到什么说什么，思维要有逻辑性，直击重点，有逻辑性的表达</p>
@@ -467,6 +515,7 @@
 <p>展开问题，进一步作答，不要等着面试官提问题</p>
 </li>
 </ul>
+<p>开闭原则：新增代替修改</p>
 
     </div>
 

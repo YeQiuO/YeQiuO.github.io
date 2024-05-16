@@ -2789,7 +2789,8 @@ blockquote cite::before {
   content: '-';
   padding: 0 5px;
 }
-blockquote>p {
+blockquote>p,
+li>p {
   margin: 0;
 }
 code {

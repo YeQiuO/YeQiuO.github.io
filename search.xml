@@ -229,6 +229,7 @@
     <content><![CDATA[<p>Java.util.concurrent 中有很多 Java 并发相关工具，例如 锁 <code>ReentrantLock</code>、线程 <code>Callable</code> <code>FutureTask</code>、信号量 <code>Semaphore</code>、共享锁 <code>CountDownLatch</code></p>
 <p>此外 Java 原生的 <code>volatile</code> 和 <code>synchronized</code> 关键字也是并发编程的关键。</p>
 <span id="more"></span>
+<p>简单的 CAS 实现：<code>AtomicInteger.compareAndSet(1, 2)</code></p>
 <h1 id="synchronized-关键字"><a class="markdownIt-Anchor" href="#synchronized-关键字"></a> synchronized 关键字</h1>
 <p>每个对象都有一个 monitor 对象于之关联，通过对象监视器 <code>monitor</code> 实现加锁和解锁，被锁住的区域是<code>临界区</code>域（就是被锁保护，线程间只能串行访问的代码）</p>
 <p><a href="https://www.cnblogs.com/yescode/p/14474104.html#autoid-0-0-0"><strong>锁升级策略</strong></a>：（图有误，hashcode 占 32 位）</p>
@@ -246,28 +247,18 @@
 <li>修饰静态方法，锁当前类，会作用于所有实例</li>
 <li>修饰代码块，程序指定锁什么</li>
 </ul>
-<p>概念：</p>
+<p><strong>概念</strong>：</p>
 <ul>
-<li>锁消除：将多次锁请求合并成一个请求，以降低短时间内大量锁请求、同步、释放带来的性能损耗</li>
-<li>锁粗化：Java 虚拟机在 JIT 编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁，通过锁消除，可以节省毫无意义的请求锁时间
-<ul>
-<li>.java -&gt; .class 字节码
-<ul>
-<li>Javac</li>
+<li>锁粗化：将多次锁请求合并成一个请求，以降低短时间内大量锁请求、同步、释放带来的性能损耗</li>
+<li>锁消除：Java 虚拟机在 JIT 编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁，通过锁消除，可以节省毫无意义的请求锁时间</li>
 </ul>
-</li>
-<li>字节码 -&gt; 机器码
-<ul>
-<li>JIT（Just-in-time）动态(即时)编译</li>
-<li>AOT（Ahead Of Time）运行前编译</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="reentrantlock-类"><a class="markdownIt-Anchor" href="#reentrantlock-类"></a> ReentrantLock 类</h1>
-<p>属性：可重入锁、独占锁、公平锁/非公平锁</p>
-<p>特点：可限时等待、可响应中断、可实现选择性通知</p>
+<blockquote>
+<p>.java -&gt; .class 字节码：Javac</p>
+<p>字节码 -&gt; 机器码：JIT（Just-in-time）动态(即时)编译；AOT（Ahead Of Time）运行前编译</p>
+</blockquote>
+<h1 id="reentrantlock"><a class="markdownIt-Anchor" href="#reentrantlock"></a> ReentrantLock</h1>
+<p><strong>属性：可重入锁、独占锁、公平锁/非公平锁</strong></p>
+<p><strong>特点：可限时等待、可响应中断、可实现选择性通知</strong></p>
 <p>使用场景：阻塞队列 <code>ArrayBlockingQueue</code> <code>LinkedBlockingDeque</code></p>
 <p>源码结构：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReentrantLock</span> <span class="keyword">implements</span> <span class="title class_">Lock</span> &#123;</span><br><span class="line">    <span class="comment">// 同步控制器（指向公平锁或非公平锁）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Sync sync;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Sync</span> <span class="keyword">extends</span> <span class="title class_">AbstractQueuedSynchronizer</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">nonfairTryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryRelease</span><span class="params">(<span class="type">int</span> releases)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">NonfairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 实现 Lock 接口</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.lock();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> sync.nonfairTryAcquire(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.release(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -337,7 +328,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.icxmghxpphds{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="icxmghxpphds" alt="image-20240415164535374">
+<style>.olrvryztcylk{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="olrvryztcylk" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>
@@ -497,11 +488,11 @@
 <ul>
 <li>Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针。</li>
 </ul>
-<style>.zqnrdpvbutiz{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="zqnrdpvbutiz" alt="image-20240429100643112">
+<style>.etyjvxugoxvr{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="etyjvxugoxvr" alt="image-20240429100643112">
 <ul>
 <li>直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销，HotSpot 采用的是直接指针</li>
 </ul>
-<style>.zdygavkbjfeu{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="zdygavkbjfeu" alt="image-20240429100908916">
+<style>.cgbcnjeullcw{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="cgbcnjeullcw" alt="image-20240429100908916">
 <h2 id="对象的内存布局"><a class="markdownIt-Anchor" href="#对象的内存布局"></a> 对象的内存布局</h2>
 <p>Mark Word 是一个具有动态定义的数据结构，以便在极小的空间内存储尽量多的数据，根据对象的状态复用自己的存储空间。</p>
 <img data-src="/JVM/1161857-20200427173120968-675206595.png" class="" title="img">
@@ -657,7 +648,7 @@ STW：Stop the World</p>
 GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a href="https://heapdump.cn/article/1870333">FGC</a></p>
 <h1 id="类加载过程"><a class="markdownIt-Anchor" href="#类加载过程"></a> 类加载过程</h1>
 <p><strong>类的生命周期</strong>：加载、连接、初始化、使用、卸载</p>
-<style>.ngoxkqtorxcl{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="ngoxkqtorxcl" alt="image-20240429095206248">
+<style>.hzmtneylienk{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="hzmtneylienk" alt="image-20240429095206248">
 <ul>
 <li>加载：通过全类名获取定义此类的二进制字节流；将字节流所代表的静态存储结构转换为方法区的运行时数据结构；在内存中生成一个代表该类的 <code>Class</code> 对象，作为方法区这些数据的访问入口；【通过类加载器实现加载，通过双亲委派模型决定采用哪个类加载器】</li>
 <li>验证：确保 Class 文件的字节流中包含的信息无误</li>
@@ -713,6 +704,66 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </categories>
       <tags>
         <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JUC</title>
+    <url>/JUC/</url>
+    <content><![CDATA[<img data-src="/JUC/image-20240516133953621.png" class="" title="image-20240516133953621">
+<h1 id="threadlocal"><a class="markdownIt-Anchor" href="#threadlocal"></a> ThreadLocal</h1>
+<p>每一个线程都有自己的专属本地变量，通过空间换时间的方式避免并发下线程安全问题</p>
+<ul>
+<li>完整的一次请求处理，于唯一一个线程中执行，可以通过 ThreadLocal 共享数据</li>
+<li>ThreadLocal.set 方法是将值存储到 <strong>Thread 线程本身的 ThreadLocalMap</strong> 里面</li>
+</ul>
+<p><strong>原理</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整体结构图</p>
+<style>.nlwqnjskxyql{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="nlwqnjskxyql" alt="img">
+<p>引用关系图</p>
+<style>.bkcwixkbooie{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="bkcwixkbooie" alt="img">
+<h2 id="重点问题"><a class="markdownIt-Anchor" href="#重点问题"></a> 重点问题</h2>
+<p><strong>Entry的key为什么设计成弱引用？</strong></p>
+<p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>
+<p><strong>ThreadLocal为什么会导致内存泄露，如何解决？</strong></p>
+<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value 值，但是如果没有调用这些方法，Entry和ThreadLocalMap将会长期存在下去，会导致内存泄露；</p>
+<p>使用完ThreadLocal对象之后，调用remove方法；</p>
+<p><strong>ThreadLocal是如何定位数据的？</strong></p>
+<p><code>int i = key.threadLocalHashCode &amp; (len-1);</code></p>
+<p>如果有冲突就通过线性探测再散列，直到 table[i] = null；</p>
+<blockquote>
+<p>其他Hash冲突解决方法：开放寻址法（再散列）、拉链法</p>
+</blockquote>
+<p><strong>ThreadLocal是如何扩容的？</strong></p>
+<ul>
+<li>size&gt;threshold</li>
+</ul>
+<p><strong>父子线程如何共享数据？</strong></p>
+<p>InheritableThreadLocal</p>
+<p>init 方法会将 父线程中往 ThreadLocal 设置的值，拷贝一份到子线程中；</p>
+<p><strong>ThreadLocal 变量为什么建议要定义成static的？</strong></p>
+<p>将 ThreadLocal 定义为 static 可以确保所有线程都访问同一个 ThreadLocal 实例，但它们各自存储的数据是独立的；</p>
+<p>确保它们的生命周期与线程的生命周期一致，而不是与类的实例的生命周期一致；</p>
+<p><strong>使用InheritableThreadLocal时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
+<p>不会影响到已经存在的子线程中 InheritableThreadLocal 的值，子线程将保持它在创建时从父线程中继承的原始值。</p>
+<h1 id="volatile"><a class="markdownIt-Anchor" href="#volatile"></a> Volatile</h1>
+<ul>
+<li>保证变量的可见性，但无法在多线程读写变量时保证操作原子性</li>
+<li>防止 JVM 的指令重排序：对该变量读写时，会插入特定的内存屏障</li>
+</ul>
+<blockquote>
+<p>也可以采用**<code>Unsafe</code> 类的内存屏障**实现 防止指令重排序 的效果</p>
+</blockquote>
+<h1 id="jmm"><a class="markdownIt-Anchor" href="#jmm"></a> JMM</h1>
+<p>Java 内存模型定义了 Java 程序中各种变量（主内存和线程工作内存）的访问规则。保证多线程环境下数据的一致性和可见性。</p>
+<p><strong>双重校验锁实现对象单例</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">//类对象加锁</span></span><br><span class="line">    <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            uniqueInstance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Java学习</category>
+      </categories>
+      <tags>
+        <tag>Java并发</tag>
       </tags>
   </entry>
   <entry>
@@ -895,16 +946,51 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
 <li><code>Deque</code> ：继承自 <code>Queue</code> 接口，具有双端队列的特性，支持从两端插入和删除元素，方便实现栈和队列等数据结构。</li>
 </ul>
+<h2 id="常用方法"><a class="markdownIt-Anchor" href="#常用方法"></a> 常用方法</h2>
+<ul>
+<li>实现 List 接口
+<ul>
+<li>get、set</li>
+</ul>
+</li>
+<li>实现 Collection 接口
+<ul>
+<li>判断是否存在：contains</li>
+</ul>
+</li>
+<li>实现 Queue 接口（通过 Deque 接口）
+<ul>
+<li>报错：add、remove、element</li>
+<li>不报错：offer、poll、peek</li>
+</ul>
+</li>
+<li>实现 Deque 接口
+<ul>
+<li>addFirst [push]、addLast [add]：无返回，容量超出限制会报错</li>
+<li>offerFirst、offerLast [offer]：返回 Boolean 表示是否加入成功</li>
+<li>removeFirst [remove\pop]、removeLast：队列为空报错</li>
+<li>pollFirst [poll]、pollLast：队列为空返回 null</li>
+<li>getFirst [element]、getLast：队列为空报错</li>
+<li>peekFirst [peek]、peekLast：队列为空返回 null
+<ul>
+<li>【注意】队列头部为 null 和队列为空时，都会返回 null</li>
+</ul>
+</li>
+<li>removeFirstOccurrence [remove]、removeLastOccurrence</li>
+<li>push、pop、peek：作为栈</li>
+</ul>
+</li>
+</ul>
 <h1 id="hashmap"><a class="markdownIt-Anchor" href="#hashmap"></a> HashMap</h1>
 <blockquote>
 <p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
 </blockquote>
-<style>.gzpwqqycurtb{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="gzpwqqycurtb" alt="image-20240425212527868">
+<style>.zwlniwtdkski{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="zwlniwtdkski" alt="image-20240425212527868">
 <ul>
 <li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
 <li>非线程安全的</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 一个包含了映射中所有键值对的集合视图</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="comment">// 连接下一个 Node，用于遍历 Map</span></span><br><span class="line">        Node&lt;K,V&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        TreeNode&lt;K,V&gt; parent;  <span class="comment">// 红黑树链</span></span><br><span class="line">        TreeNode&lt;K,V&gt; left;</span><br><span class="line">        TreeNode&lt;K,V&gt; right;</span><br><span class="line">        TreeNode&lt;K,V&gt; prev;    <span class="comment">// 需要在下次删除时解除链接</span></span><br><span class="line">        <span class="type">boolean</span> red;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 一个包含了映射中所有键值对的集合视图</span></span><br><span class="line">    <span class="comment">// 先遍历数组 bin，再通过 Entry.next 遍历每个 bin</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="comment">// 链表的下一个元素</span></span><br><span class="line">        Node&lt;K,V&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        TreeNode&lt;K,V&gt; parent;  <span class="comment">// 红黑树链</span></span><br><span class="line">        TreeNode&lt;K,V&gt; left;</span><br><span class="line">        TreeNode&lt;K,V&gt; right;</span><br><span class="line">        TreeNode&lt;K,V&gt; prev;    <span class="comment">// 需要在下次删除时解除链接</span></span><br><span class="line">        <span class="type">boolean</span> red;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>entrySet</code> 通过<code>Node的next属性</code>遍历元素，<code>keySet()</code>、<code>values()</code>基于<code>entrySet</code>实现，用于遍历访问所有 Node 元素，还支持元素的删除操作【不确定，entrySet不存储数据，只是数据对外的操作接口】。</li>
 <li><code>TreeNode</code> 继承了 <code>LinkedHashMap.Entry</code> ，有指向前后节点的指针</li>
@@ -950,17 +1036,392 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64 以下时只会触发扩容而不会将链表转为红黑树</p>
 <h1 id="linkedhashmap"><a class="markdownIt-Anchor" href="#linkedhashmap"></a> LinkedHashMap</h1>
-<p>对于每次put进来Entry，除了将其保存到哈希表中对应的位置上之外，还会将其插入到双向链表的尾部。</p>
+<p><code>LinkedHashMap</code> 内部维护了一个双向链表，确保其迭代顺序是和插入顺序一致的</p>
+<blockquote>
+<p>插入顺序遍历 entry（accessOrder=false），也可以按照访问顺序遍历 entry（accessOrder=true）</p>
+</blockquote>
+<p>实现 LRU，即 迭代顺序==访问顺序</p>
+<ul>
+<li>每次修改都将元素删除后重新插入</li>
+<li>将 <code>accessOrder</code> 设置为 true 并重写 <code>removeEldestEntry</code> 方法当链表大小超过容量时返回 true</li>
+</ul>
 <h1 id="copyonwritelist"><a class="markdownIt-Anchor" href="#copyonwritelist"></a> CopyOnWriteList</h1>
-<p>写时复制</p>
-<p><strong>如果写多读少应该用什么数据结构实现同步数组？</strong></p>
-<p>分段读写锁 ReadWriteLock（由于 List.copy() 是操作系统实现，数据量少的话依然可用写时复制）</p>
+<blockquote>
+<p>并发安全的 <code>List</code>，针对读多写少的场景，类比读写锁的思想，实现 <strong>读读不互斥、读写不互斥、写写互斥</strong> 的写时复制 Copy-On-Write 策略</p>
+</blockquote>
+<p>add 方法内部用到了 ReentrantLock 加锁，避免了多线程写的时候会复制出多个副本，导致并发问题</p>
+<p><strong>写时复制的缺点</strong></p>
+<ul>
+<li>写操作资源占用多，复制数据时占用内存</li>
+<li>数据一致性问题，修改后需要等到赋值给原数组才能访问到修改</li>
+</ul>
+<p><strong>写多读少的场景下，应该用什么数据结构实现并发数组？</strong></p>
+<p>分段读写锁 ReadWriteLock（由于 Arrays.copyOf() 是操作系统实现，数据量少的话依然可用写时复制）</p>
+<h1 id="priorityqueue"><a class="markdownIt-Anchor" href="#priorityqueue"></a> PriorityQueue</h1>
 ]]></content>
       <categories>
         <category>Java学习</category>
       </categories>
       <tags>
         <tag>Java数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java语言</title>
+    <url>/Java/</url>
+    <content><![CDATA[<h1 id="基础"><a class="markdownIt-Anchor" href="#基础"></a> 基础</h1>
+<h2 id="基本数据类型"><a class="markdownIt-Anchor" href="#基本数据类型"></a> 基本数据类型</h2>
+<p>除八个基本类型，Java 的所有数据类型都是引用，Java 中没有指针的概念，所有数据传输都是传值（引用可以看作是地址值，所有引用值都占四个字节）</p>
+<p>基本数据类型的包装类 Byte Short Integer Long Character 有常量池</p>
+<h2 id="编译运行"><a class="markdownIt-Anchor" href="#编译运行"></a> 编译运行</h2>
+<ul>
+<li>Java 编译器 Javac 是用 Java 实现的，用于将 .java 文件编译成字节码 .class</li>
+<li>.class 通过解释器对这些字节码进行解释执行</li>
+<li>Java 的运行环境 JVM 如 HotSpot VM，实现了其跨平台的特性</li>
+</ul>
+<h2 id="三大特性"><a class="markdownIt-Anchor" href="#三大特性"></a> 三大特性</h2>
+<p><strong>封装</strong></p>
+<p>将数据和基于数据的操作封装在一起，使其构成一个不可分割的独立实体；</p>
+<p><strong>继承</strong></p>
+<p>支持类之间的单继承，但支持接口之间的多继承；</p>
+<p>类可以实现多个接口，抽象类不能实例化但可以有构造方法，内部类只能通过外部类创建；</p>
+<p>Object 是超类，是所有类的父类（无父类的子类默认继承 Object。jdk6之前是编译器处理，jdk7之后是虚拟机处理）；</p>
+<p>Java8 之后接口可以有默认方法，允许在接口中声明静态方法；</p>
+<p><strong>多态</strong></p>
+<p>全面支持动态绑定，动态绑定是实现多态（一个接口，多种实现）的基础；</p>
+<ul>
+<li>多态方式调用方法时，首先检查父类中是否有该方法，如果没有，则编译错误；如果有，再去调用子类的同名方法（A a=new B()，A是父类，B是子类）</li>
+<li><strong>静态绑定</strong>：对象属性和 static private final 修饰的对象方法（构造函数），哪里声明，哪里使用</li>
+<li><strong>动态绑定</strong>：运行时 JVM 实现绑定。若子类实现了这个方法，则调用子类的内存地址，若没有则调用当前对象（父类）的方法。只能调用父类的属性，虽然实际实现的是子类，如果父类没有这个属性，那就无法调用。如果要获取子类属性，就要重写子类方法获取该属性，前提是这个方法在父类中同样存在。</li>
+</ul>
+<h2 id="关键字"><a class="markdownIt-Anchor" href="#关键字"></a> 关键字</h2>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final</td>
+<td>常量</td>
+</tr>
+<tr>
+<td>static</td>
+<td>静态变量，无论一个类实例化多少对象，它的静态变量只有一份拷贝；静态方法，不能使用类的非静态变量，类名直接调用，不需要进行实例化对象。</td>
+</tr>
+<tr>
+<td>native</td>
+<td>本地、原生方法（非 Java 实现）</td>
+</tr>
+<tr>
+<td>strictfp</td>
+<td>严格浮点、精准浮点</td>
+</tr>
+<tr>
+<td>synchronized</td>
+<td>线程、同步</td>
+</tr>
+<tr>
+<td>transient</td>
+<td>修饰的成员属性变量不被序列化，仅存于调用者的内存中而不会写到磁盘里持久化，防止敏感信息泄露（与Serilizable接口一同使用）当对象被反序列化时，被 transient 修饰的变量值不会被持久化和恢复，直接设置为默认值。static 不属于任何对象，因此永远不会被序列化。</td>
+</tr>
+<tr>
+<td>volatile</td>
+<td>变量在 CPU 的寄存器中是不确定的，必须从主存中读取。保证多线程环境下变量的可见性；禁止指令重排序。</td>
+</tr>
+<tr>
+<td>instanceof</td>
+<td>实例</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运算符优先级"><a class="markdownIt-Anchor" href="#运算符优先级"></a> 运算符优先级</h2>
+<img data-src="/Java/image-20240516125841876.png" class="" title="image-20240516125841876">
+<h2 id="自动装箱拆箱"><a class="markdownIt-Anchor" href="#自动装箱拆箱"></a> 自动装箱/拆箱</h2>
+<blockquote>
+<p>jdk1.5 i = Integer.valueOf(3) -128-127</p>
+</blockquote>
+<p>自动装箱通常也不会通过显式的 valueOf 方法调用实现。<strong>编译器</strong>生成的字节码可能直接使用内部指令或方法来处理装箱和拆箱，而不是通过Java方法调用机制。因此，在 valueOf 方法上设置断点通常不会捕获到自动装箱的过程。<br />
+<code>new String(&quot;abc&quot;)</code> 和 <code>String.valueOf(&quot;abc&quot;)</code> 的区别：前者在堆中创建了新的对象，后者返回字符串常量池对象的引用。拆箱：xxxValue()；装箱：valueOf()</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zhuangXiang</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">a1</span> <span class="operator">=</span> <span class="number">128</span>;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">a2</span> <span class="operator">=</span> <span class="number">128</span>;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">a3</span> <span class="operator">=</span> <span class="number">256</span>;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">a4</span> <span class="operator">=</span> a1 + a2;</span><br><span class="line">    System.out.println(a1 == a2); <span class="comment">// false</span></span><br><span class="line">    System.out.println(a4 == a3); <span class="comment">// false</span></span><br><span class="line">    System.out.println(a1 + a2 == a3); <span class="comment">// true 发生拆箱</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>NPE 问题</p>
+<ul>
+<li>数据库查询返回结果为 Null，无法拆箱</li>
+<li>三目运算符可能出现问题：flag ? 0 : i（应使用 flag ? new Integer(0) : i）</li>
+</ul>
+<h2 id="动态代理"><a class="markdownIt-Anchor" href="#动态代理"></a> 动态代理</h2>
+<p>静态代理：编译时完成<br />
+动态代理：运行时动态生成类字节码，并加载到 JVM 中</p>
+<ul>
+<li>JDK 动态代理：通过生成一个实现被代理类接口的对象来拦截被代理类的方法调用
+<ul>
+<li>封装：Proxy.newProxyInstance() 指定 ClassLoader 对象和一组 interface</li>
+<li>调用：InvocationHandler 接口 invoke 方法</li>
+</ul>
+</li>
+<li>CGLIB 动态代理：通过生成一个被代理类的子类来拦截被代理类的方法调用（字节码实现，不能被 final 修饰，编译速度慢，运行速度快）
+<ul>
+<li>封装：Enhancer 类</li>
+<li>调用：MethodInterceptor 接口 intercept 方法</li>
+</ul>
+</li>
+</ul>
+<p>二者的具体实现</p>
+<ul>
+<li>JDK：运行时动态解析，无法应用一些 JVM 优化</li>
+<li>CGLib：ASM 开源包，代理对象类的 class 文件加载时，修改其字节码生成代理子类（ASM 是在编译期处理字节码的，可以认为是一种编译期的 AOP 技术）</li>
+</ul>
+<p>为什么 JDK 动态代理，要求被代理对象必须实现一个接口？</p>
+<ul>
+<li>因为 JDK 动态代理类已经继承了 Proxy 这个类，所以只能通过接口来与被代理类建立联系（两个类建立起联系，一是继承的关系【jdk已经不能通过这个方式了，因为java仅支持单继承】，另一种就是实现同一个接口【JDK动态代理选这种】），所以必须要求被代理类也得实现一个接口</li>
+</ul>
+<h2 id="原生工具类"><a class="markdownIt-Anchor" href="#原生工具类"></a> 原生工具类</h2>
+<p>Collections 集合操作类</p>
+<ul>
+<li>sort(list)</li>
+<li>reverse(list)</li>
+<li>binarySearch(list, target)</li>
+</ul>
+<p>Arrays 数组操作类</p>
+<ul>
+<li>max(list)</li>
+<li>sort(array, (o1, o2)-&gt;o1-o2)</li>
+<li>copyOf(array, Length)</li>
+<li>binarySearch(array, value)</li>
+<li>fill(array, value)</li>
+</ul>
+<p>比较器 集合排序工具</p>
+<ul>
+<li>Comparator 类级别
+<ul>
+<li>针对不同的比较，单独定义一个比较类</li>
+<li>int compare(T o1, T o2);
+<ul>
+<li>返回值为正数，交换 o1 o2 的顺序</li>
+<li>返回值为负数或零，不需要调整</li>
+<li>返回升序 o1-o2，降序 o2-o1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Comparable 方法级别
+<ul>
+<li>若一个类实现了Comparable接口，就意味着“该类支持排序”，可以用Arrays.sort()排序</li>
+<li>public int compareTo(T o);</li>
+</ul>
+</li>
+</ul>
+<h2 id="接口实现"><a class="markdownIt-Anchor" href="#接口实现"></a> 接口实现</h2>
+<p>接口和抽象类的关系</p>
+<ul>
+<li>
+<p>共同点</p>
+<ul>
+<li>都不能被实例化</li>
+<li>都可以包含抽象方法</li>
+<li>方法可以有<a href="https://liushiming.cn/article/java-default-methods.html">默认实现</a>的</li>
+</ul>
+</li>
+<li>
+<p>区别</p>
+<ul>
+<li>接口主要用于对类的行为进行约束，你实现了某个接口就具有了对应的行为。抽象类主要用于代码复用，强调的是从属关系。</li>
+<li>一个类只能继承一个类，但是可以实现多个接口。</li>
+<li>接口中的成员变量只能是 public static final 类型的，不能被修改且必须有初始值，而抽象类的成员变量默认 default，可在子类中被重新定义，也可被重新赋值。</li>
+</ul>
+</li>
+<li>
+<p>接口中的所有成员变量都默认是由public static final修饰的</p>
+</li>
+<li>
+<p>接口中的所有方法都默认是由public abstract修饰的</p>
+</li>
+<li>
+<p>接口没有构造方法</p>
+</li>
+<li>
+<p>实现接口的类中必须提供接口中所有方法的具体实现内容</p>
+</li>
+<li>
+<p>多个无关的类可以实现同一个接口</p>
+</li>
+<li>
+<p>一个类可以实现多个无关的接口</p>
+</li>
+<li>
+<p>与继承关系类似，接口与实现类之间存在多态性</p>
+</li>
+<li>
+<p>接口可以继承多个接口，使用extends关键字</p>
+</li>
+<li>
+<p>Java8 后，接口可以拥有普通方法，实现类不需要重写，可以被实现类继承</p>
+</li>
+</ul>
+<h2 id="构造器"><a class="markdownIt-Anchor" href="#构造器"></a> 构造器</h2>
+<p>this(参数列表)来访问本类构造器需要注意以下几点</p>
+<ul>
+<li>只能在构造器中使用 this(参数列表)；即在一个构造器中访问本类的另外一个构造器。</li>
+<li>显示使用 this() 时，默认的 super() 就被覆盖</li>
+<li>this(参数列表)和 super(参数列表)在构造器中有且只能存在一个。</li>
+<li>若在构造器中使用 this(参数列表)，则此语句只能位于构造器第一行</li>
+</ul>
+<h2 id="动态加载"><a class="markdownIt-Anchor" href="#动态加载"></a> 动态加载</h2>
+<p>反射（运行时获取类的信息、创建对象、调用方法）</p>
+<p>类加载器 ClassLoader</p>
+]]></content>
+      <categories>
+        <category>八股文</category>
+      </categories>
+      <tags>
+        <tag>Java语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LLM应用开发</title>
+    <url>/LLM-Application/</url>
+    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
+<h1 id="何为llm应用开发"><a class="markdownIt-Anchor" href="#何为llm应用开发"></a> 何为LLM应用开发</h1>
+<p>网上不少人认为，与其去做 Prompt 应用不如去提升 LLM 的智能，Prompt 应用对于大语言模型能力提升的作用有限。但我不以为然，获得 Prompt 的加持之后，LLM 可以<strong>应用现实生活的所有工具</strong>；可以<strong>按步骤正确处理一个复杂问题</strong>（因为 LLM 不同于人类对话，只有构造出非常详细且周密的过程约束，才能得到最正确的答案，不然会出现“幻觉”现象）；可以引导 <strong>LLM 自我规划</strong>（下文的长文本对话），目前 Prompt 最常应用在 <code>Dynamic Few-Shot Examples</code> 领域中，可以快速定位与 Query 最相关的小样本，不使不相关的内容分散 LLM 的注意力，而不只局限于“聊天机器人”和“搜索引擎”这类看似没啥么太大用处的名头。</p>
+<p>一言以蔽之，应用开发就是将 LLM 聪明的大脑装上可随时替换的手脚、五官和前额叶、海马体，它可以变成任何人，使用任何工具。</p>
+<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
+<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
+<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
+<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
+<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">OutlinePrompt = ChatPromptTemplate.from_template(<span class="string">f&#x27;请根据<span class="subst">&#123;query&#125;</span>，按照以下格式对问题提炼目录。回答内容尽量简短\n \</span></span><br><span class="line"><span class="string">            开始生成大纲:\n \</span></span><br><span class="line"><span class="string">            1. XXX\n    1.1xxx 1.2xxx 1.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            2. XXX\n    2.1xxx 2.2xxx 2.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            .......\n&#x27;</span>)</span><br><span class="line">chain = LLMChain(prompt=OutlinePrompt, llm=model1, memory=<span class="literal">None</span>, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>由于需要<strong>结构化解析</strong>输出结果并<strong>链式调用</strong>模型扩写子论点，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">chat_prompt = PromptTemplate.from_template(<span class="string">f&#x27;请以<span class="subst">&#123;title&#125;</span>的<span class="subst">&#123;contexts&#125;</span>为主要内容，帮我扩写到<span class="subst">&#123;num&#125;</span>字&#x27;</span>)</span><br><span class="line">combined_prompt = PromptTemplate.from_template(<span class="string">f&#x27;写一段过渡段，从<span class="subst">&#123;title&#125;</span>自然过渡到<span class="subst">&#123;next_title&#125;</span>，内容简短&#x27;</span>)</span><br><span class="line">chat_chain = LLMChain(llm=llm, prompt=chat_prompt, output_key=<span class="string">&quot;chat&quot;</span>)</span><br><span class="line">combined_chain = LLMChain(llm=llm, prompt=combined_prompt, output_key=<span class="string">&quot;combined&quot;</span>)</span><br><span class="line">single_chain = SequentialChain(</span><br><span class="line">    chains=[chat_chain, combined_chain], </span><br><span class="line">    input_variables=[<span class="string">&quot;title&quot;</span>, <span class="string">&quot;contexts&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;next_title&quot;</span>],</span><br><span class="line">    output_variables=[<span class="string">&quot;chat&quot;</span>, <span class="string">&quot;combined&quot;</span>],</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>目前还是通过 for 循环遍历大纲，后续考虑采用路由链 <code>LLMRouterChain</code>，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">router_prompt = PromptTemplate(</span><br><span class="line">    template=router_template,</span><br><span class="line">    input_variables=[<span class="string">&quot;input&quot;</span>],</span><br><span class="line">    output_parser=RouterOutputParser(),</span><br><span class="line">)</span><br><span class="line">chain = MultiPromptChain(</span><br><span class="line">    router_chain=router_chain,    <span class="comment"># 路由链路</span></span><br><span class="line">    destination_chains=destination_chains,   <span class="comment"># 目标链路（LLmChain 数组）</span></span><br><span class="line">    default_chain=default_chain,      <span class="comment"># 默认链路</span></span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
+<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
+<p>离线私有数据不能直接作为语料库训练模型，LLM 需要具有基于私有数据返回的能力。</p>
+<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
+<p>知识库系统要包括文档加载、切分、存储、检索和存储聊天记录模块，具体通过向量表征 <code>Embeddings</code> 和向量存储 <code>Vector Store</code> 实现</p>
+<ul>
+<li>文本表征是对文本语义的向量表征，相似内容的文本具有相似的表征向量。这使我们可以在向量空间中比较文本的相似性。</li>
+<li>向量数据库<code>Vector Database</code>用来存储文档的文本块。对于给定的文档，我们首先将其分成较小的文本块<code>chunks</code>，然后获取每个小文本块的文本表征，并将这些表征储存在向量数据库中。这个流程正是创建索引<code>index</code>的过程。将文档分成小文本块的原因在于我们可能无法将整个文档传入语言模型进行处理。</li>
+</ul>
+<img data-src="/LLM-Application/image-20240424102449161.png" class="" title="image-20240424102449161">
+<p>Langchain 中文本分割器 <code>langchain.text_splitter</code> 都根据 chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行分割</p>
+<ul>
+<li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
+<li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
+</ul>
+<style>.lqrimcqlpziq{zoom:50%;}</style><img data-src="/LLM-Application/image-20240424102824838.png" class="lqrimcqlpziq" alt="langchain.text_splitter">
+<p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
+<p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
+<p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
+<p><strong>A2</strong>：通过 <code>SelfQueryRetriever</code> 参数 <code>document_content_description</code> 指定元素的不同字段（source）以及它们对应的位置（page）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">metadata_field_info_chinese = [</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;source&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章来源于 `index-浙江省财政报告`, `index-江苏省财政报告` 的其中之一&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;page&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章中的哪一页&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;integer&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p><strong>Q3</strong>：如何通过过获取到的文档得到 LLM 响应</p>
+<p><strong>A3</strong>：采用 检索式问答链 <code>RetrievalQA</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;使用以下上下文片段来回答最后的问题。如果你不知道答案，只需说不知道，不要试图编造答案。答案最多使用三个句子。尽量简明扼要地回答。在回答的最后一定要说&quot;感谢您的提问！&quot;</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：&#123;question&#125;</span></span><br><span class="line"><span class="string">有用的回答：&quot;&quot;&quot;</span></span><br><span class="line">QA_CHAIN_PROMPT = PromptTemplate.from_template(template)</span><br><span class="line"><span class="comment"># RetrievalQA 内部使用了 QA_CHAIN_PROMPT</span></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type( </span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever()</span><br><span class="line">)</span><br><span class="line">result = qa_chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>Q4</strong>：如果文档太多，无法将它们全部适配到上下文窗口中怎么办？</p>
+<p><strong>A4</strong>：采用 <code>MapReduce</code>，首先将每个独立的文档单独发送到语言模型以获取原始答案。然后，将答案通过最终对语言模型的一次调用组合成最终的答案</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">qa_chain_mr = RetrievalQA.from_chain_type(</span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever(),</span><br><span class="line">    chain_type=<span class="string">&quot;map_reduce&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>如果信息分布在两个文档之间，无法在同一上下文中获取到所有的信息，也就没法给出正确答案。为解决这个问题，可以采用 <code>Refine 检索式问答链</code> ，Refine 文档链类似于 MapReduce 链，对于每一个文档，会调用一次 LLM，但有所改进的是，我们每次发送给 LLM 的最终提示是一个序列，这个序列会将先前的响应与新数据结合在一起，并请求得到改进后的响应。这种方法类似于 RNN，我们增强了上下文，从而解决信息分布在不同文档的问题。</p>
+<p><a href="https://github.com/chatchat-space/Langchain-Chatchat">Github 参考项目链接</a></p>
+<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
+<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
+<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
+<h2 id="解决思路-3"><a class="markdownIt-Anchor" href="#解决思路-3"></a> 解决思路</h2>
+<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
+<img data-src="/LLM-Application/image-20240424140419971.png" class="" title="image-20240424140419971">
+<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> GraphCypherQAChain</span><br><span class="line"><span class="keyword">from</span> langchain.graphs <span class="keyword">import</span> Neo4jGraph</span><br><span class="line"></span><br><span class="line">graph = Neo4jGraph(</span><br><span class="line">    url=<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">    username=<span class="string">&quot;neo4j&quot;</span>, </span><br><span class="line">    password=<span class="string">&quot;&quot;</span></span><br><span class="line">)</span><br><span class="line">chain = GraphCypherQAChain.from_llm(</span><br><span class="line">    model, graph=graph, verbose=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Langchain 底层针对图数据库对话的 Prompt</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_GENERATION_TEMPLATE = <span class="string">&quot;&quot;&quot;Task:Generate Cypher statement to query a graph database.</span></span><br><span class="line"><span class="string">Instructions:</span></span><br><span class="line"><span class="string">Use only the provided relationship types and properties in the schema.</span></span><br><span class="line"><span class="string">Do not use any other relationship types or properties that are not provided.</span></span><br><span class="line"><span class="string">Schema:</span></span><br><span class="line"><span class="string">&#123;schema&#125;</span></span><br><span class="line"><span class="string">Note: Do not include any explanations or apologies in your responses.</span></span><br><span class="line"><span class="string">Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.</span></span><br><span class="line"><span class="string">Do not include any text except the generated Cypher statement.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The question is:</span></span><br><span class="line"><span class="string">&#123;question&#125;&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Langchain 底层针对上下文问答的 Prompt</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_QA_TEMPLATE = <span class="string">&quot;&quot;&quot;You are an assistant that helps to form nice and human understandable answers.</span></span><br><span class="line"><span class="string">The information part contains the provided information that you must use to construct an answer.</span></span><br><span class="line"><span class="string">The provided information is authoritative, you must never doubt it or try to use your internal knowledge to correct it.</span></span><br><span class="line"><span class="string">Make the answer sound as a response to the question. Do not mention that you based the result on the given information.</span></span><br><span class="line"><span class="string">If the provided information is empty, say that you don&#x27;t know the answer.</span></span><br><span class="line"><span class="string">Information:</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: &#123;question&#125;</span></span><br><span class="line"><span class="string">Helpful Answer:&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
+<p>采用 qdrant 向量库保存对话历史</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CustomQdrantMemory</span>(<span class="title class_ inherited__">BaseChatMemory</span>):</span><br><span class="line">    <span class="comment"># 访问数据库抽取最相关联的 message_limit 条数据</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buffer</span>(<span class="params">self, inputs: <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]</span>) -&gt; <span class="type">List</span>[BaseMessage]:</span><br><span class="line">        chat_messages: <span class="type">List</span>[BaseMessage] = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inputs:</span><br><span class="line">            <span class="keyword">return</span> chat_messages</span><br><span class="line">        hits = self.qdrant.search(</span><br><span class="line">            collection_name=self.conversation_id,</span><br><span class="line">            query_vector=self.encoder.encode(inputs[<span class="string">&#x27;input&#x27;</span>]).tolist(),</span><br><span class="line">            limit=self.message_limit,</span><br><span class="line">        )</span><br><span class="line">        hits = <span class="built_in">sorted</span>(hits, key=<span class="keyword">lambda</span> x:x.<span class="built_in">id</span>)</span><br><span class="line">        <span class="keyword">for</span> hit <span class="keyword">in</span> hits:</span><br><span class="line">            chat_messages.append(HumanMessage(content=hit.payload[<span class="string">&#x27;human&#x27;</span>]))</span><br><span class="line">            chat_messages.append(AIMessage(content=hit.payload[<span class="string">&#x27;assistant&#x27;</span>]))</span><br><span class="line">        curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="comment"># 如果超出模型最长上下文，则弹出最早的对话历史</span></span><br><span class="line">        <span class="keyword">if</span> curr_buffer_length &gt; self.max_token_limit:</span><br><span class="line">            pruned_memory = []</span><br><span class="line">            <span class="keyword">while</span> curr_buffer_length &gt; self.max_token_limit <span class="keyword">and</span> chat_messages:</span><br><span class="line">                pruned_memory.append(chat_messages.pop())</span><br><span class="line">                curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="keyword">return</span> chat_messages        </span><br></pre></td></tr></table></figure>
+<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
+<p>流程</p>
+<ul>
+<li>音视频上传
+<ul>
+<li>语音转文字 FFmpeg</li>
+<li>【初始化时】声纹构建</li>
+<li>语音转文字 Whisper</li>
+<li>特征语料库构建</li>
+</ul>
+</li>
+<li>语料 + Chroma 向量库相似度 + KNN 距离匹配</li>
+<li>组成输入，LLM 响应结果</li>
+</ul>
+<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github 参考项目链接</a></p>
+<h1 id="python-notes"><a class="markdownIt-Anchor" href="#python-notes"></a> Python Notes</h1>
+<p>def _call() 方法把这个类型的对象当作函数来使用</p>
+]]></content>
+      <categories>
+        <category>LLM应用开发</category>
+      </categories>
+      <tags>
+        <tag>Langchain</tag>
+        <tag>向量数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RAG架构和Langchain框架</title>
+    <url>/LLM-RAG-Langchain/</url>
+    <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，主要还是学习检索增强生成（RAG架构）方向</p>
+<h1 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h1>
+<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP 任务的检索增强生成</a>中提出的新思想。LLM 通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的 RAG 应用程序有两个主要组件：</p>
+<ul>
+<li>索引：用于引入源数据并对其进行<strong>索引</strong>的管道，通常离线运行。
+<ul>
+<li>加载：将数据库中的大段文本读入系统</li>
+<li>拆分：因为大块数据更难搜索，并且不适合模型的有限上下文窗口，因此需要拆分数据。</li>
+<li>存储：采用向量数据库和索引存储数据</li>
+</ul>
+</li>
+<li>检索和生成：实际的 RAG 链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
+<ul>
+<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前 k 个数据。</li>
+<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型 (LLM) 中，以生成所需的输出。</li>
+</ul>
+</li>
+</ul>
+<p>从原始数据到答案最常见的完整序列如下所示：</p>
+<img data-src="/LLM-RAG-Langchain/x7ta8v77.png" class="" title="x7ta8v77">
+<h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
+<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：对话历史 Memory、提示工程 Prompt、输出解析 Parase、LLM链 Chain、索引 Indexes、代理 Agents。Langchain 模块化设计的中心思想是提升代码维护、扩展和重用的能力，可以快速开发多轮提示以及解析输出的应用。</p>
+<h2 id="模型链-chain"><a class="markdownIt-Anchor" href="#模型链-chain"></a> 模型链 Chain</h2>
+<blockquote>
+<p>链（Chains）通常将大语言模型（LLM）与其他组件组合在一起来构建更复杂的链。</p>
+</blockquote>
+<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、历史和回调等功能，支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
+<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
+<h2 id="对话历史-memory"><a class="markdownIt-Anchor" href="#对话历史-memory"></a> 对话历史 Memory</h2>
+<p>根据需求可以将历史存储在 SQLite、qdrant、本地内存等地方，下面代码将历史存储在缓存中：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.memory <span class="keyword">import</span> ConversationBufferMemory</span><br><span class="line">memory = ConversationBufferMemory(</span><br><span class="line">    memory_key=<span class="string">&quot;history&quot;</span>, <span class="comment"># 与 prompt 的输入变量保持一致。</span></span><br><span class="line">    return_messages=<span class="literal">True</span> <span class="comment"># 将以消息列表的形式返回聊天记录，而不是单个字符串</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="提示工程-prompt"><a class="markdownIt-Anchor" href="#提示工程-prompt"></a> 提示工程 Prompt</h2>
+<p>Prompt 很少是写明不变的，通常从多个组件构建而成的。 PromptTemplate 负责构建这个输入。</p>
+<p><strong>输出解析 Parase</strong> 是提示工程的一种：</p>
+<ul>
+<li><code>get_format_instructions() -&gt; str</code>：方法，返回一个包含有关如何格式化语言模型输出的字符串，即提示 Prompt。</li>
+<li><code>parse(str) -&gt; Any</code>：方法，接受一个字符串（假定为语言模型的响应）并将其解析为某个结构。</li>
+<li><code>parse_with_prompt(str) -&gt; Any</code>：一个方法，它接受一个字符串（假设是语言模型的响应）和一个提示（假设是生成这样的响应的提示），并将其解析为某种结构。提示在此大多数情况下是为了提供信息以便 OutputParser 重新尝试或以某种方式修复输出。</li>
+</ul>
+<h2 id="索引-indexes"><a class="markdownIt-Anchor" href="#索引-indexes"></a> 索引 Indexes</h2>
+<p>结构化文档，以便 LLM 可以与外部文档交互。 LangChain有许多模块可帮助您加载、结构化、存储和检索文档。<a href="https://yeqiuo.github.io/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/#%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93">详见</a></p>
+<h2 id="代理-agents"><a class="markdownIt-Anchor" href="#代理-agents"></a> 代理 Agents</h2>
+<p>代理使用LLM来确定采取哪些行动以及顺序。</p>
+<ul>
+<li>使用工具并观察其输出</li>
+<li>生成相应返回给用户</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大语言模型应用开发</category>
+      </categories>
+      <tags>
+        <tag>RAG架构</tag>
       </tags>
   </entry>
   <entry>
@@ -983,8 +1444,8 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>传输层通过端口区分应用</li>
 <li>IP 分片（MTU）传输 TCP 报文</li>
 </ul>
-<style>.badroesqyolu{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="badroesqyolu" alt="img">
-<style>.mnwbsthvsume{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="mnwbsthvsume" alt="image-20240508140301819">
+<style>.yslxjswhgudb{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="yslxjswhgudb" alt="img">
+<style>.wszbzhgwlars{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="wszbzhgwlars" alt="image-20240508140301819">
 <h1 id="应用层-http"><a class="markdownIt-Anchor" href="#应用层-http"></a> 应用层 HTTP</h1>
 <blockquote>
 <p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
@@ -1042,15 +1503,16 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </blockquote>
 <p>TCP ：面向连接的、可靠的、基于字节流的</p>
 <p>三次握手</p>
-<style>.ninroljrbcpj{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="ninroljrbcpj" alt="TCP 三次握手">
+<style>.qwuillybcwdp{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="qwuillybcwdp" alt="TCP 三次握手">
 <p>四次挥手</p>
-<style>.fuarveqgylns{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="fuarveqgylns" alt="客户端主动关闭连接 —— TCP 四次挥手">
+<style>.oibmyldbpvxo{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="oibmyldbpvxo" alt="客户端主动关闭连接 —— TCP 四次挥手">
 <ul>
 <li>首先确认客户端不会再发送请求给服务端</li>
 <li>然后服务端在发送完数据后，再向客户端发送断开连接</li>
 </ul>
 <p>为什么这么设计？因为TCP是双向通信的可靠的协议，需要确保客户端和服务端都有收发数据包的能力；为后续传输做准备：序列号</p>
 <p>流量控制、超时重传、拥塞控制</p>
+<p><a href="https://blog.csdn.net/dl962454/article/details/115796513">拥塞控制</a>：慢开始（每经过一个传输轮次，拥塞窗口 cwnd 就加倍）、拥塞避免（慢开始门限 ssthresh）、快重传（连续收到三个重复确认就立即重传对方尚未收到的报文段，不等待重传计时器到期）、快恢复</p>
 <h1 id="网络层-ip"><a class="markdownIt-Anchor" href="#网络层-ip"></a> 网络层 IP</h1>
 <blockquote>
 <p>负责路径传输过程中路径和节点的选择，实现设备到设备的数据传输</p>
@@ -1066,7 +1528,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>IGMP：组播</p>
 ]]></content>
       <categories>
-        <category>八股</category>
+        <category>八股文</category>
       </categories>
       <tags>
         <tag>计算机网络</tag>
@@ -1096,13 +1558,13 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>table.ibd，存放<strong>表数据</strong>，<s>表数据既可以存在共享表空间文件（文件名：ibdata1）里</s>，也可以存放在独占表空间文件（文件名：表名字.ibd）。这个行为是由参数 innodb_file_per_table 控制的，若设置了参数 innodb_file_per_table 为 1，则会将存储的<strong>数据、索引等信息单独存储在一个独占表空间</strong>，从 MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本之后， MySQL 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
 </ul>
 <p><strong>表空间文件的结构</strong></p>
-<style>.jvnmohvxhoxo{zoom:67%;}</style><img data-src="/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="jvnmohvxhoxo" alt="img">
+<style>.dnkumtwjgnry{zoom:67%;}</style><img data-src="/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="dnkumtwjgnry" alt="img">
 <h2 id="innodb-行格式"><a class="markdownIt-Anchor" href="#innodb-行格式"></a> InnoDB 行格式</h2>
 <p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact 行格式的结构</p>
 <img data-src="/MySQL/COMPACT.drawio.png" class="" title="img">
 <h2 id="innodb-页格式"><a class="markdownIt-Anchor" href="#innodb-页格式"></a> InnoDB 页格式</h2>
 <p>InnoDB 的数据是按「数据页」为单位来读写的，数据页的默认大小是 16KB</p>
-<style>.mxxfxghbxfig{zoom:50%;}</style><img data-src="/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="mxxfxghbxfig" alt="243b1466779a9e107ae3ef0155604a17">
+<style>.dnrwcnqmsbuh{zoom:50%;}</style><img data-src="/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="dnrwcnqmsbuh" alt="243b1466779a9e107ae3ef0155604a17">
 <table>
 <thead>
 <tr>
@@ -1225,23 +1687,16 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </blockquote>
 <h2 id="索引失效"><a class="markdownIt-Anchor" href="#索引失效"></a> 索引失效</h2>
 <ul>
-<li>
-<p>左或者左右模糊匹配</p>
-</li>
-<li>
-<p>查询条件中对索引列做了</p>
+<li>左或者左右模糊匹配</li>
+<li>查询条件中对索引列做了
 <ul>
 <li>计算</li>
 <li>函数</li>
 <li>类型转换操作</li>
 </ul>
 </li>
-<li>
-<p>联合索引未遵循最左匹配原则</p>
-</li>
-<li>
-<p>条件语句中 OR 前后子句一个有索引一个没索引</p>
-</li>
+<li>联合索引未遵循最左匹配原则</li>
+<li>条件语句中 OR 前后子句一个有索引一个没索引</li>
 </ul>
 <p><strong>Count 计算</strong></p>
 <p>遍历索引，优先遍历 key_len 最小的二级索引，只有当没有二级索引的时候，才会采用主键索引来进行统计。</p>
@@ -1494,7 +1949,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <h3 id="重做日志文件组"><a class="markdownIt-Anchor" href="#重做日志文件组"></a> 重做日志文件组</h3>
 <p>redo log 是为了防止 Buffer Pool 中的脏页丢失而设计的，<strong>只记录未被刷入磁盘的数据的物理日志</strong>。随着系统运行，Buffer Pool 的脏页刷新到了磁盘中，redo log 对应的记录也就没用了，这时候我们需要擦除这些旧记录，以腾出空间记录新的更新操作。重做日志文件组由有 2 个 redo log 文件组成，以循环写的方式工作，从头开始写，写到末尾就又回到开头，相当于一个环形。</p>
-<style>.dgmxjhltyqyz{zoom: 50%;}</style><img data-src="/MySQL/checkpoint.png" class="dgmxjhltyqyz" alt="img">
+<style>.butkluhlaram{zoom: 50%;}</style><img data-src="/MySQL/checkpoint.png" class="butkluhlaram" alt="img">
 <ul>
 <li>write pos ～ checkpoint 之间的部分（图中红色部分）：记录新的更新操作；</li>
 <li>check point ～ write pos 之间的部分（图中蓝色部分）：待落盘的脏数据页记录；</li>
@@ -1507,7 +1962,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>binlog 是全量日志，保存了所有数据变更的情况，可以恢复整个数据库所有数据；</li>
 </ul>
 <h3 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h3>
-<style>.repbwhutbjdh{zoom:67%;}</style><img data-src="/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="repbwhutbjdh" alt="MySQL 主从复制过程">
+<style>.wdvvcinjqlou{zoom:67%;}</style><img data-src="/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="wdvvcinjqlou" alt="MySQL 主从复制过程">
 <ul>
 <li>写入 Binlog：数据修改 -&gt; 主库写 binlog 日志 -&gt; commit 事务 -&gt; 持久化本地数据 -&gt; 提交事务成功；</li>
 <li>同步 Binlog：从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。</li>
@@ -1520,7 +1975,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>半同步复制：只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端；</li>
 </ul>
 <h3 id="binlog-刷盘"><a class="markdownIt-Anchor" href="#binlog-刷盘"></a> binlog 刷盘</h3>
-<style>.ciutuyrqsmur{zoom: 67%;}</style><img data-src="/MySQL/binlogcache.drawio.png" class="ciutuyrqsmur" alt="binlog cach">
+<style>.jepuwpromwkq{zoom: 67%;}</style><img data-src="/MySQL/binlogcache.drawio.png" class="jepuwpromwkq" alt="binlog cach">
 <ul>
 <li>图中的 write，把<strong>日志写入到 binlog 文件（文件系统的 page cache 里）</strong>，但是并没有把数据持久化到磁盘；</li>
 <li>图中的 fsync，把数据持久化到磁盘的操作，这里就会涉及磁盘 I/O，所以频繁的 fsync 会导致磁盘的 I/O 升高；</li>
@@ -1535,7 +1990,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>binlog 主从复制和 redo log 崩溃恢复需要保持一致，不然会出现<strong>主从数据不一致、备份数据与真实数据不一致</strong>等问题。MySQL 采用两阶段提交来避免两份日志之间的逻辑不一致，两阶段提交是一种<strong>分布式事务一致性协议</strong>。</p>
 <p>两阶段提交：把单个事务的提交拆分成了 2 个阶段，分别是准备阶段和提交阶段（不是 commit 语句），每个阶段都由协调者和参与者共同完成。</p>
 <h3 id="内部-xa-事务"><a class="markdownIt-Anchor" href="#内部-xa-事务"></a> 内部 XA 事务</h3>
-<style>.ojuhofppsjky{zoom:50%;}</style><img data-src="/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="ojuhofppsjky" alt="两阶段提交">
+<style>.svgjeqgfahky{zoom:50%;}</style><img data-src="/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="svgjeqgfahky" alt="两阶段提交">
 <p>为了保证这两个日志的一致性，MySQL 使用了内部 XA 事务。内部 XA 事务由 binlog 作为协调者，存储引擎是参与者，可以实现跨数据库事务。将 redo log 的写入拆成了<strong>两个状态：prepare 和 commit</strong>，中间再穿插写入binlog。</p>
 <ul>
 <li>如果 binlog 中没有当前内部 XA 事务的 XID，说明 redolog 完成刷盘，但是 binlog 还没有刷盘，则<strong>回滚事务</strong>。对应时刻 <strong>A 崩溃恢复</strong>的情况；</li>
@@ -1602,12 +2057,12 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <p><strong>Free 链表</strong>：使用链表结构，快速找到空闲的缓存页；</p>
 <p>每当需要从磁盘中加载一个页到 Buffer Pool 中时，就从 Free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上，然后把该缓存页对应的控制块从 Free 链表中移除</p>
-<style>.ugcoyccojdtp{zoom: 67%;}</style><img data-src="/MySQL/freelist.drawio.png" class="ugcoyccojdtp" alt="img">
+<style>.yvtnnkrkpwhx{zoom: 67%;}</style><img data-src="/MySQL/freelist.drawio.png" class="yvtnnkrkpwhx" alt="img">
 <p><strong>Flush 链表</strong>：使用链表结构，快速找到脏页；（结构类似于 Free 链表）</p>
 <p>脏页落盘时，后台线程遍历 Flush 链表</p>
 <h2 id="提高缓存命中率"><a class="markdownIt-Anchor" href="#提高缓存命中率"></a> 提高缓存命中率</h2>
 <p>Buffer Pool 有三种页和链表用来管理数据</p>
-<style>.tjzfrmwakozs{zoom:67%;}</style><img data-src="/MySQL/bufferpoll_page.png" class="tjzfrmwakozs" alt="img">
+<style>.mppjpgrpdbwh{zoom:67%;}</style><img data-src="/MySQL/bufferpoll_page.png" class="mppjpgrpdbwh" alt="img">
 <ul>
 <li>Free Page（空闲页），表示此页未被使用，位于 Free 链表；</li>
 <li>Clean Page（干净页），表示此页已被使用，但是页面未发生修改，位于LRU 链表。</li>
@@ -1638,6 +2093,41 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </tags>
   </entry>
   <entry>
+    <title>操作系统</title>
+    <url>/OS/</url>
+    <content><![CDATA[<p><strong>进程和线程的区别</strong></p>
+<p>线程是调度的基本单位，而进程则是资源拥有的基本单位。</p>
+<ul>
+<li>进程是资源（包括内存、打开的文件等）分配的最小单位，线程是 CPU 调度的最小单位；</li>
+<li>进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈，线程之间共享地址空间和文件等资源；</li>
+<li>线程同样具有就绪、阻塞、执行三种基本状态，同样具有状态之间的转换关系；</li>
+<li>线程能减少并发执行的时间和空间开销；</li>
+</ul>
+<p><strong>进程间通信方式</strong></p>
+<p>匿名管道 / 命名管道</p>
+<p>消息队列</p>
+<p>共享内存+信号量</p>
+<p>Socket</p>
+<p><strong>虚拟地址</strong></p>
+<p>进程隔离</p>
+<p><strong>IO多路复用</strong></p>
+<ul>
+<li>epoll</li>
+</ul>
+<img data-src="/OS/640.webp" class="" title="图片">
+<ul>
+<li>select：将已连接的 Socket 都放到一个文件描述符集合，然后调用 select 函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写， 接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。<strong>2 次「遍历」文件描述符集合</strong>，<strong>2 次「拷贝」文件描述符集合</strong>。</li>
+<li>poll：和 select 并没有太大的本质区别，<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></li>
+</ul>
+]]></content>
+      <categories>
+        <category>八股文</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis</title>
     <url>/Redis/</url>
     <content><![CDATA[<p><s>先速通一遍，底层实现后续慢慢看书学</s></p>
@@ -1649,6 +2139,8 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>I/O 多路复用机制</li>
 </ul>
 <h1 id="数据结构"><a class="markdownIt-Anchor" href="#数据结构"></a> 数据结构</h1>
+<p>5 种基础数据类型：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）<br />
+3 种特殊数据类型：HyperLogLog（基数统计）、Bitmap （位图）、Geospatial (地理位置)</p>
 <p>String 字符串</p>
 <p>List 列表</p>
 <p>Set 集合</p>
@@ -1692,16 +2184,16 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>自动完成故障发现和故障转移，并通知给应用方，从而实现高可用性</p>
 </blockquote>
 <p>哨兵之间建立连接</p>
-<style>.qridoevjkqqr{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="qridoevjkqqr" alt="img">
+<style>.ywbvtcqlxure{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="ywbvtcqlxure" alt="img">
 <p>哨兵与从节点建立连接</p>
-<style>.hfacrnfdgmnp{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="hfacrnfdgmnp" alt="img">
+<style>.wjaxkgkdvgmz{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="wjaxkgkdvgmz" alt="img">
 <h3 id="第一轮投票判断主节点下线"><a class="markdownIt-Anchor" href="#第一轮投票判断主节点下线"></a> 第一轮投票：判断主节点下线</h3>
 <p>主观下线：主节点或者从节点没有在规定的时间内响应哨兵的 PING 命令</p>
 <p>客观下线：一个哨兵判断主节点为「主观下线」后，就会向其他哨兵发起命令，通过多个哨兵节点一起判断主节点是否下线。哨兵的赞同票数达到哨兵配置文件中的 quorum 配置项设定的值则判断主节点客观下线</p>
 <h3 id="第二轮投票选出哨兵-leader"><a class="markdownIt-Anchor" href="#第二轮投票选出哨兵-leader"></a> 第二轮投票：选出哨兵 leader</h3>
 <ul>
 <li>哪个哨兵节点判断主节点为「客观下线」，这个哨兵节点就是候选者，所谓的候选者就是想当 Leader 的哨兵。</li>
-<li>候选者会向其他哨兵发送命令，表明希望成为 Leader 来执行主从切换，并让所有其他哨兵对它进行投票。选择哨兵 Leader：
+<li>候选者会向其他哨兵发送命令，表明希望成为 Leader 来执行主从切换，并让所有其他哨兵对它进行投票。Raft 算法选择哨兵 Leader：
 <ul>
 <li>第一，拿到半数以上的赞成票；</li>
 <li>第二，拿到的票数同时还需要大于等于哨兵配置文件中的 quorum 值。</li>
@@ -1722,25 +2214,48 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>第四步：继续监视旧主节点，当这个旧主节点重新上线时，将它设置为新主节点的从节点；</li>
 </ul>
 <h2 id="集群"><a class="markdownIt-Anchor" href="#集群"></a> 集群</h2>
+<p><strong>Hash 槽数据分片</strong></p>
 <p>CRC16 算法 + 16384 取模，每个模数代表一个相应编号的哈希槽</p>
 <p>切片 slot 槽，将数据分布在多个Redis节点上，每个节点负责一部分 slot 槽</p>
 <h1 id="缓存"><a class="markdownIt-Anchor" href="#缓存"></a> 缓存</h1>
 <h2 id="缓存雪崩-击穿-穿透"><a class="markdownIt-Anchor" href="#缓存雪崩-击穿-穿透"></a> 缓存雪崩、击穿、穿透</h2>
+<p>缓存穿透：大量请求了缓存和数据库里都没有的数据，请求穿透缓存和数据库</p>
+<ul>
+<li>参数校验：参数不合法直接抛出异常</li>
+<li>缓存无效 key：适用于 key 变化不频繁</li>
+<li>布隆过滤器：校验 Key 是否合法（有误差，可能会把未存的值当作已有，即不合法的 key 当作合法的）</li>
+<li>接口限流：固定窗口算法、滑动窗口算法、漏桶算法、令牌桶算法</li>
+</ul>
+<p>缓存击穿：瞬间大量请求未缓存的数据库数据，请求击穿缓存直接打到数据库上</p>
+<ul>
+<li>热点数据永不过期或过期时间长</li>
+<li>预热热点数据：定时任务预热（定时触发缓存预热的逻辑，将数据库中的热点数据查询出来并存入缓存中）、kafka 异步预热（将数据库中的热点数据的主键或者 ID 发送到消息队列中，然后由缓存服务消费消息队列中的数据，根据主键或者 ID 查询数据库并更新缓存）</li>
+<li>访问数据库互斥锁</li>
+</ul>
+<p>缓存雪崩：缓存在同一时间大面积的失效，导致大量的请求都直接落到了数据库上</p>
+<ul>
+<li>Redis 集群</li>
+<li>限流</li>
+<li>多级缓存：本地缓存+Redis</li>
+<li>热点数据失效时间长</li>
+<li>预热热点数据</li>
+</ul>
 <h2 id="如何保证数据库和缓存一致性"><a class="markdownIt-Anchor" href="#如何保证数据库和缓存一致性"></a> 如何保证数据库和缓存一致性</h2>
 <blockquote>
-<p>采用 Cache Aside 旁路缓存策略：以数据库中的数据为准，缓存中的数据是按需加载的</p>
-<ul>
-<li>缺点：数据写入频繁时，缓存中的数据会被频繁的清理，降低缓存命中率</li>
-</ul>
+<p>采用 Cache Aside 旁路缓存策略：以数据库中的数据为准，缓存中的数据是按需加载的；缺点：数据写入频繁时，缓存中的数据会被频繁的清理，降低缓存命中率；</p>
 </blockquote>
 <p>更新数据库+删除缓存：延迟双删</p>
 <p>更新数据库+更新缓存：分布式锁</p>
 <p>更新数据库+不更新缓存：较短的缓存有效期</p>
-<p>删除缓存的时候失败了怎么办？采用异步删除的方式：</p>
+<p><strong>删除缓存的时候失败了怎么办？</strong></p>
+<p>采用异步删除的方式：</p>
 <ul>
 <li>消息队列确保缓存删除成功</li>
 <li>订阅 MySQL 的 binlog，数据修改时删除缓存</li>
 </ul>
+<h2 id="缓存预热"><a class="markdownIt-Anchor" href="#缓存预热"></a> 缓存预热</h2>
+<p>提高访问速度，平滑流量峰值，减少后端压力，保证数据的时效性</p>
+<p>Redis 缓存预热的方法：系统启动时加载；定时任务加载；</p>
 <h1 id="实战"><a class="markdownIt-Anchor" href="#实战"></a> 实战</h1>
 <h2 id="分布式锁"><a class="markdownIt-Anchor" href="#分布式锁"></a> 分布式锁</h2>
 <blockquote>
@@ -1768,7 +2283,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <blockquote>
 <p>订阅命令：subscribe channel  [channel … ]</p>
 </blockquote>
-<style>.rhwioracfsft{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="rhwioracfsft" alt="img">
+<style>.vbmbvkycirjw{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="vbmbvkycirjw" alt="img">
 <p><a href="https://blog.csdn.net/w15558056319/article/details/121490953">Link</a></p>
 <h2 id="事务回滚"><a class="markdownIt-Anchor" href="#事务回滚"></a> 事务回滚</h2>
 <p>Redis 不支持回滚，事务没有原子性（要么全部成功要么全部失败）</p>
@@ -1791,6 +2306,12 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>一致性（Consistency）：所有节点访问同一份最新的数据副本</li>
 <li>可用性（Availability）：非故障的节点在合理的时间内返回合理的响应（不是错误或者超时的响应）</li>
 <li>分区容错性（Partition Tolerance）：分布式系统出现网络分区的时候，仍然能够对外提供服务。</li>
+</ul>
+<p>分布式保证服务高并发稳定性</p>
+<ul>
+<li>缓存：缓存是一种提高数据读取性能的技术，通过在内存中存储经常访问的数据，可以减少对数据库或者其他存储系统的访问，从而提高系统的响应速度。缓存可以应用在多个层次，例如浏览器缓存、CDN 缓存、反向代理缓存、应用缓存等。</li>
+<li>降级：降级是在系统压力过大或者部分服务不可用的情况下，暂时关闭一些非核心的服务，以保证核心服务的正常运行。降级可以在多个层次进行，例如页面降级、功能降级、服务降级等。</li>
+<li>限流：限流是一种控制系统处理请求的速率的技术，以防止系统过载。限流可以通过多种算法实现，例如固定窗口、滑动窗口、漏桶算法、令牌桶算法等。</li>
 </ul>
 <p>Nacos 配置中心 注册中心</p>
 <h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>
@@ -1959,6 +2480,79 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </categories>
       <tags>
         <tag>SpringMVC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring</title>
+    <url>/Spring/</url>
+    <content><![CDATA[<p>SpringCore 主要提供 IoC 依赖注入功能的支持<br />
+SpringMVC 快速构建 MVC 架构的 Web 程序<br />
+SpringBoot 简化 Spring 开发，减少配置文件，开箱即用</p>
+<h1 id="ioc-控制反转"><a class="markdownIt-Anchor" href="#ioc-控制反转"></a> IOC 控制反转</h1>
+<blockquote>
+<p>当一个对象创建时，它所依赖的对象由外部传递给它，而非自己去创建所依赖的对象（比如通过new操作）。因此，也可以说在对象如何获取它的依赖对象这件事情上，控制权反转了。这便不难理解控制反转和依赖注入这两个名字的由来了。</p>
+</blockquote>
+<p>将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入<br />
+Bean 工厂模式</p>
+<ul>
+<li>单例 Singleton、多例/原型 Prototype Bean</li>
+</ul>
+<h1 id="aop-面向切面编程"><a class="markdownIt-Anchor" href="#aop-面向切面编程"></a> AOP 面向切面编程</h1>
+<p>将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。<br />
+实现方式：基于动态代理，有接口用 jdk 原生的代理方法，没借口用 CGLib<br />
+<img data-src="https://cdn.nlark.com/yuque/0/2024/png/35963383/1710914695105-23ec9fa4-bfe3-400f-a4ae-3ee481e15ed2.png#averageHue=%23fafafa&amp;clientId=u9b3c2e0d-0508-4&amp;from=paste&amp;height=268&amp;id=u95f80866&amp;originHeight=621&amp;originWidth=1255&amp;originalType=binary&amp;ratio=1.2999999523162842&amp;rotation=0&amp;showTitle=false&amp;size=225114&amp;status=done&amp;style=none&amp;taskId=uea2c3c65-5775-47c7-b2d4-e1b20ecc5a1&amp;title=&amp;width=542.3846435546875" alt="image.png" /></p>
+<h1 id="bean-生命周期"><a class="markdownIt-Anchor" href="#bean-生命周期"></a> Bean 生命周期</h1>
+<blockquote>
+<p>自动装配：@Component；@Service；@Controller；@Configure + @Bean</p>
+</blockquote>
+<p><img data-src="https://cdn.nlark.com/yuque/0/2024/png/35963383/1712674114596-397e917e-2d16-4421-a4c7-97c8361bf36a.png#averageHue=%23f8f8f8&amp;clientId=ua4aed479-db90-4&amp;from=paste&amp;id=Qa54Q&amp;originHeight=2563&amp;originWidth=5969&amp;originalType=url&amp;ratio=1.309999942779541&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;taskId=uc9b53a15-d076-484e-8090-bc105e6948f&amp;title=" alt="" /><br />
+xxx.class --&gt; 默认无参构造方法 --&gt; 普通对象 --&gt; 依赖注入（属性赋值） --&gt; 初始化前 --&gt; 初始化 --&gt; 初始化后 --&gt; 代理对象 --&gt; 得到Bean（<a href="https://www.cnblogs.com/chengxuxiaoyuan/p/16321716.html">源码</a>）<br />
+实例化 Bean 对象：默认调用无参构造器；若使用有参构造器，参数必须是容器中有的Bean【按参数查找 Bean 时，先按照 classname 后按照参数名】<br />
+初始化前中后：BeanPostProcessor 的 postProcessAfterInitialization() --&gt; @PostConstruct 注解 --&gt; InitializingBean 的 afterPropertiesSet() 方法 --&gt; BeanPostProcessor 的 postProcessAfterInitialization()（实现了 AOP 代理）</p>
+<ul>
+<li>Aware 其实就是一个标识；只有满足Aware规范或者其子类规范的才能进行相关的赋值操作，这样做的话可以少写很多判断，并且可以在一个地方进行统一的判断赋值；</li>
+<li>BeanPostProcessor 前置处理器的关键实现类：ApplicationContextAwareProcessor</li>
+<li>BeanPostProcessor 后置处理器的关键实现类：AbstractAutoProxyCreator。这个方法负责帮我们创建代理，底层采用对象cglib 或动态代理【AOP其实就是 IOC 整体流程（Bean生命周期）里的一个扩展点】</li>
+<li>InitializingBean 接口中的 afterPropertiesSet 方法：在这个方法里面去编写我们的业务逻辑，以及进行相关的属性赋值等等</li>
+</ul>
+<p>底层实现</p>
+<ul>
+<li>AbstractAutowireCapableBeanFactory 内的 initializeBean 调用了所有 BeanPostProcessor 的实现类</li>
+<li>ApplicationContext 类型容器的内部维护了一个 BeanFactory 类型的容器（AnnotationConfigApplicationContext 的父类 GenericApplicationContext 维护了一个 Bean 工厂实现类：DefaultListableBeanFactory）</li>
+<li>DefaultListableBeanFactory：Spring 默认的 BeanFactory 实现</li>
+<li>DefaultSingletonBeanRegistry：DefaultListableBeanFactory 单例模式存储关系的地方 Map&lt;String(BeanName),Object(instance)&gt;</li>
+<li>AbstractApplicationContext.refresh() 方法
+<ul>
+<li>配置了对 BeanFactoryPostProcessor 的实现 postProcessBeanFactory(beanFactory) 和处理 invokeBeanFactoryPostProcessors(beanFactory)。BeanFactoryPostProcessor 可以自定义 ApplicationContext 容器中的 BeanFactory 进行处理，在还没有对任何Bean进行实例化之前（ConfigurationClassPostProcessor 通过注解解析配置类；PropertySourcesPlaceholderConfigurer：xml配置文件中导入的 properties 文件进行解析,并替换bean定义中的占位符）</li>
+<li>配置了对 BeanPostProcessor 的实现</li>
+</ul>
+</li>
+</ul>
+<hr />
+<ol>
+<li>(1-1)依赖注入：@Autowired；@Resource</li>
+<li>事务 @Transactional、@Configuration</li>
+<li>(1-2)单例 Singleton、多例/原型 Prototype Bean</li>
+<li>jvm类加载器classloader：bootstrap ext app <a href="https://blog.csdn.net/javazejian/article/details/73413292#:~:text=%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%B8%BB%E8%A6%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%98%AFJVM%E8%87%AA%E8%BA%AB%E9%9C%80%E8%A6%81%E7%9A%84%E7%B1%BB%EF%BC%8C%E8%BF%99%E4%B8%AA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%BD%BF%E7%94%A8C%2B%2B%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E8%BA%AB%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%8C%E5%AE%83%E8%B4%9F%E8%B4%A3%E5%B0%86%20%3CJAVA_HOME%3E%2Flib%20%E8%B7%AF%E5%BE%84%E4%B8%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E7%B1%BB%E5%BA%93%E6%88%96,-Xbootclasspath%20%E5%8F%82%E6%95%B0%E6%8C%87%E5%AE%9A%E7%9A%84%E8%B7%AF%E5%BE%84%E4%B8%8B%E7%9A%84jar%E5%8C%85%E5%8A%A0%E8%BD%BD%E5%88%B0%E5%86%85%E5%AD%98%E4%B8%AD%EF%BC%8C%E6%B3%A8%E6%84%8F%E5%BF%85%E7%94%B1%E4%BA%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%98%AF%E6%8C%89%E7%85%A7%E6%96%87%E4%BB%B6%E5%90%8D%E8%AF%86%E5%88%AB%E5%8A%A0%E8%BD%BDjar%E5%8C%85%E7%9A%84%EF%BC%8C%E5%A6%82rt.jar%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%96%87%E4%BB%B6%E5%90%8D%E4%B8%8D%E8%A2%AB%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%AF%86%E5%88%AB%EF%BC%8C%E5%8D%B3%E4%BD%BF%E6%8A%8Ajar%E5%8C%85%E4%B8%A2%E5%88%B0lib%E7%9B%AE%E5%BD%95%E4%B8%8B%E4%B9%9F%E6%98%AF%E6%B2%A1%E6%9C%89%E4%BD%9C%E7%94%A8%E7%9A%84%20%28%E5%87%BA%E4%BA%8E%E5%AE%89%E5%85%A8%E8%80%83%E8%99%91%EF%BC%8CBootstrap%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8F%AA%E5%8A%A0%E8%BD%BD%E5%8C%85%E5%90%8D%E4%B8%BAjava%E3%80%81javax%E3%80%81sun%E7%AD%89%E5%BC%80%E5%A4%B4%E7%9A%84%E7%B1%BB%29%E3%80%82">博客</a></li>
+</ol>
+<p>TODO Spring 启动流程<br />
+Springboot 和 Spring 最大的区别就是不需要 xml 配置<br />
+Springboot 自动配置</p>
+<ul>
+<li>“约定优于配置”理念</li>
+<li>@EnableAutoConfiguration</li>
+<li>自动将一些配置类的bean注册进ioc容器</li>
+</ul>
+<p>logback是slf4j的官方实现，log4j是另一个实现，logback和log4j才是二选一，slf4j是门面日志的api。</p>
+<p>TODO<br />
+<a href="https://www.cnblogs.com/tuyang1129/p/12861617.html">https://www.cnblogs.com/tuyang1129/p/12861617.html</a><br />
+<a href="https://www.cnblogs.com/tuyang1129/p/12866484.html">https://www.cnblogs.com/tuyang1129/p/12866484.html</a></p>
+]]></content>
+      <categories>
+        <category>Java开发</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
       </tags>
   </entry>
   <entry>
@@ -2258,16 +2852,26 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>MySQL 调优</li>
 </ol>
 <p>愚蠢的我只知道构建索引、优化表结构和增大 BufferPool，好在后续上网也没找到什么很好的方法。或许<mark>预编译 SQL 语句</mark>是个不错的想法，根据 MySQL 运行过程推出的优化方法。</p>
-<h1 id="项目困难解决方法"><a class="markdownIt-Anchor" href="#项目困难解决方法"></a> 项目困难/解决方法</h1>
+<h1 id="面试-prepare"><a class="markdownIt-Anchor" href="#面试-prepare"></a> 面试 Prepare</h1>
+<h2 id="自我介绍"><a class="markdownIt-Anchor" href="#自我介绍"></a> 自我介绍</h2>
+<blockquote>
+<p>由于错误使用 Dubbo 注解导致的 JVM 异常问题；Rpc 中间件采用 Netty 传输数据、Zookeeper 注册服务;调度各微服务，聚合并缓存数据；我还和同事一起分析解决了线上告警事故；</p>
+</blockquote>
+<p>面试官您好，很荣幸能来参加华为的面试，我叫王哲文，目前在杭州电子科技大学读研，本科就读于浙大城市学院。</p>
+<p>本科期间我加入了黑胡桃实验室，参与了智慧实验室和时间序列预测等项目，还在实验室举办的 2020 年谷歌开发者大会上分享了自己的项目经验。我在浙江华坤道威数据科技有限公司实习期间，主要负责日志切面和运维大屏的开发，在这期间我积累了企业级分布式微服务项目的开发经验。</p>
+<p>在读研期间，我加入了大数据与城市计算实验室，主要负责三友阴极板项目的后端开发和某涉密项目的大语言模型应用开发。在项目开发过程中，我不仅更加深入掌握了 SpringBoot、MySQL、Redis 等主流技术，还了解了 Langchain、PyTorch、Milvus 等前沿技术。在工作之余，我还学习了 Rpc 中间件的架构和设计思想，并开发了一个简易的轻量级 Rpc 中间件。此外，我还搭建了个人博客网站，定期发布学习笔记和技术总结，不断沉淀自己的开发经验。</p>
+<p>最后，我非常希望能有机会加入华为，将所学知识应用到实际工作中，并与优秀的团队一起共同成长。谢谢！</p>
+<h2 id="项目困难解决方法"><a class="markdownIt-Anchor" href="#项目困难解决方法"></a> 项目困难/解决方法</h2>
 <p>实习</p>
 <ul>
-<li>分布式微服务架构</li>
-<li>多线程并发，编排任务执行流程</li>
-<li>沟通协作，和同事交流，理解别人的想法的同时清楚地表达自己的想法；让领导清楚自己在做什么，工作量和重难点在哪；</li>
+<li>分布式微服务架构复杂 === 请教前辈、打断点弄明白数据流；</li>
+<li>多线程并发，编排任务执行流程 === 美团技术博客 CompletableFuture 原理和实践；</li>
+<li>沟通协作，和同事交流，理解别人的想法的同时清楚地表达自己的想法；让领导清楚自己在做什么，工作量和重难点在哪 === 多沟通多交流，先理清自己的想法再和同事、领导沟通；</li>
 </ul>
 <p>LLM 应用开发</p>
 <ul>
-<li>LLM 部署，技术选型 FastChat、FastApi、VLLM 加速</li>
+<li>LLM 部署，技术选型 FastChat、FastApi、VLLM 加速 === 实践尝试，选择最合适的方法；</li>
+<li>思考如何实现需求 === 参考别人发表的经验和思路，比如看论文、技术博客、线上宣讲会、开源项目等，在针对需求改进和优化；</li>
 <li>Python 开发生态差，要造轮子，MySQL 连接池、事务、并发线程池等</li>
 <li>Prompt 构建，数据切分、数据集构建：分词、分段、Embedding 计算</li>
 </ul>
@@ -2282,35 +2886,92 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>数据库缓存一致性设计</li>
 <li>新需求的开发</li>
 </ul>
-<h1 id="面试"><a class="markdownIt-Anchor" href="#面试"></a> 面试</h1>
-<blockquote>
-<p>由于错误使用 Dubbo 注解导致的 JVM 异常问题；Rpc 中间件采用 Netty 传输数据、Zookeeper 注册服务;调度各微服务，聚合并缓存数据；我还和同事一起分析解决了线上告警事故；</p>
-</blockquote>
-<p><strong>自我介绍</strong>：</p>
-<p>面试官您好，很荣幸能来参加华为的面试，我叫王哲文，目前在杭州电子科技大学读研，本科就读于浙大城市学院。</p>
-<p>本科期间我加入了黑胡桃实验室，参与了智慧实验室和时间序列预测等项目，还在实验室举办的 2020 年谷歌开发者大会上分享了自己的项目经验。我在浙江华坤道威数据科技有限公司实习期间，主要负责日志切面和运维大屏的开发，在这期间我积累了企业级分布式微服务项目的开发经验。</p>
-<p>在读研期间，我加入了大数据与城市计算实验室，主要负责三友阴极板项目的后端开发和某涉密项目的大语言模型应用开发。在项目开发过程中，我不仅更加深入掌握了 SpringBoot、MySQL、Redis 等主流技术，还了解了 Langchain、PyTorch、Milvus 等前沿技术。在工作之余，我还学习了 Rpc 中间件的架构和设计思想，并开发了一个简易的轻量级 Rpc 中间件。此外，我还搭建了个人博客网站，定期发布学习笔记和技术总结，不断沉淀自己的开发经验。</p>
-<p>最后，我非常希望能有机会加入华为，将所学知识应用到实际工作中，并与优秀的团队一起共同成长。谢谢！</p>
-<p><a href="https://www.bilibili.com/read/cv13183086/#:~:text=%EF%BC%88%E7%AE%80%E5%8C%96%E7%89%88%EF%BC%89,%E5%8D%8E%E4%B8%BA%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC%E8%A7%82%E6%9C%89%E5%9B%9B%E4%B8%AA%E6%96%B9%E9%9D%A2%EF%BC%9A1%E3%80%81%E4%BB%A5%E5%AE%A2%E6%88%B7%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E7%A1%AE%E5%AE%9A%E5%A5%8B%E6%96%97%E7%9A%84%E6%96%B9%E5%90%91%3B2%E3%80%81%E4%BB%A5%E5%A5%8B%E6%96%97%E8%80%85%E4%B8%BA%E6%9C%AC%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E6%8F%90%E4%BE%9B%E6%B4%BB%E5%8A%9B%E7%9A%84%E6%BA%90%E6%B3%89%3B3%E3%80%81%E9%95%BF%E6%9C%9F%E8%89%B0%E8%8B%A6%E5%A5%8B%E6%96%97%EF%BC%8C%E8%BF%99%E6%98%AF%E5%AF%B9%E4%BA%BA%E4%BF%AE%E8%BA%AB%E7%9A%84%E4%B8%80%E4%B8%AA%E8%BF%87%E7%A8%8B%3B4%E3%80%81%E5%9D%9A%E6%8C%81%E8%87%AA%E6%88%91%E6%89%B9%E5%88%A4%EF%BC%8C%E5%9C%A8%E6%89%B9%E5%88%A4%E4%B8%AD%E8%83%BD%E5%A4%9F%E5%BE%97%E5%88%B0%E4%BF%AE%E5%BF%83%E3%80%82">华为核心价值观</a>：以客户为中心，以奋斗者为本，长期艰苦奋斗，坚持自我批判</p>
+<h2 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> Q&amp;A</h2>
+<p><a href="https://www.bilibili.com/read/cv13183086/#:~:text=%EF%BC%88%E7%AE%80%E5%8C%96%E7%89%88%EF%BC%89,%E5%8D%8E%E4%B8%BA%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC%E8%A7%82%E6%9C%89%E5%9B%9B%E4%B8%AA%E6%96%B9%E9%9D%A2%EF%BC%9A1%E3%80%81%E4%BB%A5%E5%AE%A2%E6%88%B7%E4%B8%BA%E4%B8%AD%E5%BF%83%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E7%A1%AE%E5%AE%9A%E5%A5%8B%E6%96%97%E7%9A%84%E6%96%B9%E5%90%91%3B2%E3%80%81%E4%BB%A5%E5%A5%8B%E6%96%97%E8%80%85%E4%B8%BA%E6%9C%AC%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E6%8F%90%E4%BE%9B%E6%B4%BB%E5%8A%9B%E7%9A%84%E6%BA%90%E6%B3%89%3B3%E3%80%81%E9%95%BF%E6%9C%9F%E8%89%B0%E8%8B%A6%E5%A5%8B%E6%96%97%EF%BC%8C%E8%BF%99%E6%98%AF%E5%AF%B9%E4%BA%BA%E4%BF%AE%E8%BA%AB%E7%9A%84%E4%B8%80%E4%B8%AA%E8%BF%87%E7%A8%8B%3B4%E3%80%81%E5%9D%9A%E6%8C%81%E8%87%AA%E6%88%91%E6%89%B9%E5%88%A4%EF%BC%8C%E5%9C%A8%E6%89%B9%E5%88%A4%E4%B8%AD%E8%83%BD%E5%A4%9F%E5%BE%97%E5%88%B0%E4%BF%AE%E5%BF%83%E3%80%82">华为核心价值观</a></p>
+<ul>
+<li>以客户为中心，以奋斗者为本，长期艰苦奋斗，坚持自我批判</li>
+</ul>
+<p>说说自己对于艰苦奋斗的看法（精神上的）</p>
+<ul>
+<li>我认为这是一种积极向上、不断进取的品质，是为了实现自身的价值，努力过上充实且有意义的人生，而不仅仅为了获得利益或权力；</li>
+<li>无论是高考、考研、写论文又或者找工作，我在其中付出的努力和拼搏，都是为了能够不断超越自己，寻找人生的意义，证明自己的价值所在；</li>
+</ul>
 <p>科研&amp;项目：</p>
 <ul>
 <li>
-<p>担任角色；项目背景；前期调研；创新点</p>
+<p>担任角色；负责的工作；项目背景；前期调研；创新点</p>
 </li>
 <li>
 <p>项目有哪些难点</p>
 </li>
 <li>
-<p>开发过程中遇到问题如何解决</p>
+<p>开发过程中遇到问题；如何解决</p>
+</li>
+<li>
+<p>科研过程中遇到问题；如何解决</p>
+<ul>
+<li>一开始对科研内容一窍不通</li>
+</ul>
 </li>
 </ul>
 <p>未来职业规划</p>
 <ul>
-<li>为了达成这些规划具体会做些行动</li>
+<li>努力进入优秀的团队中工作学习，能有一个不断提升自我的平台；</li>
+<li>专业技能上，不断地学习，拓宽自己的技术栈，计划未来可以任职大数据开发工程师；</li>
+</ul>
+<p>为了达成这些规划具体会做些行动</p>
+<ul>
+<li>学习大数据相关的技术栈，积极投身大数据相关的业务中，不断提升自己</li>
+</ul>
+<p>接下来的一年里有什么计划</p>
+<ul>
+<li>专利投递，学习大数据技术栈（Hadoop、Map-Reduce、Hbase），秋招找工作，写大论文+毕业答辩，出国旅行</li>
 </ul>
 <p>绩点排名</p>
+<ul>
+<li>大一只有中游水平，后面几年排名逐年上升，大三拿到了学业奖学金并考研成功。在读研期间也能有中上游的绩点，拿到了学业奖学金；</li>
+</ul>
 <p>如何看待华为公司？为什么想来华为公司进行实习？</p>
-<p>能够实习多长时间？半年，立刻到岗</p>
+<ul>
+<li>无论是在芯片、操作系统还是在手机、汽车等领域，华为都是中国的一线品牌，华为当下在做的事情相当于五十年前的核武器研究；</li>
+<li>体验大厂的环境和氛围，和优秀的团队一起成长，努力工作，争取毕业留在华为；</li>
+<li>参加华为举办的竞赛感受到华为的人文关怀做得很好，比赛场地布置的很用心，比赛结束后还举办了活动，吃了大餐，临走还送和一袋纪念品，包括所有人的合照；</li>
+</ul>
+<p>能够实习多长时间？</p>
+<ul>
+<li>半年，立刻到岗</li>
+</ul>
+<p>对什么感兴趣并做了什么努力？</p>
+<ul>
+<li>对大语言模型很感兴趣；LLM 的训练和微调对硬件和数据集的要求高，但实验室只有 A6000，更加适合 LLm 的应用开发，看了很多论文、开源项目和技术博客，最终让基于大语言模型实现一个具体需求的过程非常有成就感；</li>
+</ul>
+<p>科研内容</p>
+<ul>
+<li>使用知识图谱引导大语言模型生成，并不是通过简单的 Prompt 工程，而是提取当前对话相关的节点特征，由于其节点跟随对话进展而变化，可以得到一个动态节点特征；</li>
+<li>通过异构图构建节点特征和上下文对话之间的图结构关系，并训练，得到全局状态；</li>
+<li>设计双状态解码器，类似于LSTM门限网络，基于全局状态和上下文特征生成模型响应；</li>
+</ul>
+<p>科研期间最大的困难</p>
+<ul>
+<li>对语言模型没有任何了解，实验室也是第一次接语言模型的项目，没有任何沉淀，一开始上手很艰难，只能不断重复去看网课和教程；</li>
+</ul>
+<p>如何获取资料</p>
+<ul>
+<li>论文、技术博客、开源项目、社群宣讲会</li>
+</ul>
+<p>什么东西起了很大的作用</p>
+<ul>
+<li>技术博客，参考前人留下的经验，往往能有一些新的灵感</li>
+</ul>
+<p>重大的挫折</p>
+<ul>
+<li>人生中最大的挫折应该是中考，我当初冲重高保底优高，最后发挥失常只考上了职高；</li>
+<li>高中 保持学习的劲头，稳扎稳打，高考超重点线；这段经历让我任何时候都不会轻言放弃，即使失败了也没事，总结反思之后再出发，家人和朋友一直都在，成功与否只是我自己的选择；</li>
+</ul>
+<p>压力特别大的时候</p>
+<ul>
+<li>跑步、爬山、骑行</li>
+</ul>
 <p>面试技巧</p>
 <ul>
 <li>
@@ -2327,106 +2988,6 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </categories>
       <tags>
         <tag>面试记录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>AugESC</title>
-    <url>/2023/AugESC_%20Large-scale%20Data%20Augmentation%20for%20Emotional%20Support%20Conversation%20with%20Pre-trained%20Language%20Models/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
-<blockquote>
-<p>开放式对话数据增强的研究</p>
-</blockquote>
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前工作的缺陷
-<ul>
-<li>成本高、耗时长</li>
-<li>预算限制，所收集的对话规模小，主题少</li>
-</ul>
-</li>
-<li>本文主要贡献
-<ul>
-<li>关键发现</li>
-<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
-<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>预训练模型</li>
-<li>预训练模型的数据增强</li>
-</ul>
-<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
-<ul>
-<li>语言模型优于对话模型
-<ul>
-<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
-<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
-</ul>
-</li>
-<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
-<li>提示GPT不如微调GPT模型
-<ul>
-<li>提示型GPT-3生成可控性差</li>
-<li>只有微调才能掌握任务场景和所需特征</li>
-</ul>
-</li>
-<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
-<ul>
-<li>保持语言模型的内在知识</li>
-<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
-<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
-</ul>
-</li>
-<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
-<ul>
-<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
-</ul>
-</li>
-</ul>
-<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
-<ul>
-<li>主干模型：GPT-3，微调后的GPT-J</li>
-<li>提示模板：对话场景+情感支持</li>
-<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
-<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
-<li>触发Query
-<ul>
-<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
-<li>保留带有负面情绪的Query</li>
-</ul>
-</li>
-<li>过滤结果，删除非法对话</li>
-</ul>
-<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
-<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
-<ul>
-<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
-<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
-<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
-</ul>
-<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
-<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
-<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
-<blockquote>
-<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
-</blockquote>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
-<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>对话数据集增强</tag>
       </tags>
   </entry>
   <entry>
@@ -2564,6 +3125,106 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       <tags>
         <tag>情绪支持对话</tag>
         <tag>异构图神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>AugESC</title>
+    <url>/2023/AugESC_%20Large-scale%20Data%20Augmentation%20for%20Emotional%20Support%20Conversation%20with%20Pre-trained%20Language%20Models/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
+<blockquote>
+<p>开放式对话数据增强的研究</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前工作的缺陷
+<ul>
+<li>成本高、耗时长</li>
+<li>预算限制，所收集的对话规模小，主题少</li>
+</ul>
+</li>
+<li>本文主要贡献
+<ul>
+<li>关键发现</li>
+<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
+<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>预训练模型</li>
+<li>预训练模型的数据增强</li>
+</ul>
+<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
+<ul>
+<li>语言模型优于对话模型
+<ul>
+<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
+<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
+</ul>
+</li>
+<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
+<li>提示GPT不如微调GPT模型
+<ul>
+<li>提示型GPT-3生成可控性差</li>
+<li>只有微调才能掌握任务场景和所需特征</li>
+</ul>
+</li>
+<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
+<ul>
+<li>保持语言模型的内在知识</li>
+<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
+<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
+</ul>
+</li>
+<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
+<ul>
+<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
+</ul>
+</li>
+</ul>
+<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
+<ul>
+<li>主干模型：GPT-3，微调后的GPT-J</li>
+<li>提示模板：对话场景+情感支持</li>
+<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
+<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
+<li>触发Query
+<ul>
+<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
+<li>保留带有负面情绪的Query</li>
+</ul>
+</li>
+<li>过滤结果，删除非法对话</li>
+</ul>
+<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
+<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
+<ul>
+<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
+<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
+<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
+</ul>
+<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
+<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
+<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
+<blockquote>
+<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
+</blockquote>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>对话数据集增强</tag>
       </tags>
   </entry>
   <entry>
@@ -2744,6 +3405,154 @@ Conclusion</p>
       </tags>
   </entry>
   <entry>
+    <title>HEAL</title>
+    <url>/2023/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A Knowledge Graph for Distress Management Conversations</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>相比于seq2seq的不确定性，聊天机器人利用知识图谱进行推理，被视为端到端模型的高效、万无一失的解决方案</li>
+<li>提出HEAL知识图谱
+<ul>
+<li>基于1M痛苦叙述及其相应的安慰回应而开发的知识图谱</li>
+<li>图谱可视化：表现了对话双方的情绪动态和帮助缓解情绪的有效方法</li>
+<li>组成部分
+<ul>
+<li>22k Node 节点：识别不同类型的stressors, speaker expectations, responses, feedback types</li>
+<li>104k Edge 连接：不同类型的节点之间的关系</li>
+<li>每个节点和41种情绪状态相关联</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>神经网络架构模型缺乏可控性和黑箱性质，导致其并不可靠</li>
+<li>使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应</li>
+<li>相关工作
+<ul>
+<li>ConceptNet、ATOMIC主要是通过捕获事实知识，在开放对话中嵌入常识推理辅助对话，不适用于移情对话</li>
+</ul>
+</li>
+<li>本文，通过子Reddit精心选择的对压力事件叙述和回应，生成了一个压力对话管理知识图谱HEAL
+<ul>
+<li>五类节点：压力源、期望、回应类型、反馈类型、情感状态</li>
+<li>可以准确描述以痛苦为导向对话的潜在背景，使对话模型可以检索到更具体的上下文响应。提取响应会导致的反馈类型和是否能达到期望等信息，从而产生更为合适的反应</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>知识图谱可以帮助NLP理解用户的输入，拓展用户输入中的事实和常识性知识</li>
+<li>目前工作关注于知识感知和推理对话，不会捕捉情感推理和移情反应</li>
+</ul>
+<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
+<ul>
+<li>数据集管理
+<ul>
+<li>采用reddit数据集，通过Pushshift API，收集和处理8个子reddit对话主题：mentalhealthsupport、offmychest、sad、anxietyhelp、depression、suicidewatch、depressed、depressionhelp</li>
+<li>数据预处理</li>
+</ul>
+</li>
+<li>概要
+<ul>
+<li>针对过长而超出预训练语言模型输入上限的对话，本文采用SMMRY摘要算法保留叙事本质</li>
+</ul>
+</li>
+<li>凝聚聚类
+<ul>
+<li>自动聚类：区分对话中的压力源、期望、响应和反馈类型</li>
+<li>凝聚聚类法：递归地合并增加最小链接距离的簇对</li>
+<li>链接距离：对SentenceBERT生成的embedding使用余弦相似度计算</li>
+</ul>
+</li>
+<li>定义压力源
+<ul>
+<li>每个阈值计算了各种聚类质量指标，结果显示以0.85的相似度阈值区分压力源最合适，将压力源中的4.7%分为了4363个类。</li>
+<li>将聚类结果按照TF-IDF建模，可以明显区分压力源，表明聚类结果的可靠性。</li>
+</ul>
+</li>
+<li>期望、回复、反馈类型
+<ul>
+<li>提取带有❓的句子作为问题，以此问题提取相关的响应和反馈。使用NLTK分离响应和反馈中的单个对话，方便后续对其进行单一种类的聚类。</li>
+<li>聚类方法与压力源一致，每个集群至少有两个不同的集群元素。</li>
+</ul>
+</li>
+<li>情感状态建模
+<ul>
+<li>使用Pu提出的基于BERT的情感分类器，将每一个簇与某一情感状态相关联，共有41种情感状态。先将每一个簇下的每个文本进行分类，再按照情感出现次数和分类置信度排序，选取最相关的情感状态。</li>
+</ul>
+</li>
+</ul>
+<h2 id="statistical-analysis"><a class="markdownIt-Anchor" href="#statistical-analysis"></a> Statistical Analysis</h2>
+<ul>
+<li>HEAL知识图谱：2.2k集群节点和情感状态，104k连接</li>
+<li>反馈集群中，负面情绪明显减少，证明HEAL中存在帮助人们降低负面情感状态的有用响应</li>
+</ul>
+<h2 id="visualization-and-interpretation"><a class="markdownIt-Anchor" href="#visualization-and-interpretation"></a> Visualization and Interpretation</h2>
+<ul>
+<li>表示大多数回答都是正向积极反馈</li>
+</ul>
+<h2 id="evaluating-the-utility-of-heal-in-responding-to-distress-prompts"><a class="markdownIt-Anchor" href="#evaluating-the-utility-of-heal-in-responding-to-distress-prompts"></a> Evaluating the Utility of HEAL in Responding to Distress Prompts</h2>
+<ul>
+<li>获取共情响应
+<ul>
+<li>从测试集中选取和压力源中现有叙述相似性高于0.75的新对话</li>
+<li>根据压力源和响应之间边权的权重、响应簇大小进行排序，选择排名高的响应</li>
+</ul>
+</li>
+<li>自动评估
+<ul>
+<li>HEAL的响应更加多样化，可以根据给定的情况给出特定的响应</li>
+<li>在其他自动指标BLEU、METEOR和ROUGE方面表现不佳</li>
+</ul>
+</li>
+<li>人类评估【DOI: 10.18653/v1/d16-1230】
+<ul>
+<li>HEAL模型变现更好</li>
+</ul>
+</li>
+</ul>
+<h2 id="discussion-and-conclusion"><a class="markdownIt-Anchor" href="#discussion-and-conclusion"></a> Discussion and Conclusion</h2>
+<ul>
+<li>HEAL：利用Reddit上约1M个与痛苦相关的对话得出的知识图谱。在不同类型的压力源、说话者期望、求助者反应和求助者反馈类型之间形成联系，同时将每个节点与41种情感状态中的一种联系起来</li>
+<li></li>
+</ul>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<ul>
+<li>端到端对话经常会产生通用和重复性对话，缺乏可控性。使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应。</li>
+<li>目前的知识图谱不适用于移情对话。移情领域缺乏数据集和模型帮助产生移情反应，还缺乏具有上下文-相应之间关系的知识图谱。</li>
+</ul>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<ul>
+<li>开发大规模知识图谱HEAL，识别不同的压力源、期望、响应、反馈和该对话的情感状态</li>
+<li>统计和可视化分析，识别导致情绪强度降低的有利反应</li>
+<li>评估通过HEAL检索到的回应，在解决情感困扰问题上的共情性、多样性、可靠性</li>
+</ul>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<ul>
+<li>与RoBERTa、Blender进行比较，HEAL能够产生更多样化、更移情的反应</li>
+<li>统计和可视化分析证实了在HEAL中存在有用的反应策略，这些策略降低了遭受痛苦的人的负面情感状态</li>
+<li>使用纯生成模型来解决痛苦存在危险，HEAL通过战略性地识别与给定提示相关的特定压力源来避免不适当的反应</li>
+</ul>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+<ul>
+<li>只使用了压力源与回复的边缘权重，进一步可以通过将边缘权重与说话者的期望和反馈结合起来来开发</li>
+<li>知识图的信息可以用于增强神经反应生成模型，并为这些模型引入更多的可控性和可解释性，从而提高可靠性</li>
+<li>仅限于识别≈4K的压力源，可以从网络上获取更多数据来增强知识图谱，这将帮助其能够处理更大范围的压力源和期望</li>
+</ul>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>知识图谱</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Feedback-Aware Double</title>
     <url>/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/</url>
     <content><![CDATA[<p><strong>Title:</strong> Feedback-Aware Double COntrolling Network for Emotional Support Conversation</p>
@@ -2893,154 +3702,6 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       </categories>
       <tags>
         <tag>情绪支持对话</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>HEAL</title>
-    <url>/2023/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/</url>
-    <content><![CDATA[<p><strong>Title:</strong> A Knowledge Graph for Distress Management Conversations</p>
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>相比于seq2seq的不确定性，聊天机器人利用知识图谱进行推理，被视为端到端模型的高效、万无一失的解决方案</li>
-<li>提出HEAL知识图谱
-<ul>
-<li>基于1M痛苦叙述及其相应的安慰回应而开发的知识图谱</li>
-<li>图谱可视化：表现了对话双方的情绪动态和帮助缓解情绪的有效方法</li>
-<li>组成部分
-<ul>
-<li>22k Node 节点：识别不同类型的stressors, speaker expectations, responses, feedback types</li>
-<li>104k Edge 连接：不同类型的节点之间的关系</li>
-<li>每个节点和41种情绪状态相关联</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>神经网络架构模型缺乏可控性和黑箱性质，导致其并不可靠</li>
-<li>使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应</li>
-<li>相关工作
-<ul>
-<li>ConceptNet、ATOMIC主要是通过捕获事实知识，在开放对话中嵌入常识推理辅助对话，不适用于移情对话</li>
-</ul>
-</li>
-<li>本文，通过子Reddit精心选择的对压力事件叙述和回应，生成了一个压力对话管理知识图谱HEAL
-<ul>
-<li>五类节点：压力源、期望、回应类型、反馈类型、情感状态</li>
-<li>可以准确描述以痛苦为导向对话的潜在背景，使对话模型可以检索到更具体的上下文响应。提取响应会导致的反馈类型和是否能达到期望等信息，从而产生更为合适的反应</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>知识图谱可以帮助NLP理解用户的输入，拓展用户输入中的事实和常识性知识</li>
-<li>目前工作关注于知识感知和推理对话，不会捕捉情感推理和移情反应</li>
-</ul>
-<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
-<ul>
-<li>数据集管理
-<ul>
-<li>采用reddit数据集，通过Pushshift API，收集和处理8个子reddit对话主题：mentalhealthsupport、offmychest、sad、anxietyhelp、depression、suicidewatch、depressed、depressionhelp</li>
-<li>数据预处理</li>
-</ul>
-</li>
-<li>概要
-<ul>
-<li>针对过长而超出预训练语言模型输入上限的对话，本文采用SMMRY摘要算法保留叙事本质</li>
-</ul>
-</li>
-<li>凝聚聚类
-<ul>
-<li>自动聚类：区分对话中的压力源、期望、响应和反馈类型</li>
-<li>凝聚聚类法：递归地合并增加最小链接距离的簇对</li>
-<li>链接距离：对SentenceBERT生成的embedding使用余弦相似度计算</li>
-</ul>
-</li>
-<li>定义压力源
-<ul>
-<li>每个阈值计算了各种聚类质量指标，结果显示以0.85的相似度阈值区分压力源最合适，将压力源中的4.7%分为了4363个类。</li>
-<li>将聚类结果按照TF-IDF建模，可以明显区分压力源，表明聚类结果的可靠性。</li>
-</ul>
-</li>
-<li>期望、回复、反馈类型
-<ul>
-<li>提取带有❓的句子作为问题，以此问题提取相关的响应和反馈。使用NLTK分离响应和反馈中的单个对话，方便后续对其进行单一种类的聚类。</li>
-<li>聚类方法与压力源一致，每个集群至少有两个不同的集群元素。</li>
-</ul>
-</li>
-<li>情感状态建模
-<ul>
-<li>使用Pu提出的基于BERT的情感分类器，将每一个簇与某一情感状态相关联，共有41种情感状态。先将每一个簇下的每个文本进行分类，再按照情感出现次数和分类置信度排序，选取最相关的情感状态。</li>
-</ul>
-</li>
-</ul>
-<h2 id="statistical-analysis"><a class="markdownIt-Anchor" href="#statistical-analysis"></a> Statistical Analysis</h2>
-<ul>
-<li>HEAL知识图谱：2.2k集群节点和情感状态，104k连接</li>
-<li>反馈集群中，负面情绪明显减少，证明HEAL中存在帮助人们降低负面情感状态的有用响应</li>
-</ul>
-<h2 id="visualization-and-interpretation"><a class="markdownIt-Anchor" href="#visualization-and-interpretation"></a> Visualization and Interpretation</h2>
-<ul>
-<li>表示大多数回答都是正向积极反馈</li>
-</ul>
-<h2 id="evaluating-the-utility-of-heal-in-responding-to-distress-prompts"><a class="markdownIt-Anchor" href="#evaluating-the-utility-of-heal-in-responding-to-distress-prompts"></a> Evaluating the Utility of HEAL in Responding to Distress Prompts</h2>
-<ul>
-<li>获取共情响应
-<ul>
-<li>从测试集中选取和压力源中现有叙述相似性高于0.75的新对话</li>
-<li>根据压力源和响应之间边权的权重、响应簇大小进行排序，选择排名高的响应</li>
-</ul>
-</li>
-<li>自动评估
-<ul>
-<li>HEAL的响应更加多样化，可以根据给定的情况给出特定的响应</li>
-<li>在其他自动指标BLEU、METEOR和ROUGE方面表现不佳</li>
-</ul>
-</li>
-<li>人类评估【DOI: 10.18653/v1/d16-1230】
-<ul>
-<li>HEAL模型变现更好</li>
-</ul>
-</li>
-</ul>
-<h2 id="discussion-and-conclusion"><a class="markdownIt-Anchor" href="#discussion-and-conclusion"></a> Discussion and Conclusion</h2>
-<ul>
-<li>HEAL：利用Reddit上约1M个与痛苦相关的对话得出的知识图谱。在不同类型的压力源、说话者期望、求助者反应和求助者反馈类型之间形成联系，同时将每个节点与41种情感状态中的一种联系起来</li>
-<li></li>
-</ul>
-<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
-<ul>
-<li>端到端对话经常会产生通用和重复性对话，缺乏可控性。使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应。</li>
-<li>目前的知识图谱不适用于移情对话。移情领域缺乏数据集和模型帮助产生移情反应，还缺乏具有上下文-相应之间关系的知识图谱。</li>
-</ul>
-<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
-<ul>
-<li>开发大规模知识图谱HEAL，识别不同的压力源、期望、响应、反馈和该对话的情感状态</li>
-<li>统计和可视化分析，识别导致情绪强度降低的有利反应</li>
-<li>评估通过HEAL检索到的回应，在解决情感困扰问题上的共情性、多样性、可靠性</li>
-</ul>
-<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
-<ul>
-<li>与RoBERTa、Blender进行比较，HEAL能够产生更多样化、更移情的反应</li>
-<li>统计和可视化分析证实了在HEAL中存在有用的反应策略，这些策略降低了遭受痛苦的人的负面情感状态</li>
-<li>使用纯生成模型来解决痛苦存在危险，HEAL通过战略性地识别与给定提示相关的特定压力源来避免不适当的反应</li>
-</ul>
-<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
-<ul>
-<li>只使用了压力源与回复的边缘权重，进一步可以通过将边缘权重与说话者的期望和反馈结合起来来开发</li>
-<li>知识图的信息可以用于增强神经反应生成模型，并为这些模型引入更多的可控性和可解释性，从而提高可靠性</li>
-<li>仅限于识别≈4K的压力源，可以从网络上获取更多数据来增强知识图谱，这将帮助其能够处理更大范围的压力源和期望</li>
-</ul>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>知识图谱</tag>
       </tags>
   </entry>
   <entry>
@@ -3522,6 +4183,155 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       </tags>
   </entry>
   <entry>
+    <title>ESConv</title>
+    <url>/2023/Towards%20Emotional%20Support%20Dialog%20Systems/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Towards Emotional Support Dialog Systems</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<ul>
+<li>Abstract
+<ul>
+<li>本文关注于情感支持对话，提供了一个带策略的情绪支持数据集</li>
+</ul>
+</li>
+<li>Introduction
+<ul>
+<li>情感支持应用广泛</li>
+<li>情绪支持数据集应该包括exploration、understand、suggestion三个过程，还包括有用户的情绪强度变化</li>
+<li>目前的研究模型中没有具体有效的情绪支持方法；采集数据集时需要训练有素的支持者</li>
+<li>ESC框架：三个阶段，多种策略；众包做数据集；在情绪支持方面有提升</li>
+</ul>
+</li>
+<li>Related Work
+<ul>
+<li>移情、同感对话</li>
+<li>情绪支持的数据集</li>
+<li>情绪支持对话
+<ul>
+<li>任务定义</li>
+<li>ESC框架
+<ul>
+<li>三个阶段：探索、理解、建议</li>
+<li>八种策略</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Data Collection
+<ul>
+<li>获取数据集的方法</li>
+</ul>
+</li>
+<li>Data Characteristics
+<ul>
+<li>数据展示</li>
+</ul>
+</li>
+<li>Experiments
+<ul>
+<li>基准模型：BlenderBot、DialoGPT</li>
+<li>模型变种：不带策略：Vanilla；带策略：Random、Joint、Oracle</li>
+<li>评估指标：PPL、B-2、R-L、Extrema</li>
+<li>实验结果：
+<ul>
+<li>带策略的Oracle优于不带策略的Vanilla</li>
+<li>带策略的Oracle稍微弱于不带策略的Vanilla，因为一旦策略预测错误，respond会完全不同</li>
+<li>BlenderBot 变体始终比 DialoGPT 变体表现更好</li>
+</ul>
+</li>
+<li>人类互动评价结果：
+<ul>
+<li>微调后ES能力提升</li>
+<li>带策略微调后能更加适合用户需求</li>
+<li>正确的策略更重要</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Conclusion
+<ul>
+<li>三个阶段、多种策略、ESConv</li>
+<li>道德评估</li>
+</ul>
+</li>
+</ul>
+<h1 id="解决了什么问题"><a class="markdownIt-Anchor" href="#解决了什么问题"></a> 解决了什么问题</h1>
+<ol>
+<li>目前的对话系统没有针对情感支持的任务和语料库，因此ESC方向还没有被探索到，对话场景中缺乏情感支持。</li>
+<li>情感支持（ES）旨在减少个人的情绪困扰，帮助他们理解和应对所面临的挑战。目前的模型大都只能表示共情而不能解决问题。</li>
+<li>通过社交而不是专业咨询的方式提供情感支持。</li>
+</ol>
+<h1 id="怎么解决的该方法的优势"><a class="markdownIt-Anchor" href="#怎么解决的该方法的优势"></a> 怎么解决的/该方法的优势</h1>
+<ol>
+<li>基于Hill的帮助技能理论，提出了ESC框架
+<ol>
+<li>情感支持过程
+<ol>
+<li>理解遇到的困难，exploration</li>
+<li>表达理解和同情，insight/comforting</li>
+<li>提出解决问题的方法，action</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>构建ESConv数据集，有丰富的注释（支持策略）
+<ol>
+<li>每个聊天会都会标记：
+<ol>
+<li>问题类别</li>
+<li>用户情绪类别</li>
+<li>用户情绪强度</li>
+<li>遇到困难的简介</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>ESC系统
+<ol>
+<li>选择支持策略，生成策略约束Respond</li>
+<li>情绪状态建模，跟踪用户情绪变化【待分析】</li>
+<li>提出了评估ES实验效果的新方法</li>
+</ol>
+</li>
+</ol>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<ol>
+<li>表达情感
+<ol>
+<li>ECM：情感对话，可以生成情感反应。有情商而不只是智商</li>
+<li>ES：有情绪支持的能力，可以减少用户情绪困扰</li>
+</ol>
+</li>
+<li>共情能力
+<ol>
+<li>反应出同情心，不能做情绪支持</li>
+</ol>
+</li>
+<li>数据集
+<ol>
+<li>数据集中的对话短，不适合ES任务</li>
+</ol>
+</li>
+<li>ESC系统
+<ol>
+<li>大多研究都人为预先规定好的规则和回复词典</li>
+</ol>
+</li>
+</ol>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>BlenderBot</title>
     <url>/2023/Recipes%20for%20building%20an%20open-domain%20chatbot/</url>
     <content><![CDATA[<p><strong>Title:</strong> Recipes for building an open-domain chatbot</p>
@@ -3970,155 +4780,6 @@ Discussion</p>
       </tags>
   </entry>
   <entry>
-    <title>ESConv</title>
-    <url>/2023/Towards%20Emotional%20Support%20Dialog%20Systems/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Towards Emotional Support Dialog Systems</p>
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<ul>
-<li>Abstract
-<ul>
-<li>本文关注于情感支持对话，提供了一个带策略的情绪支持数据集</li>
-</ul>
-</li>
-<li>Introduction
-<ul>
-<li>情感支持应用广泛</li>
-<li>情绪支持数据集应该包括exploration、understand、suggestion三个过程，还包括有用户的情绪强度变化</li>
-<li>目前的研究模型中没有具体有效的情绪支持方法；采集数据集时需要训练有素的支持者</li>
-<li>ESC框架：三个阶段，多种策略；众包做数据集；在情绪支持方面有提升</li>
-</ul>
-</li>
-<li>Related Work
-<ul>
-<li>移情、同感对话</li>
-<li>情绪支持的数据集</li>
-<li>情绪支持对话
-<ul>
-<li>任务定义</li>
-<li>ESC框架
-<ul>
-<li>三个阶段：探索、理解、建议</li>
-<li>八种策略</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Data Collection
-<ul>
-<li>获取数据集的方法</li>
-</ul>
-</li>
-<li>Data Characteristics
-<ul>
-<li>数据展示</li>
-</ul>
-</li>
-<li>Experiments
-<ul>
-<li>基准模型：BlenderBot、DialoGPT</li>
-<li>模型变种：不带策略：Vanilla；带策略：Random、Joint、Oracle</li>
-<li>评估指标：PPL、B-2、R-L、Extrema</li>
-<li>实验结果：
-<ul>
-<li>带策略的Oracle优于不带策略的Vanilla</li>
-<li>带策略的Oracle稍微弱于不带策略的Vanilla，因为一旦策略预测错误，respond会完全不同</li>
-<li>BlenderBot 变体始终比 DialoGPT 变体表现更好</li>
-</ul>
-</li>
-<li>人类互动评价结果：
-<ul>
-<li>微调后ES能力提升</li>
-<li>带策略微调后能更加适合用户需求</li>
-<li>正确的策略更重要</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Conclusion
-<ul>
-<li>三个阶段、多种策略、ESConv</li>
-<li>道德评估</li>
-</ul>
-</li>
-</ul>
-<h1 id="解决了什么问题"><a class="markdownIt-Anchor" href="#解决了什么问题"></a> 解决了什么问题</h1>
-<ol>
-<li>目前的对话系统没有针对情感支持的任务和语料库，因此ESC方向还没有被探索到，对话场景中缺乏情感支持。</li>
-<li>情感支持（ES）旨在减少个人的情绪困扰，帮助他们理解和应对所面临的挑战。目前的模型大都只能表示共情而不能解决问题。</li>
-<li>通过社交而不是专业咨询的方式提供情感支持。</li>
-</ol>
-<h1 id="怎么解决的该方法的优势"><a class="markdownIt-Anchor" href="#怎么解决的该方法的优势"></a> 怎么解决的/该方法的优势</h1>
-<ol>
-<li>基于Hill的帮助技能理论，提出了ESC框架
-<ol>
-<li>情感支持过程
-<ol>
-<li>理解遇到的困难，exploration</li>
-<li>表达理解和同情，insight/comforting</li>
-<li>提出解决问题的方法，action</li>
-</ol>
-</li>
-</ol>
-</li>
-<li>构建ESConv数据集，有丰富的注释（支持策略）
-<ol>
-<li>每个聊天会都会标记：
-<ol>
-<li>问题类别</li>
-<li>用户情绪类别</li>
-<li>用户情绪强度</li>
-<li>遇到困难的简介</li>
-</ol>
-</li>
-</ol>
-</li>
-<li>ESC系统
-<ol>
-<li>选择支持策略，生成策略约束Respond</li>
-<li>情绪状态建模，跟踪用户情绪变化【待分析】</li>
-<li>提出了评估ES实验效果的新方法</li>
-</ol>
-</li>
-</ol>
-<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
-<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
-<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
-<ol>
-<li>表达情感
-<ol>
-<li>ECM：情感对话，可以生成情感反应。有情商而不只是智商</li>
-<li>ES：有情绪支持的能力，可以减少用户情绪困扰</li>
-</ol>
-</li>
-<li>共情能力
-<ol>
-<li>反应出同情心，不能做情绪支持</li>
-</ol>
-</li>
-<li>数据集
-<ol>
-<li>数据集中的对话短，不适合ES任务</li>
-</ol>
-</li>
-<li>ESC系统
-<ol>
-<li>大多研究都人为预先规定好的规则和回复词典</li>
-</ol>
-</li>
-</ol>
-<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>如何保持专注</title>
     <url>/2024/Stay-Focused/</url>
     <content><![CDATA[<p>磨刀不误砍柴工，弄明白如何做事比糊里糊涂的做更重要。当下的目标是通过不断<strong>实践试错</strong>并<strong>总结纠错</strong>，从而找到最适合我的高效专注的做事方法。在此，再以高中的座右铭激励自己：当你觉得为时已晚的时候，恰恰是最早的时候。从学生变成社会人、从孩子变成家庭支柱、从做事的变成管人的（总会有那天的啦），我还有很多要改进要学习的地方（如何清楚明确的表达自己的工作内容，如何高效明确的和别人沟通），这些变化不是为了适应社会的表演，而是成年人的责任。<s>（tmd这文字像是初中生写出来的，文化沙漠了属于是，有时间还是得多看看书捏）</s></p>
@@ -4176,235 +4837,6 @@ Discussion</p>
       </categories>
       <tags>
         <tag>保持专注</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JUC</title>
-    <url>/JUC/</url>
-    <content><![CDATA[<h1 id="threadlocal"><a class="markdownIt-Anchor" href="#threadlocal"></a> ThreadLocal</h1>
-<p>每一个线程都有自己的专属本地变量，通过空间换时间的方式避免并发下线程安全问题</p>
-<p><strong>原理</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>整体结构图</p>
-<style>.syborgdiwlps{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="syborgdiwlps" alt="img">
-<p>引用关系图</p>
-<style>.obefihmfhpxq{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="obefihmfhpxq" alt="img">
-<h2 id="重点问题"><a class="markdownIt-Anchor" href="#重点问题"></a> 重点问题</h2>
-<p><strong>Entry的key为什么设计成弱引用？</strong></p>
-<p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>
-<p><strong>ThreadLocal为什么会导致内存泄露，如何解决？</strong></p>
-<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value 值，但是如果没有调用这些方法，Entry和ThreadLocalMap将会长期存在下去，会导致内存泄露；</p>
-<p>使用完ThreadLocal对象之后，调用remove方法；</p>
-<p><strong>ThreadLocal是如何定位数据的？</strong></p>
-<p><code>int i = key.threadLocalHashCode &amp; (len-1);</code></p>
-<p>如果有冲突就通过线性探测再散列，直到 table[i] = null；</p>
-<blockquote>
-<p>其他Hash冲突解决方法：开放寻址法（再散列）、拉链法</p>
-</blockquote>
-<p><strong>ThreadLocal是如何扩容的？</strong></p>
-<ul>
-<li>size&gt;threshold</li>
-</ul>
-<p><strong>父子线程如何共享数据？</strong></p>
-<p>InheritableThreadLocal</p>
-<p>init 方法会将 父线程中往 ThreadLocal 设置的值，拷贝一份到子线程中；</p>
-<p><strong>ThreadLocal 变量为什么建议要定义成static的？</strong></p>
-<p>将 ThreadLocal 定义为 static 可以确保所有线程都访问同一个 ThreadLocal 实例，但它们各自存储的数据是独立的；</p>
-<p>确保它们的生命周期与线程的生命周期一致，而不是与类的实例的生命周期一致；</p>
-<p><strong>使用InheritableThreadLocal时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
-<p>不会影响到已经存在的子线程中 InheritableThreadLocal 的值。子线程将保持它在创建时从父线程中继承的原始值。</p>
-<h1 id="volatile"><a class="markdownIt-Anchor" href="#volatile"></a> Volatile</h1>
-<ul>
-<li>保证变量的可见性，但无法在多线程读写变量时保证操作原子性</li>
-<li>防止 JVM 的指令重排序：对该变量读写时，会插入特定的内存屏障</li>
-</ul>
-<blockquote>
-<p>也可以采用**<code>Unsafe</code> 类的内存屏障**实现 防止指令重排序 的效果</p>
-</blockquote>
-<h1 id="jmm"><a class="markdownIt-Anchor" href="#jmm"></a> JMM</h1>
-<p>Java 内存模型定义了 Java 程序中各种变量（主内存和线程工作内存）的访问规则。保证多线程环境下数据的一致性和可见性。</p>
-<p><strong>双重校验锁实现对象单例</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">//类对象加锁</span></span><br><span class="line">    <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            uniqueInstance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Java学习</category>
-      </categories>
-      <tags>
-        <tag>Java并发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RAG架构和Langchain框架</title>
-    <url>/LLM-RAG-Langchain/</url>
-    <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，主要还是学习检索增强生成（RAG架构）方向</p>
-<h1 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h1>
-<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP 任务的检索增强生成</a>中提出的新思想。LLM 通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的 RAG 应用程序有两个主要组件：</p>
-<ul>
-<li>索引：用于引入源数据并对其进行<strong>索引</strong>的管道，通常离线运行。
-<ul>
-<li>加载：将数据库中的大段文本读入系统</li>
-<li>拆分：因为大块数据更难搜索，并且不适合模型的有限上下文窗口，因此需要拆分数据。</li>
-<li>存储：采用向量数据库和索引存储数据</li>
-</ul>
-</li>
-<li>检索和生成：实际的 RAG 链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
-<ul>
-<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前 k 个数据。</li>
-<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型 (LLM) 中，以生成所需的输出。</li>
-</ul>
-</li>
-</ul>
-<p>从原始数据到答案最常见的完整序列如下所示：</p>
-<img data-src="/LLM-RAG-Langchain/x7ta8v77.png" class="" title="x7ta8v77">
-<h1 id="langchain"><a class="markdownIt-Anchor" href="#langchain"></a> Langchain</h1>
-<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：对话历史 Memory、提示工程 Prompt、输出解析 Parase、LLM链 Chain、索引 Indexes、代理 Agents。Langchain 模块化设计的中心思想是提升代码维护、扩展和重用的能力，可以快速开发多轮提示以及解析输出的应用。</p>
-<h2 id="模型链-chain"><a class="markdownIt-Anchor" href="#模型链-chain"></a> 模型链 Chain</h2>
-<blockquote>
-<p>链（Chains）通常将大语言模型（LLM）与其他组件组合在一起来构建更复杂的链。</p>
-</blockquote>
-<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、历史和回调等功能，支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
-<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
-<h2 id="对话历史-memory"><a class="markdownIt-Anchor" href="#对话历史-memory"></a> 对话历史 Memory</h2>
-<p>根据需求可以将历史存储在 SQLite、qdrant、本地内存等地方，下面代码将历史存储在缓存中：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.memory <span class="keyword">import</span> ConversationBufferMemory</span><br><span class="line">memory = ConversationBufferMemory(</span><br><span class="line">    memory_key=<span class="string">&quot;history&quot;</span>, <span class="comment"># 与 prompt 的输入变量保持一致。</span></span><br><span class="line">    return_messages=<span class="literal">True</span> <span class="comment"># 将以消息列表的形式返回聊天记录，而不是单个字符串</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h2 id="提示工程-prompt"><a class="markdownIt-Anchor" href="#提示工程-prompt"></a> 提示工程 Prompt</h2>
-<p>Prompt 很少是写明不变的，通常从多个组件构建而成的。 PromptTemplate 负责构建这个输入。</p>
-<p><strong>输出解析 Parase</strong> 是提示工程的一种：</p>
-<ul>
-<li><code>get_format_instructions() -&gt; str</code>：方法，返回一个包含有关如何格式化语言模型输出的字符串，即提示 Prompt。</li>
-<li><code>parse(str) -&gt; Any</code>：方法，接受一个字符串（假定为语言模型的响应）并将其解析为某个结构。</li>
-<li><code>parse_with_prompt(str) -&gt; Any</code>：一个方法，它接受一个字符串（假设是语言模型的响应）和一个提示（假设是生成这样的响应的提示），并将其解析为某种结构。提示在此大多数情况下是为了提供信息以便 OutputParser 重新尝试或以某种方式修复输出。</li>
-</ul>
-<h2 id="索引-indexes"><a class="markdownIt-Anchor" href="#索引-indexes"></a> 索引 Indexes</h2>
-<p>结构化文档，以便 LLM 可以与外部文档交互。 LangChain有许多模块可帮助您加载、结构化、存储和检索文档。<a href="https://yeqiuo.github.io/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/#%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93">详见</a></p>
-<h2 id="代理-agents"><a class="markdownIt-Anchor" href="#代理-agents"></a> 代理 Agents</h2>
-<p>代理使用LLM来确定采取哪些行动以及顺序。</p>
-<ul>
-<li>使用工具并观察其输出</li>
-<li>生成相应返回给用户</li>
-</ul>
-]]></content>
-      <categories>
-        <category>大语言模型应用开发</category>
-      </categories>
-      <tags>
-        <tag>RAG架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LLM应用开发</title>
-    <url>/LLM-Application/</url>
-    <content><![CDATA[<p>实验室项目对话模块的主要工作和创新点，先大致记录一下思路，后续慢慢完善</p>
-<h1 id="何为llm应用开发"><a class="markdownIt-Anchor" href="#何为llm应用开发"></a> 何为LLM应用开发</h1>
-<p>网上不少人认为，与其去做 Prompt 应用不如去提升 LLM 的智能，Prompt 应用对于大语言模型能力提升的作用有限。但我不以为然，获得 Prompt 的加持之后，LLM 可以<strong>应用现实生活的所有工具</strong>；可以<strong>按步骤正确处理一个复杂问题</strong>（因为 LLM 不同于人类对话，只有构造出非常详细且周密的过程约束，才能得到最正确的答案，不然会出现“幻觉”现象）；可以引导 <strong>LLM 自我规划</strong>（下文的长文本对话），目前 Prompt 最常应用在 <code>Dynamic Few-Shot Examples</code> 领域中，可以快速定位与 Query 最相关的小样本，不使不相关的内容分散 LLM 的注意力，而不只局限于“聊天机器人”和“搜索引擎”这类看似没啥么太大用处的名头。</p>
-<p>一言以蔽之，应用开发就是将 LLM 聪明的大脑装上可随时替换的手脚、五官和前额叶、海马体，它可以变成任何人，使用任何工具。</p>
-<h1 id="长文本对话"><a class="markdownIt-Anchor" href="#长文本对话"></a> 长文本对话</h1>
-<h2 id="问题背景"><a class="markdownIt-Anchor" href="#问题背景"></a> 问题背景</h2>
-<p>虽然模型都支持32k的上下文，但是无法要求模型一次性输出超长文本。若给模型输入：“给我讲讲中国五千年历史，字数不得少于五千”，是无法得到想要的回答，模型最多生成一两千的字，而且由于所有输出都是一次返回的，上下文逻辑和内容都不尽人意。</p>
-<h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2>
-<p>先调用模型生成一次大纲，再拆分大纲分批次输入模型，每次模型的输出只需要关注一小块内容，因此可以获得更优结果。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">OutlinePrompt = ChatPromptTemplate.from_template(<span class="string">f&#x27;请根据<span class="subst">&#123;query&#125;</span>，按照以下格式对问题提炼目录。回答内容尽量简短\n \</span></span><br><span class="line"><span class="string">            开始生成大纲:\n \</span></span><br><span class="line"><span class="string">            1. XXX\n    1.1xxx 1.2xxx 1.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            2. XXX\n    2.1xxx 2.2xxx 2.3xxx ...\n  \</span></span><br><span class="line"><span class="string">            .......\n&#x27;</span>)</span><br><span class="line">chain = LLMChain(prompt=OutlinePrompt, llm=model1, memory=<span class="literal">None</span>, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>由于需要<strong>结构化解析</strong>输出结果并<strong>链式调用</strong>模型扩写子论点，采用结构化输出解析器 <code>from langchain.output_parsers import StructuredOutputParser, ResponseSchema</code> 和模型调用链 <code>from langchain.chains import SimpleSequentialChain, SequentialChain</code> ，该方法相较于直接 for 循环调用模型更加麻烦，但是便于整体项目的开发、调用和维护。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">chat_prompt = PromptTemplate.from_template(<span class="string">f&#x27;请以<span class="subst">&#123;title&#125;</span>的<span class="subst">&#123;contexts&#125;</span>为主要内容，帮我扩写到<span class="subst">&#123;num&#125;</span>字&#x27;</span>)</span><br><span class="line">combined_prompt = PromptTemplate.from_template(<span class="string">f&#x27;写一段过渡段，从<span class="subst">&#123;title&#125;</span>自然过渡到<span class="subst">&#123;next_title&#125;</span>，内容简短&#x27;</span>)</span><br><span class="line">chat_chain = LLMChain(llm=llm, prompt=chat_prompt, output_key=<span class="string">&quot;chat&quot;</span>)</span><br><span class="line">combined_chain = LLMChain(llm=llm, prompt=combined_prompt, output_key=<span class="string">&quot;combined&quot;</span>)</span><br><span class="line">single_chain = SequentialChain(</span><br><span class="line">    chains=[chat_chain, combined_chain], </span><br><span class="line">    input_variables=[<span class="string">&quot;title&quot;</span>, <span class="string">&quot;contexts&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;next_title&quot;</span>],</span><br><span class="line">    output_variables=[<span class="string">&quot;chat&quot;</span>, <span class="string">&quot;combined&quot;</span>],</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>目前还是通过 for 循环遍历大纲，后续考虑采用路由链 <code>LLMRouterChain</code>，</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">router_prompt = PromptTemplate(</span><br><span class="line">    template=router_template,</span><br><span class="line">    input_variables=[<span class="string">&quot;input&quot;</span>],</span><br><span class="line">    output_parser=RouterOutputParser(),</span><br><span class="line">)</span><br><span class="line">chain = MultiPromptChain(</span><br><span class="line">    router_chain=router_chain,    <span class="comment"># 路由链路</span></span><br><span class="line">    destination_chains=destination_chains,   <span class="comment"># 目标链路（LLmChain 数组）</span></span><br><span class="line">    default_chain=default_chain,      <span class="comment"># 默认链路</span></span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h1 id="私有数据知识库"><a class="markdownIt-Anchor" href="#私有数据知识库"></a> 私有数据知识库</h1>
-<h2 id="问题背景-2"><a class="markdownIt-Anchor" href="#问题背景-2"></a> 问题背景</h2>
-<p>离线私有数据不能直接作为语料库训练模型，LLM 需要具有基于私有数据返回的能力。</p>
-<h2 id="解决思路-2"><a class="markdownIt-Anchor" href="#解决思路-2"></a> 解决思路</h2>
-<p>知识库系统要包括文档加载、切分、存储、检索和存储聊天记录模块，具体通过向量表征 <code>Embeddings</code> 和向量存储 <code>Vector Store</code> 实现</p>
-<ul>
-<li>文本表征是对文本语义的向量表征，相似内容的文本具有相似的表征向量。这使我们可以在向量空间中比较文本的相似性。</li>
-<li>向量数据库<code>Vector Database</code>用来存储文档的文本块。对于给定的文档，我们首先将其分成较小的文本块<code>chunks</code>，然后获取每个小文本块的文本表征，并将这些表征储存在向量数据库中。这个流程正是创建索引<code>index</code>的过程。将文档分成小文本块的原因在于我们可能无法将整个文档传入语言模型进行处理。</li>
-</ul>
-<img data-src="/LLM-Application/image-20240424102449161.png" class="" title="image-20240424102449161">
-<p>Langchain 中文本分割器 <code>langchain.text_splitter</code> 都根据 chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行分割</p>
-<ul>
-<li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
-<li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
-</ul>
-<style>.mihpkxerwxui{zoom:50%;}</style><img data-src="/LLM-Application/image-20240424102824838.png" class="mihpkxerwxui" alt="langchain.text_splitter">
-<p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
-<p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
-<p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
-<p><strong>A2</strong>：通过 <code>SelfQueryRetriever</code> 参数 <code>document_content_description</code> 指定元素的不同字段（source）以及它们对应的位置（page）</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">metadata_field_info_chinese = [</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;source&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章来源于 `index-浙江省财政报告`, `index-江苏省财政报告` 的其中之一&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;string&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">    AttributeInfo(</span><br><span class="line">        name=<span class="string">&quot;page&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;文章中的哪一页&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&quot;integer&quot;</span>,</span><br><span class="line">    ),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p><strong>Q3</strong>：如何通过过获取到的文档得到 LLM 响应</p>
-<p><strong>A3</strong>：采用 检索式问答链 <code>RetrievalQA</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;使用以下上下文片段来回答最后的问题。如果你不知道答案，只需说不知道，不要试图编造答案。答案最多使用三个句子。尽量简明扼要地回答。在回答的最后一定要说&quot;感谢您的提问！&quot;</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string">问题：&#123;question&#125;</span></span><br><span class="line"><span class="string">有用的回答：&quot;&quot;&quot;</span></span><br><span class="line">QA_CHAIN_PROMPT = PromptTemplate.from_template(template)</span><br><span class="line"><span class="comment"># RetrievalQA 内部使用了 QA_CHAIN_PROMPT</span></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type( </span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever()</span><br><span class="line">)</span><br><span class="line">result = qa_chain(&#123;<span class="string">&quot;query&quot;</span>: question&#125;)</span><br></pre></td></tr></table></figure>
-<p><strong>Q4</strong>：如果文档太多，无法将它们全部适配到上下文窗口中怎么办？</p>
-<p><strong>A4</strong>：采用 <code>MapReduce</code>，首先将每个独立的文档单独发送到语言模型以获取原始答案。然后，将答案通过最终对语言模型的一次调用组合成最终的答案</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">qa_chain_mr = RetrievalQA.from_chain_type(</span><br><span class="line">    llm,</span><br><span class="line">    retriever=vectordb.as_retriever(),</span><br><span class="line">    chain_type=<span class="string">&quot;map_reduce&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>如果信息分布在两个文档之间，无法在同一上下文中获取到所有的信息，也就没法给出正确答案。为解决这个问题，可以采用 <code>Refine 检索式问答链</code> ，Refine 文档链类似于 MapReduce 链，对于每一个文档，会调用一次 LLM，但有所改进的是，我们每次发送给 LLM 的最终提示是一个序列，这个序列会将先前的响应与新数据结合在一起，并请求得到改进后的响应。这种方法类似于 RNN，我们增强了上下文，从而解决信息分布在不同文档的问题。</p>
-<p><a href="https://github.com/chatchat-space/Langchain-Chatchat">Github 参考项目链接</a></p>
-<h1 id="多场景知识图谱"><a class="markdownIt-Anchor" href="#多场景知识图谱"></a> 多场景知识图谱</h1>
-<h2 id="问题背景-3"><a class="markdownIt-Anchor" href="#问题背景-3"></a> 问题背景</h2>
-<p>参考 Langchain 外部知识库开源项目的 <a href="https://github.com/chatchat-space/Langchain-Chatchat/issues/1583">Issue</a>，可以发现，由于单一的文档切分方法和已训练好的分词器切分方法（项目中用的是 bge-large-zh-v1.5 模型）并不能理解场景相关的概念，也就无法构建有针对性的对话知识库，因此简单的导入外部数据无法实现多场景需求。</p>
-<h2 id="解决思路-3"><a class="markdownIt-Anchor" href="#解决思路-3"></a> 解决思路</h2>
-<p>针对私有数据的多场景对话需求，可以构建并应用不同场景的知识图谱。</p>
-<img data-src="/LLM-Application/image-20240424140419971.png" class="" title="image-20240424140419971">
-<p>基于 用户输入Query 和 图数据库 Schema 构建 Prompt，通过 LLM 获取简短、精要的实体和关系信息，后续再基于此生成对话响应。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> GraphCypherQAChain</span><br><span class="line"><span class="keyword">from</span> langchain.graphs <span class="keyword">import</span> Neo4jGraph</span><br><span class="line"></span><br><span class="line">graph = Neo4jGraph(</span><br><span class="line">    url=<span class="string">&quot;bolt://localhost:7687&quot;</span>, </span><br><span class="line">    username=<span class="string">&quot;neo4j&quot;</span>, </span><br><span class="line">    password=<span class="string">&quot;&quot;</span></span><br><span class="line">)</span><br><span class="line">chain = GraphCypherQAChain.from_llm(</span><br><span class="line">    model, graph=graph, verbose=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>Langchain 底层针对图数据库对话的 Prompt</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_GENERATION_TEMPLATE = <span class="string">&quot;&quot;&quot;Task:Generate Cypher statement to query a graph database.</span></span><br><span class="line"><span class="string">Instructions:</span></span><br><span class="line"><span class="string">Use only the provided relationship types and properties in the schema.</span></span><br><span class="line"><span class="string">Do not use any other relationship types or properties that are not provided.</span></span><br><span class="line"><span class="string">Schema:</span></span><br><span class="line"><span class="string">&#123;schema&#125;</span></span><br><span class="line"><span class="string">Note: Do not include any explanations or apologies in your responses.</span></span><br><span class="line"><span class="string">Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.</span></span><br><span class="line"><span class="string">Do not include any text except the generated Cypher statement.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The question is:</span></span><br><span class="line"><span class="string">&#123;question&#125;&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Langchain 底层针对上下文问答的 Prompt</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">CYPHER_QA_TEMPLATE = <span class="string">&quot;&quot;&quot;You are an assistant that helps to form nice and human understandable answers.</span></span><br><span class="line"><span class="string">The information part contains the provided information that you must use to construct an answer.</span></span><br><span class="line"><span class="string">The provided information is authoritative, you must never doubt it or try to use your internal knowledge to correct it.</span></span><br><span class="line"><span class="string">Make the answer sound as a response to the question. Do not mention that you based the result on the given information.</span></span><br><span class="line"><span class="string">If the provided information is empty, say that you don&#x27;t know the answer.</span></span><br><span class="line"><span class="string">Information:</span></span><br><span class="line"><span class="string">&#123;context&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: &#123;question&#125;</span></span><br><span class="line"><span class="string">Helpful Answer:&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-<h1 id="多轮对话"><a class="markdownIt-Anchor" href="#多轮对话"></a> 多轮对话</h1>
-<p>采用 qdrant 向量库保存对话历史</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CustomQdrantMemory</span>(<span class="title class_ inherited__">BaseChatMemory</span>):</span><br><span class="line">    <span class="comment"># 访问数据库抽取最相关联的 message_limit 条数据</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buffer</span>(<span class="params">self, inputs: <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]</span>) -&gt; <span class="type">List</span>[BaseMessage]:</span><br><span class="line">        chat_messages: <span class="type">List</span>[BaseMessage] = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inputs:</span><br><span class="line">            <span class="keyword">return</span> chat_messages</span><br><span class="line">        hits = self.qdrant.search(</span><br><span class="line">            collection_name=self.conversation_id,</span><br><span class="line">            query_vector=self.encoder.encode(inputs[<span class="string">&#x27;input&#x27;</span>]).tolist(),</span><br><span class="line">            limit=self.message_limit,</span><br><span class="line">        )</span><br><span class="line">        hits = <span class="built_in">sorted</span>(hits, key=<span class="keyword">lambda</span> x:x.<span class="built_in">id</span>)</span><br><span class="line">        <span class="keyword">for</span> hit <span class="keyword">in</span> hits:</span><br><span class="line">            chat_messages.append(HumanMessage(content=hit.payload[<span class="string">&#x27;human&#x27;</span>]))</span><br><span class="line">            chat_messages.append(AIMessage(content=hit.payload[<span class="string">&#x27;assistant&#x27;</span>]))</span><br><span class="line">        curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="comment"># 如果超出模型最长上下文，则弹出最早的对话历史</span></span><br><span class="line">        <span class="keyword">if</span> curr_buffer_length &gt; self.max_token_limit:</span><br><span class="line">            pruned_memory = []</span><br><span class="line">            <span class="keyword">while</span> curr_buffer_length &gt; self.max_token_limit <span class="keyword">and</span> chat_messages:</span><br><span class="line">                pruned_memory.append(chat_messages.pop())</span><br><span class="line">                curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="keyword">return</span> chat_messages        </span><br></pre></td></tr></table></figure>
-<h1 id="虚拟人设"><a class="markdownIt-Anchor" href="#虚拟人设"></a> 虚拟人设</h1>
-<p>流程</p>
-<ul>
-<li>音视频上传
-<ul>
-<li>语音转文字 FFmpeg</li>
-<li>【初始化时】声纹构建</li>
-<li>语音转文字 Whisper</li>
-<li>特征语料库构建</li>
-</ul>
-</li>
-<li>语料 + Chroma 向量库相似度 + KNN 距离匹配</li>
-<li>组成输入，LLM 响应结果</li>
-</ul>
-<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github 参考项目链接</a></p>
-<h1 id="python-notes"><a class="markdownIt-Anchor" href="#python-notes"></a> Python Notes</h1>
-<p>def _call() 方法把这个类型的对象当作函数来使用</p>
-]]></content>
-      <categories>
-        <category>LLM应用开发</category>
-      </categories>
-      <tags>
-        <tag>Langchain</tag>
-        <tag>向量数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统</title>
-    <url>/OS/</url>
-    <content><![CDATA[<p><strong>进程和线程的区别</strong></p>
-<p>线程是调度的基本单位，而进程则是资源拥有的基本单位。</p>
-<ul>
-<li>进程是资源（包括内存、打开的文件等）分配的最小单位，线程是 CPU 调度的最小单位；</li>
-<li>进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈，线程之间共享地址空间和文件等资源；</li>
-<li>线程同样具有就绪、阻塞、执行三种基本状态，同样具有状态之间的转换关系；</li>
-<li>线程能减少并发执行的时间和空间开销；</li>
-</ul>
-<p><strong>进程间通信方式</strong></p>
-<p>匿名管道 / 命名管道</p>
-<p>消息队列</p>
-<p>共享内存+信号量</p>
-<p>Socket</p>
-<p>多线程竞争共享资源</p>
-<p><strong>虚拟地址</strong></p>
-<p>进程隔离</p>
-<p>IO多路复用</p>
-<p>select,poll,epoll</p>
-]]></content>
-      <categories>
-        <category>八股文</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
       </tags>
   </entry>
 </search>

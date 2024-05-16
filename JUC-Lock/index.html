@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/image-20240415164535374.png">
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-Lock/clh-queue-state.png">
 <meta property="article:published_time" content="2024-04-14T05:30:54.000Z">
-<meta property="article:modified_time" content="2024-05-12T11:44:08.278Z">
+<meta property="article:modified_time" content="2024-05-16T05:50:09.871Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="Java并发">
 <meta property="article:tag" content="Java并发锁">
@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.</span> <span class="nav-text"> synchronized 关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reentrantlock-%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text"> ReentrantLock 类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#abstractqueuedsynchronizer-%E6%8A%BD%E8%B1%A1%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text"> AbstractQueuedSynchronizer 抽象类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#clh-%E9%94%81"><span class="nav-number">3.1.</span> <span class="nav-text"> CLH 锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#locksupport"><span class="nav-number">3.2.</span> <span class="nav-text"> LockSupport</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text"> 实现方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86%E5%85%AC%E5%B9%B3%E9%94%81%E5%92%8C%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81"><span class="nav-number">3.4.</span> <span class="nav-text"> 如何区分公平锁和非公平锁</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#semaphore"><span class="nav-number">4.</span> <span class="nav-text"> Semaphore</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#countdownlatch"><span class="nav-number">5.</span> <span class="nav-text"> CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cyclicbarrier"><span class="nav-number">6.</span> <span class="nav-text"> CyclicBarrier</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.</span> <span class="nav-text"> synchronized 关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reentrantlock"><span class="nav-number">2.</span> <span class="nav-text"> ReentrantLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#abstractqueuedsynchronizer-%E6%8A%BD%E8%B1%A1%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text"> AbstractQueuedSynchronizer 抽象类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#clh-%E9%94%81"><span class="nav-number">3.1.</span> <span class="nav-text"> CLH 锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#locksupport"><span class="nav-number">3.2.</span> <span class="nav-text"> LockSupport</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text"> 实现方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86%E5%85%AC%E5%B9%B3%E9%94%81%E5%92%8C%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81"><span class="nav-number">3.4.</span> <span class="nav-text"> 如何区分公平锁和非公平锁</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#semaphore"><span class="nav-number">4.</span> <span class="nav-text"> Semaphore</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#countdownlatch"><span class="nav-number">5.</span> <span class="nav-text"> CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cyclicbarrier"><span class="nav-number">6.</span> <span class="nav-text"> CyclicBarrier</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -160,18 +160,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -239,7 +239,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-12 19:44:08" itemprop="dateModified" datetime="2024-05-12T19:44:08+08:00">2024-05-12</time>
+      <time title="修改时间：2024-05-16 13:50:09" itemprop="dateModified" datetime="2024-05-16T13:50:09+08:00">2024-05-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -263,6 +263,7 @@
     <div class="post-body" itemprop="articleBody"><p>Java.util.concurrent 中有很多 Java 并发相关工具，例如 锁 <code>ReentrantLock</code>、线程 <code>Callable</code> <code>FutureTask</code>、信号量 <code>Semaphore</code>、共享锁 <code>CountDownLatch</code></p>
 <p>此外 Java 原生的 <code>volatile</code> 和 <code>synchronized</code> 关键字也是并发编程的关键。</p>
 <span id="more"></span>
+<p>简单的 CAS 实现：<code>AtomicInteger.compareAndSet(1, 2)</code></p>
 <h1 id="synchronized-关键字"><a class="markdownIt-Anchor" href="#synchronized-关键字"></a> synchronized 关键字</h1>
 <p>每个对象都有一个 monitor 对象于之关联，通过对象监视器 <code>monitor</code> 实现加锁和解锁，被锁住的区域是<code>临界区</code>域（就是被锁保护，线程间只能串行访问的代码）</p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yescode/p/14474104.html#autoid-0-0-0"><strong>锁升级策略</strong></a>：（图有误，hashcode 占 32 位）</p>
@@ -280,28 +281,18 @@
 <li>修饰静态方法，锁当前类，会作用于所有实例</li>
 <li>修饰代码块，程序指定锁什么</li>
 </ul>
-<p>概念：</p>
+<p><strong>概念</strong>：</p>
 <ul>
-<li>锁消除：将多次锁请求合并成一个请求，以降低短时间内大量锁请求、同步、释放带来的性能损耗</li>
-<li>锁粗化：Java 虚拟机在 JIT 编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁，通过锁消除，可以节省毫无意义的请求锁时间
-<ul>
-<li>.java -&gt; .class 字节码
-<ul>
-<li>Javac</li>
+<li>锁粗化：将多次锁请求合并成一个请求，以降低短时间内大量锁请求、同步、释放带来的性能损耗</li>
+<li>锁消除：Java 虚拟机在 JIT 编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁，通过锁消除，可以节省毫无意义的请求锁时间</li>
 </ul>
-</li>
-<li>字节码 -&gt; 机器码
-<ul>
-<li>JIT（Just-in-time）动态(即时)编译</li>
-<li>AOT（Ahead Of Time）运行前编译</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="reentrantlock-类"><a class="markdownIt-Anchor" href="#reentrantlock-类"></a> ReentrantLock 类</h1>
-<p>属性：可重入锁、独占锁、公平锁/非公平锁</p>
-<p>特点：可限时等待、可响应中断、可实现选择性通知</p>
+<blockquote>
+<p>.java -&gt; .class 字节码：Javac</p>
+<p>字节码 -&gt; 机器码：JIT（Just-in-time）动态(即时)编译；AOT（Ahead Of Time）运行前编译</p>
+</blockquote>
+<h1 id="reentrantlock"><a class="markdownIt-Anchor" href="#reentrantlock"></a> ReentrantLock</h1>
+<p><strong>属性：可重入锁、独占锁、公平锁/非公平锁</strong></p>
+<p><strong>特点：可限时等待、可响应中断、可实现选择性通知</strong></p>
 <p>使用场景：阻塞队列 <code>ArrayBlockingQueue</code> <code>LinkedBlockingDeque</code></p>
 <p>源码结构：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReentrantLock</span> <span class="keyword">implements</span> <span class="title class_">Lock</span> &#123;</span><br><span class="line">    <span class="comment">// 同步控制器（指向公平锁或非公平锁）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Sync sync;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Sync</span> <span class="keyword">extends</span> <span class="title class_">AbstractQueuedSynchronizer</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">nonfairTryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryRelease</span><span class="params">(<span class="type">int</span> releases)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">NonfairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 实现 Lock 接口</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.lock();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> sync.nonfairTryAcquire(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.release(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -371,7 +362,7 @@
 </ul>
 <p><strong>线程调度逻辑：</strong><br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.icxmghxpphds{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="icxmghxpphds" alt="image-20240415164535374">
+<style>.olrvryztcylk{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="olrvryztcylk" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <p>采用<strong>模板方法设计模式：</strong></p>
 <p>模板方法设计模式：抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现。</p>

@@ -167,18 +167,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -332,11 +332,11 @@
 <ul>
 <li>Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针。</li>
 </ul>
-<style>.zqnrdpvbutiz{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="zqnrdpvbutiz" alt="image-20240429100643112">
+<style>.etyjvxugoxvr{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="etyjvxugoxvr" alt="image-20240429100643112">
 <ul>
 <li>直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销，HotSpot 采用的是直接指针</li>
 </ul>
-<style>.zdygavkbjfeu{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="zdygavkbjfeu" alt="image-20240429100908916">
+<style>.cgbcnjeullcw{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="cgbcnjeullcw" alt="image-20240429100908916">
 <h2 id="对象的内存布局"><a class="markdownIt-Anchor" href="#对象的内存布局"></a> 对象的内存布局</h2>
 <p>Mark Word 是一个具有动态定义的数据结构，以便在极小的空间内存储尽量多的数据，根据对象的状态复用自己的存储空间。</p>
 <img data-src="/JVM/1161857-20200427173120968-675206595.png" class="" title="img">
@@ -492,7 +492,7 @@ STW：Stop the World</p>
 GC 回收问题：<a target="_blank" rel="noopener" href="https://heapdump.cn/article/1661497">YGC</a>、<a target="_blank" rel="noopener" href="https://heapdump.cn/article/1870333">FGC</a></p>
 <h1 id="类加载过程"><a class="markdownIt-Anchor" href="#类加载过程"></a> 类加载过程</h1>
 <p><strong>类的生命周期</strong>：加载、连接、初始化、使用、卸载</p>
-<style>.ngoxkqtorxcl{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="ngoxkqtorxcl" alt="image-20240429095206248">
+<style>.hzmtneylienk{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="hzmtneylienk" alt="image-20240429095206248">
 <ul>
 <li>加载：通过全类名获取定义此类的二进制字节流；将字节流所代表的静态存储结构转换为方法区的运行时数据结构；在内存中生成一个代表该类的 <code>Class</code> 对象，作为方法区这些数据的访问入口；【通过类加载器实现加载，通过双亲委派模型决定采用哪个类加载器】</li>
 <li>验证：确保 Class 文件的字节流中包含的信息无误</li>
@@ -558,13 +558,13 @@ GC 回收问题：<a target="_blank" rel="noopener" href="https://heapdump.cn/ar
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/" rel="prev" title="Git 文档阅读">
-                  <i class="fa fa-angle-left"></i> Git 文档阅读
+                <a href="/Java/" rel="prev" title="Java语言">
+                  <i class="fa fa-angle-left"></i> Java语言
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/Java-Algorithm/" rel="next" title="Java 算法汇总">
-                  Java 算法汇总 <i class="fa fa-angle-right"></i>
+                <a href="/SpringMVC/" rel="next" title="SpringMVC">
+                  SpringMVC <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

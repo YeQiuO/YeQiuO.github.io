@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/Rpc/A5B6F28E3286E3F920698A1D904CE4B0.png">
 <meta property="article:published_time" content="2024-04-16T03:05:58.000Z">
-<meta property="article:modified_time" content="2024-05-09T03:40:18.375Z">
+<meta property="article:modified_time" content="2024-05-16T05:44:28.451Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="分布式通讯框架">
 <meta name="twitter:card" content="summary">
@@ -155,18 +155,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -234,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-09 11:40:18" itemprop="dateModified" datetime="2024-05-09T11:40:18+08:00">2024-05-09</time>
+      <time title="修改时间：2024-05-16 13:44:28" itemprop="dateModified" datetime="2024-05-16T13:44:28+08:00">2024-05-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -262,6 +262,12 @@
 <li>一致性（Consistency）：所有节点访问同一份最新的数据副本</li>
 <li>可用性（Availability）：非故障的节点在合理的时间内返回合理的响应（不是错误或者超时的响应）</li>
 <li>分区容错性（Partition Tolerance）：分布式系统出现网络分区的时候，仍然能够对外提供服务。</li>
+</ul>
+<p>分布式保证服务高并发稳定性</p>
+<ul>
+<li>缓存：缓存是一种提高数据读取性能的技术，通过在内存中存储经常访问的数据，可以减少对数据库或者其他存储系统的访问，从而提高系统的响应速度。缓存可以应用在多个层次，例如浏览器缓存、CDN 缓存、反向代理缓存、应用缓存等。</li>
+<li>降级：降级是在系统压力过大或者部分服务不可用的情况下，暂时关闭一些非核心的服务，以保证核心服务的正常运行。降级可以在多个层次进行，例如页面降级、功能降级、服务降级等。</li>
+<li>限流：限流是一种控制系统处理请求的速率的技术，以防止系统过载。限流可以通过多种算法实现，例如固定窗口、滑动窗口、漏桶算法、令牌桶算法等。</li>
 </ul>
 <p>Nacos 配置中心 注册中心</p>
 <h1 id="rpc-框架"><a class="markdownIt-Anchor" href="#rpc-框架"></a> RPC 框架</h1>

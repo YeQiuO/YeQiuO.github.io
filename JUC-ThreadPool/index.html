@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-ThreadPool/b969e49a7eedbd52b014f86e86dcd3fc49634.png">
 <meta property="og:image" content="https://yeqiuo.github.io/JUC-ThreadPool/cef5469b5ec2e67ecca1b99a07260e4e22003.png">
 <meta property="article:published_time" content="2024-04-18T02:22:18.000Z">
-<meta property="article:modified_time" content="2024-05-13T12:12:39.944Z">
+<meta property="article:modified_time" content="2024-05-17T07:12:21.963Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="Java并发">
 <meta property="article:tag" content="Java线程池">
@@ -155,7 +155,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#threadpoolexecutor-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text"> ThreadPoolExecutor 线程池实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text"> 执行流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text"> 底层结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.</span> <span class="nav-text"> 线程池实现接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#executors-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%B7%A5%E5%8E%82%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text"> Executors 线程池工厂类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#completablefuture-%E5%BC%82%E6%AD%A5%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text"> CompletableFuture 异步执行结果类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.1.</span> <span class="nav-text"> 注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%BC%9A%E5%AF%BC%E8%87%B4%E6%AD%BB%E9%94%81"><span class="nav-number">3.1.1.</span> <span class="nav-text"> 线程池循环引用会导致死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5rpc%E8%B0%83%E7%94%A8%E6%B3%A8%E6%84%8F%E4%B8%8D%E8%A6%81%E9%98%BB%E5%A1%9Eio%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">3.1.2.</span> <span class="nav-text"> 异步RPC调用注意不要阻塞IO线程池</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.</span> <span class="nav-text"> 实际使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E4%BE%9D%E8%B5%96-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.1.</span> <span class="nav-text"> 零依赖-构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E4%BE%9D%E8%B5%96-%E5%BC%82%E6%AD%A5%E5%9B%9E%E8%B0%83"><span class="nav-number">3.2.2.</span> <span class="nav-text"> 一元依赖-异步回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%85%83%E4%BE%9D%E8%B5%96-%E5%A4%9A%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.2.3.</span> <span class="nav-text"> 二元依赖-多任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E4%BE%9D%E8%B5%96"><span class="nav-number">3.2.4.</span> <span class="nav-text"> 多元依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text"> 使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.1.</span> <span class="nav-text"> 构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%BB%93%E6%9E%9C%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.2.</span> <span class="nav-text"> 获取结果方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%9B%9E%E8%B0%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.3.</span> <span class="nav-text"> 异步回调方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.4.</span> <span class="nav-text"> 异常处理方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E7%BB%84%E5%90%88%E5%9B%9E%E8%B0%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.5.</span> <span class="nav-text"> 多任务组合回调方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E4%BB%A3%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text"> 底层代码</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#threadpoolexecutor-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text"> ThreadPoolExecutor 线程池实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text"> 底层结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97-blockingqueue"><span class="nav-number">1.1.1.</span> <span class="nav-text"> 阻塞队列 BlockingQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E5%B7%A5%E5%8E%82%E7%B1%BB-threadfactory"><span class="nav-number">1.1.2.</span> <span class="nav-text"> 创建线程工厂类 ThreadFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E6%8B%92%E7%BB%9D%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.3.</span> <span class="nav-text"> 任务拒绝策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.2.</span> <span class="nav-text"> 线程池实现接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#executors-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%B7%A5%E5%8E%82%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text"> Executors 线程池工厂类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#completablefuture-%E5%BC%82%E6%AD%A5%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text"> CompletableFuture 异步执行结果类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.1.</span> <span class="nav-text"> 注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%BC%9A%E5%AF%BC%E8%87%B4%E6%AD%BB%E9%94%81"><span class="nav-number">3.1.1.</span> <span class="nav-text"> 线程池循环引用会导致死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5rpc%E8%B0%83%E7%94%A8%E6%B3%A8%E6%84%8F%E4%B8%8D%E8%A6%81%E9%98%BB%E5%A1%9Eio%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">3.1.2.</span> <span class="nav-text"> 异步RPC调用注意不要阻塞IO线程池</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.</span> <span class="nav-text"> 实际使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E4%BE%9D%E8%B5%96-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.1.</span> <span class="nav-text"> 零依赖-构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E4%BE%9D%E8%B5%96-%E5%BC%82%E6%AD%A5%E5%9B%9E%E8%B0%83"><span class="nav-number">3.2.2.</span> <span class="nav-text"> 一元依赖-异步回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%85%83%E4%BE%9D%E8%B5%96-%E5%A4%9A%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.2.3.</span> <span class="nav-text"> 二元依赖-多任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E4%BE%9D%E8%B5%96"><span class="nav-number">3.2.4.</span> <span class="nav-text"> 多元依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text"> 使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.1.</span> <span class="nav-text"> 构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%BB%93%E6%9E%9C%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.2.</span> <span class="nav-text"> 获取结果方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%9B%9E%E8%B0%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.3.</span> <span class="nav-text"> 异步回调方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.4.</span> <span class="nav-text"> 异常处理方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E7%BB%84%E5%90%88%E5%9B%9E%E8%B0%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.5.</span> <span class="nav-text"> 多任务组合回调方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E4%BB%A3%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text"> 底层代码</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -168,18 +168,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -247,7 +247,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-13 20:12:39" itemprop="dateModified" datetime="2024-05-13T20:12:39+08:00">2024-05-13</time>
+      <time title="修改时间：2024-05-17 15:12:21" itemprop="dateModified" datetime="2024-05-17T15:12:21+08:00">2024-05-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,7 +271,7 @@
     
     <div class="post-body" itemprop="articleBody"><p>池化思想，维护一个池子，减少创建/销毁的开销，合理分配系统资源，但会增加调度开销。<a target="_blank" rel="noopener" href="https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html">参考美团技术博客</a>：底层设计思想、业务实现</p>
 <h1 id="threadpoolexecutor-线程池实现类"><a class="markdownIt-Anchor" href="#threadpoolexecutor-线程池实现类"></a> ThreadPoolExecutor 线程池实现类</h1>
-<h2 id="执行流程图"><a class="markdownIt-Anchor" href="#执行流程图"></a> 执行流程图</h2>
+<p><strong>执行流程图</strong></p>
 <img data-src="/JUC-ThreadPool/77441586f6b312a54264e3fcf5eebe2663494.png" class="" title="图2 ThreadPoolExecutor运行流程">
 <p><strong>线程池生命周期</strong></p>
 <img data-src="/JUC-ThreadPool/582d1606d57ff99aa0e5f8fc59c7819329028.png" class="" title="图3 线程池生命周期">
@@ -288,7 +288,9 @@
 <h2 id="底层结构"><a class="markdownIt-Anchor" href="#底层结构"></a> 底层结构</h2>
 <p><strong>ThreadPoolExecutor 构造函数</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="type">int</span> corePoolSize,  //线程池的核心线程数量</span></span><br><span class="line"><span class="params">    <span class="type">int</span> maximumPoolSize,  //线程池的最大线程数</span></span><br><span class="line"><span class="params">    <span class="type">long</span> keepAliveTime,  //当线程数大于核心线程数时，多余的空闲线程存活的最长时间</span></span><br><span class="line"><span class="params">    TimeUnit unit,  //时间单位</span></span><br><span class="line"><span class="params">    BlockingQueue&lt;Runnable&gt; workQueue,  //任务队列，用来储存等待执行任务的队列</span></span><br><span class="line"><span class="params">    ThreadFactory threadFactory,  //线程工厂，用来创建线程，一般默认即可</span></span><br><span class="line"><span class="params">    RejectedExecutionHandler handler  //拒绝策略，当提交的任务过多而不能及时处理时，我们可以定制策略来处理任务</span></span><br><span class="line"><span class="params">)</span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>阻塞队列 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6999798721269465102">BlockingQueue</a></strong></p>
+<p>核心线程数：CPU 密集型任务(N+1) I/O 密集型任务(2N) CPU 核心数 N</p>
+<h3 id="阻塞队列-blockingqueue"><a class="markdownIt-Anchor" href="#阻塞队列-blockingqueue"></a> 阻塞队列 BlockingQueue</h3>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6999798721269465102">Link</a></p>
 <p>阻塞队列中保存即将运行的任务，BlockingQueue 与 Queue 的主要区别是：</p>
 <ul>
 <li>通过在入队和出队时进行加锁，保证了队列线程安全</li>
@@ -303,7 +305,7 @@
 <thead>
 <tr>
 <th>阻塞队列</th>
-<th></th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
@@ -315,9 +317,21 @@
 <td>LinkedBlockingQueue</td>
 <td>不设置大小的话，默认无界队列</td>
 </tr>
+<tr>
+<td>SynchronousQueue</td>
+<td>如果有空闲线程，则使用空闲线程来处理；否则新建一个线程来处理任务</td>
+</tr>
+<tr>
+<td>DelayedWorkQueue</td>
+<td>内部元素并不是按照放入的时间排序，而是会按照延迟的时间长短对任务进行排序</td>
+</tr>
+<tr>
+<td>PriorityBlockingQueue</td>
+<td>优先级阻塞队列</td>
+</tr>
 </tbody>
 </table>
-<p><strong>创建线程工厂类 <u>ThreadFactory</u></strong></p>
+<h3 id="创建线程工厂类-threadfactory"><a class="markdownIt-Anchor" href="#创建线程工厂类-threadfactory"></a> 创建线程工厂类 ThreadFactory</h3>
 <blockquote>
 <p>参数可以设定线程名</p>
 </blockquote>
@@ -328,7 +342,7 @@
 </ul>
 <p>自定义线程工厂</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">testThreadPoolFactory</span> <span class="keyword">implements</span> <span class="title class_">ThreadFactory</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">AtomicInteger</span> <span class="variable">threadIdx</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String threadNamePrefix;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">testThreadPoolFactory</span><span class="params">(String Prefix)</span> &#123;</span><br><span class="line">        threadNamePrefix = Prefix;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Thread <span class="title function_">newThread</span><span class="params">(Runnable r)</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(r);</span><br><span class="line">        thread.setName(threadNamePrefix + <span class="string">&quot;-xxljob-&quot;</span> + threadIdx.getAndIncrement());</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><strong>任务拒绝策略</strong></p>
+<h3 id="任务拒绝策略"><a class="markdownIt-Anchor" href="#任务拒绝策略"></a> 任务拒绝策略</h3>
 <blockquote>
 <p>在使用线程池并且使用有界队列的时候，如果队列满了，任务添加到线程池的时候就会拒绝，具体的拒绝策略可以设定</p>
 </blockquote>
@@ -342,7 +356,7 @@
 <tbody>
 <tr>
 <td>AbortPolicy</td>
-<td>线程池队列满了丢掉这个任务并且抛出RejectedExecutionException异常</td>
+<td>线程池队列满了丢掉这个任务并且抛出 RejectedExecutionException 异常</td>
 </tr>
 <tr>
 <td>DiscardPolicy</td>
@@ -379,7 +393,11 @@
 <p>RxJava、Reactor 比 CompletableFuture 增加了操作融合、延迟执行、回压等特性</p>
 </blockquote>
 <p>CompletableFuture实现 Future、CompletionStage 接口。</p>
-<p>Future表示异步<strong>计算的结果</strong>，CompletionStage用于表示异步执行过程中的一个<strong>步骤</strong>（Stage），这个步骤可能是由另外一个CompletionStage触发的，随着当前步骤的完成，也可能会触发其他一系列CompletionStage的执行。从而我们可以根据实际业务对这些步骤进行多样化的编排组合，CompletionStage接口正是定义了这样的能力，我们可以通过其提供的thenAppy、thenCompose等函数式编程方法来组合编排这些步骤。</p>
+<ul>
+<li>Future 表示异步<strong>计算的结果</strong>，可以通过<code>Future</code> 类获取到耗时任务的执行结果</li>
+<li>CompletionStage 用于表示异步执行过程中的一个<strong>步骤</strong>（Stage），这个步骤可能是由另外一个 CompletionStage 触发的，随着当前步骤的完成，也可能会触发其他一系列 CompletionStage 的执行。从而我们可以根据实际业务对这些步骤进行多样化的<strong>编排组合</strong>，CompletionStage 接口正是定义了这样的能力，我们可以通过其提供的 thenAppy、thenCompose 等函数式编程方法来组合编排这些步骤。</li>
+</ul>
+<p><code>FutureTask</code>相当于对<code>Callable</code> 进行了封装，管理着任务执行的情况，存储了 <code>Callable</code> 的 <code>call</code> 方法的任务执行结果</p>
 <h2 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> 注意事项</h2>
 <ul>
 <li>Future 需要获取返回值，才能获取异常信息（即线程需要实现 <code>Callable</code> 接口，而 <code>Runnable</code> 接口创建线程不会返回结果或抛出检查异常）</li>
@@ -497,13 +515,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/Rpc/" rel="prev" title="Rpc 框架">
-                  <i class="fa fa-angle-left"></i> Rpc 框架
+                <a href="/Rpc/" rel="prev" title="Rpc 中间件">
+                  <i class="fa fa-angle-left"></i> Rpc 中间件
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/LLM-RAG-Langchain/" rel="next" title="RAG架构和Langchain框架">
-                  RAG架构和Langchain框架 <i class="fa fa-angle-right"></i>
+                <a href="/LLM-RAG-Langchain/" rel="next" title="RAG 架构和 Langchain 框架">
+                  RAG 架构和 Langchain 框架 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

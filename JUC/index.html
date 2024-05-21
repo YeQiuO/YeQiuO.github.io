@@ -21,7 +21,7 @@
 
     <meta name="description" content="JMM、ThreadLocal">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JUC">
+<meta property="og:title" content="Java并发基础">
 <meta property="og:url" content="https://yeqiuo.github.io/JUC/index.html">
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="JMM、ThreadLocal">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://yeqiuo.github.io/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp">
 <meta property="og:image" content="https://yeqiuo.github.io/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp">
 <meta property="article:published_time" content="2024-04-09T09:11:06.000Z">
-<meta property="article:modified_time" content="2024-05-16T05:39:58.283Z">
+<meta property="article:modified_time" content="2024-05-18T01:19:42.368Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="Java并发">
 <meta name="twitter:card" content="summary">
@@ -41,10 +41,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/JUC/","path":"JUC/","title":"JUC"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/JUC/","path":"JUC/","title":"Java并发基础"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>JUC | 闻</title>
+<title>Java并发基础 | 闻</title>
   
 
 
@@ -144,7 +144,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#threadlocal"><span class="nav-number">1.</span> <span class="nav-text"> ThreadLocal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E7%82%B9%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text"> 重点问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">2.</span> <span class="nav-text"> Volatile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jmm"><span class="nav-number">3.</span> <span class="nav-text"> JMM</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#threadlocal"><span class="nav-number">1.</span> <span class="nav-text"> ThreadLocal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-number">1.1.</span> <span class="nav-text"> Q&amp;A</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jmm"><span class="nav-number">2.</span> <span class="nav-text"> JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text"> 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#happens-before-%E5%8E%9F%E5%88%99"><span class="nav-number">2.2.</span> <span class="nav-text"> happens-before 原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7"><span class="nav-number">2.3.</span> <span class="nav-text"> 并发的三大特性</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -157,18 +157,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -213,12 +213,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="JUC | 闻">
+      <meta itemprop="name" content="Java并发基础 | 闻">
       <meta itemprop="description" content="JMM、ThreadLocal">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          JUC
+          Java并发基础
         </h1>
 
         <div class="post-meta-container">
@@ -236,7 +236,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-16 13:39:58" itemprop="dateModified" datetime="2024-05-16T13:39:58+08:00">2024-05-16</time>
+      <time title="修改时间：2024-05-18 09:19:42" itemprop="dateModified" datetime="2024-05-18T09:19:42+08:00">2024-05-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -268,45 +268,68 @@
 <p><strong>原理</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>整体结构图</p>
-<style>.nlwqnjskxyql{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="nlwqnjskxyql" alt="img">
+<style>.kvxruxtirphv{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="kvxruxtirphv" alt="img">
 <p>引用关系图</p>
-<style>.bkcwixkbooie{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="bkcwixkbooie" alt="img">
-<h2 id="重点问题"><a class="markdownIt-Anchor" href="#重点问题"></a> 重点问题</h2>
+<style>.quxltjyexiug{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="quxltjyexiug" alt="img">
+<h2 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> Q&amp;A</h2>
 <p><strong>Entry的key为什么设计成弱引用？</strong></p>
 <p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>
 <p><strong>ThreadLocal为什么会导致内存泄露，如何解决？</strong></p>
-<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value 值，但是如果没有调用这些方法，Entry和ThreadLocalMap将会长期存在下去，会导致内存泄露；</p>
-<p>使用完ThreadLocal对象之后，调用remove方法；</p>
-<p><strong>ThreadLocal是如何定位数据的？</strong></p>
+<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value 值，但是如果没有调用这些方法，Entry 和ThreadLocalMap 将会长期存在下去，会导致内存泄露；</p>
+<p>使用完 ThreadLocal 对象之后，调用 remove 方法；</p>
+<p><strong>ThreadLocal 是如何定位数据的？</strong></p>
 <p><code>int i = key.threadLocalHashCode &amp; (len-1);</code></p>
-<p>如果有冲突就通过线性探测再散列，直到 table[i] = null；</p>
+<p>如果有冲突就通过线性探测再散列，直到找到空 bin；</p>
 <blockquote>
 <p>其他Hash冲突解决方法：开放寻址法（再散列）、拉链法</p>
 </blockquote>
-<p><strong>ThreadLocal是如何扩容的？</strong></p>
-<ul>
-<li>size&gt;threshold</li>
-</ul>
+<p><strong>ThreadLocal 是如何扩容的？</strong></p>
 <p><strong>父子线程如何共享数据？</strong></p>
-<p>InheritableThreadLocal</p>
-<p>init 方法会将 父线程中往 ThreadLocal 设置的值，拷贝一份到子线程中；</p>
-<p><strong>ThreadLocal 变量为什么建议要定义成static的？</strong></p>
+<p>InheritableThreadLocal：初始化时会拷贝一份父线程中 ThreadLocal 值，到子线程 InheritableThreadLocal  中；</p>
+<p><strong>ThreadLocal 作为成员变量时，为什么定义成 static 更好？</strong></p>
 <p>将 ThreadLocal 定义为 static 可以确保所有线程都访问同一个 ThreadLocal 实例，但它们各自存储的数据是独立的；</p>
 <p>确保它们的生命周期与线程的生命周期一致，而不是与类的实例的生命周期一致；</p>
-<p><strong>使用InheritableThreadLocal时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
-<p>不会影响到已经存在的子线程中 InheritableThreadLocal 的值，子线程将保持它在创建时从父线程中继承的原始值。</p>
-<h1 id="volatile"><a class="markdownIt-Anchor" href="#volatile"></a> Volatile</h1>
-<ul>
-<li>保证变量的可见性，但无法在多线程读写变量时保证操作原子性</li>
-<li>防止 JVM 的指令重排序：对该变量读写时，会插入特定的内存屏障</li>
-</ul>
-<blockquote>
-<p>也可以采用**<code>Unsafe</code> 类的内存屏障**实现 防止指令重排序 的效果</p>
-</blockquote>
+<p><strong>使用 InheritableThreadLocal 时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
+<p>不会影响到已经存在的子线程中 InheritableThreadLocal 的值，子线程将保持它在创建时从父线程中继承的原始值；</p>
 <h1 id="jmm"><a class="markdownIt-Anchor" href="#jmm"></a> JMM</h1>
-<p>Java 内存模型定义了 Java 程序中各种变量（主内存和线程工作内存）的访问规则。保证多线程环境下数据的一致性和可见性。</p>
-<p><strong>双重校验锁实现对象单例</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">//类对象加锁</span></span><br><span class="line">    <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            uniqueInstance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>抽象了 happens-before 原则来解决这个指令重排序问题，保证多线程环境下数据的一致性和可见性。</p>
+</li>
+<li>
+<p>抽象了线程和主内存之间的关系，提供一套内存模型以屏蔽系统差异</p>
+</li>
+</ul>
+<h2 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h2>
+<p>CPU 高速缓存：为解决 CPU 处理速度和内存不匹配的问题；</p>
+<p>指令重排序【编译器优化重排 —&gt; 指令并行重排 —&gt; 内存系统重排】：指令重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致；</p>
+<blockquote>
+<p>内存屏障可以禁止处理器指令发生重排序，从而保障指令执行的有序性。此外，还能保证指令执行的可见性。</p>
+</blockquote>
+<h2 id="happens-before-原则"><a class="markdownIt-Anchor" href="#happens-before-原则"></a> happens-before 原则</h2>
+<p>前一个操作的结果对于后一个操作是可见的，无论这两个操作是否在同一个线程里</p>
+<ul>
+<li>只要不改变程序的执行结果，编译器和处理器怎么进行重排序优化都行；</li>
+<li>会改变程序执行结果的重排序，JMM 要求编译器和处理器必须禁止这种重排序；</li>
+</ul>
+<h2 id="并发的三大特性"><a class="markdownIt-Anchor" href="#并发的三大特性"></a> 并发的三大特性</h2>
+<p>原子性：一次操作或者多次操作，要么所有的操作全部都得到执行并且不会受到任何因素的干扰而中断，要么都不执行</p>
+<ul>
+<li>synchronized、各种 Lock 以及各种原子类；</li>
+</ul>
+<p>可见性：当一个线程对共享变量进行了修改，那么另外的线程都是立即可以看到修改后的最新值</p>
+<ul>
+<li>synchronized、Volatile 以及各种 Lock 实现可见性；</li>
+</ul>
+<p>有序性：代码的执行顺序未必就是编写代码时候的顺序</p>
+<ul>
+<li>
+<p>Volatile 关键字：<strong>保证变量的可见性和代码执行的有序性</strong>，但无法在多线程读写变量时保证操作原子性；</p>
+</li>
+<li>
+<p>内存屏障：<code>Unsafe</code> 类的 <code>fullFence()</code> 可以避免代码重排序；</p>
+</li>
+</ul>
 
     </div>
 

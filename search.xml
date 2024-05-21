@@ -2460,16 +2460,16 @@ Bean 工厂模式</p>
 </ul>
 <h1 id="aop-面向切面编程"><a class="markdownIt-Anchor" href="#aop-面向切面编程"></a> AOP 面向切面编程</h1>
 <p>将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。<br />
-实现方式：基于动态代理，有接口用 jdk 原生的代理方法，没借口用 CGLib<br />
-<img data-src="https://cdn.nlark.com/yuque/0/2024/png/35963383/1710914695105-23ec9fa4-bfe3-400f-a4ae-3ee481e15ed2.png#averageHue=%23fafafa&amp;clientId=u9b3c2e0d-0508-4&amp;from=paste&amp;height=268&amp;id=u95f80866&amp;originHeight=621&amp;originWidth=1255&amp;originalType=binary&amp;ratio=1.2999999523162842&amp;rotation=0&amp;showTitle=false&amp;size=225114&amp;status=done&amp;style=none&amp;taskId=uea2c3c65-5775-47c7-b2d4-e1b20ecc5a1&amp;title=&amp;width=542.3846435546875" alt="image.png" /></p>
+实现方式：基于动态代理，有接口用 jdk 原生的代理方法，没借口用 CGLib</p>
+<img data-src="/Spring/image-20240521182846989.png" class="" title="image-20240521182846989">
 <h1 id="bean-生命周期"><a class="markdownIt-Anchor" href="#bean-生命周期"></a> Bean 生命周期</h1>
 <blockquote>
 <p>自动装配：@Component；@Service；@Controller；@Configure + @Bean</p>
 </blockquote>
-<p><img data-src="https://cdn.nlark.com/yuque/0/2024/png/35963383/1712674114596-397e917e-2d16-4421-a4c7-97c8361bf36a.png#averageHue=%23f8f8f8&amp;clientId=ua4aed479-db90-4&amp;from=paste&amp;id=Qa54Q&amp;originHeight=2563&amp;originWidth=5969&amp;originalType=url&amp;ratio=1.309999942779541&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;taskId=uc9b53a15-d076-484e-8090-bc105e6948f&amp;title=" alt="" /><br />
-xxx.class --&gt; 默认无参构造方法 --&gt; 普通对象 --&gt; 依赖注入（属性赋值） --&gt; 初始化前 --&gt; 初始化 --&gt; 初始化后 --&gt; 代理对象 --&gt; 得到Bean（<a href="https://www.cnblogs.com/chengxuxiaoyuan/p/16321716.html">源码</a>）<br />
+<img data-src="/Spring/image-20240521182854337.png" class="" title="image-20240521182854337">
+<p>xxx.class --&gt; 默认无参构造方法 --&gt; 普通对象 --&gt; 依赖注入（属性赋值） --&gt; 初始化前 --&gt; 初始化 --&gt; 初始化后 --&gt; 代理对象 --&gt; 得到Bean（<a href="https://www.cnblogs.com/chengxuxiaoyuan/p/16321716.html">源码</a>）<br />
 实例化 Bean 对象：默认调用无参构造器；若使用有参构造器，参数必须是容器中有的Bean【按参数查找 Bean 时，先按照 classname 后按照参数名】<br />
-初始化前中后：BeanPostProcessor 的 postProcessAfterInitialization() --&gt; @PostConstruct 注解 --&gt; InitializingBean 的 afterPropertiesSet() 方法 --&gt; BeanPostProcessor 的 postProcessAfterInitialization()（实现了 AOP 代理）</p>
+初始化前中后：BeanPostProcessor 的 postProcessAfterInitialization() --&gt; @PostConstruct 注解 --&gt; InitializingBean 的 afterPropertiesSet() 方法 --&gt; BeanPostProcessor 的 postProcessAfterInitialization()（实现了 AOP 代理)</p>
 <ul>
 <li>Aware 其实就是一个标识；只有满足Aware规范或者其子类规范的才能进行相关的赋值操作，这样做的话可以少写很多判断，并且可以在一个地方进行统一的判断赋值；</li>
 <li>BeanPostProcessor 前置处理器的关键实现类：ApplicationContextAwareProcessor</li>
@@ -2504,7 +2504,7 @@ Springboot 自动配置</p>
 <li>@EnableAutoConfiguration</li>
 <li>自动将一些配置类的bean注册进ioc容器</li>
 </ul>
-<p>logback是slf4j的官方实现，log4j是另一个实现，logback和log4j才是二选一，slf4j是门面日志的api。</p>
+<p>logback是 slf4j 的官方实现，log4j 是另一个实现，logback 和 log4j 才是二选一，slf4j 是门面日志的 api。</p>
 <p>TODO<br />
 <a href="https://www.cnblogs.com/tuyang1129/p/12861617.html">https://www.cnblogs.com/tuyang1129/p/12861617.html</a><br />
 <a href="https://www.cnblogs.com/tuyang1129/p/12866484.html">https://www.cnblogs.com/tuyang1129/p/12866484.html</a></p>

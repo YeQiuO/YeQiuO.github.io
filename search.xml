@@ -2137,8 +2137,8 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>传输层通过端口区分应用</li>
 <li>IP 分片（MTU）传输 TCP 报文</li>
 </ul>
-<style>.fmtrngtwpblv{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="fmtrngtwpblv" alt="img">
-<style>.yrwulrgqbhdc{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="yrwulrgqbhdc" alt="image-20240508140301819">
+<style>.yahpxufvlnax{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="yahpxufvlnax" alt="img">
+<style>.tiwypkybwkhf{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="tiwypkybwkhf" alt="image-20240508140301819">
 <h1 id="应用层-http"><a class="markdownIt-Anchor" href="#应用层-http"></a> 应用层 HTTP</h1>
 <blockquote>
 <p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
@@ -2196,9 +2196,9 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </blockquote>
 <p>TCP ：面向连接的、可靠的、基于字节流的</p>
 <p>三次握手</p>
-<style>.keejlxdolszm{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="keejlxdolszm" alt="TCP 三次握手">
-<p>四次挥手</p>
-<style>.wppkqsqeopfv{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="wppkqsqeopfv" alt="客户端主动关闭连接 —— TCP 四次挥手">
+<style>.ykimquyrvlqp{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="ykimquyrvlqp" alt="TCP 三次握手">
+<p>四次挥手【closed_wait；last_ack】</p>
+<style>.rmmcwgmarsbp{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="rmmcwgmarsbp" alt="客户端主动关闭连接 —— TCP 四次挥手">
 <ul>
 <li>首先确认客户端不会再发送请求给服务端</li>
 <li>然后服务端在发送完数据后，再向客户端发送断开连接</li>
@@ -2235,7 +2235,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>CPU 只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
 <p>进程隔离：将虚拟内存映射到物理内存，进程之间的地址空间相互隔离，互不干扰</p>
 <p>虚拟内存空间：</p>
-<style>.denskkmcctig{zoom:50%;}</style><img data-src="/OS/image-20240518105657086.png" class="denskkmcctig" alt="image-20240518105657086">
+<style>.urbpyswfdmoe{zoom:50%;}</style><img data-src="/OS/image-20240518105657086.png" class="urbpyswfdmoe" alt="image-20240518105657086">
 <p>用户态虚拟内存空间是相互隔离相互独立的；内核虚拟内存空间是各个进程共享的；</p>
 <h1 id="进程管理"><a class="markdownIt-Anchor" href="#进程管理"></a> 进程管理</h1>
 <p>数据结构 PCB</p>
@@ -2260,12 +2260,23 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>3、想要防止进程奔溃，需要自定义信号处理函数去拦截 SIGSEGV 信号。参考 JVM 中线程崩溃但 JVM 进程不会崩溃</p>
 <h1 id="网络系统"><a class="markdownIt-Anchor" href="#网络系统"></a> 网络系统</h1>
 <h2 id="io-多路复用"><a class="markdownIt-Anchor" href="#io-多路复用"></a> I/O 多路复用</h2>
-<p>epoll</p>
-<img data-src="/OS/640.webp" class="" title="图片">
+<p><strong>单个进程或线程同时监视多个文件描述符</strong>，如网络连接或文件句柄。当这些描述符中的任何一个就绪时，比如有数据可读或可写，多路复用机制就能够通知应用程序进行相应的读写操作。常见的IO多路复用技术包括 select、poll 和 epoll 等。</p>
 <p>select</p>
 <p>将已连接的 Socket 都放到一个文件描述符集合，然后调用 select 函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写， 接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。<strong>2 次「遍历」文件描述符集合</strong>，<strong>2 次「拷贝」文件描述符集合</strong>。</p>
 <p>poll</p>
-<p>和 select 并没有太大的本质区别，<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
+<p>它使用一个 pollfd 结构来表示被监视的文件描述符及其事件，与select相比，poll没有文件描述符数量的限制，因为它基于链表来存储。<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
+<p>epoll</p>
+<img data-src="/OS/640.webp" class="" title="图片">
+<ul>
+<li>epoll 只在初始时完成一次文件描述符的注册，避免了每次调用时的拷贝开销</li>
+<li>采用回调函数的方式，只有当一个或多个文件描述符就绪时，才会调用回调函数并通知用户空间，这使得epoll在处理大量文件描述符时仍然能保持高效</li>
+<li>epoll 返回时已经明确指出了哪些文件描述符是就绪的，因此无需再像 select 和 poll 那样进行额外的遍历操作。</li>
+</ul>
+<p><strong>epoll 触发时机</strong></p>
+<ul>
+<li>边缘触发：只有当文件描述符的状态从不就绪变为就绪时，epoll才会发出通知；一旦通知过后，除非状态再次发生变化，否则不会再次通知；</li>
+<li>水平触发：只要文件描述符处于就绪状态，epoll就会持续发出通知，直到数据处理完毕；</li>
+</ul>
 ]]></content>
       <categories>
         <category>八股文</category>
@@ -3272,8 +3283,8 @@ Springboot 自动配置</p>
 <p>如何看待华为公司？为什么想来华为公司进行实习？</p>
 <ul>
 <li>无论是在芯片、操作系统还是在手机、汽车等领域，华为都是中国的一线品牌，华为当下在做的事情相当于五十年前的核武器研究；</li>
-<li>体验大厂的氛围和管理制度，和优秀的团队一起成长，努力工作，争取毕业留在华为；</li>
 <li>参加华为举办的竞赛感受到华为的人文关怀做得很好，比赛场地布置的很用心，比赛结束后还举办了活动，吃了大餐，临走还送和一袋纪念品，包括所有人的合照；</li>
+<li>体验大厂的氛围和管理制度，和优秀的团队一起成长，努力工作，争取毕业留在华为；</li>
 </ul>
 <p>能够实习多长时间？</p>
 <ul>
@@ -3308,11 +3319,9 @@ Springboot 自动配置</p>
 <p>应用背景：将知识图谱应用在大模型领域，提升 LLM 响应的准确性和逻辑性；</p>
 <p>创新点：不同于目前流行 RAG架构 思想，并不是通过 Prompt 帮助模型获取外部知识，而是将知识图谱中的数据训练到模型中，微调后的模型不仅得到了图谱中的外部知识，还获取了图谱中节点之间的逻辑性（对话过程中的）；</p>
 <p>具体实现：</p>
-<ul>
-<li>使用知识图谱引导大语言模型生成，区别于基于 Neo4j 的 Prompt 工程，我提取当前对话相关的图谱节点特征，由于其节点跟随对话进展而变化，可以得到一个动态节点特征；</li>
-<li>通过异构图构建动态节点和上下文对话之间的图结构关系，并训练，得到全局状态；</li>
-<li>设计双状态解码器，类似于 LSTM 门限网络，基于全局状态和上下文特征生成模型响应；</li>
-</ul>
+<p>（1） 提出了动态策略模型，跟踪历史对话中用户语句多类特征的动态变化，抽取对话中深层次的关系和属性。</p>
+<p>（2）设计了一个基于注意力机制的异构图网络，将用户的意图、历史策略和上下文对话进行交互，选择最优的支持策略以生成有效的支持响应。</p>
+<p>（3）考虑到全局策略控制着整个对话流，DSA设计了监控全局策略信息的子任务和上下文到全局状态和全局状态到上下文的门限控制网络。</p>
 <p>实验：应用于情感支持对话领域，将情感支持策略视作一种类型的知识图谱，同时引入常识性知识图谱，微调 BlenderBot 模型学习知识图谱的节点特征，提高模型的在 ESConv 数据集上的指标；</p>
 <p><strong>步骤</strong></p>
 <p>【3】</p>

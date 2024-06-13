@@ -26,12 +26,6 @@
       </tags>
   </entry>
   <entry>
-    <title>大论文笔记</title>
-    <url>/Graduate-Research/</url>
-    <content><![CDATA[<p>和最近的文献作比较，可以和指标跑出来不是很好的比</p>
-]]></content>
-  </entry>
-  <entry>
     <title>模拟面试题</title>
     <url>/Interview-Questions/</url>
     <content><![CDATA[<h1 id="java-basic"><a class="markdownIt-Anchor" href="#java-basic"></a> Java-basic</h1>
@@ -977,13 +971,13 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <h2 id="数组-列表快速初始化"><a class="markdownIt-Anchor" href="#数组-列表快速初始化"></a> 数组、列表快速初始化</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] array = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[] array = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">int</span>[][] array = &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">3</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);  <span class="comment">// 返回的是Arrays的内部类无法增删</span></span><br><span class="line">List&lt;&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()&#123;&#123;</span><br><span class="line">    add(<span class="number">1</span>);</span><br><span class="line">    add(<span class="number">2</span>);</span><br><span class="line">    add(<span class="number">3</span>);</span><br><span class="line">&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);  <span class="comment">// 返回的是Arrays的内部类【无法增删】</span></span><br><span class="line">List&lt;&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()&#123;&#123;</span><br><span class="line">    add(<span class="number">1</span>);</span><br><span class="line">    add(<span class="number">2</span>);</span><br><span class="line">    add(<span class="number">3</span>);</span><br><span class="line">&#125;&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="初始化小根堆"><a class="markdownIt-Anchor" href="#初始化小根堆"></a> 初始化小根堆</h2>
 <p>使用优先级队列 <code>PriorityQueue</code> 实现小根堆</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">PriorityQueue&lt;<span class="type">int</span>[]&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((pair1,pair2) -&gt; pair1[<span class="number">1</span>]-pair2[<span class="number">1</span>]);  <span class="comment">// 数组</span></span><br><span class="line">PriorityQueue&lt;ListNode&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((o1, o2) -&gt; o1.val-o2.val);  <span class="comment">// 节点</span></span><br><span class="line"></span><br><span class="line">queue.offer(data)  <span class="comment">// 节点入堆</span></span><br><span class="line">data = queue.poll()  <span class="comment">// 头节点出堆</span></span><br></pre></td></tr></table></figure>
 <h2 id="list-转数组"><a class="markdownIt-Anchor" href="#list-转数组"></a> List 转数组</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动拆箱</span></span><br><span class="line"><span class="type">int</span>[] array = list.stream().mapToInt(Integer::valueOf).toArray();</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 流式</span></span><br><span class="line">String[] array = list.stream().toArray(String[]::<span class="keyword">new</span>);</span><br><span class="line"><span class="comment">// 串行</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[list.size()]); <span class="comment">// 规定好数组大小，速度更快</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 流式</span></span><br><span class="line">String[] array = list.stream().toArray(String[]::<span class="keyword">new</span>);</span><br><span class="line"><span class="comment">// 串行【规定好数组大小，zhuan&#x27;hua速度更快】</span></span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[list.size()]);</span><br><span class="line">String[] array = list.toArray(<span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
 <h2 id="数组转-list"><a class="markdownIt-Anchor" href="#数组转-list"></a> 数组转 List</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动装箱</span></span><br><span class="line"><span class="type">int</span>[] arr = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.stream(arr).boxed().collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer[] integers = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">3</span>,<span class="number">8</span>,<span class="number">20</span>,<span class="number">7</span>,<span class="number">11</span>,<span class="number">25</span>&#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.asList(integers); </span><br><span class="line"><span class="comment">// ArrayList&lt;Object&gt; list = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">// Collections.addAll(list, a);</span></span><br></pre></td></tr></table></figure>
@@ -1571,7 +1565,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>执行 SQL：
 <ul>
 <li>预处理阶段：检查表或字段是否存在；将 select * 中的 * 符号扩展为表上的所有列；</li>
-<li>优化阶段：基于查询成本的考虑， 选择查询成本最小的执行计划；查询优化器</li>
+<li>优化阶段：基于查询成本的考虑， 选择查询成本最小的执行计划；查询优化器；</li>
 <li>执行阶段：根据执行计划执行 SQL 查询语句，从存储引擎读取记录，返回给客户端；</li>
 </ul>
 </li>
@@ -1583,13 +1577,13 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>table.ibd，存放<strong>表数据</strong>，<s>表数据既可以存在共享表空间文件（文件名：ibdata1）里</s>，也可以存放在独占表空间文件（文件名：表名字.ibd）。这个行为是由参数 innodb_file_per_table 控制的，若设置了参数 innodb_file_per_table 为 1，则会将存储的<strong>数据、索引等信息单独存储在一个独占表空间</strong>，从 MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本之后， MySQL 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
 </ul>
 <p><strong>表空间文件的结构</strong></p>
-<style>.sfvymqesfdgz{zoom:67%;}</style><img data-src="/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="sfvymqesfdgz" alt="img">
+<style>.pnngyeagsidr{zoom:67%;}</style><img data-src="/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="pnngyeagsidr" alt="img">
 <h2 id="innodb-行格式"><a class="markdownIt-Anchor" href="#innodb-行格式"></a> InnoDB 行格式</h2>
 <p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact 行格式的结构</p>
 <img data-src="/MySQL/COMPACT.drawio.png" class="" title="img">
 <h2 id="innodb-页格式"><a class="markdownIt-Anchor" href="#innodb-页格式"></a> InnoDB 页格式</h2>
 <p>InnoDB 的数据是按「数据页」为单位来读写的，数据页的默认大小是 16KB</p>
-<style>.qlduowjbpkzt{zoom:50%;}</style><img data-src="/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="qlduowjbpkzt" alt="243b1466779a9e107ae3ef0155604a17">
+<style>.sbcjeckmptbo{zoom:50%;}</style><img data-src="/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="sbcjeckmptbo" alt="243b1466779a9e107ae3ef0155604a17">
 <table>
 <thead>
 <tr>
@@ -1653,7 +1647,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>所有节点都是 16KB 数据页</li>
 <li>非叶子节点中有多少个子节点，就有多少个索引</li>
 </ul>
-<p>nosql 的 MongoDB 采用 B 树实现，适用于大量的单个索引查询的场景；</p>
+<p>nosql 的 MongoDB 采用 B 树实现，适用于大量的单个索引（而不是范围查询）查询的场景；</p>
 </blockquote>
 <ul>
 <li><strong>查询底层节点的磁盘 I/O次数少</strong>。非叶子节点只存放索引，相比 B 树，每个非叶子节点能存储更多的索引，树形结构更加矮胖；</li>
@@ -1928,6 +1922,9 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>开启主动死锁检测 <code>innodb_deadlock_detect</code></li>
 </ul>
 <h1 id="日志"><a class="markdownIt-Anchor" href="#日志"></a> 日志</h1>
+<blockquote>
+<p>目前，很多数据库采用的是 steal（没提交的事务写的脏页也可以马上落盘）+ no force（已提交的事务可以不马上落盘）模式。MySQL 也参考了这个模式，undo log 变更持久性和数据一样，由 redo log 保证，对 undo log 还没落盘的修改也会写入 redo log。这样不管怎么样基于 undo log 做事务回滚或者做 MVCC都可以保证原子和一致性。</p>
+</blockquote>
 <ul>
 <li>undo log（回滚日志）：是 Innodb 存储引擎层生成的日志，实现了事务中的原子性，主要用于<strong>事务回滚和 MVCC</strong>；</li>
 <li>redo log（重做日志）：是 Innodb 存储引擎层生成的日志，实现了事务中的持久性，主要用于<strong>掉电等故障恢复</strong>；</li>
@@ -1974,7 +1971,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <h3 id="重做日志文件组"><a class="markdownIt-Anchor" href="#重做日志文件组"></a> 重做日志文件组</h3>
 <p>redo log 是为了防止 Buffer Pool 中的脏页丢失而设计的，<strong>只记录未被刷入磁盘的数据的物理日志</strong>。随着系统运行，Buffer Pool 的脏页刷新到了磁盘中，redo log 对应的记录也就没用了，这时候我们需要擦除这些旧记录，以腾出空间记录新的更新操作。重做日志文件组由有 2 个 redo log 文件组成，以循环写的方式工作，从头开始写，写到末尾就又回到开头，相当于一个环形。</p>
-<style>.hlhxsuooqxji{zoom: 50%;}</style><img data-src="/MySQL/checkpoint.png" class="hlhxsuooqxji" alt="img">
+<style>.hmmngjzqnpxa{zoom: 50%;}</style><img data-src="/MySQL/checkpoint.png" class="hmmngjzqnpxa" alt="img">
 <ul>
 <li>write pos ～ checkpoint 之间的部分（图中红色部分）：记录新的更新操作；</li>
 <li>check point ～ write pos 之间的部分（图中蓝色部分）：待落盘的脏数据页记录；</li>
@@ -1987,7 +1984,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>binlog 是全量日志，保存了所有数据变更的情况，可以恢复整个数据库所有数据；</li>
 </ul>
 <h3 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h3>
-<style>.yisodxdydgsc{zoom:67%;}</style><img data-src="/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="yisodxdydgsc" alt="MySQL 主从复制过程">
+<style>.ccbeflvvgkds{zoom:67%;}</style><img data-src="/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="ccbeflvvgkds" alt="MySQL 主从复制过程">
 <ul>
 <li>写入 Binlog：数据修改 -&gt; 主库写 binlog 日志 -&gt; commit 事务 -&gt; 持久化本地数据 -&gt; 提交事务成功；</li>
 <li>同步 Binlog：从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。</li>
@@ -2000,7 +1997,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>半同步复制：只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端；</li>
 </ul>
 <h3 id="binlog-刷盘"><a class="markdownIt-Anchor" href="#binlog-刷盘"></a> binlog 刷盘</h3>
-<style>.ipnmiwbvkrrg{zoom: 67%;}</style><img data-src="/MySQL/binlogcache.drawio.png" class="ipnmiwbvkrrg" alt="binlog cach">
+<style>.tkguqvtbabbn{zoom: 67%;}</style><img data-src="/MySQL/binlogcache.drawio.png" class="tkguqvtbabbn" alt="binlog cach">
 <ul>
 <li>图中的 write，把<strong>日志写入到 binlog 文件（文件系统的 page cache 里）</strong>，但是并没有把数据持久化到磁盘；</li>
 <li>图中的 fsync，把数据持久化到磁盘的操作，这里就会涉及磁盘 I/O，所以频繁的 fsync 会导致磁盘的 I/O 升高；</li>
@@ -2015,7 +2012,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>binlog 主从复制和 redo log 崩溃恢复需要保持一致，不然会出现<strong>主从数据不一致、备份数据与真实数据不一致</strong>等问题。MySQL 采用两阶段提交来避免两份日志之间的逻辑不一致，两阶段提交是一种<strong>分布式事务一致性协议</strong>。</p>
 <p>两阶段提交：把单个事务的提交拆分成了 2 个阶段，分别是准备阶段和提交阶段（不是 commit 语句），每个阶段都由协调者和参与者共同完成。</p>
 <h3 id="内部-xa-事务"><a class="markdownIt-Anchor" href="#内部-xa-事务"></a> 内部 XA 事务</h3>
-<style>.nhiethbqcwmf{zoom:50%;}</style><img data-src="/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="nhiethbqcwmf" alt="两阶段提交">
+<style>.chljrcpcmbrp{zoom:50%;}</style><img data-src="/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="chljrcpcmbrp" alt="两阶段提交">
 <p>为了保证这两个日志的一致性，MySQL 使用了内部 XA 事务。内部 XA 事务由 binlog 作为协调者，存储引擎是参与者，可以实现跨数据库事务。将 redo log 的写入拆成了<strong>两个状态：prepare 和 commit</strong>，中间再穿插写入binlog。</p>
 <ul>
 <li>如果 binlog 中没有当前内部 XA 事务的 XID，说明 redolog 完成刷盘，但是 binlog 还没有刷盘，则<strong>回滚事务</strong>。对应时刻 <strong>A 崩溃恢复</strong>的情况；</li>
@@ -2082,12 +2079,12 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <p><strong>Free 链表</strong>：使用链表结构，快速找到空闲的缓存页；</p>
 <p>每当需要从磁盘中加载一个页到 Buffer Pool 中时，就从 Free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上，然后把该缓存页对应的控制块从 Free 链表中移除</p>
-<style>.eqxbwkrrvbfw{zoom: 67%;}</style><img data-src="/MySQL/freelist.drawio.png" class="eqxbwkrrvbfw" alt="img">
+<style>.tfmmtrvithho{zoom: 67%;}</style><img data-src="/MySQL/freelist.drawio.png" class="tfmmtrvithho" alt="img">
 <p><strong>Flush 链表</strong>：使用链表结构，快速找到脏页；（结构类似于 Free 链表）</p>
 <p>脏页落盘时，后台线程遍历 Flush 链表</p>
 <h2 id="提高缓存命中率"><a class="markdownIt-Anchor" href="#提高缓存命中率"></a> 提高缓存命中率</h2>
 <p>Buffer Pool 有三种页和链表用来管理数据</p>
-<style>.uceetgwmhtbr{zoom:67%;}</style><img data-src="/MySQL/bufferpoll_page.png" class="uceetgwmhtbr" alt="img">
+<style>.pcwvaexecrpn{zoom:67%;}</style><img data-src="/MySQL/bufferpoll_page.png" class="pcwvaexecrpn" alt="img">
 <ul>
 <li>Free Page（空闲页），表示此页未被使用，位于 Free 链表；</li>
 <li>Clean Page（干净页），表示此页已被使用，但是页面未发生修改，位于LRU 链表。</li>
@@ -2109,6 +2106,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>young 区域优化：为了防止 young 区域节点频繁移动到头部。young 区域前面 1/4 被访问不会移动到链表头部，只有后面的 3/4被访问了才会</li>
 </ul>
 <h1 id="优化"><a class="markdownIt-Anchor" href="#优化"></a> 优化</h1>
+<p>磁盘IO、索引、<a href="https://www.cnblogs.com/yanggb/p/11058707.html">数据分页（查询大量数据）</a>、锁竞争、内存使用下·</p>
 ]]></content>
       <categories>
         <category>数据库</category>
@@ -2311,7 +2309,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <h2 id="rdb-快照"><a class="markdownIt-Anchor" href="#rdb-快照"></a> RDB 快照</h2>
 <p>某一时刻的内存数据快照</p>
 <h2 id="混合持久化"><a class="markdownIt-Anchor" href="#混合持久化"></a> 混合持久化</h2>
-<p>前半部分是 RDB 格式的全量数据，后半部分是 AOF 格式的增量数据（重写缓冲区数据）。</p>
+<p>前半部分是 RDB 格式的全量数据，后半部分是 AOF 格式的增量数据（重写缓冲区数据）</p>
 <h1 id="策略"><a class="markdownIt-Anchor" href="#策略"></a> 策略</h1>
 <h2 id="过期删除策略"><a class="markdownIt-Anchor" href="#过期删除策略"></a> 过期删除策略</h2>
 <p>惰性删除+定期删除</p>
@@ -2320,13 +2318,16 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>淘汰所有数据：lru、lfu</p>
 <h1 id="高可用"><a class="markdownIt-Anchor" href="#高可用"></a> 高可用</h1>
 <h2 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h2>
-<p>全量复制</p>
+<p>模式一：全量复制</p>
 <img data-src="/Redis/ea4f7e86baf2435af3999e5cd38b6a26.png" class="" title="图片">
 <ul>
-<li>bgsave 命令是产生了一个子进程来做生成 RDB 文件的工作，是异步工作的</li>
+<li>bgsave 命令创建子进程来做生成 RDB 文件的工作，是异步工作的</li>
 </ul>
-<p>基于长连接的命令传播</p>
-<p>连接恢复时可以采用<strong>增量复制</strong>：repl_backlog_buffer 环形缓冲区保存了最近传播的写命令，若其中存着从服务器请求的 offset，就采用增量复制，否则采用全量复制</p>
+<p>为了避免过多的从服务器和主服务器进行数据同步（全量复制），可以把一部分从服务器升级成分发节点，利用从节点分担读取操作的压力</p>
+<p>模式二：基于长连接的命令传播</p>
+<p>主从服务器在完成第一次同步后，双方之间就会维护一个 TCP 连接，保证第一次同步后的主从服务器的数据一致性。</p>
+<p>模式三：<strong>连接恢复</strong>时可以采用<strong>增量复制</strong>：repl_backlog_buffer 环形缓冲区保存了最近传播的写命令，若其中存着从服务器请求的 offset，就采用增量复制；否则采用<strong>全量复制</strong>。若想降低主从服务器断开后全量同步的概率，需要增大 repl_backlog_buffer</p>
+<h3 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> QA</h3>
 <p><strong>如何应对异步复制导致的主从数据不一致？</strong></p>
 <p>外部程序来监控主从节点间的复制进度</p>
 <p><strong>主从切换如何减少数据丢失？</strong></p>
@@ -2341,9 +2342,9 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>自动完成故障发现和故障转移，并通知给应用方，从而实现高可用性</p>
 </blockquote>
 <p>哨兵之间建立连接</p>
-<style>.onxrntgecwja{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="onxrntgecwja" alt="img">
+<style>.hjmzkthwjqvt{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="hjmzkthwjqvt" alt="img">
 <p>哨兵与从节点建立连接</p>
-<style>.qmppeyyrpxbv{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="qmppeyyrpxbv" alt="img">
+<style>.vhrmkqffdtqo{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="vhrmkqffdtqo" alt="img">
 <h3 id="第一轮投票判断主节点下线"><a class="markdownIt-Anchor" href="#第一轮投票判断主节点下线"></a> 第一轮投票：判断主节点下线</h3>
 <p>主观下线：主节点或者从节点没有在规定的时间内响应哨兵的 PING 命令</p>
 <p>客观下线：一个哨兵判断主节点为「主观下线」后，就会向其他哨兵发起命令，通过多个哨兵节点一起判断主节点是否下线。哨兵的赞同票数达到哨兵配置文件中的 quorum 配置项设定的值则判断主节点客观下线</p>
@@ -2371,9 +2372,21 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>第四步：继续监视旧主节点，当这个旧主节点重新上线时，将它设置为新主节点的从节点；</li>
 </ul>
 <h2 id="集群"><a class="markdownIt-Anchor" href="#集群"></a> 集群</h2>
-<p><strong>Hash 槽数据分片</strong></p>
-<p>CRC16 算法 + 16384 取模，每个模数代表一个相应编号的哈希槽</p>
-<p>切片 slot 槽，将数据分布在多个Redis节点上，每个节点负责一部分 slot 槽</p>
+<img data-src="/Redis/d1b889b9039f4f2f9853d44e3aa258fctplv-k3u1fbpfcp-zoom-in-crop-mark1512000.webp" class="" title="img">
+<ul>
+<li>同一个分区内的 Redis 节点之间的数据完全一样，多个节点保证了数据有多份副本冗余保存，且可以提供高可用保障；</li>
+<li>不同分片之间的数据不相同；</li>
+<li>通过水平增加多个分片的方式，可以实现整体集群容量的扩展；</li>
+</ul>
+<h3 id="集群数据分布策略"><a class="markdownIt-Anchor" href="#集群数据分布策略"></a> 集群数据分布策略</h3>
+<p><strong>Hash 槽</strong></p>
+<ul>
+<li>切片 slot 槽，共有16384个槽位；</li>
+<li>数据 key 通过 “CRC16 算法 + 16384 取模”，得到对应存储的哈希槽；</li>
+<li>数据存储在该槽位对应的 Redis 分区中，每个分区都有独立的主从哨兵保证高可用；</li>
+</ul>
+<p><strong>一致性Hash</strong></p>
+<p>虚拟节点</p>
 <h1 id="缓存"><a class="markdownIt-Anchor" href="#缓存"></a> 缓存</h1>
 <h2 id="缓存雪崩-击穿-穿透"><a class="markdownIt-Anchor" href="#缓存雪崩-击穿-穿透"></a> 缓存雪崩、击穿、穿透</h2>
 <p>缓存穿透：大量请求了缓存和数据库里都没有的数据，请求穿透缓存和数据库</p>
@@ -2416,12 +2429,16 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <h1 id="实战"><a class="markdownIt-Anchor" href="#实战"></a> 实战</h1>
 <h2 id="分布式锁"><a class="markdownIt-Anchor" href="#分布式锁"></a> 分布式锁</h2>
 <blockquote>
-<p>Redis + Lua 脚本，可以以原子性的方式执行一组命令，可用于保证锁释放操作的原子性（Lua 脚本在处理的过程中不会被任意其它请求打断），但无法用于事务执行失败的回滚</p>
+<p>Redis + Lua 脚本，可以以原子性的方式执行一组命令，可用于保证锁释放操作的原子性（Lua 脚本在处理的过程中不会被任意其它请求打断），但无法用于事务执行失败的回滚。Redisson 采用的就是这种方法保证分布式锁的原子性。</p>
 </blockquote>
-<p>SET 命令的 NX 参数可以实现：key不存在才插入，可以用于实现分布式锁</p>
+<p><strong>SET 命令的 NX 参数</strong>可以实现：key 不存在才插入，可以用于实现分布式锁</p>
 <p>优点：性能高效、实现方便、分布式高可用</p>
-<p>缺点：不好设置超时时间（守护线程定期续约）、主从异步复制可能导致不可靠性</p>
-<p>提高可靠性：客户端和多个独立的 Redis 节点依次请求申请加锁，如果客户端能够和半数以上的节点成功地完成加锁操作，那么就认为，客户端成功地获得分布式锁，否则加锁失败</p>
+<p>缺点：不好设置超时时间（解决方法：守护线程定期续约）、主从异步复制可能导致不可靠性（解决方法如下）</p>
+<p>提高可靠性（Redlock 算法）：客户端和多个独立的 Redis 节点依次请求申请加锁，如果客户端能够和半数以上的节点成功地完成加锁操作，那么就认为，客户端成功地获得分布式锁，否则加锁失败，所有的 redis 实例都会进行解锁；</p>
+<ul>
+<li>单机的 redis 是 cp 的，但是集群情况下 redis 是 ap 的，所以运行 Redisson 的节点必须是主节点，不能有从节点，防止主节点加锁成功未同步从节点就宕机，而客户端却收到加锁成功，导致数据不一致。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> RedissonClient redisson;</span><br></pre></td></tr></table></figure>
 <h2 id="延迟队列"><a class="markdownIt-Anchor" href="#延迟队列"></a> 延迟队列</h2>
 <p>有序集合 Zset；score 存储延迟执行的时间</p>
 <h2 id="大-key-问题"><a class="markdownIt-Anchor" href="#大-key-问题"></a> 大 Key 问题</h2>
@@ -2440,7 +2457,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <blockquote>
 <p>订阅命令：subscribe channel  [channel … ]</p>
 </blockquote>
-<style>.ciysbtokjgfi{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="ciysbtokjgfi" alt="img">
+<style>.wddsevhtsuyh{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="wddsevhtsuyh" alt="img">
 <p><a href="https://blog.csdn.net/w15558056319/article/details/121490953">Link</a></p>
 <h2 id="事务回滚"><a class="markdownIt-Anchor" href="#事务回滚"></a> 事务回滚</h2>
 <p>Redis 不支持回滚，事务没有原子性（要么全部成功要么全部失败）</p>
@@ -2482,7 +2499,7 @@ Bean 工厂模式</p>
 实例化 Bean 对象：默认调用无参构造器；若使用有参构造器，参数必须是容器中有的Bean【按参数查找 Bean 时，先按照 classname 后按照参数名】<br />
 初始化前中后：BeanPostProcessor 的 postProcessAfterInitialization() --&gt; @PostConstruct 注解 --&gt; InitializingBean 的 afterPropertiesSet() 方法 --&gt; BeanPostProcessor 的 postProcessAfterInitialization()（实现了 AOP 代理)</p>
 <ul>
-<li>Aware 其实就是一个标识；只有满足Aware规范或者其子类规范的才能进行相关的赋值操作，这样做的话可以少写很多判断，并且可以在一个地方进行统一的判断赋值；</li>
+<li>Aware 其实就是一个标识；只有满足 Aware 规范或者其子类规范的才能进行相关的赋值操作，这样做的话可以少写很多判断，并且可以在一个地方进行统一的判断赋值；</li>
 <li>BeanPostProcessor 前置处理器的关键实现类：ApplicationContextAwareProcessor</li>
 <li>BeanPostProcessor 后置处理器的关键实现类：AbstractAutoProxyCreator。这个方法负责帮我们创建代理，底层采用对象cglib 或动态代理【AOP其实就是 IOC 整体流程（Bean生命周期）里的一个扩展点】</li>
 <li>InitializingBean 接口中的 afterPropertiesSet 方法：在这个方法里面去编写我们的业务逻辑，以及进行相关的属性赋值等等</li>
@@ -2519,6 +2536,19 @@ Springboot 自动配置</p>
 <p>TODO<br />
 <a href="https://www.cnblogs.com/tuyang1129/p/12861617.html">https://www.cnblogs.com/tuyang1129/p/12861617.html</a><br />
 <a href="https://www.cnblogs.com/tuyang1129/p/12866484.html">https://www.cnblogs.com/tuyang1129/p/12866484.html</a></p>
+<h1 id="spring-事务"><a class="markdownIt-Anchor" href="#spring-事务"></a> Spring 事务</h1>
+<p>Spring 的声明式事务信息是存在 ThreadLocal 中的，所以一个线程永远只能有一个事务，所以 Spring 的事务是无法实现事务一致性（同时提交、同时回滚）的</p>
+<p>解决方法：可以通过编程式事务，或者通过分布式事务的思路：二阶段提交方式</p>
+<h1 id="如何解决循环依赖"><a class="markdownIt-Anchor" href="#如何解决循环依赖"></a> 如何解决循环依赖</h1>
+<p><a href="https://juejin.cn/post/6860785780307492871#heading-1">三层缓存设计</a></p>
+<ul>
+<li>一级缓存，缓存正常的 bean 实例</li>
+<li>二级缓存，缓存还未进行依赖注入和初始化方法调用的 bean 实例</li>
+<li>三级缓存，缓存 bean 实例的 ObjectFactory，用于解决 BeanPostProcessor 代理类时正确地依赖注入</li>
+</ul>
+<blockquote>
+<p>循环依赖的情况下，不管使用三级缓存还是两级缓存，代理类逻辑都必须提前曝光</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>Java开发</category>
@@ -2710,234 +2740,6 @@ Springboot 自动配置</p>
       </categories>
       <tags>
         <tag>SpringMVC</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git 文档阅读</title>
-    <url>/2024/Git%20%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB/</url>
-    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
-<blockquote>
-<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
-</blockquote>
-<span id="more"></span>
-<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
-<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
-<ol>
-<li>
-<p>集中化版本控制（CVCS）缺点</p>
-<ol>
-<li>中央服务器的单点故障就无法协同工作</li>
-<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
-</ol>
-</li>
-<li>
-<p>分布式版本控制（DVCS）优点</p>
-<ol>
-<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
-<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
-<li>可以指定和若干不同的远端代码仓库进行交互</li>
-</ol>
-</li>
-</ol>
-<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
-<ol>
-<li>并行开发</li>
-<li>完全分布式</li>
-<li>速度快</li>
-<li>数据量大</li>
-</ol>
-<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
-<ol>
-<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
-<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
-<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
-<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
-<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
-</ol>
-<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
-<blockquote>
-<p>git config --list --show-origin</p>
-</blockquote>
-<ol>
-<li>/etc/gitconfig 系统通用配置 git config --system</li>
-<li>~/.gitconfig 当前用户配置 git config --global</li>
-<li>.git/config 当前项目配置 git config --local</li>
-</ol>
-<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
-<blockquote>
-<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
-</blockquote>
-<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
-<ol>
-<li>git init
-<ol>
-<li>初始化仓库</li>
-</ol>
-</li>
-<li>git clone
-<ol>
-<li>克隆仓库</li>
-<li>git clone -b master &lt;url&gt; 克隆指定分支</li>
-</ol>
-</li>
-<li>git status
-<ol>
-<li>查看文件状态</li>
-<li>[-s] 简要文件状态信息</li>
-</ol>
-</li>
-<li>git add
-<ol>
-<li>[&lt;file&gt;] 跟踪新文件</li>
-<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
-<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
-</ol>
-</li>
-<li>git diff
-<ol>
-<li>已修改文件与已暂存文件的内容差异</li>
-<li>[–staged] 已暂存与分支HEAD的内容差异</li>
-</ol>
-</li>
-<li>git rm
-<ol>
-<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
-<li>[-f] 强制移除存在未暂存修改的文件</li>
-<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
-</ol>
-</li>
-<li>git commit
-<ol>
-<li>提交文件</li>
-<li>[-m] 提交备注</li>
-<li>[–amend] 追加提交</li>
-<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
-</ol>
-</li>
-<li>git mv
-<ol>
-<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
-</ol>
-</li>
-<li>git log
-<ol>
-<li>回顾提交历史</li>
-<li>[–stat] 显示每次提交的简要信息</li>
-<li>[-p ] 显示每次提交的详细信息</li>
-<li>[–pretty=format:“xxx”] 自定义信息格式</li>
-<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
-<li>[–since] 限制时间</li>
-</ol>
-</li>
-<li>git reset
-<ol>
-<li>[HEAD &lt;file&gt;] 取消暂存</li>
-</ol>
-</li>
-<li>git checkout
-<ol>
-<li>[-- &lt;filename&gt;] 撤销修改</li>
-<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
-<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
-</ol>
-</li>
-<li>git remote
-<ol>
-<li>[-v] 列出远程仓库</li>
-<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
-<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
-<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
-<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
-</ol>
-</li>
-<li>git fetch
-<ol>
-<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
-</ol>
-</li>
-<li>git push
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
-<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
-<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
-<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
-<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
-</ol>
-</li>
-<li>git pull
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
-</ol>
-</li>
-<li>git tag
-<ol>
-<li>列出已有的标签</li>
-<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
-<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
-<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
-<li>[-d] 删除标签</li>
-</ol>
-</li>
-<li>git show
-<ol>
-<li>标签信息和与之对应的提交信息</li>
-</ol>
-</li>
-<li>git restore
-<ol>
-<li>[&lt;filename&gt;] 丢弃工作区修改</li>
-<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
-</ol>
-</li>
-<li>git merge
-<ol>
-<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
-</ol>
-</li>
-<li>git branch
-<ol>
-<li>[-d &lt;branchname&gt;] 删除分支</li>
-<li>[-v] 每个分支的最后一次提交</li>
-<li>[-vv] 跟踪信息</li>
-<li>[–set-upstream-to &lt;remotename&gt;/&lt;branchname&gt;] 跟踪上游分支</li>
-<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
-<li>[-m old_branch_name new_branch_name] 改名</li>
-</ol>
-</li>
-<li>git stash
-<ol>
-<li>贮藏工作</li>
-<li>[list] 列出所有贮藏</li>
-<li>[apply] 恢复贮藏</li>
-</ol>
-</li>
-<li>git rebase
-<ol>
-<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
-</ol>
-</li>
-</ol>
-<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
-<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
-<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
-<blockquote>
-<p>相关命令合并到 Chapter2 中</p>
-</blockquote>
-<ol>
-<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
-<li>git mergetool 图形化冲突解决工具</li>
-<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
-</ol>
-<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
-<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
-<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
-<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>版本管理</tag>
       </tags>
   </entry>
   <entry>
@@ -3361,106 +3163,6 @@ Springboot 自动配置</p>
       </tags>
   </entry>
   <entry>
-    <title>AugESC</title>
-    <url>/2023/AugESC_%20Large-scale%20Data%20Augmentation%20for%20Emotional%20Support%20Conversation%20with%20Pre-trained%20Language%20Models/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
-<blockquote>
-<p>开放式对话数据增强的研究</p>
-</blockquote>
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前工作的缺陷
-<ul>
-<li>成本高、耗时长</li>
-<li>预算限制，所收集的对话规模小，主题少</li>
-</ul>
-</li>
-<li>本文主要贡献
-<ul>
-<li>关键发现</li>
-<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
-<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>预训练模型</li>
-<li>预训练模型的数据增强</li>
-</ul>
-<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
-<ul>
-<li>语言模型优于对话模型
-<ul>
-<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
-<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
-</ul>
-</li>
-<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
-<li>提示GPT不如微调GPT模型
-<ul>
-<li>提示型GPT-3生成可控性差</li>
-<li>只有微调才能掌握任务场景和所需特征</li>
-</ul>
-</li>
-<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
-<ul>
-<li>保持语言模型的内在知识</li>
-<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
-<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
-</ul>
-</li>
-<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
-<ul>
-<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
-</ul>
-</li>
-</ul>
-<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
-<ul>
-<li>主干模型：GPT-3，微调后的GPT-J</li>
-<li>提示模板：对话场景+情感支持</li>
-<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
-<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
-<li>触发Query
-<ul>
-<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
-<li>保留带有负面情绪的Query</li>
-</ul>
-</li>
-<li>过滤结果，删除非法对话</li>
-</ul>
-<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
-<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
-<ul>
-<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
-<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
-<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
-</ul>
-<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
-<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
-<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
-<blockquote>
-<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
-</blockquote>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
-<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>对话数据集增强</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>实习笔试题汇总</title>
     <url>/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/</url>
     <content><![CDATA[<h1 id="2024427-美团笔试"><a class="markdownIt-Anchor" href="#2024427-美团笔试"></a> 2024.4.27 美团笔试</h1>
@@ -3555,472 +3257,6 @@ Springboot 自动配置</p>
       </categories>
       <tags>
         <tag>笔试记录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Control Globally, Understand Locally</title>
-    <url>/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation.</p>
-<p>论文的创新点在于在Encoder和Decoder之间加了一层 GCNConv 和 RGCNConv</p>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/image-20240414083742062-17138602623661-17138606243731.png" class="" title="image-20240414083742062-17138602623661">
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>目前研究的缺陷
-<ul>
-<li>关注序列上下文信息，忽略了全局原因和局部心理意图与其的层次关系</li>
-</ul>
-</li>
-<li>本文
-<ul>
-<li>提出了一个全局到局部的<strong>层次图网络</strong>来捕获多源信息(全局原因、局部意图和对话历史)并建模它们之间的层次关系，该网络由一个多源编码器、一个层次图推理器和一个全局引导解码器组成</li>
-<li>设计了一个新的训练目标来监测全局的语义信息</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>探索求助者情绪问题的原因：<strong>全局</strong>地控制情感支持对话的整个流程</li>
-<li>了解求助者的心理意图：帮助系统<strong>局部</strong>了解求助者当前时的心理状态</li>
-<li>本文目标
-<ul>
-<li>捕获全局原因和局部心理意图</li>
-<li>建模全局与局部之间的关系</li>
-</ul>
-</li>
-<li>解决方法【全局到局部层次图网络GLHG】
-<ul>
-<li>多源编码器：COMET提取局部心理意图</li>
-<li>层次图推理机：全局原因(对话级)、局部心理意图(句子级)和对话历史之间的层次关系进行建模</li>
-<li>解码器中设计了一个新的训练目标来监控全局原因的语义信息</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>图建模对话
-<ul>
-<li>GCN 利用自我和对话者间依赖性来模拟会话上下文</li>
-<li>EGAE 使用图网络捕获面向任务对话中的对话模式</li>
-</ul>
-</li>
-<li>常识性知识
-<ul>
-<li>与本人有关的心理状态：xReact、xIntent</li>
-</ul>
-</li>
-</ul>
-<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
-<ul>
-<li>问题定义</li>
-<li>多源编码器
-<ul>
-<li>BlenderBot Encoder + Max-pooling</li>
-<li>上下文 + 全局原因 + 局部原因</li>
-</ul>
-</li>
-<li>分层图推理机
-<ul>
-<li>GAT 图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png" class="" title="img">注意力函数（2017出版)
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp" class="" title="image.png"> <img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png" class="" title="img">注意力机制
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png" class="" title="img">
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png" class="" title="img">注意力机制
-</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png" class="" title="img">
-</li>
-</ul>
-</li>
-<li>Global-guide 解码器
-<ul>
-<li>响应生成
-<ul>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">，v表示图神经网络得到的全局变量
-</li>
-</ul>
-</li>
-<li>监督全局语义信息：预测问题类型
-<ul>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img">
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>联合训练
-<ul>
-<li>对数似然损失+交叉熵损失</li>
-<li>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png" class="" title="img"><img data-src="/2023/Control%20Globally,%20Understand%20Locally_%20A%20Global-to-Local%20Hierarchical%20Graph%20Network%20for%20Emotional%20Support%20Conversation/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png" class="" title="img">
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
-<ul>
-<li>指标：plexity (PPL), BLEU-n (B-n), ROUGE-L (R-L), Distinct-1(D-1), and Distinct-2 (D-2)</li>
-<li>由于有了意图特征，提出建议更具体有效</li>
-</ul>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
-<ul>
-<li>全局到局部的层次图网络(Global-to-Local Hierarchical Graph network, GLHG)来捕获多源信息并从全局到局部的角度建模层次关系</li>
-<li>新的训练目标“预测Seeker遇到问题的类型”</li>
-</ul>
-<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
-<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
-<ul>
-<li><strong>多源编码器</strong>利用情境信息并将心理意图与COMET结合，捕获全局原因和局部意图</li>
-<li><strong>分层图推理机</strong>在全局原因、局部心理意图和对话历史之间进行交互，建模不同层次的关系（hierarchical graph reasoner）</li>
-</ul>
-<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
-<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>异构图神经网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>DQ-HGAN</title>
-    <url>/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation</p>
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>关注的问题
-<ul>
-<li>动态建模对用户状态，包含个体的意图和情感</li>
-<li>综合各类因素选择最合适的支持策略</li>
-</ul>
-</li>
-<li>提出的方法【基于异构图注意力网络的深度Q-learning情感支持对话生成】
-<ul>
-<li>为了捕获用户意图、情感和历史对话之间的交互关系，基于意图词典和情感分类器，构建了异构图注意力网络</li>
-<li>采用基于DQN的最优响应策略以指导响应生成，优于传统的基于规则或启发式方法</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前研究
-<ul>
-<li>ESC任务要求能够确定求助者的心理意图和情绪状态，以便提供适当的支持。因此整合意图识别和情感识别对于提高情感支持对话的质量至关重要，且目前的方法对用户状态建模不充分。</li>
-</ul>
-</li>
-<li>关注的问题
-<ul>
-<li>建模用户状态</li>
-<li>选择最优策略，以产生有效的保障响应</li>
-</ul>
-</li>
-<li>提出的方法
-<ul>
-<li>设计了基于注意力的<strong>异构图网络</strong>，与用户的意图、情感和历史对话交互，可以有效地捕获和建模图中不同类型的节点和边</li>
-<li>构建<strong>意图词典</strong>和<strong>情感分类器</strong>来捕捉求助者在语境中的细微情感表达</li>
-<li><strong>DQN算法</strong>对用户未来反馈的期望值进行估计，帮助系统选择获得最优长期值的策略。其允许系统从用户的反馈中学习，调整其策略，以提供最有效的支持响应。</li>
-</ul>
-</li>
-<li>主要贡献
-<ul>
-<li>提出了一种新的方法DQ-HGAN，将<strong>意图和情感识别与策略生成相结合</strong>，以提高情感支持对话系统的质量和个性化</li>
-<li>构建<strong>意图词典和情感分类器</strong>，捕捉求助者在语境中的细微情感表达并跟踪其状态</li>
-<li>设计了一种基于注意力机制的<strong>异构图网络</strong>，与用户的意图、情感和历史对话进行交互，并选择最优的支持策略以生成有效的支持响应</li>
-<li>ESC生成中使用ESC生成中使用<strong>强化学习</strong>，具体来说，使用DQN算法（Deep Q-Network）估计用户未来反馈的期望值，动态调整策略以提供最有效的支持响应</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>对话中的意图和情感识别【在模型中融合了“意图”这个特征】
-<ul>
-<li>多头注意力机制
-<ul>
-<li>多头注意力机制来捕捉用户的意图和情感。缺点：缺乏有效捕捉用户细微情感表达的能力</li>
-<li>使用预训练模型，增强PLM对话相关性，识别对话意图、推断对话情感。缺点：不是专门为ESC任务定制的，性能差</li>
-</ul>
-</li>
-<li>词典
-<ul>
-<li>词典包含特定意图或情感相关的词汇和短语，利用基于规则的算法将context与意图词典进行匹配，并分配相应的意图标签。缺点：只将单个单词与标签匹配，可能会忽略整个句子的意图或情感含义</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>图建模【捕获会话系统中用户意图、情感和对话历史之间的复杂关系】
-<ul>
-<li>同构图【忽略了用户意图和情感的异构性】
-<ul>
-<li>GAT 图注意力网络，利用自注意力机制来捕获对话图中意图和情感节点之间的交互</li>
-<li>GCN 图卷积网络，利用图结构在节点之间传播信息，并捕获对话数据中的上下文依赖</li>
-</ul>
-</li>
-<li><strong>异构图注意力网络是专为表示图中不同类型的节点和边而设计的</strong>，它擅长对<strong>不同的节点</strong>类型进行建模，如用户话语、系统响应、情感状态和意图，从而更全面地了解用户的情感状态；还擅长捕捉<strong>不同类型的边</strong>，包括顺序依赖、自依赖和状态依赖，从而能够更准确地表示用户的情感状态。此外，它还包含了一种<strong>注意力机制</strong>来进行重要性加权，允许它在聚合过程中专注于最相关的信息，从而更全面地了解用户的状态。</li>
-</ul>
-</li>
-<li>策略选择
-<ul>
-<li>基于规则或启发式方法</li>
-<li>强化学习方法（如：Q-learning）
-<ul>
-<li>采用DQN估计不同对话动作的期望值，并学习了一种最大化该值的策略。从用户反馈中学习，并生成更有吸引力和信息量的响应</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>响应生成
-<ul>
-<li>目前流行的Encoder-Decoder模型往往专注于根据对话历史生成回复，而没有考虑用户的意图、情感以及合适的支持策略</li>
-</ul>
-</li>
-</ul>
-<h1 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h1>
-<ul>
-<li>ESConv：标记对话，并将其转换为词嵌入，以将其输入到模型中</li>
-<li>COMET：使用COMET初始化模型的词嵌入，并在ESConv数据集上进行微调，以提高其构建意图词典的有效性</li>
-<li>ATOMIC：得到意图或目的（xIntent）</li>
-<li>NRC VAD 词典：得到情感词典，每个单词对应的效价-觉醒-支配（Valence-Arousal-Dominance）</li>
-<li>问题定义：上下文+策略+Query =&gt;响应Yt。最优策略基于当前状态和期望的长期回报（通过Q-learning预测）</li>
-</ul>
-<h2 id="method"><a class="markdownIt-Anchor" href="#method"></a> Method</h2>
-<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484543763-403c4648-68f4-4644-bf00-e2356c06841c.jpg" class="" title="88c61f5be72a795a087441904fcd0ad9_3_Figure_2_780332990.png">
-<ul>
-<li>
-<p>多源编码器</p>
-<ul>
-<li>
-<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484574764-c5051f60-2b3c-40cf-a161-5848c1d67bc2.png" class="" title="img">
-</li>
-<li>
-<p>transformer编码器（TransformerEncoder）</p>
-<ul>
-<li>ht = TransformerEncoder(Ht)</li>
-</ul>
-</li>
-<li>
-<p>意图词典（COMET）：通过对ATOMIC 微调，同去意图关键词，构建意图词典（意图关键词，对应的词嵌入）</p>
-<ul>
-<li>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>t</mi></msub><mo>=</mo><mi>T</mi><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>f</mi><mi>o</mi><mi>r</mi><mi>m</mi><mi>e</mi><mi>r</mi><mi>E</mi><mi>n</mi><mi>c</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>r</mi><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>∈</mo><mi mathvariant="script">F</mi></mrow></munder><mi mathvariant="normal">softmax</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>T</mi></msubsup><msub><mi>h</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><msub><mi>c</mi><mi>i</mi></msub><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">g_{t}=TransformerEncoder\left(\sum_{w_{i}\in\mathscr{F}}\operatorname{softmax}\left(c_{i}^{T} h_{t}\right)c_{i}\right) 
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.156105em;vertical-align:-1.406105em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault">n</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0500050000000003em;"><span style="top:-1.843995em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathscr mtight" style="margin-right:0.13634em;">F</span></span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.406105em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">s</span><span class="mord mathrm">o</span><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">t</span><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">x</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span></span></span></span></span></p>
-</li>
-</ul>
-</li>
-<li>
-<p>情感分类器（NRC VAD词典）</p>
-<ul>
-<li>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>e</mi><mi>t</mi></msub><mo>=</mo><mtext>TransformerEncoder</mtext><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mrow><msub><mi>w</mi><mi>k</mi></msub><mo>∈</mo><mi mathvariant="script">Z</mi></mrow></munder><mi mathvariant="normal">softmax</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msubsup><mi>z</mi><mi>k</mi><mi>T</mi></msubsup><msub><mi>h</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><msub><mi>g</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">e_{t}=\text{TransformerEncoder}\left(\sum_{w_{k} \in \mathscr{Z}}\operatorname{softmax}\left(z_{k}^{T} h_{t}\right) g_{t}\right) \text { }
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.1618649999999997em;vertical-align:-1.411865em;"></span><span class="mord text"><span class="mord">TransformerEncoder</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.050005em;"><span style="top:-1.843995em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathscr mtight" style="margin-right:0.24037em;">Z</span></span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.411865em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">s</span><span class="mord mathrm">o</span><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">t</span><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">x</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord"> </span></span></span></span></span></span></p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>基于异构图的用户状态跟踪</p>
-<ul>
-<li>
-<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258dd.png" class="" title="img">
-</li>
-</ul>
-</li>
-<li>
-<p>DQN策略规划</p>
-<ul>
-<li>
-<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7.png" class="" title="img">
-</li>
-</ul>
-</li>
-<li>
-<p>响应生成解码器</p>
-<ul>
-<li>
-<img data-src="/2023/DQ-HGAN_%20A%20heterogeneous%20graph%20attention%20network%20based%20deep%20Q-learning%20for%20emotional%20support%20conversation%20generation/1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762.png" class="" title="img">
-</li>
-</ul>
-</li>
-</ul>
-<p>Experiments<br />
-Conclusion</p>
-<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
-<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
-<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
-<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>异构图神经网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Feedback-Aware Double</title>
-    <url>/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Feedback-Aware Double COntrolling Network for Emotional Support Conversation</p>
-<img data-src="/2023/FADO_%20Feedback-Aware%20Double%20COntrolling%20Network%20for%20Emotional%20Support%20Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png" class="" title="img">
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>双层反馈策略选择器：通过反馈信息预测策略</li>
-<li>双层控制阅读器：通过策略约束上下文响应</li>
-<li>策略词典：丰富策略的语义信息</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<h2 id="problem-formulation"><a class="markdownIt-Anchor" href="#problem-formulation"></a> Problem Formulation</h2>
-<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
-<ul>
-<li>上下文编码器
-<ul>
-<li>BlenderBot预训练编码器编码上下文历史对话U，得到Ht</li>
-</ul>
-</li>
-<li>双层反馈策略选择器
-<ul>
-<li>策略选择
-<ul>
-<li>输入
-<ul>
-<li>BlenderBot Encoder 编码上下文历史对话U，得到隐状态Ht</li>
-<li>BlenderBot Encoder 编码策略S</li>
-<li>EmoBERTa Encoder 编码上下文对话U</li>
-</ul>
-</li>
-<li>公式
-<ul>
-<li>上下文编码器（策略S同理）：$$\boldsymbol{H}=\operatorname{Enc}<em>{cxt}\left(\boldsymbol{[CLS]}, \boldsymbol{u}</em>{1}, \boldsymbol{[SEP]}, \boldsymbol{u}<em>{2}, …, \boldsymbol{u}</em>{M}\right)$$，M为对话数
-<ul>
-<li>
-\boldsymbol{H}=\left(\boldsymbol{u}_{1},..., \boldsymbol{u}_{T}\right)$$，T为Token数
-
-</li>
-<li>
-\boldsymbol{E}=\left(\boldsymbol{e}_{1},..., \boldsymbol{e}_{T}\right)$$，T为Token数
-
-</li>
-<li>s、c、r 为策略S、上下文H、情感分类E。编码+平均池化操作后得到</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>双层反馈
-<ul>
-<li>回合级反馈：局部变量，当前用户的感受。包含每轮对话Seeker情感Δe和Seeker评分变化Δr</li>
-<li>对话级反馈：全局变量Δc，用户的全局状态。包含Seeker在谈话后的情绪压力、Supporter对话题的回应的相关性、Supporter对Seeker感受的理解和共情</li>
-<li>融合adapter：整合回合级和会话级反馈的两类语义信息。Δs = Δe + Δr + uΔc【计算损失时，给予正向或负向的反馈】</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>双控读取器（模仿情感聊天机器ECM）
-<ul>
-<li>context-to-strategy：利用上下文信息来选择上下文相关的策略
-<ul>
-<li>
-\boldsymbol{g}^{c} = \operatorname{sigmoid}\left(
-
-</li>
-</ul>
-\right)$$</li>
-<li>strategy-to-context：编码阶段可以关注与策略相关的上下文，从而生成策略约束的响应
-<ul>
-<li>
-\boldsymbol{g}^{o} = \operatorname{sigmoid}\left(
-
-</li>
-</ul>
-\right)$$</li>
-<li>残差连接：在原始信息和更新信息之间进行权衡
-<ul>
-<li>
-\begin{array}{r}
-
-</li>
-</ul>
-h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
-\end{array}$$</li>
-</ul>
-</li>
-<li>策略字典
-<ul>
-<li>输入策略令牌的描述， 而不是策略令牌，以便模型对策略进行更深入的理解</li>
-<li>Encoder-Decoder 之间的状态传输类似于MISC，采用cross-attention代替self-attention<a href="https://www.yuque.com/jinzang/lnx420/wrq82cgnp6p47q59?view=doc_embed">MISC: A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</a></li>
-</ul>
-</li>
-<li>响应生成
-<ul>
-<li>BlenderBot Decoder：$$\boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}<em>{&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)=\text { Generator }\left(\boldsymbol{W}<em>{y&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)$$</li>
-</ul>
-</li>
-<li>联合训练
-<ul>
-<li>策略预测：反馈感知负对数似然 feedback-aware negative log-likelihood
-<ul>
-<li>
-\mathcal{L}_{1}=\left\{\begin{array}{ccc}
-
-</li>
-</ul>
--\hat{o} \log \left(1-\operatorname{softmax}\left(\boldsymbol{o}^{\prime}\right)\right) &amp; \text { if } &amp; \Delta s \leq 0<br />
-\end{array}\right.\$$</li>
-<li>响应生成：标准交叉熵损失优化 cross-entropy
-<ul>
-<li>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mn>2</mn></msub><mo>=</mo><mo>−</mo><munderover><mo>∑</mo><mrow><mi>z</mi><mo>=</mo><mn>1</mn></mrow><mi>Z</mi></munderover><mi>log</mi><mo>⁡</mo><mi mathvariant="bold-italic">p</mi><mrow><mo fence="true">(</mo><msub><mi>y</mi><mi>z</mi></msub><mo>∣</mo><msub><mi mathvariant="bold-italic">y</mi><mrow><mo>&lt;</mo><mi>z</mi></mrow></msub><mo separator="true">,</mo><msubsup><mi mathvariant="bold-italic">h</mi><mi mathvariant="bold-italic">t</mi><mo mathvariant="normal">′</mo></msubsup><mo separator="true">,</mo><mi mathvariant="bold-italic">V</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{2}=-\sum_{z=1}^{Z} \log \boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}_{&lt;z}, \boldsymbol{h}_{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.0954490000000003em;vertical-align:-1.267113em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283360000000002em;"><span style="top:-1.882887em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3000050000000005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">Z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.267113em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">p</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">y</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.13323000000000002em;"><span style="top:-2.45586em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mrel mtight">&lt;</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.27151em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.836232em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight">t</span></span></span></span></span></span><span style="top:-3.1473400000000002em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.25555em;">V</span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span></p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiment"><a class="markdownIt-Anchor" href="#experiment"></a> Experiment</h2>
-<ul>
-<li>采用EmoBERTa-base作为特征提取器，以获取Seeker的情感得分和情感表征，情感得分由softmax函数使用EmoBERTa-base的[CLS]表示获得</li>
-</ul>
-<h2 id="experimental-results"><a class="markdownIt-Anchor" href="#experimental-results"></a> Experimental Results</h2>
-<h2 id="analyses"><a class="markdownIt-Anchor" href="#analyses"></a> Analyses</h2>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> conclusion</h2>
-<h1 id="关注的问题"><a class="markdownIt-Anchor" href="#关注的问题"></a> 关注的问题</h1>
-<ol>
-<li>预测策略只依靠对话历史，而不考虑求助者反馈，导致预测的结果与用户无关</li>
-<li>建模过程只关注上下文到策略，而不关注策略到上下文和与策略相关的上下文</li>
-</ol>
-<h1 id="解决方法"><a class="markdownIt-Anchor" href="#解决方法"></a> 解决方法</h1>
-<ol>
-<li>双层反馈策略选择器：利用回合级和会话级反馈信息来激励或惩罚策略</li>
-<li>双层控制阅读器：策略到上下文流来生成策略约束响应</li>
-</ol>
-<h1 id="创新点-本文的优势"><a class="markdownIt-Anchor" href="#创新点-本文的优势"></a> 创新点 / 本文的优势</h1>
-<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
-<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
       </tags>
   </entry>
   <entry>
@@ -4934,8 +4170,256 @@ Discussion</p>
       </tags>
   </entry>
   <entry>
+    <title>Docker</title>
+    <url>/Docker/</url>
+    <content><![CDATA[<img data-src="/Docker/576507-docker1.png" class="" title="img">
+<ul>
+<li>Docker Compose：用于定义和运行<strong>多容器 Docker 应用程序</strong>的工具，使多个容器可以在隔离环境中一起运行；</li>
+<li>Dockerfile：用来构建镜像的文本文件，包含了一条条<strong>构建镜像</strong>所需的指令和说明；</li>
+<li>Docker Machine：是一个简化 Docker 安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker；可以集中<strong>管理</strong>所有的 docker 主机，比如快速的给 100 台服务器安装上 docker；</li>
+</ul>
+<h1 id="命令"><a class="markdownIt-Anchor" href="#命令"></a> 命令</h1>
+<p>示例代码，如何在 docker compose 中运行一个 java 程序，并使用 mysql 镜像的 3306 端口</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span>  </span><br><span class="line"><span class="attr">services:</span>  </span><br><span class="line">  <span class="attr">db:</span>  </span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:5.7</span>  </span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span>  </span><br><span class="line">    <span class="attr">environment:</span>  </span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">example</span>  </span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">mydb</span>  </span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">myuser</span>  </span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">mypassword</span>  </span><br><span class="line">    <span class="attr">ports:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3608:3306&quot;</span>  <span class="comment"># 将宿主机的 3608 端口映射到容器的 3306 端口  </span></span><br><span class="line">  </span><br><span class="line">  <span class="attr">java-app:</span>  </span><br><span class="line">    <span class="attr">build:</span>  </span><br><span class="line">      <span class="attr">context:</span> <span class="string">.</span>  <span class="comment"># 假设 Dockerfile 在当前目录下  </span></span><br><span class="line">      <span class="attr">dockerfile:</span> <span class="string">Dockerfile</span>  </span><br><span class="line">    <span class="attr">depends_on:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span>  </span><br><span class="line">    <span class="attr">environment:</span>  </span><br><span class="line">      <span class="attr">DB_HOST:</span> <span class="string">db</span>  <span class="comment"># Java 程序将连接到名为 &quot;db&quot; 的服务（即 MySQL 容器）  </span></span><br><span class="line">      <span class="attr">DB_PORT:</span> <span class="number">3306</span>  <span class="comment"># 在容器内部，MySQL 仍然监听 3306 端口  </span></span><br><span class="line">      <span class="attr">DB_USER:</span> <span class="string">myuser</span>  </span><br><span class="line">      <span class="attr">DB_PASSWORD:</span> <span class="string">mypassword</span>  </span><br><span class="line">      <span class="attr">DB_NAME:</span> <span class="string">mydb</span>  </span><br><span class="line">    <span class="attr">ports:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span>  <span class="comment"># 假设 Java 程序监听 8080 端口</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>容器虚拟化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 文档阅读</title>
+    <url>/2024/Git/</url>
+    <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
+<blockquote>
+<p>有空可以看看这个 <a href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
+</blockquote>
+<span id="more"></span>
+<h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
+<h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
+<ol>
+<li>
+<p>集中化版本控制（CVCS）缺点</p>
+<ol>
+<li>中央服务器的单点故障就无法协同工作</li>
+<li>本地只有快照，项目整体和其变更历史只保存在服务器上</li>
+</ol>
+</li>
+<li>
+<p>分布式版本控制（DVCS）优点</p>
+<ol>
+<li>代码仓库完整地镜像下来，包括完整的历史记录</li>
+<li>用户在本地保存了所有改动，每一次的克隆都是对仓库的完整备份</li>
+<li>可以指定和若干不同的远端代码仓库进行交互</li>
+</ol>
+</li>
+</ol>
+<h3 id="git-简史"><a class="markdownIt-Anchor" href="#git-简史"></a> Git 简史</h3>
+<ol>
+<li>并行开发</li>
+<li>完全分布式</li>
+<li>速度快</li>
+<li>数据量大</li>
+</ol>
+<h3 id="git-简介"><a class="markdownIt-Anchor" href="#git-简介"></a> Git 简介</h3>
+<ol>
+<li>大多版本控制工具都是基于差异的，存储文件随时间变化的差异，而Git储存项目快照或索引</li>
+<li>Git 安全性优，只做增不做删；完整性好，使用SHA-1 哈希算法</li>
+<li>文件的四种状态：已提交（committed）、已修改（modified）、已暂存（staged）、未跟踪（untracked）</li>
+<li>项目的三个阶段：工作目录、暂存区域以及 Git 仓库</li>
+<li>工作流程：修改文件、暂存文件、将暂存区文件快照永久存在Git目录</li>
+</ol>
+<h3 id="git-配置"><a class="markdownIt-Anchor" href="#git-配置"></a> Git 配置</h3>
+<blockquote>
+<p>git config --list --show-origin</p>
+</blockquote>
+<ol>
+<li>/etc/gitconfig 系统通用配置 git config --system</li>
+<li>~/.gitconfig 当前用户配置 git config --global</li>
+<li>.git/config 当前项目配置 git config --local</li>
+</ol>
+<h2 id="chapter-2-基础"><a class="markdownIt-Anchor" href="#chapter-2-基础"></a> Chapter 2 基础</h2>
+<blockquote>
+<p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
+</blockquote>
+<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
+<ol>
+<li>git init
+<ol>
+<li>初始化仓库</li>
+</ol>
+</li>
+<li>git clone
+<ol>
+<li>克隆仓库</li>
+<li>git clone -b master &lt;url&gt; 克隆指定分支</li>
+</ol>
+</li>
+<li>git status
+<ol>
+<li>查看文件状态</li>
+<li>[-s] 简要文件状态信息</li>
+</ol>
+</li>
+<li>git add
+<ol>
+<li>[&lt;file&gt;] 跟踪新文件</li>
+<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
+<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
+</ol>
+</li>
+<li>git diff
+<ol>
+<li>已修改文件与已暂存文件的内容差异</li>
+<li>[–staged] 已暂存与分支HEAD的内容差异</li>
+</ol>
+</li>
+<li>git rm
+<ol>
+<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
+<li>[-f] 强制移除存在未暂存修改的文件</li>
+<li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
+</ol>
+</li>
+<li>git commit
+<ol>
+<li>提交文件</li>
+<li>[-m] 提交备注</li>
+<li>[–amend] 追加提交</li>
+<li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
+</ol>
+</li>
+<li>git mv
+<ol>
+<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
+</ol>
+</li>
+<li>git log
+<ol>
+<li>回顾提交历史</li>
+<li>[–stat] 显示每次提交的简要信息</li>
+<li>[-p ] 显示每次提交的详细信息</li>
+<li>[–pretty=format:“xxx”] 自定义信息格式</li>
+<li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
+<li>[–since] 限制时间</li>
+</ol>
+</li>
+<li>git reset
+<ol>
+<li>[HEAD &lt;file&gt;] 取消暂存</li>
+</ol>
+</li>
+<li>git checkout
+<ol>
+<li>[-- &lt;filename&gt;] 撤销修改</li>
+<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
+<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
+</ol>
+</li>
+<li>git remote
+<ol>
+<li>[-v] 列出远程仓库</li>
+<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
+<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
+<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
+<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
+</ol>
+</li>
+<li>git fetch
+<ol>
+<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
+</ol>
+</li>
+<li>git push
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
+<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
+<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
+<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
+<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
+</ol>
+</li>
+<li>git pull
+<ol>
+<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
+</ol>
+</li>
+<li>git tag
+<ol>
+<li>列出已有的标签</li>
+<li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
+<li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
+<li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
+<li>[-d] 删除标签</li>
+</ol>
+</li>
+<li>git show
+<ol>
+<li>标签信息和与之对应的提交信息</li>
+</ol>
+</li>
+<li>git restore
+<ol>
+<li>[&lt;filename&gt;] 丢弃工作区修改</li>
+<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
+</ol>
+</li>
+<li>git merge
+<ol>
+<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
+</ol>
+</li>
+<li>git branch
+<ol>
+<li>[-d &lt;branchname&gt;] 删除分支</li>
+<li>[-v] 每个分支的最后一次提交</li>
+<li>[-vv] 跟踪信息</li>
+<li>[–set-upstream-to &lt;remotename&gt;/&lt;branchname&gt;] 跟踪上游分支</li>
+<li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
+<li>[-m old_branch_name new_branch_name] 改名</li>
+</ol>
+</li>
+<li>git stash
+<ol>
+<li>贮藏工作</li>
+<li>[list] 列出所有贮藏</li>
+<li>[apply] 恢复贮藏</li>
+</ol>
+</li>
+<li>git rebase
+<ol>
+<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
+</ol>
+</li>
+</ol>
+<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
+<p>.gitignore 正则表达式：<a href="https://github.com/github/gitignore">官方样例文件</a></p>
+<h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
+<blockquote>
+<p>相关命令合并到 Chapter2 中</p>
+</blockquote>
+<ol>
+<li>Git 中 HEAD是一个指针，指向当前工作位置</li>
+<li>git mergetool 图形化冲突解决工具</li>
+<li>有 Git 特性演化出的开发工作流：长期分支、主题分支</li>
+</ol>
+<h3 id="变基"><a class="markdownIt-Anchor" href="#变基"></a> 变基</h3>
+<p>如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作。</p>
+<p>工作原理：提取&lt;topicbranch&gt;内的修改并存为临时文件，然后将HEAD指向&lt;basebranch&gt;，最后以此将之前另存为临时文件的修改依序应用</p>
+<h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>版本管理</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo 使用指南</title>
-    <url>/2023/hexo%20%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
+    <url>/2024/Hexo/</url>
     <content><![CDATA[<blockquote>
 <p><a href="https://hexo.io/docs/">官方文档</a></p>
 </blockquote>
@@ -5006,7 +4490,7 @@ Discussion</p>
 <h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
 <p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
-<p>使用 <code>mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
+<p>管理员 PowerShell <code>cmd /c mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
 <h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
 <blockquote>
 <p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
@@ -5018,6 +4502,532 @@ Discussion</p>
       </categories>
       <tags>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>AugESC</title>
+    <url>/2023/AugESC/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
+<blockquote>
+<p>研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前工作的缺陷
+<ul>
+<li>成本高、耗时长</li>
+<li>预算限制，所收集的对话规模小，主题少</li>
+</ul>
+</li>
+<li>本文主要贡献
+<ul>
+<li>关键发现</li>
+<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
+<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>预训练模型</li>
+<li>预训练模型的数据增强</li>
+</ul>
+<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
+<ul>
+<li>语言模型优于对话模型
+<ul>
+<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
+<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
+</ul>
+</li>
+<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
+<li>提示GPT不如微调GPT模型
+<ul>
+<li>提示型GPT-3生成可控性差</li>
+<li>只有微调才能掌握任务场景和所需特征</li>
+</ul>
+</li>
+<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
+<ul>
+<li>保持语言模型的内在知识</li>
+<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
+<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
+</ul>
+</li>
+<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
+<ul>
+<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
+</ul>
+</li>
+</ul>
+<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
+<ul>
+<li>主干模型：GPT-3，微调后的GPT-J</li>
+<li>提示模板：对话场景+情感支持</li>
+<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
+<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
+<li>触发Query
+<ul>
+<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
+<li>保留带有负面情绪的Query</li>
+</ul>
+</li>
+<li>过滤结果，删除非法对话</li>
+</ul>
+<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
+<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
+<ul>
+<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
+<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
+<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
+</ul>
+<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
+<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
+<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
+<blockquote>
+<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
+</blockquote>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>对话数据集增强</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Control Globally, Understand Locally</title>
+    <url>/2023/Control%20Globally,%20Understand%20Locally/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation.</p>
+<p>创新点：</p>
+<ul>
+<li>在 Encoder 和 Decoder 之间加了一层 GCNConv 和 RGCNConv</li>
+</ul>
+<p>![image-20240414083742062-17138602623661](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/image-20240414083742062-17138602623661-17138606243731.png)</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>目前研究的缺陷
+<ul>
+<li>关注序列上下文信息，忽略了全局原因和局部心理意图与其的层次关系</li>
+</ul>
+</li>
+<li>本文
+<ul>
+<li>提出了一个全局到局部的<strong>层次图网络</strong>来捕获多源信息(全局原因、局部意图和对话历史)并建模它们之间的层次关系，该网络由一个多源编码器、一个层次图推理器和一个全局引导解码器组成</li>
+<li>设计了一个新的训练目标来监测全局的语义信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>探索求助者情绪问题的原因：<strong>全局</strong>地控制情感支持对话的整个流程</li>
+<li>了解求助者的心理意图：帮助系统<strong>局部</strong>了解求助者当前时的心理状态</li>
+<li>本文目标
+<ul>
+<li>捕获全局原因和局部心理意图</li>
+<li>建模全局与局部之间的关系</li>
+</ul>
+</li>
+<li>解决方法【全局到局部层次图网络GLHG】
+<ul>
+<li>多源编码器：COMET提取局部心理意图</li>
+<li>层次图推理机：全局原因(对话级)、局部心理意图(句子级)和对话历史之间的层次关系进行建模</li>
+<li>解码器中设计了一个新的训练目标来监控全局原因的语义信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>图建模对话
+<ul>
+<li>GCN 利用自我和对话者间依赖性来模拟会话上下文</li>
+<li>EGAE 使用图网络捕获面向任务对话中的对话模式</li>
+</ul>
+</li>
+<li>常识性知识
+<ul>
+<li>与本人有关的心理状态：xReact、xIntent</li>
+</ul>
+</li>
+</ul>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
+<ul>
+<li>问题定义</li>
+<li>多源编码器
+<ul>
+<li>BlenderBot Encoder + Max-pooling</li>
+<li>上下文 + 全局原因 + 局部原因</li>
+</ul>
+</li>
+<li>分层图推理机
+<ul>
+<li>GAT 图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png)注意力函数（2017出版)</li>
+<li>![image.png](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp) ![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png)注意力机制</li>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png)</li>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png)注意力机制</li>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png)</li>
+</ul>
+</li>
+<li>Global-guide 解码器
+<ul>
+<li>响应生成
+<ul>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png)，v表示图神经网络得到的全局变量</li>
+</ul>
+</li>
+<li>监督全局语义信息：预测问题类型
+<ul>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>联合训练
+<ul>
+<li>对数似然损失+交叉熵损失</li>
+<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png)![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png)</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>指标：plexity (PPL), BLEU-n (B-n), ROUGE-L (R-L), Distinct-1(D-1), and Distinct-2 (D-2)</li>
+<li>由于有了意图特征，提出建议更具体有效</li>
+</ul>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<ul>
+<li>全局到局部的层次图网络(Global-to-Local Hierarchical Graph network, GLHG)来捕获多源信息并从全局到局部的角度建模层次关系</li>
+<li>新的训练目标“预测Seeker遇到问题的类型”</li>
+</ul>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<ul>
+<li><strong>多源编码器</strong>利用情境信息并将心理意图与COMET结合，捕获全局原因和局部意图</li>
+<li><strong>分层图推理机</strong>在全局原因、局部心理意图和对话历史之间进行交互，建模不同层次的关系（hierarchical graph reasoner）</li>
+</ul>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>异构图神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DQ-HGAN</title>
+    <url>/2023/DQ-HGAN/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>关注的问题
+<ul>
+<li>动态建模对用户状态，包含个体的意图和情感</li>
+<li>综合各类因素选择最合适的支持策略</li>
+</ul>
+</li>
+<li>提出的方法【基于异构图注意力网络的深度Q-learning情感支持对话生成】
+<ul>
+<li>为了捕获用户意图、情感和历史对话之间的交互关系，基于意图词典和情感分类器，构建了异构图注意力网络</li>
+<li>采用基于DQN的最优响应策略以指导响应生成，优于传统的基于规则或启发式方法</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前研究
+<ul>
+<li>ESC任务要求能够确定求助者的心理意图和情绪状态，以便提供适当的支持。因此整合意图识别和情感识别对于提高情感支持对话的质量至关重要，且目前的方法对用户状态建模不充分。</li>
+</ul>
+</li>
+<li>关注的问题
+<ul>
+<li>建模用户状态</li>
+<li>选择最优策略，以产生有效的保障响应</li>
+</ul>
+</li>
+<li>提出的方法
+<ul>
+<li>设计了基于注意力的<strong>异构图网络</strong>，与用户的意图、情感和历史对话交互，可以有效地捕获和建模图中不同类型的节点和边</li>
+<li>构建<strong>意图词典</strong>和<strong>情感分类器</strong>来捕捉求助者在语境中的细微情感表达</li>
+<li><strong>DQN算法</strong>对用户未来反馈的期望值进行估计，帮助系统选择获得最优长期值的策略。其允许系统从用户的反馈中学习，调整其策略，以提供最有效的支持响应。</li>
+</ul>
+</li>
+<li>主要贡献
+<ul>
+<li>提出了一种新的方法DQ-HGAN，将<strong>意图和情感识别与策略生成相结合</strong>，以提高情感支持对话系统的质量和个性化</li>
+<li>构建<strong>意图词典和情感分类器</strong>，捕捉求助者在语境中的细微情感表达并跟踪其状态</li>
+<li>设计了一种基于注意力机制的<strong>异构图网络</strong>，与用户的意图、情感和历史对话进行交互，并选择最优的支持策略以生成有效的支持响应</li>
+<li>ESC生成中使用ESC生成中使用<strong>强化学习</strong>，具体来说，使用DQN算法（Deep Q-Network）估计用户未来反馈的期望值，动态调整策略以提供最有效的支持响应</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>对话中的意图和情感识别【在模型中融合了“意图”这个特征】
+<ul>
+<li>多头注意力机制
+<ul>
+<li>多头注意力机制来捕捉用户的意图和情感。缺点：缺乏有效捕捉用户细微情感表达的能力</li>
+<li>使用预训练模型，增强PLM对话相关性，识别对话意图、推断对话情感。缺点：不是专门为ESC任务定制的，性能差</li>
+</ul>
+</li>
+<li>词典
+<ul>
+<li>词典包含特定意图或情感相关的词汇和短语，利用基于规则的算法将context与意图词典进行匹配，并分配相应的意图标签。缺点：只将单个单词与标签匹配，可能会忽略整个句子的意图或情感含义</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>图建模【捕获会话系统中用户意图、情感和对话历史之间的复杂关系】
+<ul>
+<li>同构图【忽略了用户意图和情感的异构性】
+<ul>
+<li>GAT 图注意力网络，利用自注意力机制来捕获对话图中意图和情感节点之间的交互</li>
+<li>GCN 图卷积网络，利用图结构在节点之间传播信息，并捕获对话数据中的上下文依赖</li>
+</ul>
+</li>
+<li><strong>异构图注意力网络是专为表示图中不同类型的节点和边而设计的</strong>，它擅长对<strong>不同的节点</strong>类型进行建模，如用户话语、系统响应、情感状态和意图，从而更全面地了解用户的情感状态；还擅长捕捉<strong>不同类型的边</strong>，包括顺序依赖、自依赖和状态依赖，从而能够更准确地表示用户的情感状态。此外，它还包含了一种<strong>注意力机制</strong>来进行重要性加权，允许它在聚合过程中专注于最相关的信息，从而更全面地了解用户的状态。</li>
+</ul>
+</li>
+<li>策略选择
+<ul>
+<li>基于规则或启发式方法</li>
+<li>强化学习方法（如：Q-learning）
+<ul>
+<li>采用DQN估计不同对话动作的期望值，并学习了一种最大化该值的策略。从用户反馈中学习，并生成更有吸引力和信息量的响应</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>响应生成
+<ul>
+<li>目前流行的Encoder-Decoder模型往往专注于根据对话历史生成回复，而没有考虑用户的意图、情感以及合适的支持策略</li>
+</ul>
+</li>
+</ul>
+<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
+<ul>
+<li>ESConv：标记对话，并将其转换为词嵌入，以将其输入到模型中</li>
+<li>COMET：使用COMET初始化模型的词嵌入，并在ESConv数据集上进行微调，以提高其构建意图词典的有效性</li>
+<li>ATOMIC：得到意图或目的（xIntent）</li>
+<li>NRC VAD 词典：得到情感词典，每个单词对应的效价-觉醒-支配（Valence-Arousal-Dominance）</li>
+<li>问题定义：上下文+策略+Query =&gt;响应Yt。最优策略基于当前状态和期望的长期回报（通过Q-learning预测）</li>
+</ul>
+<h2 id="method"><a class="markdownIt-Anchor" href="#method"></a> Method</h2>
+<p>![88c61f5be72a795a087441904fcd0ad9_3_Figure_2_780332990.png](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484543763-403c4648-68f4-4644-bf00-e2356c06841c.jpg)</p>
+<h3 id="多源编码器"><a class="markdownIt-Anchor" href="#多源编码器"></a> 多源编码器</h3>
+<p>![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484574764-c5051f60-2b3c-40cf-a161-5848c1d67bc2.png)</p>
+<ul>
+<li>
+<p>transformer编码器（TransformerEncoder）</p>
+<ul>
+<li>ht = TransformerEncoder(Ht)</li>
+</ul>
+</li>
+<li>
+<p>意图词典（COMET）：通过对ATOMIC 微调，同去意图关键词，构建意图词典（意图关键词，对应的词嵌入）</p>
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>t</mi></msub><mo>=</mo><mi>T</mi><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>f</mi><mi>o</mi><mi>r</mi><mi>m</mi><mi>e</mi><mi>r</mi><mi>E</mi><mi>n</mi><mi>c</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>r</mi><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mrow><msub><mi>w</mi><mi>i</mi></msub><mo>∈</mo><mi mathvariant="script">F</mi></mrow></munder><mi mathvariant="normal">softmax</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>T</mi></msubsup><msub><mi>h</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><msub><mi>c</mi><mi>i</mi></msub><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">g_{t}=TransformerEncoder\left(\sum_{w_{i}\in\mathscr{F}}\operatorname{softmax}\left(c_{i}^{T} h_{t}\right)c_{i}\right) 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.156105em;vertical-align:-1.406105em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault">n</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0500050000000003em;"><span style="top:-1.843995em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathscr mtight" style="margin-right:0.13634em;">F</span></span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.406105em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">s</span><span class="mord mathrm">o</span><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">t</span><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">x</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+<li>
+<p>情感分类器（NRC VAD词典）</p>
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>e</mi><mi>t</mi></msub><mo>=</mo><mtext>TransformerEncoder</mtext><mrow><mo fence="true">(</mo><munder><mo>∑</mo><mrow><msub><mi>w</mi><mi>k</mi></msub><mo>∈</mo><mi mathvariant="script">Z</mi></mrow></munder><mi mathvariant="normal">softmax</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msubsup><mi>z</mi><mi>k</mi><mi>T</mi></msubsup><msub><mi>h</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><msub><mi>g</mi><mi>t</mi></msub><mo fence="true">)</mo></mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">e_{t}=\text{TransformerEncoder}\left(\sum_{w_{k} \in \mathscr{Z}}\operatorname{softmax}\left(z_{k}^{T} h_{t}\right) g_{t}\right) \text { }
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.1618649999999997em;vertical-align:-1.411865em;"></span><span class="mord text"><span class="mord">TransformerEncoder</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.050005em;"><span style="top:-1.843995em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathscr mtight" style="margin-right:0.24037em;">Z</span></span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.411865em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">s</span><span class="mord mathrm">o</span><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">t</span><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">x</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord"> </span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于异构图的用户状态跟踪imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258ddpng"><a class="markdownIt-Anchor" href="#基于异构图的用户状态跟踪imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258ddpng"></a> 基于异构图的用户状态跟踪![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258dd.png)</h3>
+<h3 id="dqn强化学习imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7png"><a class="markdownIt-Anchor" href="#dqn强化学习imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7png"></a> DQN强化学习![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7.png)</h3>
+<h3 id="响应生成解码器imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762png"><a class="markdownIt-Anchor" href="#响应生成解码器imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762png"></a> 响应生成解码器![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762.png)</h3>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<p>Conclusion</p>
+<h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
+<h1 id="解决方法-创新点"><a class="markdownIt-Anchor" href="#解决方法-创新点"></a> 解决方法 / 创新点</h1>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>异构图神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Feedback-Aware Double</title>
+    <url>/2023/FADO/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Feedback-Aware Double COntrolling Network for Emotional Support Conversation</p>
+<p>![img](FADO_ Feedback-Aware Double COntrolling Network for Emotional Support Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png)</p>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>双层反馈策略选择器：通过反馈信息预测策略</li>
+<li>双层控制阅读器：通过策略约束上下文响应</li>
+<li>策略词典：丰富策略的语义信息</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<h2 id="problem-formulation"><a class="markdownIt-Anchor" href="#problem-formulation"></a> Problem Formulation</h2>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> Approach</h2>
+<ul>
+<li>上下文编码器
+<ul>
+<li>BlenderBot预训练编码器编码上下文历史对话U，得到Ht</li>
+</ul>
+</li>
+<li>双层反馈策略选择器
+<ul>
+<li>策略选择
+<ul>
+<li>输入
+<ul>
+<li>BlenderBot Encoder 编码上下文历史对话U，得到隐状态Ht</li>
+<li>BlenderBot Encoder 编码策略S</li>
+<li>EmoBERTa Encoder 编码上下文对话U</li>
+</ul>
+</li>
+<li>公式
+<ul>
+<li>上下文编码器（策略S同理）：$$\boldsymbol{H}=\operatorname{Enc}<em>{cxt}\left(\boldsymbol{[CLS]}, \boldsymbol{u}</em>{1}, \boldsymbol{[SEP]}, \boldsymbol{u}<em>{2}, …, \boldsymbol{u}</em>{M}\right)$$，M为对话数
+<ul>
+<li>
+\boldsymbol{H}=\left(\boldsymbol{u}_{1},..., \boldsymbol{u}_{T}\right)$$，T为Token数
+
+</li>
+<li>
+\boldsymbol{E}=\left(\boldsymbol{e}_{1},..., \boldsymbol{e}_{T}\right)$$，T为Token数
+
+</li>
+<li>s、c、r 为策略S、上下文H、情感分类E。编码+平均池化操作后得到</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双层反馈
+<ul>
+<li>回合级反馈：局部变量，当前用户的感受。包含每轮对话Seeker情感Δe和Seeker评分变化Δr</li>
+<li>对话级反馈：全局变量Δc，用户的全局状态。包含Seeker在谈话后的情绪压力、Supporter对话题的回应的相关性、Supporter对Seeker感受的理解和共情</li>
+<li>融合adapter：整合回合级和会话级反馈的两类语义信息。Δs = Δe + Δr + uΔc【计算损失时，给予正向或负向的反馈】</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双控读取器（模仿情感聊天机器ECM）
+<ul>
+<li>context-to-strategy：利用上下文信息来选择上下文相关的策略
+<ul>
+<li>
+\boldsymbol{g}^{c} = \operatorname{sigmoid}\left(
+
+</li>
+</ul>
+\right)$$</li>
+<li>strategy-to-context：编码阶段可以关注与策略相关的上下文，从而生成策略约束的响应
+<ul>
+<li>
+\boldsymbol{g}^{o} = \operatorname{sigmoid}\left(
+
+</li>
+</ul>
+\right)$$</li>
+<li>残差连接：在原始信息和更新信息之间进行权衡
+<ul>
+<li>
+\begin{array}{r}
+
+</li>
+</ul>
+h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
+\end{array}$$</li>
+</ul>
+</li>
+<li>策略字典
+<ul>
+<li>输入策略令牌的描述， 而不是策略令牌，以便模型对策略进行更深入的理解</li>
+<li>Encoder-Decoder 之间的状态传输类似于MISC，采用cross-attention代替self-attention<a href="https://www.yuque.com/jinzang/lnx420/wrq82cgnp6p47q59?view=doc_embed">MISC: A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</a></li>
+</ul>
+</li>
+<li>响应生成
+<ul>
+<li>BlenderBot Decoder：$$\boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}<em>{&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)=\text { Generator }\left(\boldsymbol{W}<em>{y&lt;z}, \boldsymbol{h}</em>{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)$$</li>
+</ul>
+</li>
+<li>联合训练
+<ul>
+<li>策略预测：反馈感知负对数似然 feedback-aware negative log-likelihood
+<ul>
+<li>
+\mathcal{L}_{1}=\left\{\begin{array}{ccc}
+
+</li>
+</ul>
+-\hat{o} \log \left(1-\operatorname{softmax}\left(\boldsymbol{o}^{\prime}\right)\right) &amp; \text { if } &amp; \Delta s \leq 0<br />
+\end{array}\right.\$$</li>
+<li>响应生成：标准交叉熵损失优化 cross-entropy
+<ul>
+<li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="script">L</mi><mn>2</mn></msub><mo>=</mo><mo>−</mo><munderover><mo>∑</mo><mrow><mi>z</mi><mo>=</mo><mn>1</mn></mrow><mi>Z</mi></munderover><mi>log</mi><mo>⁡</mo><mi mathvariant="bold-italic">p</mi><mrow><mo fence="true">(</mo><msub><mi>y</mi><mi>z</mi></msub><mo>∣</mo><msub><mi mathvariant="bold-italic">y</mi><mrow><mo>&lt;</mo><mi>z</mi></mrow></msub><mo separator="true">,</mo><msubsup><mi mathvariant="bold-italic">h</mi><mi mathvariant="bold-italic">t</mi><mo mathvariant="normal">′</mo></msubsup><mo separator="true">,</mo><mi mathvariant="bold-italic">V</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{2}=-\sum_{z=1}^{Z} \log \boldsymbol{p}\left(y_{z} \mid \boldsymbol{y}_{&lt;z}, \boldsymbol{h}_{\boldsymbol{t}}^{\prime}, \boldsymbol{V}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathcal">L</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.0954490000000003em;vertical-align:-1.267113em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283360000000002em;"><span style="top:-1.882887em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3000050000000005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">Z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.267113em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">p</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">y</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.13323000000000002em;"><span style="top:-2.45586em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mrel mtight">&lt;</span><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.27151em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.836232em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight">t</span></span></span></span></span></span><span style="top:-3.1473400000000002em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.25555em;">V</span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiment"><a class="markdownIt-Anchor" href="#experiment"></a> Experiment</h2>
+<ul>
+<li>采用EmoBERTa-base作为特征提取器，以获取Seeker的情感得分和情感表征，情感得分由softmax函数使用EmoBERTa-base的[CLS]表示获得</li>
+</ul>
+<h2 id="experimental-results"><a class="markdownIt-Anchor" href="#experimental-results"></a> Experimental Results</h2>
+<h2 id="analyses"><a class="markdownIt-Anchor" href="#analyses"></a> Analyses</h2>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> conclusion</h2>
+<h1 id="关注的问题"><a class="markdownIt-Anchor" href="#关注的问题"></a> 关注的问题</h1>
+<ol>
+<li>预测策略只依靠对话历史，而不考虑求助者反馈，导致预测的结果与用户无关</li>
+<li>建模过程只关注上下文到策略，而不关注策略到上下文和与策略相关的上下文</li>
+</ol>
+<h1 id="解决方法"><a class="markdownIt-Anchor" href="#解决方法"></a> 解决方法</h1>
+<ol>
+<li>双层反馈策略选择器：利用回合级和会话级反馈信息来激励或惩罚策略</li>
+<li>双层控制阅读器：策略到上下文流来生成策略约束响应</li>
+</ol>
+<h1 id="创新点-本文的优势"><a class="markdownIt-Anchor" href="#创新点-本文的优势"></a> 创新点 / 本文的优势</h1>
+<h1 id="实验结论"><a class="markdownIt-Anchor" href="#实验结论"></a> 实验结论</h1>
+<h1 id="有待提升的部分"><a class="markdownIt-Anchor" href="#有待提升的部分"></a> 有待提升的部分</h1>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
       </tags>
   </entry>
 </search>

@@ -900,7 +900,10 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
     <url>/Java-Algorithm/</url>
     <content><![CDATA[<h1 id="算法"><a class="markdownIt-Anchor" href="#算法"></a> 算法</h1>
 <h2 id="链表"><a class="markdownIt-Anchor" href="#链表"></a> 链表</h2>
-<p>快慢指针</p>
+<h3 id="快慢指针"><a class="markdownIt-Anchor" href="#快慢指针"></a> 快慢指针</h3>
+<p>链表倒数第n个数</p>
+<h3 id="分治法"><a class="markdownIt-Anchor" href="#分治法"></a> 分治法</h3>
+<p>排序</p>
 <h2 id="动态规划"><a class="markdownIt-Anchor" href="#动态规划"></a> 动态规划</h2>
 <blockquote>
 <p>思路</p>
@@ -1116,7 +1119,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <blockquote>
 <p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
 </blockquote>
-<style>.zqczehlutful{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="zqczehlutful" alt="image-20240425212527868">
+<style>.uwrkxjbudqhm{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="uwrkxjbudqhm" alt="image-20240425212527868">
 <ul>
 <li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
 <li>非线程安全的</li>
@@ -1167,11 +1170,12 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64 以下时只会触发扩容而不会将链表转为红黑树</p>
 <h1 id="linkedhashmap"><a class="markdownIt-Anchor" href="#linkedhashmap"></a> LinkedHashMap</h1>
-<p><code>LinkedHashMap</code> 内部维护了一个双向链表，确保其迭代顺序是和插入顺序一致的</p>
+<p><code>LinkedHashMap</code> 内部维护了一个双向链表，确保其迭代顺序是和插入顺序或访问顺序是一致的，通过重写 get、newNode、afterNodeAccess、afterNodeInsertion、afterNodeRemoval 等方法实现，最近插入或访问的节点位于链表尾部。</p>
 <blockquote>
-<p>插入顺序遍历 entry（accessOrder=false），也可以按照访问顺序遍历 entry（accessOrder=true）</p>
+<p>可以按照插入顺序遍历 entry（accessOrder=false）</p>
+<p>也可以按照访问顺序遍历 entry（accessOrder=true），即 LRU</p>
 </blockquote>
-<p>实现 LRU，即 迭代顺序==访问顺序</p>
+<p>可用于实现 LRU，即 迭代顺序==访问顺序</p>
 <ul>
 <li>每次修改都将元素删除后重新插入</li>
 <li>将 <code>accessOrder</code> 设置为 true 并重写 <code>removeEldestEntry</code> 方法当链表大小超过容量时返回 true</li>

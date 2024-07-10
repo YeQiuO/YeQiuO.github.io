@@ -26,11 +26,13 @@
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="Git 文档阅读笔记和常用命令集合">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/2024/Git/1352126739_7909.jpg">
 <meta property="article:published_time" content="2024-01-27T04:54:45.000Z">
-<meta property="article:modified_time" content="2024-05-18T07:38:59.236Z">
+<meta property="article:modified_time" content="2024-07-10T05:03:27.574Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="版本管理">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/2024/Git/1352126739_7909.jpg">
 
 
 <link rel="canonical" href="https://yeqiuo.github.io/2024/Git/">
@@ -140,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-1-%E8%B5%B7%E6%AD%A5"><span class="nav-number">1.</span> <span class="nav-text"> Chapter 1 起步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text"> 版本控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E7%AE%80%E5%8F%B2"><span class="nav-number">1.2.</span> <span class="nav-text"> Git 简史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.3.</span> <span class="nav-text"> Git 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.4.</span> <span class="nav-text"> Git 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-2-%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text"> Chapter 2 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text"> 基础命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5"><span class="nav-number">2.2.</span> <span class="nav-text"> 忽略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-3-%E5%88%86%E6%94%AF"><span class="nav-number">3.</span> <span class="nav-text"> Chapter 3 分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E5%9F%BA"><span class="nav-number">3.1.</span> <span class="nav-text"> 变基</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-6-github"><span class="nav-number">4.</span> <span class="nav-text"> Chapter 6 GitHub</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-1-%E8%B5%B7%E6%AD%A5"><span class="nav-number">1.</span> <span class="nav-text"> Chapter 1 起步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text"> 版本控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E7%AE%80%E5%8F%B2"><span class="nav-number">1.2.</span> <span class="nav-text"> Git 简史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.3.</span> <span class="nav-text"> Git 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.4.</span> <span class="nav-text"> Git 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-2-%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text"> Chapter 2 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text"> 常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5%E4%B8%8D%E8%B7%9F%E8%B8%AA%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text"> 忽略&#x2F;不跟踪文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-3-%E5%88%86%E6%94%AF"><span class="nav-number">3.</span> <span class="nav-text"> Chapter 3 分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E5%9F%BA"><span class="nav-number">3.1.</span> <span class="nav-text"> 变基</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chapter-6-github"><span class="nav-number">4.</span> <span class="nav-text"> Chapter 6 GitHub</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -232,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-18 15:38:59" itemprop="dateModified" datetime="2024-05-18T15:38:59+08:00">2024-05-18</time>
+      <time title="修改时间：2024-07-10 13:03:27" itemprop="dateModified" datetime="2024-07-10T13:03:27+08:00">2024-07-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -259,6 +261,7 @@
 <p>有空可以看看这个 <a target="_blank" rel="noopener" href="https://github.com/xirong/my-git">Git 笔记汇总</a></p>
 </blockquote>
 <span id="more"></span>
+<img data-src="/2024/Git/1352126739_7909.jpg" class="" title="img">
 <h2 id="chapter-1-起步"><a class="markdownIt-Anchor" href="#chapter-1-起步"></a> Chapter 1 起步</h2>
 <h3 id="版本控制"><a class="markdownIt-Anchor" href="#版本控制"></a> 版本控制</h3>
 <ol>
@@ -306,157 +309,120 @@
 <blockquote>
 <p>Git命令只能控制当前文件夹和子文件夹内的修改</p>
 </blockquote>
-<h3 id="基础命令"><a class="markdownIt-Anchor" href="#基础命令"></a> 基础命令</h3>
-<ol>
-<li>git init
-<ol>
-<li>初始化仓库</li>
-</ol>
-</li>
-<li>git clone
-<ol>
-<li>克隆仓库</li>
-<li>git clone -b master &lt;url&gt; 克隆指定分支</li>
-</ol>
-</li>
-<li>git status
-<ol>
-<li>查看文件状态</li>
+<h3 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h3>
+<p>git init 【初始化仓库】</p>
+<p>git clone [OPTIONS] &lt;url&gt;【克隆仓库】</p>
+<ul>
+<li>[-b master]克隆指定分支</li>
+</ul>
+<p>git status [OPTIONS] 【查看文件状态 】</p>
+<ul>
 <li>[-s] 简要文件状态信息</li>
-</ol>
-</li>
-<li>git add
-<ol>
-<li>[&lt;file&gt;] 跟踪新文件</li>
-<li>[&lt;file&gt;] 已修改的文件放到暂存区</li>
-<li>[&lt;file&gt;] 合并时把有冲突的文件标记为已解决状态</li>
-</ol>
-</li>
-<li>git diff
-<ol>
-<li>已修改文件与已暂存文件的内容差异</li>
-<li>[–staged] 已暂存与分支HEAD的内容差异</li>
-</ol>
-</li>
-<li>git rm
-<ol>
-<li>[&lt;file&gt;] 记录此次移除文件的操作</li>
-<li>[-f] 强制移除存在未暂存修改的文件</li>
+</ul>
+<p>git add &lt;file&gt; 【跟踪新文件、已修改的文件放到暂存区、合并时把有冲突的文件标记为已解决状态 】</p>
+<p>git diff [OPTIONS] &lt;file&gt;【已修改文件与已暂存文件的内容差异】</p>
+<ul>
+<li>[–staged] 显示暂存区和上一次提交的差异</li>
+</ul>
+<p>git rm [OPTIONS] &lt;file&gt; 【删除文件】</p>
+<ul>
+<li>[-f] 强制移除存在未提交修改的文件</li>
 <li>[ --cached] 文件保留在工作区中，从Git仓库和暂存区中删除</li>
-</ol>
-</li>
-<li>git commit
-<ol>
-<li>提交文件</li>
-<li>[-m] 提交备注</li>
+</ul>
+<p>git commit [OPTIONS] 【提交文件】</p>
+<ul>
+<li>[-m &lt;message&gt;] 提交备注</li>
 <li>[–amend] 追加提交</li>
 <li>[-a] 直接将工作区和暂存区的所有修改一起提交</li>
-</ol>
-</li>
-<li>git mv
-<ol>
-<li>[&lt;oldfilename&gt; &lt;newfilename&gt;] 移动文件/改名</li>
-</ol>
-</li>
-<li>git log
-<ol>
-<li>回顾提交历史</li>
+</ul>
+<p>git mv &lt;oldfilename&gt; &lt;newfilename&gt; 【移动文件/改名】</p>
+<p>git log [OPTIONS] 【回顾提交历史】</p>
+<ul>
 <li>[–stat] 显示每次提交的简要信息</li>
-<li>[-p ] 显示每次提交的详细信息</li>
+<li>[-p] 显示每次提交的详细信息</li>
 <li>[–pretty=format:“xxx”] 自定义信息格式</li>
 <li>[–oneline --graph --all] 显示提交历史、各个分支的指向以及项目的分支分叉情况</li>
 <li>[–since] 限制时间</li>
-</ol>
+</ul>
+<p>git reset [OPTIONS] &lt;HEAD&gt;【回退版本，可以指定退回某一次提交的版本，直接删除某些commit的内容】</p>
+<ul>
+<li>[–soft]  回退到某个版本</li>
+<li>[–mixed]  默认，用于重置暂存区的文件与上一次的提交保持一致（取消暂存），工作区文件内容保持不变</li>
+<li>[–hard] 撤销工作区中所有未提交的修改内容，将暂存区与工作区都回到上一次版本，并删除之前的所有信息提交</li>
+</ul>
+<p>git checkout [OPTIONS]【在不同的分支之间切换、恢复文件、创建新分支，git switch 和 git restore 可以代替它】</p>
+<ul>
+<li>[.] 放弃所有工作区的修改</li>
+<li>[-f] 放弃工作区和暂存区的所有修改</li>
+<li>[&lt;branch-name&gt;] 从当前分支切换到指定的分支</li>
+<li>[-b &lt;local_new_branch_name&gt; &lt;remote_new_branch_name&gt;] 将远程仓库里指定的分支拉取到本地，并在本地创建一个分支与指定远程仓库分支关联起来,并切换到新建的本地分支中</li>
+</ul>
+<p>git remote [OPTIONS] 【列出当前仓库中已配置的<strong>远程仓库</strong>】</p>
+<ul>
+<li>[-v] 列出当前仓库中已配置的远程仓库，并显示它们的 URL</li>
+<li>[add &lt;remote_name&gt; &lt;remote_url&gt;] 添加远程仓库，指定一个远程仓库的名称和 URL，将其添加到当前仓库中</li>
+<li>[remane &lt;old_name&gt; &lt;new_name&gt;] 将已配置的远程仓库重命名</li>
+<li>[show &lt;remote_name&gt;] 显示指定远程仓库的详细信息，包括 URL 和跟踪分支</li>
+<li>[remove &lt;remote_name&gt;] 从当前仓库中删除指定的远程仓库</li>
+<li>[&lt;remote_name&gt; &lt;new_url&gt;] 修改指定远程仓库的 URL</li>
+</ul>
+<p>git fetch &lt;remote_name&gt; &lt;local_branch_name&gt; 【获取远程仓库的更新，但不自动合并到你的工作】</p>
+<p>git push [OPTIONS]【推送到远程分支】</p>
+<ul>
+<li>
+<p>&lt;remote_name&gt; &lt;local_branch_name&gt;:&lt;remote_branch_name&gt;</p>
 </li>
-<li>git reset
-<ol>
-<li>[HEAD &lt;file&gt;] 取消暂存</li>
-</ol>
+<li>
+<p>[&lt;remote_name&gt; --delete &lt;branch_name&gt;] 删除远程分支</p>
 </li>
-<li>git checkout
-<ol>
-<li>[-- &lt;filename&gt;] 撤销修改</li>
-<li>[&lt;branch&gt;/&lt;version&gt;]  切换分支</li>
-<li>[-b &lt;localnewbranchname&gt; &lt;remotenewbranchname&gt;] 创建本地和远程分支并切换，本地与远程分支相关联</li>
-</ol>
+<li>
+<p>[-u &lt;remote_name&gt; --all]  本地的仓库和远程仓库进行关联</p>
 </li>
-<li>git remote
-<ol>
-<li>[-v] 列出远程仓库</li>
-<li>[add &lt;Repositoryname&gt; &lt;url&gt;] 添加远程仓库</li>
-<li>[remane &lt;oldRepositoryname&gt; &lt;newRepositoryname&gt;] 修改仓库本地名称</li>
-<li>[show &lt;remoteRepository&gt;] 查看远程仓库信息</li>
-<li>[remove &lt;remotebranch&gt;] 移除远程仓库</li>
-</ol>
+<li>
+<p>[–set-upstream &lt;remote_branch_name&gt; &lt;local_branch_name&gt;] 将本地分支与远程分支关联</p>
 </li>
-<li>git fetch
-<ol>
-<li>[&lt;remoteBranch&gt;] 从远程仓库抓取</li>
-</ol>
-</li>
-<li>git push
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 推送到远程分支</li>
-<li>[&lt;Repository&gt; &lt;tagname&gt;/–tags] 推送标签/所有标签</li>
-<li>[&lt;Repository&gt; --delete &lt;branch&gt;] 删除远程分支</li>
-<li>[-u &lt;remote&gt; --all]  本地的仓库和远程仓库进行关联</li>
-<li>[–set-upstream origin main] 将本地分支与远程分支关联</li>
-</ol>
-</li>
-<li>git pull
-<ol>
-<li>[&lt;Repositoryname&gt; &lt;branch&gt; ] 拉取到本地分支并合并</li>
-</ol>
-</li>
-<li>git tag
-<ol>
-<li>列出已有的标签</li>
+</ul>
+<p>git pull &lt;remote_name&gt; &lt;branch&gt;【<code>git fetch</code> 和 <code>git merge</code> 的组合，拉取到本地分支并合并】</p>
+<p>git tag [OPTIONS]【列出已有的标签】</p>
+<ul>
 <li>[-l &lt;通配符&gt;] 查询某些对应标签</li>
 <li>[&lt;version&gt;] 轻量标签（提交校验和存储到一个文件中）</li>
 <li>[-a &lt;version&gt; -m &lt;comment&gt;] 创建附注标签（数据库中的一个完整对象， 可以被校验）</li>
 <li>[-d] 删除标签</li>
-</ol>
-</li>
-<li>git show
-<ol>
-<li>标签信息和与之对应的提交信息</li>
-</ol>
-</li>
-<li>git restore
-<ol>
+</ul>
+<p>git rebase &lt;cur_branch&gt; &lt;target_branch&gt; 【将提交到某一分支上的所有修改都移至另一分支上】</p>
+<p>git revert &lt;commit_id&gt;【生成一次新的commit冲抵原来的commit】</p>
+<p>git merge &lt;branch&gt; 【合并指定分支到当前分支】</p>
+<p>git switch [OPTIONS] &lt;branch-name&gt; 【切换分支，与 git checkout 类似，但提供了更清晰的语义和错误检查】</p>
+<ul>
+<li>[-c] 创建一个新分支并切换到该分支</li>
+</ul>
+<p>git show 【对于提交，它显示日志消息和文本差异；对于标签，它显示标签消息和引用对象】</p>
+<p>git restore [OPTIONS]  【恢复或撤销文件的更改】</p>
+<ul>
+<li>[.] 还原所有未提交的更改</li>
 <li>[&lt;filename&gt;] 丢弃工作区修改</li>
-<li>[–staged &lt;filename&gt;] 暂存区修改放回工作区</li>
-</ol>
-</li>
-<li>git merge
-<ol>
-<li>[&lt;branch&gt;] 合并当前分支到branch分支</li>
-</ol>
-</li>
-<li>git branch
-<ol>
-<li>[-d &lt;branchname&gt;] 删除分支</li>
+<li>[–staged &lt;filename&gt;] 将暂存区的修改放回工作区</li>
+<li>[–source=&lt;commit&gt; &lt;file&gt;] 将文件恢复到特定提交的状态</li>
+</ul>
+<p>git branch [OPTIONS] 【查看本地分支】</p>
+<ul>
+<li>[&lt;branch_name&gt;] 创建本地分支</li>
+<li>[-b &lt;branch_name&gt;] 创建本地分支并切换</li>
 <li>[-v] 每个分支的最后一次提交</li>
 <li>[-vv] 跟踪信息</li>
-<li>[–set-upstream-to &lt;remotename&gt;/&lt;branchname&gt;] 跟踪上游分支</li>
+<li>[-r] 查看远程分支</li>
+<li>[-d &lt;branch_name&gt;] 删除分支</li>
+<li>[–set-upstream-to &lt;remotename&gt;/&lt;remote_branch&gt; &lt;local_branch&gt;] 跟踪远程分支。在本地新建一个分支后，需要做远程分支关联，目的是在执行git pull, git push操作时就不需要指定对应的远程分支</li>
 <li>[–merged --no-merged] 合并/未合并到当前分支的其他分支</li>
-<li>[-m old_branch_name new_branch_name] 改名</li>
-</ol>
-</li>
-<li>git stash
-<ol>
-<li>贮藏工作</li>
+<li>[-m &lt;old_branch_name&gt; &lt;new_branch_name&gt;] 改名</li>
+</ul>
+<p>git stash [OPTIONS] 【贮藏工作】</p>
+<ul>
 <li>[list] 列出所有贮藏</li>
 <li>[apply] 恢复贮藏</li>
-</ol>
-</li>
-<li>git rebase
-<ol>
-<li>[&lt;basebranch&gt; &lt;topicbranch&gt;] 变基</li>
-</ol>
-</li>
-</ol>
-<h3 id="忽略"><a class="markdownIt-Anchor" href="#忽略"></a> 忽略</h3>
+</ul>
+<h3 id="忽略不跟踪文件"><a class="markdownIt-Anchor" href="#忽略不跟踪文件"></a> 忽略/不跟踪文件</h3>
 <p>.gitignore 正则表达式：<a target="_blank" rel="noopener" href="https://github.com/github/gitignore">官方样例文件</a></p>
 <h2 id="chapter-3-分支"><a class="markdownIt-Anchor" href="#chapter-3-分支"></a> Chapter 3 分支</h2>
 <blockquote>

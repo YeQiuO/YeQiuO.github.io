@@ -268,9 +268,9 @@
 <p><strong>原理</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>整体结构图</p>
-<style>.kvxruxtirphv{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="kvxruxtirphv" alt="img">
+<style>.hgfudsurzooz{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="hgfudsurzooz" alt="img">
 <p>引用关系图</p>
-<style>.quxltjyexiug{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="quxltjyexiug" alt="img">
+<style>.hphpnefuwicw{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="hphpnefuwicw" alt="img">
 <h2 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> Q&amp;A</h2>
 <p><strong>Entry的key为什么设计成弱引用？</strong></p>
 <p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>

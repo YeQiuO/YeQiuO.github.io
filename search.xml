@@ -19,7 +19,7 @@
 <p>开闭原则：新增代替修改</p>
 ]]></content>
       <categories>
-        <category>Java学习</category>
+        <category>Java基础</category>
       </categories>
       <tags>
         <tag>设计模式</tag>
@@ -74,10 +74,27 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 基础镜像Java 8</span></span><br><span class="line">FROM java:8</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置工作目录</span></span><br><span class="line">WORKDIR /app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制文件到工作目录</span></span><br><span class="line">COPY . /app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置Java环境变量</span></span><br><span class="line">ENV PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin</span><br><span class="line">ENV JRE_HOME=<span class="variable">$&#123;JAVA_HOME&#125;</span>/jre</span><br><span class="line">ENV CLASSPATH=.:<span class="variable">$&#123;JAVA_HOME&#125;</span>/lib:<span class="variable">$&#123;JRE_HOME&#125;</span>/lib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 暴露端口</span></span><br><span class="line">EXPOSE 8080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">ENTRYPOINT [<span class="string">&#x27;/usr/lib/jvm/java-9-openjdk-amd64/bin/javac&#x27;</span>,<span class="string">&#x27;-jar&#x27;</span>,<span class="string">&#x27;app.jar&#x27;</span>]</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>工具</category>
+        <category>开发工具</category>
       </categories>
       <tags>
         <tag>容器虚拟化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何工作</title>
+    <url>/How-to-Work/</url>
+    <content><![CDATA[<h1 id="方法论"><a class="markdownIt-Anchor" href="#方法论"></a> 方法论</h1>
+<p>不卑不亢，谦虚有礼</p>
+<p>可以竞争但要避免内斗</p>
+<p>及时和领导同步进度</p>
+<p>平和谦逊，思维敏捷，处理问题简明扼要</p>
+]]></content>
+      <categories>
+        <category>工作</category>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>工作</tag>
       </tags>
   </entry>
   <entry>
@@ -101,7 +118,7 @@
 </ol>
 ]]></content>
       <categories>
-        <category>找工作</category>
+        <category>工作</category>
       </categories>
       <tags>
         <tag>面试准备</tag>
@@ -170,7 +187,7 @@
 <p>源码结构：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReentrantLock</span> <span class="keyword">implements</span> <span class="title class_">Lock</span> &#123;</span><br><span class="line">    <span class="comment">// 同步控制器（指向公平锁或非公平锁）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Sync sync;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Sync</span> <span class="keyword">extends</span> <span class="title class_">AbstractQueuedSynchronizer</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">nonfairTryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryRelease</span><span class="params">(<span class="type">int</span> releases)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">NonfairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 公平锁</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FairSync</span> <span class="keyword">extends</span> <span class="title class_">Sync</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;...&#125;</span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 实现 Lock 接口</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.lock();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> sync.nonfairTryAcquire(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.release(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>ReentrantLock</code>独占锁运行过程（可重入锁的 <code>state</code> 表示<mark>重入的次数</mark>，会大于1）</p>
-<style>.ypfwpqzfrhif{}</style><img data-src="/JUC-Lock/aqs-exclusive-mode-acquire-lock.png" class="ypfwpqzfrhif" alt="AQS 独占模式获取锁">
+<style>.peqzbbaakmjt{}</style><img data-src="/JUC-Lock/aqs-exclusive-mode-acquire-lock.png" class="peqzbbaakmjt" alt="AQS 独占模式获取锁">
 <h2 id="加锁失败时阻塞"><a class="markdownIt-Anchor" href="#加锁失败时阻塞"></a> 加锁失败时阻塞</h2>
 <p><code>ReentrantLock</code>在 CAS 加锁失败之后会将 Thread 封装成一个<code>Node</code>类型的对象加入<code>CLH</code>队列中</p>
 <p>然后调用<code>LockSupport.park(this)</code>进行阻塞（<code>LockSupport</code>是一个 native 方法实现的工具类，在 hotspot 源码中通过<code>mutex</code>来实现的）</p>
@@ -236,7 +253,7 @@
 </ul>
 <p><strong>线程调度逻辑</strong>：<br />
 当线程尝试获取资源失败时，会创建一个<mark>Node节点</mark>并将当前线程包装进去，然后利用<mark>CAS算法</mark>将其安全地加入到<mark>等待队列的尾部</mark>，并阻塞。<a href="https://www.bilibili.com/video/BV1mP4y1i7Vm/?p=6&amp;spm_id_from=pageDriver">Link</a></p>
-<style>.fburqefmpjce{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="fburqefmpjce" alt="image-20240415164535374">
+<style>.rnmildzrmnlf{zoom:67%;}</style><img data-src="/JUC-Lock/image-20240415164535374.png" class="rnmildzrmnlf" alt="image-20240415164535374">
 <p>在释放资源时，AQS会根据资源管理策略从队列中选择合适的节点并唤醒对应线程。</p>
 <h2 id="clh-锁"><a class="markdownIt-Anchor" href="#clh-锁"></a> CLH 锁</h2>
 <blockquote>
@@ -334,7 +351,7 @@
 <p>循环栅栏：让<mark>一组线程</mark>到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程都会继续干活。</p>
 ]]></content>
       <categories>
-        <category>Java学习</category>
+        <category>Java基础</category>
       </categories>
       <tags>
         <tag>Java并发</tag>
@@ -342,7 +359,7 @@
       </tags>
   </entry>
   <entry>
-    <title>ThreadPoolExecutor 和 CompletableFuture实践</title>
+    <title>ThreadPoolExecutor 和 CompletableFuture 实践</title>
     <url>/JUC-ThreadPool/</url>
     <content><![CDATA[<p>池化思想，维护一个池子，减少创建/销毁的开销，合理分配系统资源，但会增加调度开销。<a href="https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html">参考美团技术博客</a>：底层设计思想、业务实现</p>
 <h1 id="threadpoolexecutor-线程池实现类"><a class="markdownIt-Anchor" href="#threadpoolexecutor-线程池实现类"></a> ThreadPoolExecutor 线程池实现类</h1>
@@ -575,94 +592,11 @@
 <img data-src="/JUC-ThreadPool/cef5469b5ec2e67ecca1b99a07260e4e22003.png" class="" title="图18 多元依赖结构树">
 ]]></content>
       <categories>
-        <category>Java学习</category>
+        <category>Java基础</category>
       </categories>
       <tags>
         <tag>Java并发</tag>
         <tag>Java线程池</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java并发基础</title>
-    <url>/JUC/</url>
-    <content><![CDATA[<img data-src="/JUC/image-20240516133953621.png" class="" title="image-20240516133953621">
-<h1 id="threadlocal"><a class="markdownIt-Anchor" href="#threadlocal"></a> ThreadLocal</h1>
-<p>每一个线程都有自己的专属本地变量，通过空间换时间的方式避免并发下线程安全问题</p>
-<ul>
-<li>完整的一次请求处理，于唯一一个线程中执行，可以通过 ThreadLocal 共享数据</li>
-<li>ThreadLocal.set 方法是将值存储到 <strong>Thread 线程本身的 ThreadLocalMap</strong> 里面</li>
-</ul>
-<p><strong>原理</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>整体结构图</p>
-<style>.hgfudsurzooz{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="hgfudsurzooz" alt="img">
-<p>引用关系图</p>
-<style>.hphpnefuwicw{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="hphpnefuwicw" alt="img">
-<h2 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> Q&amp;A</h2>
-<p><strong>Entry的key为什么设计成弱引用？</strong></p>
-<p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>
-<p><strong>ThreadLocal为什么会导致内存泄露，如何解决？</strong></p>
-<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value 值，但是如果没有调用这些方法，Entry 和ThreadLocalMap 将会长期存在下去，会导致内存泄露；</p>
-<p>使用完 ThreadLocal 对象之后，调用 remove 方法；</p>
-<p><strong>ThreadLocal 是如何定位数据的？</strong></p>
-<p><code>int i = key.threadLocalHashCode &amp; (len-1);</code></p>
-<p>如果有冲突就通过线性探测再散列，直到找到空 bin；</p>
-<blockquote>
-<p>其他Hash冲突解决方法：开放寻址法（再散列）、拉链法</p>
-</blockquote>
-<p><strong>ThreadLocal 是如何扩容的？</strong></p>
-<p><strong>父子线程如何共享数据？</strong></p>
-<p>InheritableThreadLocal：初始化时会拷贝一份父线程中 ThreadLocal 值，到子线程 InheritableThreadLocal  中；</p>
-<p><strong>ThreadLocal 作为成员变量时，为什么定义成 static 更好？</strong></p>
-<p>将 ThreadLocal 定义为 static 可以确保所有线程都访问同一个 ThreadLocal 实例，但它们各自存储的数据是独立的；</p>
-<p>确保它们的生命周期与线程的生命周期一致，而不是与类的实例的生命周期一致；</p>
-<p><strong>使用 InheritableThreadLocal 时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
-<p>不会影响到已经存在的子线程中 InheritableThreadLocal 的值，子线程将保持它在创建时从父线程中继承的原始值；</p>
-<h1 id="jmm"><a class="markdownIt-Anchor" href="#jmm"></a> JMM</h1>
-<ul>
-<li>
-<p>抽象了 happens-before 原则来解决这个指令重排序问题，保证多线程环境下数据的一致性和可见性。</p>
-</li>
-<li>
-<p>抽象了线程和主内存之间的关系，提供一套内存模型以屏蔽系统差异</p>
-</li>
-</ul>
-<h2 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h2>
-<p>CPU 高速缓存：为解决 CPU 处理速度和内存不匹配的问题；</p>
-<p>指令重排序【编译器优化重排 —&gt; 指令并行重排 —&gt; 内存系统重排】：指令重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致；</p>
-<blockquote>
-<p>内存屏障可以禁止处理器指令发生重排序，从而保障指令执行的有序性。此外，还能保证指令执行的可见性。</p>
-</blockquote>
-<h2 id="happens-before-原则"><a class="markdownIt-Anchor" href="#happens-before-原则"></a> happens-before 原则</h2>
-<p>前一个操作的结果对于后一个操作是可见的，无论这两个操作是否在同一个线程里</p>
-<ul>
-<li>只要不改变程序的执行结果，编译器和处理器怎么进行重排序优化都行；</li>
-<li>会改变程序执行结果的重排序，JMM 要求编译器和处理器必须禁止这种重排序；</li>
-</ul>
-<h2 id="并发的三大特性"><a class="markdownIt-Anchor" href="#并发的三大特性"></a> 并发的三大特性</h2>
-<p>原子性：一次操作或者多次操作，要么所有的操作全部都得到执行并且不会受到任何因素的干扰而中断，要么都不执行</p>
-<ul>
-<li>synchronized、各种 Lock 以及各种原子类；</li>
-</ul>
-<p>可见性：当一个线程对共享变量进行了修改，那么另外的线程都是立即可以看到修改后的最新值</p>
-<ul>
-<li>synchronized、Volatile 以及各种 Lock 实现可见性；</li>
-</ul>
-<p>有序性：代码的执行顺序未必就是编写代码时候的顺序</p>
-<ul>
-<li>
-<p>Volatile 关键字：<strong>保证变量的可见性和代码执行的有序性</strong>，但无法在多线程读写变量时保证操作原子性；</p>
-</li>
-<li>
-<p>内存屏障：<code>Unsafe</code> 类的 <code>fullFence()</code> 可以避免代码重排序；</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java学习</category>
-      </categories>
-      <tags>
-        <tag>Java并发</tag>
       </tags>
   </entry>
   <entry>
@@ -732,11 +666,11 @@
 <ul>
 <li>Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针。</li>
 </ul>
-<style>.xmyljwuegfln{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="xmyljwuegfln" alt="image-20240429100643112">
+<style>.rccnoeqrrokh{zoom:50%;}</style><img data-src="/JVM/image-20240429100643112.png" class="rccnoeqrrokh" alt="image-20240429100643112">
 <ul>
 <li>直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销，HotSpot 采用的是直接指针</li>
 </ul>
-<style>.aqlrugafjmjo{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="aqlrugafjmjo" alt="image-20240429100908916">
+<style>.rcrncvbvjuxt{zoom:50%;}</style><img data-src="/JVM/image-20240429100908916.png" class="rcrncvbvjuxt" alt="image-20240429100908916">
 <h2 id="对象的内存布局"><a class="markdownIt-Anchor" href="#对象的内存布局"></a> 对象的内存布局</h2>
 <p>Mark Word 是一个具有动态定义的数据结构，以便在极小的空间内存储尽量多的数据，根据对象的状态复用自己的存储空间。</p>
 <img data-src="/JVM/1161857-20200427173120968-675206595.png" class="" title="img">
@@ -892,7 +826,7 @@ STW：Stop the World</p>
 GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a href="https://heapdump.cn/article/1870333">FGC</a></p>
 <h1 id="类加载过程"><a class="markdownIt-Anchor" href="#类加载过程"></a> 类加载过程</h1>
 <p><strong>类的生命周期</strong>：加载、连接、初始化、使用、卸载</p>
-<style>.mihmmzeypnut{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="mihmmzeypnut" alt="image-20240429095206248">
+<style>.icczujlqyqbl{zoom:67%;}</style><img data-src="/JVM/image-20240429095206248.png" class="icczujlqyqbl" alt="image-20240429095206248">
 <ul>
 <li>加载：通过全类名获取定义此类的二进制字节流；将字节流所代表的静态存储结构转换为方法区的运行时数据结构；在内存中生成一个代表该类的 <code>Class</code> 对象，作为方法区这些数据的访问入口；【通过类加载器实现加载，通过双亲委派模型决定采用哪个类加载器】</li>
 <li>验证：确保 Class 文件的字节流中包含的信息无误</li>
@@ -944,14 +878,97 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>JVM性能监控和调试，分析堆内存状态，合理优化代码</p>
 ]]></content>
       <categories>
-        <category>Java学习</category>
+        <category>Java基础</category>
       </categories>
       <tags>
         <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
-    <title>算法笔记</title>
+    <title>Java 并发基础</title>
+    <url>/JUC/</url>
+    <content><![CDATA[<img data-src="/JUC/image-20240516133953621.png" class="" title="image-20240516133953621">
+<h1 id="threadlocal"><a class="markdownIt-Anchor" href="#threadlocal"></a> ThreadLocal</h1>
+<p>每一个线程都有自己的专属本地变量，通过空间换时间的方式避免并发下线程安全问题</p>
+<ul>
+<li>完整的一次请求处理，于唯一一个线程中执行，可以通过 ThreadLocal 共享数据</li>
+<li>ThreadLocal.set 方法是将值存储到 <strong>Thread 线程本身的 ThreadLocalMap</strong> 里面</li>
+</ul>
+<p><strong>原理</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整体结构图</p>
+<style>.itqfisbkqgxc{zoom:50%;}</style><img data-src="/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="itqfisbkqgxc" alt="img">
+<p>引用关系图</p>
+<style>.oojmbxbdosks{zoom:50%;}</style><img data-src="/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="oojmbxbdosks" alt="img">
+<h2 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> Q&amp;A</h2>
+<p><strong>Entry的key为什么设计成弱引用？</strong></p>
+<p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>
+<p><strong>ThreadLocal为什么会导致内存泄露，如何解决？</strong></p>
+<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value 值，但是如果没有调用这些方法，Entry 和ThreadLocalMap 将会长期存在下去，会导致内存泄露；</p>
+<p>使用完 ThreadLocal 对象之后，调用 remove 方法；</p>
+<p><strong>ThreadLocal 是如何定位数据的？</strong></p>
+<p><code>int i = key.threadLocalHashCode &amp; (len-1);</code></p>
+<p>如果有冲突就通过线性探测再散列，直到找到空 bin；</p>
+<blockquote>
+<p>其他Hash冲突解决方法：开放寻址法（再散列）、拉链法</p>
+</blockquote>
+<p><strong>ThreadLocal 是如何扩容的？</strong></p>
+<p><strong>父子线程如何共享数据？</strong></p>
+<p>InheritableThreadLocal：初始化时会拷贝一份父线程中 ThreadLocal 值，到子线程 InheritableThreadLocal  中；</p>
+<p><strong>ThreadLocal 作为成员变量时，为什么定义成 static 更好？</strong></p>
+<p>将 ThreadLocal 定义为 static 可以确保所有线程都访问同一个 ThreadLocal 实例，但它们各自存储的数据是独立的；</p>
+<p>确保它们的生命周期与线程的生命周期一致，而不是与类的实例的生命周期一致；</p>
+<p><strong>使用 InheritableThreadLocal 时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
+<p>不会影响到已经存在的子线程中 InheritableThreadLocal 的值，子线程将保持它在创建时从父线程中继承的原始值；</p>
+<h1 id="jmm"><a class="markdownIt-Anchor" href="#jmm"></a> JMM</h1>
+<ul>
+<li>
+<p>抽象了 happens-before 原则来解决这个指令重排序问题，保证多线程环境下数据的一致性和可见性。</p>
+</li>
+<li>
+<p>抽象了线程和主内存之间的关系，提供一套内存模型以屏蔽系统差异</p>
+</li>
+</ul>
+<h2 id="概念"><a class="markdownIt-Anchor" href="#概念"></a> 概念</h2>
+<p>CPU 高速缓存：为解决 CPU 处理速度和内存不匹配的问题；</p>
+<p>指令重排序【编译器优化重排 —&gt; 指令并行重排 —&gt; 内存系统重排】：指令重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致；</p>
+<blockquote>
+<p>内存屏障可以禁止处理器指令发生重排序，从而保障指令执行的有序性。此外，还能保证指令执行的可见性。</p>
+</blockquote>
+<h2 id="happens-before-原则"><a class="markdownIt-Anchor" href="#happens-before-原则"></a> happens-before 原则</h2>
+<p>前一个操作的结果对于后一个操作是可见的，无论这两个操作是否在同一个线程里</p>
+<ul>
+<li>只要不改变程序的执行结果，编译器和处理器怎么进行重排序优化都行；</li>
+<li>会改变程序执行结果的重排序，JMM 要求编译器和处理器必须禁止这种重排序；</li>
+</ul>
+<h2 id="并发的三大特性"><a class="markdownIt-Anchor" href="#并发的三大特性"></a> 并发的三大特性</h2>
+<p>原子性：一次操作或者多次操作，要么所有的操作全部都得到执行并且不会受到任何因素的干扰而中断，要么都不执行</p>
+<ul>
+<li>synchronized、各种 Lock 以及各种原子类；</li>
+</ul>
+<p>可见性：当一个线程对共享变量进行了修改，那么另外的线程都是立即可以看到修改后的最新值</p>
+<ul>
+<li>synchronized、Volatile 以及各种 Lock 实现可见性；</li>
+</ul>
+<p>有序性：代码的执行顺序未必就是编写代码时候的顺序</p>
+<ul>
+<li>
+<p>Volatile 关键字：<strong>保证变量的可见性和代码执行的有序性</strong>，但无法在多线程读写变量时保证操作原子性；</p>
+</li>
+<li>
+<p>内存屏障：<code>Unsafe</code> 类的 <code>fullFence()</code> 可以避免代码重排序；</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java基础</category>
+      </categories>
+      <tags>
+        <tag>Java并发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构和算法</title>
     <url>/Java-Algorithm/</url>
     <content><![CDATA[<h1 id="算法"><a class="markdownIt-Anchor" href="#算法"></a> 算法</h1>
 <h2 id="链表"><a class="markdownIt-Anchor" href="#链表"></a> 链表</h2>
@@ -959,6 +976,14 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>链表倒数第n个数</p>
 <h3 id="分治法"><a class="markdownIt-Anchor" href="#分治法"></a> 分治法</h3>
 <p>排序</p>
+<h2 id="二分查找"><a class="markdownIt-Anchor" href="#二分查找"></a> 二分查找</h2>
+<p>【1】目标不存在于数组中，找第一个大于它的下标</p>
+<p>【2】有多个目标存在于数组中，找第一个等于它的下标</p>
+<p>【思路】基于二分查找，优化寻找 mid 指针和收敛 left right 指针的步骤，具体问题具体分析</p>
+<ul>
+<li>mid=(left+right)&gt;&gt;2；if (nums[left]<strong>&lt;<strong>nums[mid]) left=mid</strong>+1</strong>; else right=mid;【找左边】</li>
+<li>mid=(left+right**+1**)&gt;&gt;2；if (nums[left]<strong>&lt;=<strong>nums[mid]) left=mid; else right=mid</strong>-1</strong>;【找右边】</li>
+</ul>
 <h2 id="动态规划"><a class="markdownIt-Anchor" href="#动态规划"></a> 动态规划</h2>
 <blockquote>
 <p>思路</p>
@@ -1041,7 +1066,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <h2 id="数组转-list"><a class="markdownIt-Anchor" href="#数组转-list"></a> 数组转 List</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型需要手动装箱</span></span><br><span class="line"><span class="type">int</span>[] arr = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.stream(arr).boxed().collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer[] integers = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">3</span>,<span class="number">8</span>,<span class="number">20</span>,<span class="number">7</span>,<span class="number">11</span>,<span class="number">25</span>&#125;;</span><br><span class="line">List&lt;Integer&gt; list = Arrays.asList(integers); </span><br><span class="line"><span class="comment">// ArrayList&lt;Object&gt; list = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">// Collections.addAll(list, a);</span></span><br></pre></td></tr></table></figure>
-<h2 id="原地交换"><a class="markdownIt-Anchor" href="#原地交换"></a> 原地交换</h2>
+<h2 id="位运算值交换"><a class="markdownIt-Anchor" href="#位运算值交换"></a> 位运算值交换</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ch[a] ^= ch[b];</span><br><span class="line">ch[b] ^= ch[a];</span><br><span class="line">ch[a] ^= ch[b];</span><br></pre></td></tr></table></figure>
 <h2 id="泛型占位符"><a class="markdownIt-Anchor" href="#泛型占位符"></a> 泛型&amp;占位符</h2>
 <p>泛型：T E K V</p>
@@ -1054,206 +1079,25 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <p>占位符：?</p>
 <p>TODO lambda stream 流式计算 详解</p>
-<h2 id="判断奇偶"><a class="markdownIt-Anchor" href="#判断奇偶"></a> 判断奇偶</h2>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">num &amp; <span class="number">1</span> == <span class="number">0</span> 则为奇数</span><br></pre></td></tr></table></figure>
+<h2 id="位运算判断奇偶"><a class="markdownIt-Anchor" href="#位运算判断奇偶"></a> 位运算判断奇偶</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">num &amp; <span class="number">1</span> == <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <h2 id="十进制数转-char"><a class="markdownIt-Anchor" href="#十进制数转-char"></a> 十进制数转 char</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> <span class="variable">t</span> <span class="operator">=</span> Character.forDigit(i, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="collection-转-list的方法"><a class="markdownIt-Anchor" href="#collection-转-list的方法"></a> Collection 转 List的方法</h2>
+<h2 id="collection-转-list"><a class="markdownIt-Anchor" href="#collection-转-list"></a> Collection 转 List</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Collection&lt;T&gt; collection = map.values();</span><br><span class="line">List&lt;T&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;(collection);</span><br></pre></td></tr></table></figure>
 <h2 id="map-遍历方法"><a class="markdownIt-Anchor" href="#map-遍历方法"></a> Map 遍历方法</h2>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (Map.Entry&lt;Key.class, Value.class&gt; entry : map.entrySet()) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;key= &quot;</span> + entry.getKey() + <span class="string">&quot; and value= &quot;</span> + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="条件语句中赋值"><a class="markdownIt-Anchor" href="#条件语句中赋值"></a> 条件语句中赋值</h2>
+<h2 id="在条件语句中赋值"><a class="markdownIt-Anchor" href="#在条件语句中赋值"></a> 在条件语句中赋值</h2>
 <p>不能直接在 <code>if</code> 语句的条件部分进行声明和赋值，需要在 <code>if</code> 语句之前声明变量，并在条件语句中只进行赋值或比较操作</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> dis;  </span><br><span class="line"><span class="keyword">if</span> ((dis = i - dp[i - <span class="number">1</span>]) &gt; <span class="number">1</span> &amp;&amp; s.charAt(dis - <span class="number">2</span>) == <span class="string">&#x27;(&#x27;</span>) &#123;  </span><br><span class="line">    <span class="comment">// ... 使用 dis 进行操作 ...  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[5,4,8,11,null,13,4,7,2,null,null,5,1]</span><br><span class="line">22</span><br></pre></td></tr></table></figure>
+<h2 id="stringbuilderstringbuffer-常用方法"><a class="markdownIt-Anchor" href="#stringbuilderstringbuffer-常用方法"></a> StringBuilder/StringBuffer 常用方法</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">s.append(char c) // 将 char 追加到此序列</span><br><span class="line">s.charAt(int index) // 返回指定索引处的此序列中的 char 值</span><br><span class="line">s.deleteCharAt(int index) // 按此顺序删除指定位置的 char</span><br><span class="line">s.setCharAt(int index, char ch) // 指定索引处的字符设置为 ch</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>算法</category>
       </categories>
       <tags>
         <tag>Java算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java常用数据结构的底层实现</title>
-    <url>/Java-DataStructure/</url>
-    <content><![CDATA[<h1 id="arraylist"><a class="markdownIt-Anchor" href="#arraylist"></a> ArrayList</h1>
-<p><code>ArrayList</code> 的底层是数组队列，相当于动态数组。</p>
-<ul>
-<li>与数组相比，它的容量能动态增长。</li>
-<li>与 Vector 相比，它的底层使用 Object[] 存储，适用于频繁的查找工作，线程不安全</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractList</span>&lt;E&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">set</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">get</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">    E <span class="title function_">remove</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
-<li><code>RandomAccess</code> ：这是一个标志接口，表明实现这个接口的 <code>List</code> 集合是支持 <strong>快速随机访问</strong> ,可以通过元素的序号快速获取元素对象<code>list.get(i)</code>。</li>
-<li><code>Cloneable</code> ：表明它具有拷贝能力，可以进行深拷贝或浅拷贝操作。</li>
-<li><code>Serializable</code> : 表明它可以进行序列化操作，也就是可以将对象转换为字节流进行持久化存储或网络传输，非常方便。</li>
-</ul>
-<h2 id="扩容机制"><a class="markdownIt-Anchor" href="#扩容机制"></a> 扩容机制</h2>
-<p>初始化时默认空数组 <code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>。</p>
-<p>添加元素时，先判断需要扩容的最小扩容量大小（DEFAULT_CAPACITY 默认是 10）</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">calculateCapacity</span><span class="params">(Object[] elementData, <span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> minCapacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果需要扩容，就会进入扩容方法 grow()，扩容效果是小于等于 1.5 倍的（因为 int 取整）</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elementData.length;</span><br><span class="line">    <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果扩容长度超过定义的数组的最大长度 <code>MAX_ARRAY_SIZE = Integer.MAX_VALUE-8</code>，就会触发最大值限制，防止 size 溢出</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">hugeCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">OutOfMemoryError</span>();</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>将旧数组移动到新数组</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] copyOf(<span class="type">int</span>[] original, <span class="type">int</span> newLength) &#123;</span><br><span class="line">    <span class="type">int</span>[] copy = <span class="keyword">new</span> <span class="title class_">int</span>[newLength];</span><br><span class="line">    System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>, Math.min(original.length, newLength));</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>手动扩容</strong>，可以在需要插入大量数据前手动扩容</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ensureCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">minExpand</span> <span class="operator">=</span> (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) ? <span class="number">0</span> : DEFAULT_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &gt; minExpand) &#123;</span><br><span class="line">        ensureExplicitCapacity(minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="与-linkedlist-的异同"><a class="markdownIt-Anchor" href="#与-linkedlist-的异同"></a> 与 LinkedList 的异同</h2>
-<ul>
-<li>
-<p>都不保证线程安全；</p>
-</li>
-<li>
-<p><code>ArrayList</code> 底层使用的是 <code>Object[]</code> <strong>数组</strong>；<code>LinkedList</code> 底层使用的是 <strong>Node+双向链表</strong> 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环）</p>
-</li>
-<li>
-<p><strong>插入和删除是否受元素位置的影响：</strong></p>
-</li>
-<li>
-<ul>
-<li><code>ArrayList</code> 将指定的元素<strong>追加到此列表的末尾</strong>，时间复杂度 <strong>O(1)</strong>。但是如果要在<strong>指定位置 i 插入和删除元素</strong>的话（<code>add(int index, E element)</code>），时间复杂度 <strong>O(n)</strong>。</li>
-<li><code>LinkedList</code> <strong>头尾插入或者删除</strong>元素不受元素位置的影响（<code>add(E e)</code>、<code>addFirst(E e)</code>、<code>addLast(E e)</code>、<code>removeFirst()</code>、 <code>removeLast()</code>），时间复杂度 <strong>O(1)</strong>；<strong>指定位置 <code>i</code> 插入和删除元素</strong>的话（<code>add(int index, E element)</code>，<code>remove(Object o)</code>,<code>remove(int index)</code>）， 时间复杂度为 <strong>O(n)</strong> 。</li>
-</ul>
-</li>
-<li>
-<p><strong>是否支持快速随机访问：</strong> <code>LinkedList</code> 不支持高效的随机元素访问，而 <code>ArrayList</code>（实现了 <code>RandomAccess</code> 接口） 支持。</p>
-</li>
-<li>
-<p><strong>内存空间占用：</strong> <code>ArrayList</code> 的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素 Node 都需要消耗比 ArrayList 更多的空间</p>
-</li>
-</ul>
-<h1 id="linkedlist"><a class="markdownIt-Anchor" href="#linkedlist"></a> LinkedList</h1>
-<blockquote>
-<p>需要用到 <code>LinkedList</code> 的场景几乎都可以使用 <code>ArrayList</code> 来代替，而且性能会更好。头尾插入或者删除元素的时候时间复杂度近似 O(1)，其他情况增删元素的平均时间复杂度都是 O(n) 。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LinkedList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractSequentialList</span>&lt;E&gt; </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;E&gt; &#123;</span><br><span class="line">        E item;</span><br><span class="line">        Node&lt;E&gt; next;</span><br><span class="line">        Node&lt;E&gt; prev;</span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">            <span class="built_in">this</span>.item = element;</span><br><span class="line">            <span class="built_in">this</span>.next = next;</span><br><span class="line">            <span class="built_in">this</span>.prev = prev;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
-<li><code>Deque</code> ：继承自 <code>Queue</code> 接口，具有双端队列的特性，支持从两端插入和删除元素，方便实现栈和队列等数据结构。</li>
-</ul>
-<h2 id="常用方法"><a class="markdownIt-Anchor" href="#常用方法"></a> 常用方法</h2>
-<ul>
-<li>实现 List 接口
-<ul>
-<li>get、set</li>
-</ul>
-</li>
-<li>实现 Collection 接口
-<ul>
-<li>判断是否存在：contains</li>
-</ul>
-</li>
-<li>实现 Queue 接口（通过 Deque 接口）
-<ul>
-<li>报错：add、remove、element</li>
-<li>不报错：offer、poll、peek</li>
-</ul>
-</li>
-<li>实现 Deque 接口
-<ul>
-<li>addFirst [push]、addLast [add]：无返回，容量超出限制会报错</li>
-<li>offerFirst、offerLast [offer]：返回 Boolean 表示是否加入成功</li>
-<li>removeFirst [remove\pop]、removeLast：队列为空报错</li>
-<li>pollFirst [poll]、pollLast：队列为空返回 null</li>
-<li>getFirst [element]、getLast：队列为空报错</li>
-<li>peekFirst [peek]、peekLast：队列为空返回 null
-<ul>
-<li>【注意】队列头部为 null 和队列为空时，都会返回 null</li>
-</ul>
-</li>
-<li>removeFirstOccurrence [remove]、removeLastOccurrence</li>
-<li>push、pop、peek：作为栈</li>
-</ul>
-</li>
-</ul>
-<h1 id="hashmap"><a class="markdownIt-Anchor" href="#hashmap"></a> HashMap</h1>
-<blockquote>
-<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
-</blockquote>
-<style>.sxjehxuwzcrf{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="sxjehxuwzcrf" alt="image-20240425212527868">
-<ul>
-<li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
-<li>非线程安全的</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 一个包含了映射中所有键值对的集合视图</span></span><br><span class="line">    <span class="comment">// 先遍历数组 bin，再通过 Entry.next 遍历每个 bin</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="comment">// 链表的下一个元素</span></span><br><span class="line">        Node&lt;K,V&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        TreeNode&lt;K,V&gt; parent;  <span class="comment">// 红黑树链</span></span><br><span class="line">        TreeNode&lt;K,V&gt; left;</span><br><span class="line">        TreeNode&lt;K,V&gt; right;</span><br><span class="line">        TreeNode&lt;K,V&gt; prev;    <span class="comment">// 需要在下次删除时解除链接</span></span><br><span class="line">        <span class="type">boolean</span> red;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>entrySet</code> 通过<code>Node的next属性</code>遍历元素，<code>keySet()</code>、<code>values()</code>基于<code>entrySet</code>实现，用于遍历访问所有 Node 元素，还支持元素的删除操作【不确定，entrySet不存储数据，只是数据对外的操作接口】。</li>
-<li><code>TreeNode</code> 继承了 <code>LinkedHashMap.Entry</code> ，有指向前后节点的指针</li>
-</ul>
-<p>jdk 1.8 <strong>Key 计算 hash 值的方法</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="扩容机制-2"><a class="markdownIt-Anchor" href="#扩容机制-2"></a> 扩容机制</h2>
-<p><strong>何时触发 <code>resize()</code> 扩容</strong></p>
-<ul>
-<li>要插入数据前，发现<code>table</code> 中的 <code>bin</code> 为空</li>
-<li>要插入数据后，发现<code>HashMap</code>的 <code>size</code> 超过 <code>threshold</code></li>
-<li><code>table</code> 长度小于 <code>MIN_TREEIFY_CAPACITY</code>时，某 <code>Node</code> 上的链长度超过 <code>TREEIFY_THRESHOLD</code></li>
-</ul>
-<p><code>resize()</code> 扩容，会将 table 中的节点数量 &lt;&lt; 1，并重新 hash 映射所有节点（因为 table 变大了，每个节点对应的 bin 下标发生了变化 <code>newTab[e.hash &amp; (newCap - 1)] = e</code>，<code>newCap</code>为 table 的新大小）</p>
-<p>链表何时变成红黑树？</p>
-<ul>
-<li>该 <code>bin</code> 上的链长度<code>binCount</code>大于等于 <code>TREEIFY_THRESHOLD</code>  且 <code>table</code> 中 <code>bin</code> 数量大于等于 <code>MIN_TREEIFY_CAPACITY</code></li>
-</ul>
-<p>如果链表转红黑树的时候，又有数据要插入，会发生什么？</p>
-<ul>
-<li>线程不安全。在树结构替换链表最终阶段会校验树结构，在此过程中的插入会使该树结构不满足红黑树和双链表的特性，导致报异常 <code>assert checkInvariants(root);</code></li>
-</ul>
-<h1 id="concurrenthashmap"><a class="markdownIt-Anchor" href="#concurrenthashmap"></a> ConcurrentHashMap</h1>
-<blockquote>
-<p>Java7 中 ConcurrentHashMap 使用的是分段锁，每一个 Segment 上同时只有一个线程可以操作，结构上时 <code>Segment</code> <strong>数组 +</strong> <code>HashEntry</code> <strong>数组 + 链表</strong>。<code>Segment</code> 的个数一旦<strong>初始化就不能改变</strong>，默认 <code>Segment</code> 的个数是 16 个，<code>Segment</code>继承<code>ReentrantLock</code>实现分段锁。</p>
-<p>Java8 中的 ConcurrentHashMap 通过 <strong>Synchronized 锁加 CAS</strong> 保证多线程安全，结构上是 <code>Node</code> <strong>数组</strong> + <strong>链表 / 红黑树</strong>。</p>
-</blockquote>
-<p>如果链表转红黑树，又有数据要插入，会发生什么。</p>
-<ul>
-<li><code>treeifyBin</code> 通过 <code>synchronized</code> 把 <code>bin</code> 加锁，后续数据插入会因为无法竞争到资源而阻塞</li>
-<li>链表开始转红黑树前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在转换为红黑树，此时会自旋等待转换完成后插入（大概是这样的）</li>
-</ul>
-<p>如果数组扩容，又有数据要插入，会发生什么。</p>
-<ul>
-<li>扩容前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在扩容。</li>
-<li>扩容时，插入数据的线程若发现 hash 值为负，会去协助扩容，扩容完成后再插入数据。</li>
-</ul>
-<p><a href="https://blog.csdn.net/ZOKEKAI/article/details/90051567"><strong>什么时候触发扩容？</strong></a></p>
-<ul>
-<li>在调用 addCount 方法增加集合元素计数后发现当前集合元素个数到达扩容阈值时就会触发扩容</li>
-<li>扩容状态下其他线程对集合进行插入、修改、删除、合并、compute 等操作时遇到 <code>ForwardingNode</code> 节点会触发扩容（帮助扩容）</li>
-<li>putAll 批量插入或者插入节点后发现存在链表长度达到 8 个或以上，但数组长度为 64 以下时会触发扩容  。</li>
-</ul>
-<p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64 以下时只会触发扩容而不会将链表转为红黑树</p>
-<h1 id="linkedhashmap"><a class="markdownIt-Anchor" href="#linkedhashmap"></a> LinkedHashMap</h1>
-<p><code>LinkedHashMap</code> 内部维护了一个双向链表，确保其迭代顺序是和插入顺序或访问顺序是一致的，通过重写 get、newNode、afterNodeAccess、afterNodeInsertion、afterNodeRemoval 等方法实现，最近插入或访问的节点位于链表尾部。</p>
-<blockquote>
-<p>可以按照插入顺序遍历 entry（accessOrder=false）</p>
-<p>也可以按照访问顺序遍历 entry（accessOrder=true），即 LRU</p>
-</blockquote>
-<p>可用于实现 LRU，即 迭代顺序==访问顺序</p>
-<ul>
-<li>每次修改都将元素删除后重新插入</li>
-<li>将 <code>accessOrder</code> 设置为 true 并重写 <code>removeEldestEntry</code> 方法当链表大小超过容量时返回 true</li>
-</ul>
-<h1 id="copyonwritelist"><a class="markdownIt-Anchor" href="#copyonwritelist"></a> CopyOnWriteList</h1>
-<blockquote>
-<p>并发安全的 <code>List</code>，针对读多写少的场景，类比读写锁的思想，实现 <strong>读读不互斥、读写不互斥、写写互斥</strong> 的写时复制 Copy-On-Write 策略</p>
-</blockquote>
-<p>add 方法内部用到了 ReentrantLock 加锁，避免了多线程写的时候会复制出多个副本，导致并发问题</p>
-<p><strong>写时复制的缺点</strong></p>
-<ul>
-<li>写操作资源占用多，复制数据时占用内存</li>
-<li>数据一致性问题，修改后需要等到赋值给原数组才能访问到修改</li>
-</ul>
-<p><strong>写多读少的场景下，应该用什么数据结构实现并发数组？</strong></p>
-<p>分段读写锁 ReadWriteLock（由于 Arrays.copyOf() 是操作系统实现，数据量少的话依然可用写时复制）</p>
-<h1 id="priorityqueue"><a class="markdownIt-Anchor" href="#priorityqueue"></a> PriorityQueue</h1>
-]]></content>
-      <categories>
-        <category>Java学习</category>
-      </categories>
-      <tags>
-        <tag>Java数据结构</tag>
       </tags>
   </entry>
   <entry>
@@ -1463,10 +1307,192 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>类加载器 ClassLoader</p>
 ]]></content>
       <categories>
-        <category>八股文</category>
+        <category>Java基础</category>
       </categories>
       <tags>
         <tag>Java语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java 常用数据结构的底层实现</title>
+    <url>/Java-DataStructure/</url>
+    <content><![CDATA[<h1 id="arraylist"><a class="markdownIt-Anchor" href="#arraylist"></a> ArrayList</h1>
+<p><code>ArrayList</code> 的底层是数组队列，相当于动态数组。</p>
+<ul>
+<li>与数组相比，它的容量能动态增长。</li>
+<li>与 Vector 相比，它的底层使用 Object[] 存储，适用于频繁的查找工作，线程不安全</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractList</span>&lt;E&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">set</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">get</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">    E <span class="title function_">remove</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
+<li><code>RandomAccess</code> ：这是一个标志接口，表明实现这个接口的 <code>List</code> 集合是支持 <strong>快速随机访问</strong> ,可以通过元素的序号快速获取元素对象<code>list.get(i)</code>。</li>
+<li><code>Cloneable</code> ：表明它具有拷贝能力，可以进行深拷贝或浅拷贝操作。</li>
+<li><code>Serializable</code> : 表明它可以进行序列化操作，也就是可以将对象转换为字节流进行持久化存储或网络传输，非常方便。</li>
+</ul>
+<h2 id="扩容机制"><a class="markdownIt-Anchor" href="#扩容机制"></a> 扩容机制</h2>
+<p>初始化时默认空数组 <code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>。</p>
+<p>添加元素时，先判断需要扩容的最小扩容量大小（DEFAULT_CAPACITY 默认是 10）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">calculateCapacity</span><span class="params">(Object[] elementData, <span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> minCapacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果需要扩容，就会进入扩容方法 grow()，扩容效果是小于等于 1.5 倍的（因为 int 取整）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elementData.length;</span><br><span class="line">    <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果扩容长度超过定义的数组的最大长度 <code>MAX_ARRAY_SIZE = Integer.MAX_VALUE-8</code>，就会触发最大值限制，防止 size 溢出</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">hugeCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">OutOfMemoryError</span>();</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将旧数组移动到新数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] copyOf(<span class="type">int</span>[] original, <span class="type">int</span> newLength) &#123;</span><br><span class="line">    <span class="type">int</span>[] copy = <span class="keyword">new</span> <span class="title class_">int</span>[newLength];</span><br><span class="line">    System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>, Math.min(original.length, newLength));</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>手动扩容</strong>，可以在需要插入大量数据前手动扩容</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ensureCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">minExpand</span> <span class="operator">=</span> (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) ? <span class="number">0</span> : DEFAULT_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &gt; minExpand) &#123;</span><br><span class="line">        ensureExplicitCapacity(minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="与-linkedlist-的异同"><a class="markdownIt-Anchor" href="#与-linkedlist-的异同"></a> 与 LinkedList 的异同</h2>
+<ul>
+<li>
+<p>都不保证线程安全；</p>
+</li>
+<li>
+<p><code>ArrayList</code> 底层使用的是 <code>Object[]</code> <strong>数组</strong>；<code>LinkedList</code> 底层使用的是 <strong>Node+双向链表</strong> 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环）</p>
+</li>
+<li>
+<p><strong>插入和删除是否受元素位置的影响：</strong></p>
+</li>
+<li>
+<ul>
+<li><code>ArrayList</code> 将指定的元素<strong>追加到此列表的末尾</strong>，时间复杂度 <strong>O(1)</strong>。但是如果要在<strong>指定位置 i 插入和删除元素</strong>的话（<code>add(int index, E element)</code>），时间复杂度 <strong>O(n)</strong>。</li>
+<li><code>LinkedList</code> <strong>头尾插入或者删除</strong>元素不受元素位置的影响（<code>add(E e)</code>、<code>addFirst(E e)</code>、<code>addLast(E e)</code>、<code>removeFirst()</code>、 <code>removeLast()</code>），时间复杂度 <strong>O(1)</strong>；<strong>指定位置 <code>i</code> 插入和删除元素</strong>的话（<code>add(int index, E element)</code>，<code>remove(Object o)</code>,<code>remove(int index)</code>）， 时间复杂度为 <strong>O(n)</strong> 。</li>
+</ul>
+</li>
+<li>
+<p><strong>是否支持快速随机访问：</strong> <code>LinkedList</code> 不支持高效的随机元素访问，而 <code>ArrayList</code>（实现了 <code>RandomAccess</code> 接口） 支持。</p>
+</li>
+<li>
+<p><strong>内存空间占用：</strong> <code>ArrayList</code> 的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素 Node 都需要消耗比 ArrayList 更多的空间</p>
+</li>
+</ul>
+<h1 id="linkedlist"><a class="markdownIt-Anchor" href="#linkedlist"></a> LinkedList</h1>
+<blockquote>
+<p>需要用到 <code>LinkedList</code> 的场景几乎都可以使用 <code>ArrayList</code> 来代替，而且性能会更好。头尾插入或者删除元素的时候时间复杂度近似 O(1)，其他情况增删元素的平均时间复杂度都是 O(n) 。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LinkedList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractSequentialList</span>&lt;E&gt; </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;E&gt; &#123;</span><br><span class="line">        E item;</span><br><span class="line">        Node&lt;E&gt; next;</span><br><span class="line">        Node&lt;E&gt; prev;</span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">            <span class="built_in">this</span>.item = element;</span><br><span class="line">            <span class="built_in">this</span>.next = next;</span><br><span class="line">            <span class="built_in">this</span>.prev = prev;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
+<li><code>Deque</code> ：继承自 <code>Queue</code> 接口，具有双端队列的特性，支持从两端插入和删除元素，方便实现栈和队列等数据结构。</li>
+</ul>
+<h2 id="常用方法"><a class="markdownIt-Anchor" href="#常用方法"></a> 常用方法</h2>
+<ul>
+<li>实现 List 接口
+<ul>
+<li>get、set</li>
+</ul>
+</li>
+<li>实现 Collection 接口
+<ul>
+<li>判断是否存在：contains</li>
+</ul>
+</li>
+<li>实现 Queue 接口（通过 Deque 接口）
+<ul>
+<li>报错：add、remove、element</li>
+<li>不报错：offer、poll、peek</li>
+</ul>
+</li>
+<li>实现 Deque 接口
+<ul>
+<li>addFirst [push]、addLast [add]：无返回，容量超出限制会报错</li>
+<li>offerFirst、offerLast [offer]：返回 Boolean 表示是否加入成功</li>
+<li>removeFirst [remove\pop]、removeLast：队列为空报错</li>
+<li>pollFirst [poll]、pollLast：队列为空返回 null</li>
+<li>getFirst [element]、getLast：队列为空报错</li>
+<li>peekFirst [peek]、peekLast：队列为空返回 null
+<ul>
+<li>【注意】队列头部为 null 和队列为空时，都会返回 null</li>
+</ul>
+</li>
+<li>removeFirstOccurrence [remove]、removeLastOccurrence</li>
+<li>push、pop、peek：作为栈</li>
+</ul>
+</li>
+</ul>
+<h1 id="hashmap"><a class="markdownIt-Anchor" href="#hashmap"></a> HashMap</h1>
+<blockquote>
+<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
+</blockquote>
+<style>.mtqxzqvyvsri{zoom:50%;}</style><img data-src="/Java-DataStructure/image-20240425212527868.png" class="mtqxzqvyvsri" alt="image-20240425212527868">
+<ul>
+<li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
+<li>非线程安全的</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 一个包含了映射中所有键值对的集合视图</span></span><br><span class="line">    <span class="comment">// 先遍历数组 bin，再通过 Entry.next 遍历每个 bin</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="comment">// 链表的下一个元素</span></span><br><span class="line">        Node&lt;K,V&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        TreeNode&lt;K,V&gt; parent;  <span class="comment">// 红黑树链</span></span><br><span class="line">        TreeNode&lt;K,V&gt; left;</span><br><span class="line">        TreeNode&lt;K,V&gt; right;</span><br><span class="line">        TreeNode&lt;K,V&gt; prev;    <span class="comment">// 需要在下次删除时解除链接</span></span><br><span class="line">        <span class="type">boolean</span> red;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>entrySet</code> 通过<code>Node的next属性</code>遍历元素，<code>keySet()</code>、<code>values()</code>基于<code>entrySet</code>实现，用于遍历访问所有 Node 元素，还支持元素的删除操作【不确定，entrySet不存储数据，只是数据对外的操作接口】。</li>
+<li><code>TreeNode</code> 继承了 <code>LinkedHashMap.Entry</code> ，有指向前后节点的指针</li>
+</ul>
+<p>jdk 1.8 <strong>Key 计算 hash 值的方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="扩容机制-2"><a class="markdownIt-Anchor" href="#扩容机制-2"></a> 扩容机制</h2>
+<p><strong>何时触发 <code>resize()</code> 扩容</strong></p>
+<ul>
+<li>要插入数据前，发现<code>table</code> 中的 <code>bin</code> 为空</li>
+<li>要插入数据后，发现<code>HashMap</code>的 <code>size</code> 超过 <code>threshold</code></li>
+<li><code>table</code> 长度小于 <code>MIN_TREEIFY_CAPACITY</code>时，某 <code>Node</code> 上的链长度超过 <code>TREEIFY_THRESHOLD</code></li>
+</ul>
+<p><code>resize()</code> 扩容，会将 table 中的节点数量 &lt;&lt; 1，并重新 hash 映射所有节点（因为 table 变大了，每个节点对应的 bin 下标发生了变化 <code>newTab[e.hash &amp; (newCap - 1)] = e</code>，<code>newCap</code>为 table 的新大小）</p>
+<p>链表何时变成红黑树？</p>
+<ul>
+<li>该 <code>bin</code> 上的链长度<code>binCount</code>大于等于 <code>TREEIFY_THRESHOLD</code>  且 <code>table</code> 中 <code>bin</code> 数量大于等于 <code>MIN_TREEIFY_CAPACITY</code></li>
+</ul>
+<p>如果链表转红黑树的时候，又有数据要插入，会发生什么？</p>
+<ul>
+<li>线程不安全。在树结构替换链表最终阶段会校验树结构，在此过程中的插入会使该树结构不满足红黑树和双链表的特性，导致报异常 <code>assert checkInvariants(root);</code></li>
+</ul>
+<h1 id="concurrenthashmap"><a class="markdownIt-Anchor" href="#concurrenthashmap"></a> ConcurrentHashMap</h1>
+<blockquote>
+<p>Java7 中 ConcurrentHashMap 使用的是分段锁，每一个 Segment 上同时只有一个线程可以操作，结构上时 <code>Segment</code> <strong>数组 +</strong> <code>HashEntry</code> <strong>数组 + 链表</strong>。<code>Segment</code> 的个数一旦<strong>初始化就不能改变</strong>，默认 <code>Segment</code> 的个数是 16 个，<code>Segment</code>继承<code>ReentrantLock</code>实现分段锁。</p>
+<p>Java8 中的 ConcurrentHashMap 通过 <strong>Synchronized 锁加 CAS</strong> 保证多线程安全，结构上是 <code>Node</code> <strong>数组</strong> + <strong>链表 / 红黑树</strong>。</p>
+</blockquote>
+<p>如果链表转红黑树，又有数据要插入，会发生什么。</p>
+<ul>
+<li><code>treeifyBin</code> 通过 <code>synchronized</code> 把 <code>bin</code> 加锁，后续数据插入会因为无法竞争到资源而阻塞</li>
+<li>链表开始转红黑树前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在转换为红黑树，此时会自旋等待转换完成后插入（大概是这样的）</li>
+</ul>
+<p>如果数组扩容，又有数据要插入，会发生什么。</p>
+<ul>
+<li>扩容前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在扩容。</li>
+<li>扩容时，插入数据的线程若发现 hash 值为负，会去协助扩容，扩容完成后再插入数据。</li>
+</ul>
+<p><a href="https://blog.csdn.net/ZOKEKAI/article/details/90051567"><strong>什么时候触发扩容？</strong></a></p>
+<ul>
+<li>在调用 addCount 方法增加集合元素计数后发现当前集合元素个数到达扩容阈值时就会触发扩容</li>
+<li>扩容状态下其他线程对集合进行插入、修改、删除、合并、compute 等操作时遇到 <code>ForwardingNode</code> 节点会触发扩容（帮助扩容）</li>
+<li>putAll 批量插入或者插入节点后发现存在链表长度达到 8 个或以上，但数组长度为 64 以下时会触发扩容  。</li>
+</ul>
+<p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64 以下时只会触发扩容而不会将链表转为红黑树</p>
+<h1 id="linkedhashmap"><a class="markdownIt-Anchor" href="#linkedhashmap"></a> LinkedHashMap</h1>
+<p><code>LinkedHashMap</code> 内部维护了一个双向链表，确保其迭代顺序是和插入顺序或访问顺序是一致的，通过重写 get、newNode、afterNodeAccess、afterNodeInsertion、afterNodeRemoval 等方法实现，最近插入或访问的节点位于链表尾部。</p>
+<blockquote>
+<p>可以按照插入顺序遍历 entry（accessOrder=false）</p>
+<p>也可以按照访问顺序遍历 entry（accessOrder=true），即 LRU</p>
+</blockquote>
+<p>可用于实现 LRU，即 迭代顺序==访问顺序</p>
+<ul>
+<li>每次修改都将元素删除后重新插入</li>
+<li>将 <code>accessOrder</code> 设置为 true 并重写 <code>removeEldestEntry</code> 方法当链表大小超过容量时返回 true</li>
+</ul>
+<h1 id="copyonwritelist"><a class="markdownIt-Anchor" href="#copyonwritelist"></a> CopyOnWriteList</h1>
+<blockquote>
+<p>并发安全的 <code>List</code>，针对读多写少的场景，类比读写锁的思想，实现 <strong>读读不互斥、读写不互斥、写写互斥</strong> 的写时复制 Copy-On-Write 策略</p>
+</blockquote>
+<p>add 方法内部用到了 ReentrantLock 加锁，避免了多线程写的时候会复制出多个副本，导致并发问题</p>
+<p><strong>写时复制的缺点</strong></p>
+<ul>
+<li>写操作资源占用多，复制数据时占用内存</li>
+<li>数据一致性问题，修改后需要等到赋值给原数组才能访问到修改</li>
+</ul>
+<p><strong>写多读少的场景下，应该用什么数据结构实现并发数组？</strong></p>
+<p>分段读写锁 ReadWriteLock（由于 Arrays.copyOf() 是操作系统实现，数据量少的话依然可用写时复制）</p>
+<h1 id="priorityqueue"><a class="markdownIt-Anchor" href="#priorityqueue"></a> PriorityQueue</h1>
+]]></content>
+      <categories>
+        <category>Java基础</category>
+      </categories>
+      <tags>
+        <tag>Java数据结构</tag>
       </tags>
   </entry>
   <entry>
@@ -1501,7 +1527,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>chunk_size 指每个块包含的字符或 Token（如单词、句子等）的数量</li>
 <li>chunk_overlap 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
 </ul>
-<style>.bgselwjhvfns{zoom:50%;}</style><img data-src="/LLM-Application/image-20240424102824838.png" class="bgselwjhvfns" alt="langchain.text_splitter">
+<style>.epqjxceybjis{zoom:50%;}</style><img data-src="/LLM-Application/image-20240424102824838.png" class="epqjxceybjis" alt="langchain.text_splitter">
 <p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
 <p><strong>A1</strong>：最大边际相关性 <code>Maximum marginal relevance</code> ，过滤搜索结果中相似度很高的文档，可以同时满足查询的相关性和结果的多样性</p>
 <p><strong>Q2</strong>：如何将查询限定在某些文档中？如 LLM 在查询时可能同时查找 浙江省财政报告、江苏省财政报告，但问题只与浙江省相关</p>
@@ -1554,6 +1580,94 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       <tags>
         <tag>Langchain</tag>
         <tag>向量数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大模型的参数高效微调</title>
+    <url>/LLM-PEFT/</url>
+    <content><![CDATA[<h1 id="参数微调方法"><a class="markdownIt-Anchor" href="#参数微调方法"></a> 参数微调方法</h1>
+<p>为什么需要PEFT？</p>
+<ul>
+<li>大语言模型参数越来越大，使在消费级硬件上对模型进行<strong>全部参数的微调变得不可行</strong></li>
+<li>为每个下游任务独立<strong>存储和部署微调模型变得非常昂贵</strong>，因为微调模型（调整模型的所有参数）与原始预训练模型中需要反向传播的参数量相同。</li>
+</ul>
+<p>因此，近年来研究者们提出了各种各样的参数高效迁移学习方法，即<strong>固定住预训练模型的大部分参数，仅调整模型的一小部分参数来达到与全部参数的微调接近的效果</strong>。调整的可以是模型自有的参数，也可以是额外加入的一些参数，基于此将微调方法分为 A – additive，S – selective，R – reparametrization-based 三大类。</p>
+<ul>
+<li>增加额外参数，如：Prefix Tuning、Prompt Tuning、Adapter Tuning及其变体；</li>
+<li>选取一部分参数更新，如：BitFit；</li>
+<li>引入重参数化，如：LoRA、AdaLoRA、QLoRA；</li>
+<li>混合高效微调，如：MAM Adapter、UniPELT；</li>
+</ul>
+<p>【TODO】</p>
+<p>梯度低秩投影 GaLore</p>
+<p>针对 Lora 算法的优化：</p>
+<ul>
+<li>LongLoRA、PiSSA 方法、对 LoRA 层使用秩稳定缩放方法 rslora、权重分解 DoRA</li>
+</ul>
+<p>针对 PPO 算法的优化：</p>
+<ul>
+<li>归一化奖励分数、将奖励分数做白化处理</li>
+</ul>
+<p>当下流行技术一览：</p>
+<img data-src="/LLM-PEFT/peft%E6%96%B9%E6%B3%95.jpg" class="" title="peft方法">
+<h2 id="bitfit"><a class="markdownIt-Anchor" href="#bitfit"></a> BitFit</h2>
+<h2 id="adapter-tuning"><a class="markdownIt-Anchor" href="#adapter-tuning"></a> Adapter Tuning</h2>
+<p>在 Transformer Layer 的 Self-Attetion+FFN 之后插入一个先降维再升维的 MLP（以及一层残差和Layer Normalization）来学习模型微调的知识，具体分为串行和并行两个版本。</p>
+<style>.zgtjhyvqxiyj{zoom:70%;}</style><img data-src="/LLM-PEFT/image-20240712172913057.png" class="zgtjhyvqxiyj" alt="image-20240712172913057">
+<p>图中，Adapter 即插入的 FF Down + 非线性关系 + FF up。在微调过程中，他们固定原始模型的参数，只微调适配层；无需为每个任务存储完整的模型，只需存储适配参数；只需 3.6% 的参数。</p>
+<p><strong>缺陷与不足</strong>：需要修改原有模型结构，同时还会增加模型参数量。</p>
+<p>MAM Adapter</p>
+<h2 id="prompt-tuning"><a class="markdownIt-Anchor" href="#prompt-tuning"></a> Prompt Tuning</h2>
+<p>在模型输入的 Token 序列前添加前缀 prompt token，而这个前缀 prompt token 的 embedding 是由网络学到。相当于仅用 prompt token 的 embedding 去适应下游任务，相比手工设计或挑选 prompt，它是一种 Soft 的 prompt（软提示）。</p>
+<style>.yhvvgqxgbjhs{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712160012402.png" class="yhvvgqxgbjhs" alt="image-20240712160012402">
+<p><strong>性能如何？</strong></p>
+<p>Soft Prompt Tuning 在模型增大时可以达到接近 fine-tuning 的效果；</p>
+<style>.ocalsbotyxot{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712160245055.png" class="ocalsbotyxot" alt="image-20240712160245055">
+<p>离散的 Prompt Tuning（Prompt Design）基本不能达到 fine-tuning 的效果，prompt 长度过短时，效果不佳；</p>
+<style>.wsxkljopmxpr{zoom:33%;}</style><img data-src="/LLM-PEFT/image-20240712160346485.png" class="wsxkljopmxpr" alt="image-20240712160346485">
+<h2 id="p-tuning"><a class="markdownIt-Anchor" href="#p-tuning"></a> P-Tuning</h2>
+<h2 id="prefix-tuning"><a class="markdownIt-Anchor" href="#prefix-tuning"></a> Prefix Tuning</h2>
+<p>深化 Promot Tuning 的思想，在模型内加入可学习的 Prefix Prompt Token。</p>
+<p>为 𝑙 层的 Transformer Layer 的每层多头注意力的键和值都配置了可学习的 prefix vectors。</p>
+<style>.ywgiseedmffx{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712161951488.png" class="ywgiseedmffx" alt="image-20240712161951488">
+<p>通过共享连续提示同时优化多个任务。多任务学习是 P-Tuning v2 的可选功能，可以通过提供多任务 Prefix 来进一步提升性能。</p>
+<style>.bbhtpvpfbnbf{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712162725874.png" class="bbhtpvpfbnbf" alt="image-20240712162725874">
+<style>.didlmwgggnhy{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712162302772.png" class="didlmwgggnhy" alt="image-20240712162302772">
+<p>在训练样本量较少的场景下，微调结果优于 FineTuning；</p>
+<p>prefix长度在 100~200 时，微调结果最优；</p>
+<p>**缺陷不足：**由于模型可接受的最大输入长度有限，随着软提示的参数量增多，实际输入序列的最大长度也会相应减小，影响模型性能。</p>
+<p>P-Tuning v2</p>
+<h2 id="lora"><a class="markdownIt-Anchor" href="#lora"></a> LoRA</h2>
+<p>深度网络由大量Dense层构成，这些参数矩阵通常是满秩的。相关工作表明，在适应特定任务时，预训练模型是过度参数化的，hidden_size 实际上存在于一个较低的内在维度上，即高维数据实际是在低维子空间中。</p>
+<p>因此，将 $$\Delta\mathbf{W}=\mathbf{BA}$$ 用两个更参数量更小的矩阵 $$\mathbf{B}\in\mathbb{R}^{r\times d}$$ 和 $$\mathbf{A}\in\mathbb{R}^{d\times r}$$ 进行低秩近似。具体而言，冻结预训练的模型权重，并将可训练的秩分解矩阵注入到LLM的每个 Transformer Decoder 层中。</p>
+<style>.kilyivwohkkb{zoom:40%;}</style><img data-src="/LLM-PEFT/image-20240712170241205.png" class="kilyivwohkkb" alt="image-20240712170241205">
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">h</mi><mo>=</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold">W</mi><mn>0</mn></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><mi mathvariant="bold">W</mi><mo stretchy="false">)</mo><mi mathvariant="bold">x</mi><mo>=</mo><msub><mi mathvariant="bold">W</mi><mn>0</mn></msub><mi mathvariant="bold">x</mi><mo>+</mo><mi mathvariant="bold">B</mi><mi mathvariant="bold">A</mi><mi mathvariant="bold">x</mi></mrow><annotation encoding="application/x-tex">\mathbf{h}=(\mathbf{W}_0+\Delta\mathbf{W})\mathbf{x}=\mathbf{W}_0\mathbf{x}+\mathbf{B}\mathbf{A}\mathbf{x}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">h</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span></span><span class="mclose">)</span><span class="mord"><span class="mord mathbf">x</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83611em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathbf">x</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68611em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">B</span></span><span class="mord"><span class="mord mathbf">A</span></span><span class="mord"><span class="mord mathbf">x</span></span></span></span></span></span></p>
+<p>其中，矩阵 B 通过高斯函数初始化，矩阵 A 为全零初始化，使得训练开始之前旁路对原模型不造成影响。</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>可以将原权重与训练后权重合并，因此在推理时不存在额外的开销；</li>
+<li>不增加模型参数，不改变模型结构，减少了训练和推理的成本；</li>
+</ul>
+<p><a href="https://www.cnblogs.com/justLittleStar/p/18242820">技术博客</a></p>
+<h2 id="qlora"><a class="markdownIt-Anchor" href="#qlora"></a> QLoRA</h2>
+<h2 id="adalora"><a class="markdownIt-Anchor" href="#adalora"></a> AdaLoRA</h2>
+<h2 id="slora"><a class="markdownIt-Anchor" href="#slora"></a> SLORA</h2>
+<h2 id="unipeft"><a class="markdownIt-Anchor" href="#unipeft"></a> UniPEFT</h2>
+<h2 id="方法性能对比"><a class="markdownIt-Anchor" href="#方法性能对比"></a> 方法性能对比</h2>
+<p>从方法类型、是否存储高效、是否内存高效、反向传播成本、推理开销五个维度比较 PEFT 方法：</p>
+<img data-src="/LLM-PEFT/image-20240714150443014.png" class="" title="image-20240714150443014">
+<p>各种参数高效方法的参与训练的参数量、最终模型与原始模型的改变参数（delta值）以及论文中参与评估的模型的范围：</p>
+<img data-src="/LLM-PEFT/image-20240714150638355.png" class="" title="image-20240714150638355">
+<p>PEFT 方法在何种模型大小上进行过评估，以及在论文中通常使用的可训练参数数量。我们所说的可训练参数数量是指由梯度优化算法更新的参数数量，而不是我们用“更改参数”表示的原始模型与最终模型之间的差异。对于重参数化方法，我们报告了重参数化前后的参数数量。由于S4模型在不同层使用了不同的方法，因此估算其更新后的参数数量比较复杂。我们报告了在已发表的文献中对这些方法进行评估的范围。</p>
+<p>近年来，基于Transformer架构的大语言模型（LLM），在众多自然语言处理（NLP）任务达到了最佳性能表现。目前，构建领域专用LLM的主流策略是：在海量通用数据集上预训练的大语言模型（PLM），并通过针对特定下游任务的微调（Fine-tuning）。相较于直接采用PLM，针对下游任务的微调能显著提升模型性能。然而，随着LLM参数规模急剧增长，在消费级硬件上进行微调变得不切实际。</p>
+<p>为应对此挑战，研究者们近年来提出了参数高效微调技术（Parameter-Efficient Fine-Tuning, PEFT），其核心思想在于固定PLM的大部分参数，仅调整一小部分关键参数或引入额外参数，以接近直接微调PLM的效果。这种方法不仅保留了PLM的广泛知识库，还显著降低了计算与存储需求，为在资源受限环境下高效微调LLM开辟了新路径。</p>
+]]></content>
+      <categories>
+        <category>LLM微调</category>
+      </categories>
+      <tags>
+        <tag>PEFT</tag>
       </tags>
   </entry>
   <entry>
@@ -1617,7 +1731,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </tags>
   </entry>
   <entry>
-    <title>机器学习</title>
+    <title>机器学习基础</title>
     <url>/Machine-Learning/</url>
     <content><![CDATA[<h1 id="偏差方差"><a class="markdownIt-Anchor" href="#偏差方差"></a> 偏差方差</h1>
 <p><a href="https://www.cnblogs.com/makefile/p/bias-var.html#fn2">参考文章</a></p>
@@ -1677,6 +1791,31 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <h2 id="优化器"><a class="markdownIt-Anchor" href="#优化器"></a> 优化器</h2>
 <p>Adam：自适应学习率，通过计算梯度的一阶矩（均值）和二阶矩（未中心化的方差）来调整学习率</p>
 <p>AdamW：带有权重衰减和学习率预热的Adam优化器。改进了Adam，将权重衰退和梯度更新解耦，把L2正则化移到权重更新时而不是梯度计算时</p>
+<h1 id="训练方法"><a class="markdownIt-Anchor" href="#训练方法"></a> 训练方法</h1>
+<h2 id="监督学习"><a class="markdownIt-Anchor" href="#监督学习"></a> 监督学习</h2>
+<p>训练数据既有特征(feature)又有标签(label)，通过训练，让机器可以自己找到特征和标签之间的联系，在面对只有特征没有标签的数据时，可以判断出标签。</p>
+<h2 id="无监督学习"><a class="markdownIt-Anchor" href="#无监督学习"></a> 无监督学习</h2>
+<p>数据只有特征(feature)无标签(label)，是一种机器学习的训练方式，它本质上是一个统计手段，在没有标签的数据里可以发现潜在的一些结构的一种训练方式。</p>
+<h2 id="半监督学习"><a class="markdownIt-Anchor" href="#半监督学习"></a> 半监督学习</h2>
+<p>利用同时包含有标签和无标签的数据来构建一个模型，使得模型能够在测试阶段更好地泛化到新的、未见过的数据。</p>
+<h2 id="强化学习"><a class="markdownIt-Anchor" href="#强化学习"></a> 强化学习</h2>
+<p>让一个智能体（agent）在环境（Enviroment）中通过尝试和错误来学习行为（Action）策略。智能体通过与环境进行交互，根据奖励信号来调整其行为策略，以达到最大化累积奖励的目标。</p>
+<h3 id="rlhf"><a class="markdownIt-Anchor" href="#rlhf"></a> RLHF</h3>
+<blockquote>
+<p>Reinforcement Learning from Human Feedback，以<strong>强化学习方式依据人类反馈优化语言模型</strong>，是 OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
+</blockquote>
+<p>Policy Gradient</p>
+<style>.smesmlsiuoqq{zoom:50%;}</style><img data-src="/Machine-Learning/image-20240716101748533.png" class="smesmlsiuoqq" alt="image-20240716101748533">
+<p>RM+PPO</p>
+<p>步骤一、预训练语言模型</p>
+<style>.ltkongkcibum{zoom: 50%;}</style><img data-src="/Machine-Learning/image-20240715191912939.png" class="ltkongkcibum" alt="image-20240715191912939">
+<p>步骤二、训练奖励模型 RM</p>
+<style>.rrmwubppggeu{zoom: 50%;}</style><img data-src="/Machine-Learning/image-20240715191936226.png" class="rrmwubppggeu" alt="image-20240715191936226">
+<p>步骤三、用强化学习 PPO 微调</p>
+<style>.csajlejhwgtd{zoom:50%;}</style><img data-src="/Machine-Learning/image-20240715192056550.png" class="csajlejhwgtd" alt="image-20240715192056550">
+<p>DPO</p>
+<p>KTO</p>
+<p>ORPO</p>
 ]]></content>
   </entry>
   <entry>
@@ -1703,13 +1842,13 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>table.ibd，存放<strong>表数据</strong>，<s>表数据既可以存在共享表空间文件（文件名：ibdata1）里</s>，也可以存放在独占表空间文件（文件名：表名字.ibd）。这个行为是由参数 innodb_file_per_table 控制的，若设置了参数 innodb_file_per_table 为 1，则会将存储的<strong>数据、索引等信息单独存储在一个独占表空间</strong>，从 MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本之后， MySQL 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
 </ul>
 <p><strong>表空间文件的结构</strong></p>
-<style>.tfnlyuhmmvck{zoom:67%;}</style><img data-src="/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="tfnlyuhmmvck" alt="img">
+<style>.luehelmowjrg{zoom:67%;}</style><img data-src="/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="luehelmowjrg" alt="img">
 <h2 id="innodb-行格式"><a class="markdownIt-Anchor" href="#innodb-行格式"></a> InnoDB 行格式</h2>
 <p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact 行格式的结构</p>
 <img data-src="/MySQL/COMPACT.drawio.png" class="" title="img">
 <h2 id="innodb-页格式"><a class="markdownIt-Anchor" href="#innodb-页格式"></a> InnoDB 页格式</h2>
 <p>InnoDB 的数据是按「数据页」为单位来读写的，数据页的默认大小是 16KB</p>
-<style>.nixvbqpofhtl{zoom:50%;}</style><img data-src="/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="nixvbqpofhtl" alt="243b1466779a9e107ae3ef0155604a17">
+<style>.sxrnepcvfkom{zoom:50%;}</style><img data-src="/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="sxrnepcvfkom" alt="243b1466779a9e107ae3ef0155604a17">
 <table>
 <thead>
 <tr>
@@ -2097,7 +2236,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <h3 id="重做日志文件组"><a class="markdownIt-Anchor" href="#重做日志文件组"></a> 重做日志文件组</h3>
 <p>redo log 是为了防止 Buffer Pool 中的脏页丢失而设计的，<strong>只记录未被刷入磁盘的数据的物理日志</strong>。随着系统运行，Buffer Pool 的脏页刷新到了磁盘中，redo log 对应的记录也就没用了，这时候我们需要擦除这些旧记录，以腾出空间记录新的更新操作。重做日志文件组由有 2 个 redo log 文件组成，以循环写的方式工作，从头开始写，写到末尾就又回到开头，相当于一个环形。</p>
-<style>.kkpnfnejptri{zoom: 50%;}</style><img data-src="/MySQL/checkpoint.png" class="kkpnfnejptri" alt="img">
+<style>.npstqyonkugu{zoom: 50%;}</style><img data-src="/MySQL/checkpoint.png" class="npstqyonkugu" alt="img">
 <ul>
 <li>write pos ～ checkpoint 之间的部分（图中红色部分）：记录新的更新操作；</li>
 <li>check point ～ write pos 之间的部分（图中蓝色部分）：待落盘的脏数据页记录；</li>
@@ -2110,7 +2249,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>binlog 是全量日志，保存了所有数据变更的情况，可以恢复整个数据库所有数据；</li>
 </ul>
 <h3 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h3>
-<style>.wvizqkkdvuus{zoom:67%;}</style><img data-src="/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="wvizqkkdvuus" alt="MySQL 主从复制过程">
+<style>.odwlvhpacegj{zoom:67%;}</style><img data-src="/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="odwlvhpacegj" alt="MySQL 主从复制过程">
 <ul>
 <li>写入 Binlog：数据修改 -&gt; 主库写 binlog 日志 -&gt; commit 事务 -&gt; 持久化本地数据 -&gt; 提交事务成功；</li>
 <li>同步 Binlog：从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。</li>
@@ -2123,7 +2262,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>半同步复制：只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端；</li>
 </ul>
 <h3 id="binlog-刷盘"><a class="markdownIt-Anchor" href="#binlog-刷盘"></a> binlog 刷盘</h3>
-<style>.frlgvtfpwgue{zoom: 67%;}</style><img data-src="/MySQL/binlogcache.drawio.png" class="frlgvtfpwgue" alt="binlog cach">
+<style>.oqkrwqaidysn{zoom: 67%;}</style><img data-src="/MySQL/binlogcache.drawio.png" class="oqkrwqaidysn" alt="binlog cach">
 <ul>
 <li>图中的 write，把<strong>日志写入到 binlog 文件（文件系统的 page cache 里）</strong>，但是并没有把数据持久化到磁盘；</li>
 <li>图中的 fsync，把数据持久化到磁盘的操作，这里就会涉及磁盘 I/O，所以频繁的 fsync 会导致磁盘的 I/O 升高；</li>
@@ -2138,7 +2277,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>binlog 主从复制和 redo log 崩溃恢复需要保持一致，不然会出现<strong>主从数据不一致、备份数据与真实数据不一致</strong>等问题。MySQL 采用两阶段提交来避免两份日志之间的逻辑不一致，两阶段提交是一种<strong>分布式事务一致性协议</strong>。</p>
 <p>两阶段提交：把单个事务的提交拆分成了 2 个阶段，分别是准备阶段和提交阶段（不是 commit 语句），每个阶段都由协调者和参与者共同完成。</p>
 <h3 id="内部-xa-事务"><a class="markdownIt-Anchor" href="#内部-xa-事务"></a> 内部 XA 事务</h3>
-<style>.hxotyywrynsp{zoom:50%;}</style><img data-src="/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="hxotyywrynsp" alt="两阶段提交">
+<style>.bnwbvynynyzj{zoom:50%;}</style><img data-src="/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="bnwbvynynyzj" alt="两阶段提交">
 <p>为了保证这两个日志的一致性，MySQL 使用了内部 XA 事务。内部 XA 事务由 binlog 作为协调者，存储引擎是参与者，可以实现跨数据库事务。将 redo log 的写入拆成了<strong>两个状态：prepare 和 commit</strong>，中间再穿插写入binlog。</p>
 <ul>
 <li>如果 binlog 中没有当前内部 XA 事务的 XID，说明 redolog 完成刷盘，但是 binlog 还没有刷盘，则<strong>回滚事务</strong>。对应时刻 <strong>A 崩溃恢复</strong>的情况；</li>
@@ -2205,12 +2344,12 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </ul>
 <p><strong>Free 链表</strong>：使用链表结构，快速找到空闲的缓存页；</p>
 <p>每当需要从磁盘中加载一个页到 Buffer Pool 中时，就从 Free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上，然后把该缓存页对应的控制块从 Free 链表中移除</p>
-<style>.hosvelrwuqik{zoom: 67%;}</style><img data-src="/MySQL/freelist.drawio.png" class="hosvelrwuqik" alt="img">
+<style>.dggmnmxfzlqx{zoom: 67%;}</style><img data-src="/MySQL/freelist.drawio.png" class="dggmnmxfzlqx" alt="img">
 <p><strong>Flush 链表</strong>：使用链表结构，快速找到脏页；（结构类似于 Free 链表）</p>
 <p>脏页落盘时，后台线程遍历 Flush 链表</p>
 <h2 id="提高缓存命中率"><a class="markdownIt-Anchor" href="#提高缓存命中率"></a> 提高缓存命中率</h2>
 <p>Buffer Pool 有三种页和链表用来管理数据</p>
-<style>.fqwgnnxozjfv{zoom:67%;}</style><img data-src="/MySQL/bufferpoll_page.png" class="fqwgnnxozjfv" alt="img">
+<style>.cqophqyekucq{zoom:67%;}</style><img data-src="/MySQL/bufferpoll_page.png" class="cqophqyekucq" alt="img">
 <ul>
 <li>Free Page（空闲页），表示此页未被使用，位于 Free 链表；</li>
 <li>Clean Page（干净页），表示此页已被使用，但是页面未发生修改，位于LRU 链表。</li>
@@ -2242,62 +2381,18 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </tags>
   </entry>
   <entry>
-    <title>操作系统</title>
-    <url>/OS/</url>
-    <content><![CDATA[<h1 id="内存管理"><a class="markdownIt-Anchor" href="#内存管理"></a> 内存管理</h1>
-<h2 id="虚拟内存"><a class="markdownIt-Anchor" href="#虚拟内存"></a> 虚拟内存</h2>
-<p>CPU 只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
-<p>进程隔离：将虚拟内存映射到物理内存，进程之间的地址空间相互隔离，互不干扰</p>
-<p>虚拟内存空间：</p>
-<style>.gffoxfjpeukt{zoom:50%;}</style><img data-src="/OS/image-20240518105657086.png" class="gffoxfjpeukt" alt="image-20240518105657086">
-<p>用户态虚拟内存空间是相互隔离相互独立的；内核虚拟内存空间是各个进程共享的；</p>
-<h1 id="进程管理"><a class="markdownIt-Anchor" href="#进程管理"></a> 进程管理</h1>
-<p>数据结构 PCB</p>
-<p><strong>进程和线程的区别</strong></p>
-<p>线程是调度的基本单位，而进程则是资源拥有的基本单位。</p>
+    <title>NLP</title>
+    <url>/NLP/</url>
+    <content><![CDATA[<p>NLP 数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词 LM、完形填空 MLM。</p>
+<p>早些年，流行的是词嵌入 Word Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
+<p>现阶段，Transformer 的出现促使三种类型的模型的出现：Encoder-only\Decoder-only\Encoder-Decoder。Encoder-only 适用于机器翻译、句子分类、命名体识别和问答；Decoder-only 适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
+<p><strong>万物之始 Transformer</strong> Attention is all you need</p>
+<style>.opxbjigheoid{zoom:70%;}</style><img data-src="/NLP/image-20240714162218754.png" class="opxbjigheoid" alt="image-20240714162218754">
 <ul>
-<li>进程是资源（包括内存、打开的文件等）分配的最小单位，线程是 CPU 调度的最小单位；</li>
-<li>进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈，线程之间共享地址空间和文件等资源；</li>
-<li>线程同样具有就绪、阻塞、执行三种基本状态，同样具有状态之间的转换关系；</li>
-<li>线程能减少并发执行的时间和空间开销；</li>
-</ul>
-<h2 id="进程间通信方式"><a class="markdownIt-Anchor" href="#进程间通信方式"></a> 进程间通信方式</h2>
-<p>匿名管道 / 命名管道</p>
-<p>消息队列</p>
-<p>共享内存+信号量</p>
-<p>Socket</p>
-<h2 id="乐观锁悲观锁"><a class="markdownIt-Anchor" href="#乐观锁悲观锁"></a> 乐观锁悲观锁</h2>
-<p>CAS 是乐观锁没错，但是 CAS 和自旋锁不同之处，自旋锁基于 CAS 加了while 或者睡眠 CPU 的操作而产生自旋的效果，加锁失败会忙等待直到拿到锁，自旋锁是要需要事先拿到锁才能修改数据的，所以算悲观锁。</p>
-<h2 id="线程崩溃"><a class="markdownIt-Anchor" href="#线程崩溃"></a> 线程崩溃</h2>
-<p>1、如果线程是<strong>非法访问内存</strong>引起的崩溃，其对应进程一定会崩溃。</p>
-<p>2、进程崩溃的本质是：操作系统对进程发出了信号，例如非法访问内存的信号是 SIGSEGV（序号 11）</p>
-<p>3、想要防止进程奔溃，需要自定义信号处理函数去拦截 SIGSEGV 信号。参考 JVM 中线程崩溃但 JVM 进程不会崩溃</p>
-<h1 id="网络系统"><a class="markdownIt-Anchor" href="#网络系统"></a> 网络系统</h1>
-<h2 id="io-多路复用"><a class="markdownIt-Anchor" href="#io-多路复用"></a> I/O 多路复用</h2>
-<p><strong>单个进程或线程同时监视多个文件描述符</strong>，如网络连接或文件句柄。当这些描述符中的任何一个就绪时，比如有数据可读或可写，多路复用机制就能够通知应用程序进行相应的读写操作。常见的IO多路复用技术包括 select、poll 和 epoll 等。</p>
-<p>select</p>
-<p>将已连接的 Socket 都放到一个文件描述符集合，然后调用 select 函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写， 接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。<strong>2 次「遍历」文件描述符集合</strong>，<strong>2 次「拷贝」文件描述符集合</strong>。</p>
-<p>poll</p>
-<p>它使用一个 pollfd 结构来表示被监视的文件描述符及其事件，与select相比，poll没有文件描述符数量的限制，因为它基于链表来存储。<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
-<p>epoll</p>
-<img data-src="/OS/640.webp" class="" title="图片">
-<ul>
-<li>epoll 只在初始时完成一次文件描述符的注册，避免了每次调用时的拷贝开销</li>
-<li>采用回调函数的方式，只有当一个或多个文件描述符就绪时，才会调用回调函数并通知用户空间，这使得epoll在处理大量文件描述符时仍然能保持高效</li>
-<li>epoll 返回时已经明确指出了哪些文件描述符是就绪的，因此无需再像 select 和 poll 那样进行额外的遍历操作。</li>
-</ul>
-<p><strong>epoll 触发时机</strong></p>
-<ul>
-<li>边缘触发：只有当文件描述符的状态从不就绪变为就绪时，epoll才会发出通知；一旦通知过后，除非状态再次发生变化，否则不会再次通知；</li>
-<li>水平触发：只要文件描述符处于就绪状态，epoll就会持续发出通知，直到数据处理完毕；</li>
+<li>直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
+<li>Self Attention 对于增加计算的并行性有直接帮助作用；</li>
 </ul>
 ]]></content>
-      <categories>
-        <category>八股文</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
-      </tags>
   </entry>
   <entry>
     <title>计算机网络</title>
@@ -2319,8 +2414,8 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <li>传输层通过端口区分应用</li>
 <li>IP 分片（MTU）传输 TCP 报文</li>
 </ul>
-<style>.ycfdkugpudhj{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="ycfdkugpudhj" alt="img">
-<style>.tulafzunfqup{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="tulafzunfqup" alt="image-20240508140301819">
+<style>.ifvvriwphykn{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="ifvvriwphykn" alt="img">
+<style>.yyrlmcttbilu{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="yyrlmcttbilu" alt="image-20240508140301819">
 <h1 id="应用层-http"><a class="markdownIt-Anchor" href="#应用层-http"></a> 应用层 HTTP</h1>
 <blockquote>
 <p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
@@ -2378,9 +2473,9 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 </blockquote>
 <p>TCP ：面向连接的、可靠的、基于字节流的</p>
 <p>三次握手</p>
-<style>.qfqdeylxddfz{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="qfqdeylxddfz" alt="TCP 三次握手">
+<style>.tscqvlcumjdp{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="tscqvlcumjdp" alt="TCP 三次握手">
 <p>四次挥手【closed_wait；last_ack】</p>
-<style>.zxvothwwzqkp{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="zxvothwwzqkp" alt="客户端主动关闭连接 —— TCP 四次挥手">
+<style>.mqxyqskqdgbd{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="mqxyqskqdgbd" alt="客户端主动关闭连接 —— TCP 四次挥手">
 <ul>
 <li>首先确认客户端不会再发送请求给服务端</li>
 <li>然后服务端在发送完数据后，再向客户端发送断开连接</li>
@@ -2410,32 +2505,186 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </tags>
   </entry>
   <entry>
+    <title>操作系统</title>
+    <url>/OS/</url>
+    <content><![CDATA[<p>重点：线程进程、死锁</p>
+<h1 id="内存管理"><a class="markdownIt-Anchor" href="#内存管理"></a> 内存管理</h1>
+<h2 id="虚拟内存"><a class="markdownIt-Anchor" href="#虚拟内存"></a> 虚拟内存</h2>
+<p>CPU 只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
+<p>进程隔离：将虚拟内存映射到物理内存，进程之间的地址空间相互隔离，互不干扰</p>
+<p>虚拟内存空间：</p>
+<style>.jvnhvoegmdck{zoom:50%;}</style><img data-src="/OS/image-20240518105657086.png" class="jvnhvoegmdck" alt="image-20240518105657086">
+<p>用户态虚拟内存空间是相互隔离相互独立的；内核虚拟内存空间是各个进程共享的；</p>
+<h1 id="进程管理"><a class="markdownIt-Anchor" href="#进程管理"></a> 进程管理</h1>
+<p>数据结构 PCB</p>
+<p><strong>进程和线程的区别</strong></p>
+<p>线程是调度的基本单位，而进程则是资源拥有的基本单位。</p>
+<ul>
+<li>进程是资源（包括内存、打开的文件等）分配的最小单位，线程是 CPU 调度的最小单位；</li>
+<li>进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈，线程之间共享地址空间和文件等资源；</li>
+<li>线程同样具有就绪、阻塞、执行三种基本状态，同样具有状态之间的转换关系；</li>
+<li>线程能减少并发执行的时间和空间开销；</li>
+</ul>
+<h2 id="进程间通信方式"><a class="markdownIt-Anchor" href="#进程间通信方式"></a> 进程间通信方式</h2>
+<p>匿名管道 / 命名管道</p>
+<p>消息队列</p>
+<p>共享内存+信号量</p>
+<p>Socket</p>
+<h2 id="乐观锁悲观锁"><a class="markdownIt-Anchor" href="#乐观锁悲观锁"></a> 乐观锁悲观锁</h2>
+<p>CAS 是乐观锁没错，但是 CAS 和自旋锁不同之处，自旋锁基于 CAS 加了while 或者睡眠 CPU 的操作而产生自旋的效果，加锁失败会忙等待直到拿到锁，自旋锁是要需要事先拿到锁才能修改数据的，所以算悲观锁。</p>
+<h2 id="线程崩溃"><a class="markdownIt-Anchor" href="#线程崩溃"></a> 线程崩溃</h2>
+<p>1、如果线程是<strong>非法访问内存</strong>引起的崩溃，其对应进程一定会崩溃。</p>
+<p>2、进程崩溃的本质是：操作系统对进程发出了信号，例如非法访问内存的信号是 SIGSEGV（序号 11）</p>
+<p>3、想要防止进程奔溃，需要自定义信号处理函数去拦截 SIGSEGV 信号。参考 JVM 中线程崩溃但 JVM 进程不会崩溃</p>
+<h1 id="网络系统"><a class="markdownIt-Anchor" href="#网络系统"></a> 网络系统</h1>
+<h2 id="io-多路复用"><a class="markdownIt-Anchor" href="#io-多路复用"></a> I/O 多路复用</h2>
+<p><strong>单个进程或线程同时监视多个文件描述符</strong>，如网络连接或文件句柄。当这些描述符中的任何一个就绪时，比如有数据可读或可写，多路复用机制就能够通知应用程序进行相应的读写操作。常见的IO多路复用技术包括 select、poll 和 epoll 等。</p>
+<p>select</p>
+<p>将已连接的 Socket 都放到一个文件描述符集合，然后调用 select 函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写， 接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。<strong>2 次「遍历」文件描述符集合</strong>，<strong>2 次「拷贝」文件描述符集合</strong>。</p>
+<p>poll</p>
+<p>它使用一个 pollfd 结构来表示被监视的文件描述符及其事件，与select相比，poll没有文件描述符数量的限制，因为它基于链表来存储。<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
+<p>epoll</p>
+<img data-src="/OS/640.webp" class="" title="图片">
+<ul>
+<li>epoll 只在初始时完成一次文件描述符的注册，避免了每次调用时的拷贝开销</li>
+<li>采用回调函数的方式，只有当一个或多个文件描述符就绪时，才会调用回调函数并通知用户空间，这使得epoll在处理大量文件描述符时仍然能保持高效</li>
+<li>epoll 返回时已经明确指出了哪些文件描述符是就绪的，因此无需再像 select 和 poll 那样进行额外的遍历操作。</li>
+</ul>
+<p><strong>epoll 触发时机</strong></p>
+<ul>
+<li>边缘触发：只有当文件描述符的状态从不就绪变为就绪时，epoll才会发出通知；一旦通知过后，除非状态再次发生变化，否则不会再次通知；</li>
+<li>水平触发：只要文件描述符处于就绪状态，epoll就会持续发出通知，直到数据处理完毕；</li>
+</ul>
+]]></content>
+      <categories>
+        <category>八股文</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring</title>
+    <url>/Spring/</url>
+    <content><![CDATA[<p>SpringCore 主要提供 IoC 依赖注入功能的支持<br />
+SpringMVC 快速构建 MVC 架构的 Web 程序<br />
+SpringBoot 简化 Spring 开发，减少配置文件，开箱即用</p>
+<h1 id="ioc-控制反转"><a class="markdownIt-Anchor" href="#ioc-控制反转"></a> IOC 控制反转</h1>
+<blockquote>
+<p>当一个对象创建时，它所依赖的对象由外部传递给它，而非自己去创建所依赖的对象（比如通过new操作）。因此，也可以说在对象如何获取它的依赖对象这件事情上，控制权反转了。这便不难理解控制反转和依赖注入这两个名字的由来了。</p>
+</blockquote>
+<p>将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入<br />
+Bean 工厂模式</p>
+<ul>
+<li>单例 Singleton、多例/原型 Prototype Bean</li>
+</ul>
+<h1 id="aop-面向切面编程"><a class="markdownIt-Anchor" href="#aop-面向切面编程"></a> AOP 面向切面编程</h1>
+<p>将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。<br />
+实现方式：基于动态代理，有接口用 jdk 原生的代理方法，没借口用 CGLib</p>
+<img data-src="/Spring/image-20240521182846989.png" class="" title="image-20240521182846989">
+<h1 id="bean-生命周期"><a class="markdownIt-Anchor" href="#bean-生命周期"></a> Bean 生命周期</h1>
+<blockquote>
+<p>自动装配：@Component；@Service；@Controller；@Configure + @Bean</p>
+</blockquote>
+<img data-src="/Spring/image-20240521182854337.png" class="" title="image-20240521182854337">
+<p>xxx.class --&gt; 默认无参构造方法 --&gt; 普通对象 --&gt; 依赖注入（属性赋值） --&gt; 初始化前 --&gt; 初始化 --&gt; 初始化后 --&gt; 代理对象 --&gt; 得到Bean（<a href="https://www.cnblogs.com/chengxuxiaoyuan/p/16321716.html">源码</a>）<br />
+实例化 Bean 对象：默认调用无参构造器；若使用有参构造器，参数必须是容器中有的Bean【按参数查找 Bean 时，先按照 classname 后按照参数名】<br />
+初始化前中后：BeanPostProcessor 的 postProcessAfterInitialization() --&gt; @PostConstruct 注解 --&gt; InitializingBean 的 afterPropertiesSet() 方法 --&gt; BeanPostProcessor 的 postProcessAfterInitialization()（实现了 AOP 代理)</p>
+<ul>
+<li>Aware 其实就是一个标识；只有满足 Aware 规范或者其子类规范的才能进行相关的赋值操作，这样做的话可以少写很多判断，并且可以在一个地方进行统一的判断赋值；</li>
+<li>BeanPostProcessor 前置处理器的关键实现类：ApplicationContextAwareProcessor</li>
+<li>BeanPostProcessor 后置处理器的关键实现类：AbstractAutoProxyCreator。这个方法负责帮我们创建代理，底层采用对象cglib 或动态代理【AOP其实就是 IOC 整体流程（Bean生命周期）里的一个扩展点】</li>
+<li>InitializingBean 接口中的 afterPropertiesSet 方法：在这个方法里面去编写我们的业务逻辑，以及进行相关的属性赋值等等</li>
+</ul>
+<p>底层实现</p>
+<ul>
+<li>AbstractAutowireCapableBeanFactory 内的 initializeBean 调用了所有 BeanPostProcessor 的实现类</li>
+<li>ApplicationContext 类型容器的内部维护了一个 BeanFactory 类型的容器（AnnotationConfigApplicationContext 的父类 GenericApplicationContext 维护了一个 Bean 工厂实现类：DefaultListableBeanFactory）</li>
+<li>DefaultListableBeanFactory：Spring 默认的 BeanFactory 实现</li>
+<li>DefaultSingletonBeanRegistry：DefaultListableBeanFactory 单例模式存储关系的地方 Map&lt;String(BeanName),Object(instance)&gt;</li>
+<li>AbstractApplicationContext.refresh() 方法
+<ul>
+<li>配置了对 BeanFactoryPostProcessor 的实现 postProcessBeanFactory(beanFactory) 和处理 invokeBeanFactoryPostProcessors(beanFactory)。BeanFactoryPostProcessor 可以自定义 ApplicationContext 容器中的 BeanFactory 进行处理，在还没有对任何Bean进行实例化之前（ConfigurationClassPostProcessor 通过注解解析配置类；PropertySourcesPlaceholderConfigurer：xml配置文件中导入的 properties 文件进行解析,并替换bean定义中的占位符）</li>
+<li>配置了对 BeanPostProcessor 的实现</li>
+</ul>
+</li>
+</ul>
+<hr />
+<ol>
+<li>(1-1)依赖注入：@Autowired；@Resource</li>
+<li>事务 @Transactional、@Configuration</li>
+<li>(1-2)单例 Singleton、多例/原型 Prototype Bean</li>
+<li>jvm类加载器classloader：bootstrap ext app <a href="https://blog.csdn.net/javazejian/article/details/73413292#:~:text=%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%B8%BB%E8%A6%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%98%AFJVM%E8%87%AA%E8%BA%AB%E9%9C%80%E8%A6%81%E7%9A%84%E7%B1%BB%EF%BC%8C%E8%BF%99%E4%B8%AA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%BD%BF%E7%94%A8C%2B%2B%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E8%BA%AB%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%8C%E5%AE%83%E8%B4%9F%E8%B4%A3%E5%B0%86%20%3CJAVA_HOME%3E%2Flib%20%E8%B7%AF%E5%BE%84%E4%B8%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E7%B1%BB%E5%BA%93%E6%88%96,-Xbootclasspath%20%E5%8F%82%E6%95%B0%E6%8C%87%E5%AE%9A%E7%9A%84%E8%B7%AF%E5%BE%84%E4%B8%8B%E7%9A%84jar%E5%8C%85%E5%8A%A0%E8%BD%BD%E5%88%B0%E5%86%85%E5%AD%98%E4%B8%AD%EF%BC%8C%E6%B3%A8%E6%84%8F%E5%BF%85%E7%94%B1%E4%BA%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%98%AF%E6%8C%89%E7%85%A7%E6%96%87%E4%BB%B6%E5%90%8D%E8%AF%86%E5%88%AB%E5%8A%A0%E8%BD%BDjar%E5%8C%85%E7%9A%84%EF%BC%8C%E5%A6%82rt.jar%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%96%87%E4%BB%B6%E5%90%8D%E4%B8%8D%E8%A2%AB%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%AF%86%E5%88%AB%EF%BC%8C%E5%8D%B3%E4%BD%BF%E6%8A%8Ajar%E5%8C%85%E4%B8%A2%E5%88%B0lib%E7%9B%AE%E5%BD%95%E4%B8%8B%E4%B9%9F%E6%98%AF%E6%B2%A1%E6%9C%89%E4%BD%9C%E7%94%A8%E7%9A%84%20%28%E5%87%BA%E4%BA%8E%E5%AE%89%E5%85%A8%E8%80%83%E8%99%91%EF%BC%8CBootstrap%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8F%AA%E5%8A%A0%E8%BD%BD%E5%8C%85%E5%90%8D%E4%B8%BAjava%E3%80%81javax%E3%80%81sun%E7%AD%89%E5%BC%80%E5%A4%B4%E7%9A%84%E7%B1%BB%29%E3%80%82">博客</a></li>
+</ol>
+<p>TODO Spring 启动流程<br />
+Springboot 和 Spring 最大的区别就是不需要 xml 配置<br />
+Springboot 自动配置</p>
+<ul>
+<li>“约定优于配置”理念</li>
+<li>@EnableAutoConfiguration</li>
+<li>自动将一些配置类的bean注册进ioc容器</li>
+</ul>
+<p>logback是 slf4j 的官方实现，log4j 是另一个实现，logback 和 log4j 才是二选一，slf4j 是门面日志的 api。</p>
+<p>TODO<br />
+<a href="https://www.cnblogs.com/tuyang1129/p/12861617.html">https://www.cnblogs.com/tuyang1129/p/12861617.html</a><br />
+<a href="https://www.cnblogs.com/tuyang1129/p/12866484.html">https://www.cnblogs.com/tuyang1129/p/12866484.html</a></p>
+<h1 id="spring-事务"><a class="markdownIt-Anchor" href="#spring-事务"></a> Spring 事务</h1>
+<p>Spring 的声明式事务信息是存在 ThreadLocal 中的，所以一个线程永远只能有一个事务，所以 Spring 的事务是无法实现事务一致性（同时提交、同时回滚）的</p>
+<p>解决方法：可以通过编程式事务，或者通过分布式事务的思路：二阶段提交方式</p>
+<h1 id="如何解决循环依赖"><a class="markdownIt-Anchor" href="#如何解决循环依赖"></a> 如何解决循环依赖</h1>
+<p><a href="https://juejin.cn/post/6860785780307492871#heading-1">三层缓存设计</a></p>
+<ul>
+<li>一级缓存，缓存正常的 bean 实例</li>
+<li>二级缓存，缓存还未进行依赖注入和初始化方法调用的 bean 实例</li>
+<li>三级缓存，缓存 bean 实例的 ObjectFactory，用于解决 BeanPostProcessor 代理类时正确地依赖注入</li>
+</ul>
+<blockquote>
+<p>循环依赖的情况下，不管使用三级缓存还是两级缓存，代理类逻辑都必须提前曝光</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Java开发</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis</title>
     <url>/Redis/</url>
     <content><![CDATA[<p>Redis 的特性：单线程、原子性、基于内存、优化数据结构、I/O 多路复用的非关系型数据库；</p>
 <p>6.0 版本前网络 I/O 和命令处理都是单线程，6.0 版本后网络 I/O 改用多个线程处理</p>
 <ul>
-<li>大部分操作都在内存中完成。CPU 并不是制约 Redis 性能表现的瓶颈所在，而是机器的内存或者网络带宽</li>
+<li>大部分操作都在内存中完成（制约 Redis 性能的瓶颈并不是 CPU，而是内存和网络带宽）</li>
 <li>避免了多线程之间的竞争</li>
 <li>I/O 多路复用机制</li>
 </ul>
 <h1 id="数据结构"><a class="markdownIt-Anchor" href="#数据结构"></a> 数据结构</h1>
 <p>5 种基础数据类型：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）<br />
 3 种特殊数据类型：HyperLogLog（基数统计）、Bitmap （位图）、Geospatial (地理位置)</p>
-<p>String 字符串</p>
-<p>List 列表</p>
-<p>Set 集合</p>
-<p>Zset 有序集合</p>
-<p>Hash 哈希</p>
 <h1 id="持久化"><a class="markdownIt-Anchor" href="#持久化"></a> 持久化</h1>
 <p>保证即使在服务器重启的情况下也不会丢失数据（或少量损失）</p>
 <h2 id="aof-日志"><a class="markdownIt-Anchor" href="#aof-日志"></a> AOF 日志</h2>
-<p>每执行一条写操作命令就追加到日志文件中</p>
-<p>重写机制：后台子进程共享父进程内存，AOF 重写缓冲区</p>
+<p>将每条执行成功的<strong>写操作命令</strong>追加到日志文件中，持久化代码命令在主进程上执行</p>
+<p>写回策略（防止AOF日志在持久化过程中丢失）：</p>
+<style>.pqsflhfnuoqw{zoom:67%;}</style><img data-src="/Redis/98987d9417b2bab43087f45fc959d32a.png" class="pqsflhfnuoqw" alt="img">
+<p>重写机制（防止AOF日志文件过大）：</p>
+<ul>
+<li>
+<p>删去已经无意义的日志；</p>
+</li>
+<li>
+<p>重写操作由后台子进程完成，子进程共享父进程内存（为什么不用线程？父子进程以只读的方式共享数据，如果任意一方修改了该共享内存，父子进程会有独立的数据副本，即<strong>写时复制</strong>，注意这里只会复制主进程修改的物理内存数据，没修改物理内存还是与子进程共享的。而线程共享内存需要加锁）；</p>
+</li>
+<li>
+<p>AOF 重写缓冲区用于保存重写子进程启动后，新产生的AOF日志，并在重写结束后追加到新的AOF文件中；</p>
+</li>
+</ul>
 <h2 id="rdb-快照"><a class="markdownIt-Anchor" href="#rdb-快照"></a> RDB 快照</h2>
-<p>某一时刻的内存数据快照</p>
+<p>某一时刻内存数据的快照（二进制数据），恢复时直接读入内存即可</p>
+<p>执行 bgsave 时，想要修改数据，需采用<a href="https://xiaolincoding.com/redis/storage/rdb.html#%E6%89%A7%E8%A1%8C%E5%BF%AB%E7%85%A7%E6%97%B6-%E6%95%B0%E6%8D%AE%E8%83%BD%E8%A2%AB%E4%BF%AE%E6%94%B9%E5%90%97">写时复制</a>（Copy-On-Write, COW），以减少性能损耗</p>
 <h2 id="混合持久化"><a class="markdownIt-Anchor" href="#混合持久化"></a> 混合持久化</h2>
-<p>前半部分是 RDB 格式的全量数据，后半部分是 AOF 格式的增量数据（重写缓冲区数据）</p>
+<p>在AOF日志重写过程中，将新的含有 RDB 格式和 AOF 格式的 AOF 文件替换旧的的 AOF 文件，前半部分是 RDB 格式的全量数据，后半部分是 AOF 格式的增量数据，即重写缓冲区数据。</p>
 <h1 id="策略"><a class="markdownIt-Anchor" href="#策略"></a> 策略</h1>
 <h2 id="过期删除策略"><a class="markdownIt-Anchor" href="#过期删除策略"></a> 过期删除策略</h2>
 <p>惰性删除+定期删除</p>
@@ -2444,13 +2693,13 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>淘汰所有数据：lru、lfu</p>
 <h1 id="高可用"><a class="markdownIt-Anchor" href="#高可用"></a> 高可用</h1>
 <h2 id="主从复制"><a class="markdownIt-Anchor" href="#主从复制"></a> 主从复制</h2>
-<p>模式一：全量复制</p>
+<p>模式一：全量复制【多用于初始化】</p>
 <img data-src="/Redis/ea4f7e86baf2435af3999e5cd38b6a26.png" class="" title="图片">
 <ul>
 <li>bgsave 命令创建子进程来做生成 RDB 文件的工作，是异步工作的</li>
 </ul>
 <p>为了避免过多的从服务器和主服务器进行数据同步（全量复制），可以把一部分从服务器升级成分发节点，利用从节点分担读取操作的压力</p>
-<p>模式二：基于长连接的命令传播</p>
+<p>模式二：基于长连接的命令传播【多用于保持同步】</p>
 <p>主从服务器在完成第一次同步后，双方之间就会维护一个 TCP 连接，保证第一次同步后的主从服务器的数据一致性。</p>
 <p>模式三：<strong>连接恢复</strong>时可以采用<strong>增量复制</strong>：repl_backlog_buffer 环形缓冲区保存了最近传播的写命令，若其中存着从服务器请求的 offset，就采用增量复制；否则采用<strong>全量复制</strong>。若想降低主从服务器断开后全量同步的概率，需要增大 repl_backlog_buffer</p>
 <h3 id="qa"><a class="markdownIt-Anchor" href="#qa"></a> QA</h3>
@@ -2468,9 +2717,9 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>自动完成故障发现和故障转移，并通知给应用方，从而实现高可用性</p>
 </blockquote>
 <p>哨兵之间建立连接</p>
-<style>.whycjakomfog{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="whycjakomfog" alt="img">
+<style>.ucywvbfebdnr{zoom:50%;}</style><img data-src="/Redis/a6286053c6884cf58bf397d01674fe80.png" class="ucywvbfebdnr" alt="img">
 <p>哨兵与从节点建立连接</p>
-<style>.pcwxbeaauvjs{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="pcwxbeaauvjs" alt="img">
+<style>.hcfcxgqsanof{zoom:50%;}</style><img data-src="/Redis/fdd5f695bb3643258662886f9fba0aab.png" class="hcfcxgqsanof" alt="img">
 <h3 id="第一轮投票判断主节点下线"><a class="markdownIt-Anchor" href="#第一轮投票判断主节点下线"></a> 第一轮投票：判断主节点下线</h3>
 <p>主观下线：主节点或者从节点没有在规定的时间内响应哨兵的 PING 命令</p>
 <p>客观下线：一个哨兵判断主节点为「主观下线」后，就会向其他哨兵发起命令，通过多个哨兵节点一起判断主节点是否下线。哨兵的赞同票数达到哨兵配置文件中的 quorum 配置项设定的值则判断主节点客观下线</p>
@@ -2570,20 +2819,20 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <h2 id="大-key-问题"><a class="markdownIt-Anchor" href="#大-key-问题"></a> 大 Key 问题</h2>
 <p>会导致的问题</p>
 <ul>
-<li>由于 Redis 单线程处理，大 Key 的增删改查都很耗时，会导致工作线程阻塞、客户响应超时</li>
-<li>内存分布不均匀，集群场景下 slot 槽数据量不均</li>
-<li>阻塞网络传输</li>
+<li>由于 Redis 单线程处理，大 Key 的增删改查都很耗时，会导致<strong>工作线程阻塞、客户响应超时、网络传输阻塞</strong>；</li>
+<li><strong>内存分布不均</strong>，集群场景下 slot 槽数据量不均；</li>
+<li><strong>持久化阻塞主线程</strong>，会主线程的两个阶段耗时增加：创建子进程复制页表结构、修改共享数据写时复制；</li>
 </ul>
 <p>解决办法</p>
 <ul>
-<li>拆分大 key</li>
-<li>及时清理大 key，unlink 异步删除代替 del 删除</li>
+<li>拆分大 key；</li>
+<li>及时/定时清理大 key，unlink 异步删除代替 del 同步删除；</li>
 </ul>
 <h2 id="发布者订阅者"><a class="markdownIt-Anchor" href="#发布者订阅者"></a> 发布者/订阅者</h2>
 <blockquote>
 <p>订阅命令：subscribe channel  [channel … ]</p>
 </blockquote>
-<style>.hctvmyggfwnl{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="hctvmyggfwnl" alt="img">
+<style>.qbssjqohamik{zoom:40%;}</style><img data-src="/Redis/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAwrfmooXoirHljYHkuIk=,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="qbssjqohamik" alt="img">
 <p><a href="https://blog.csdn.net/w15558056319/article/details/121490953">Link</a></p>
 <h2 id="事务回滚"><a class="markdownIt-Anchor" href="#事务回滚"></a> 事务回滚</h2>
 <p>Redis 不支持回滚，事务没有原子性（要么全部成功要么全部失败）</p>
@@ -2756,92 +3005,6 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
       </tags>
   </entry>
   <entry>
-    <title>Spring</title>
-    <url>/Spring/</url>
-    <content><![CDATA[<p>SpringCore 主要提供 IoC 依赖注入功能的支持<br />
-SpringMVC 快速构建 MVC 架构的 Web 程序<br />
-SpringBoot 简化 Spring 开发，减少配置文件，开箱即用</p>
-<h1 id="ioc-控制反转"><a class="markdownIt-Anchor" href="#ioc-控制反转"></a> IOC 控制反转</h1>
-<blockquote>
-<p>当一个对象创建时，它所依赖的对象由外部传递给它，而非自己去创建所依赖的对象（比如通过new操作）。因此，也可以说在对象如何获取它的依赖对象这件事情上，控制权反转了。这便不难理解控制反转和依赖注入这两个名字的由来了。</p>
-</blockquote>
-<p>将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入<br />
-Bean 工厂模式</p>
-<ul>
-<li>单例 Singleton、多例/原型 Prototype Bean</li>
-</ul>
-<h1 id="aop-面向切面编程"><a class="markdownIt-Anchor" href="#aop-面向切面编程"></a> AOP 面向切面编程</h1>
-<p>将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。<br />
-实现方式：基于动态代理，有接口用 jdk 原生的代理方法，没借口用 CGLib</p>
-<img data-src="/Spring/image-20240521182846989.png" class="" title="image-20240521182846989">
-<h1 id="bean-生命周期"><a class="markdownIt-Anchor" href="#bean-生命周期"></a> Bean 生命周期</h1>
-<blockquote>
-<p>自动装配：@Component；@Service；@Controller；@Configure + @Bean</p>
-</blockquote>
-<img data-src="/Spring/image-20240521182854337.png" class="" title="image-20240521182854337">
-<p>xxx.class --&gt; 默认无参构造方法 --&gt; 普通对象 --&gt; 依赖注入（属性赋值） --&gt; 初始化前 --&gt; 初始化 --&gt; 初始化后 --&gt; 代理对象 --&gt; 得到Bean（<a href="https://www.cnblogs.com/chengxuxiaoyuan/p/16321716.html">源码</a>）<br />
-实例化 Bean 对象：默认调用无参构造器；若使用有参构造器，参数必须是容器中有的Bean【按参数查找 Bean 时，先按照 classname 后按照参数名】<br />
-初始化前中后：BeanPostProcessor 的 postProcessAfterInitialization() --&gt; @PostConstruct 注解 --&gt; InitializingBean 的 afterPropertiesSet() 方法 --&gt; BeanPostProcessor 的 postProcessAfterInitialization()（实现了 AOP 代理)</p>
-<ul>
-<li>Aware 其实就是一个标识；只有满足 Aware 规范或者其子类规范的才能进行相关的赋值操作，这样做的话可以少写很多判断，并且可以在一个地方进行统一的判断赋值；</li>
-<li>BeanPostProcessor 前置处理器的关键实现类：ApplicationContextAwareProcessor</li>
-<li>BeanPostProcessor 后置处理器的关键实现类：AbstractAutoProxyCreator。这个方法负责帮我们创建代理，底层采用对象cglib 或动态代理【AOP其实就是 IOC 整体流程（Bean生命周期）里的一个扩展点】</li>
-<li>InitializingBean 接口中的 afterPropertiesSet 方法：在这个方法里面去编写我们的业务逻辑，以及进行相关的属性赋值等等</li>
-</ul>
-<p>底层实现</p>
-<ul>
-<li>AbstractAutowireCapableBeanFactory 内的 initializeBean 调用了所有 BeanPostProcessor 的实现类</li>
-<li>ApplicationContext 类型容器的内部维护了一个 BeanFactory 类型的容器（AnnotationConfigApplicationContext 的父类 GenericApplicationContext 维护了一个 Bean 工厂实现类：DefaultListableBeanFactory）</li>
-<li>DefaultListableBeanFactory：Spring 默认的 BeanFactory 实现</li>
-<li>DefaultSingletonBeanRegistry：DefaultListableBeanFactory 单例模式存储关系的地方 Map&lt;String(BeanName),Object(instance)&gt;</li>
-<li>AbstractApplicationContext.refresh() 方法
-<ul>
-<li>配置了对 BeanFactoryPostProcessor 的实现 postProcessBeanFactory(beanFactory) 和处理 invokeBeanFactoryPostProcessors(beanFactory)。BeanFactoryPostProcessor 可以自定义 ApplicationContext 容器中的 BeanFactory 进行处理，在还没有对任何Bean进行实例化之前（ConfigurationClassPostProcessor 通过注解解析配置类；PropertySourcesPlaceholderConfigurer：xml配置文件中导入的 properties 文件进行解析,并替换bean定义中的占位符）</li>
-<li>配置了对 BeanPostProcessor 的实现</li>
-</ul>
-</li>
-</ul>
-<hr />
-<ol>
-<li>(1-1)依赖注入：@Autowired；@Resource</li>
-<li>事务 @Transactional、@Configuration</li>
-<li>(1-2)单例 Singleton、多例/原型 Prototype Bean</li>
-<li>jvm类加载器classloader：bootstrap ext app <a href="https://blog.csdn.net/javazejian/article/details/73413292#:~:text=%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%B8%BB%E8%A6%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%98%AFJVM%E8%87%AA%E8%BA%AB%E9%9C%80%E8%A6%81%E7%9A%84%E7%B1%BB%EF%BC%8C%E8%BF%99%E4%B8%AA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%BD%BF%E7%94%A8C%2B%2B%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E8%BA%AB%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%8C%E5%AE%83%E8%B4%9F%E8%B4%A3%E5%B0%86%20%3CJAVA_HOME%3E%2Flib%20%E8%B7%AF%E5%BE%84%E4%B8%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E7%B1%BB%E5%BA%93%E6%88%96,-Xbootclasspath%20%E5%8F%82%E6%95%B0%E6%8C%87%E5%AE%9A%E7%9A%84%E8%B7%AF%E5%BE%84%E4%B8%8B%E7%9A%84jar%E5%8C%85%E5%8A%A0%E8%BD%BD%E5%88%B0%E5%86%85%E5%AD%98%E4%B8%AD%EF%BC%8C%E6%B3%A8%E6%84%8F%E5%BF%85%E7%94%B1%E4%BA%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%98%AF%E6%8C%89%E7%85%A7%E6%96%87%E4%BB%B6%E5%90%8D%E8%AF%86%E5%88%AB%E5%8A%A0%E8%BD%BDjar%E5%8C%85%E7%9A%84%EF%BC%8C%E5%A6%82rt.jar%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%96%87%E4%BB%B6%E5%90%8D%E4%B8%8D%E8%A2%AB%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%AF%86%E5%88%AB%EF%BC%8C%E5%8D%B3%E4%BD%BF%E6%8A%8Ajar%E5%8C%85%E4%B8%A2%E5%88%B0lib%E7%9B%AE%E5%BD%95%E4%B8%8B%E4%B9%9F%E6%98%AF%E6%B2%A1%E6%9C%89%E4%BD%9C%E7%94%A8%E7%9A%84%20%28%E5%87%BA%E4%BA%8E%E5%AE%89%E5%85%A8%E8%80%83%E8%99%91%EF%BC%8CBootstrap%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8F%AA%E5%8A%A0%E8%BD%BD%E5%8C%85%E5%90%8D%E4%B8%BAjava%E3%80%81javax%E3%80%81sun%E7%AD%89%E5%BC%80%E5%A4%B4%E7%9A%84%E7%B1%BB%29%E3%80%82">博客</a></li>
-</ol>
-<p>TODO Spring 启动流程<br />
-Springboot 和 Spring 最大的区别就是不需要 xml 配置<br />
-Springboot 自动配置</p>
-<ul>
-<li>“约定优于配置”理念</li>
-<li>@EnableAutoConfiguration</li>
-<li>自动将一些配置类的bean注册进ioc容器</li>
-</ul>
-<p>logback是 slf4j 的官方实现，log4j 是另一个实现，logback 和 log4j 才是二选一，slf4j 是门面日志的 api。</p>
-<p>TODO<br />
-<a href="https://www.cnblogs.com/tuyang1129/p/12861617.html">https://www.cnblogs.com/tuyang1129/p/12861617.html</a><br />
-<a href="https://www.cnblogs.com/tuyang1129/p/12866484.html">https://www.cnblogs.com/tuyang1129/p/12866484.html</a></p>
-<h1 id="spring-事务"><a class="markdownIt-Anchor" href="#spring-事务"></a> Spring 事务</h1>
-<p>Spring 的声明式事务信息是存在 ThreadLocal 中的，所以一个线程永远只能有一个事务，所以 Spring 的事务是无法实现事务一致性（同时提交、同时回滚）的</p>
-<p>解决方法：可以通过编程式事务，或者通过分布式事务的思路：二阶段提交方式</p>
-<h1 id="如何解决循环依赖"><a class="markdownIt-Anchor" href="#如何解决循环依赖"></a> 如何解决循环依赖</h1>
-<p><a href="https://juejin.cn/post/6860785780307492871#heading-1">三层缓存设计</a></p>
-<ul>
-<li>一级缓存，缓存正常的 bean 实例</li>
-<li>二级缓存，缓存还未进行依赖注入和初始化方法调用的 bean 实例</li>
-<li>三级缓存，缓存 bean 实例的 ObjectFactory，用于解决 BeanPostProcessor 代理类时正确地依赖注入</li>
-</ul>
-<blockquote>
-<p>循环依赖的情况下，不管使用三级缓存还是两级缓存，代理类逻辑都必须提前曝光</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Java开发</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SpringMVC</title>
     <url>/SpringMVC/</url>
     <content><![CDATA[<h1 id="tomcat"><a class="markdownIt-Anchor" href="#tomcat"></a> Tomcat</h1>
@@ -2962,10 +3125,110 @@ Springboot 自动配置</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">long</span>[][] dp = <span class="keyword">new</span> <span class="title class_">long</span>[k + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[<span class="number">1</span>][i + <span class="number">1</span>] = in.nextInt() ^ dp[<span class="number">1</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span>[] prefix = dp[<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// 拆分为 i 份</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= k; i++) &#123;</span><br><span class="line">        <span class="comment">// 从头到尾遍历：将第 1~j 个元素拆成 i 份</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 将第 [1,s] 个元素拆成 i-1 份，(s,j] 是最后一份</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> j - <span class="number">1</span>; s &gt;= i - <span class="number">1</span>; s--) &#123;</span><br><span class="line">                <span class="comment">// 异或的优先级小于加减法</span></span><br><span class="line">                max = Math.max(max, dp[i - <span class="number">1</span>][s] + (prefix[j] ^ prefix[s]));</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(dp[k][n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>找工作</category>
+        <category>工作</category>
       </categories>
       <tags>
         <tag>笔试记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>AugESC</title>
+    <url>/2023/AugESC/</url>
+    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
+<blockquote>
+<p>研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前工作的缺陷
+<ul>
+<li>成本高、耗时长</li>
+<li>预算限制，所收集的对话规模小，主题少</li>
+</ul>
+</li>
+<li>本文主要贡献
+<ul>
+<li>关键发现</li>
+<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
+<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>预训练模型</li>
+<li>预训练模型的数据增强</li>
+</ul>
+<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
+<ul>
+<li>语言模型优于对话模型
+<ul>
+<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
+<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
+</ul>
+</li>
+<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
+<li>提示GPT不如微调GPT模型
+<ul>
+<li>提示型GPT-3生成可控性差</li>
+<li>只有微调才能掌握任务场景和所需特征</li>
+</ul>
+</li>
+<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
+<ul>
+<li>保持语言模型的内在知识</li>
+<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
+<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
+</ul>
+</li>
+<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
+<ul>
+<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
+</ul>
+</li>
+</ul>
+<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
+<ul>
+<li>主干模型：GPT-3，微调后的GPT-J</li>
+<li>提示模板：对话场景+情感支持</li>
+<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
+<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
+<li>触发Query
+<ul>
+<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
+<li>保留带有负面情绪的Query</li>
+</ul>
+</li>
+<li>过滤结果，删除非法对话</li>
+</ul>
+<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
+<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
+<ul>
+<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
+<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
+<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
+</ul>
+<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
+<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
+<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
+<blockquote>
+<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
+</blockquote>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
+        <tag>对话数据集增强</tag>
       </tags>
   </entry>
   <entry>
@@ -3352,110 +3615,10 @@ Springboot 自动配置</p>
 <p>6 总结【3】</p>
 ]]></content>
       <categories>
-        <category>找工作</category>
+        <category>工作</category>
       </categories>
       <tags>
         <tag>面试记录</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>AugESC</title>
-    <url>/2023/AugESC/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
-<blockquote>
-<p>研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小</p>
-</blockquote>
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前工作的缺陷
-<ul>
-<li>成本高、耗时长</li>
-<li>预算限制，所收集的对话规模小，主题少</li>
-</ul>
-</li>
-<li>本文主要贡献
-<ul>
-<li>关键发现</li>
-<li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
-<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>预训练模型</li>
-<li>预训练模型的数据增强</li>
-</ul>
-<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
-<ul>
-<li>语言模型优于对话模型
-<ul>
-<li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
-<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
-</ul>
-</li>
-<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
-<li>提示GPT不如微调GPT模型
-<ul>
-<li>提示型GPT-3生成可控性差</li>
-<li>只有微调才能掌握任务场景和所需特征</li>
-</ul>
-</li>
-<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
-<ul>
-<li>保持语言模型的内在知识</li>
-<li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
-<li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
-</ul>
-</li>
-<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
-<ul>
-<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
-</ul>
-</li>
-</ul>
-<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
-<ul>
-<li>主干模型：GPT-3，微调后的GPT-J</li>
-<li>提示模板：对话场景+情感支持</li>
-<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
-<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
-<li>触发Query
-<ul>
-<li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
-<li>保留带有负面情绪的Query</li>
-</ul>
-</li>
-<li>过滤结果，删除非法对话</li>
-</ul>
-<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
-<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
-<ul>
-<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
-<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
-<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
-</ul>
-<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
-<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
-<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
-<blockquote>
-<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
-</blockquote>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
-<p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-        <tag>对话数据集增强</tag>
       </tags>
   </entry>
   <entry>
@@ -3466,7 +3629,7 @@ Springboot 自动配置</p>
 <ul>
 <li>在 Encoder 和 Decoder 之间加了一层 GCNConv 和 RGCNConv</li>
 </ul>
-<p>![image-20240414083742062-17138602623661](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/image-20240414083742062-17138602623661-17138606243731.png)</p>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/image-20240414083742062-17138602623661-17138606243731.png" class="" title="image.png">
 <span id="more"></span>
 <h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
 <h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
@@ -3527,23 +3690,37 @@ Springboot 自动配置</p>
 <li>分层图推理机
 <ul>
 <li>GAT 图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png)注意力函数（2017出版)</li>
-<li>![image.png](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp) ![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png)注意力机制</li>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png)</li>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png)注意力机制</li>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png)</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png" class="" title="img">注意力函数（2017出版)
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp" class="" title="image.png"> <img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png" class="" title="img">注意力机制
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png" class="" title="img">
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png" class="" title="img">注意力机制
+</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png" class="" title="img">
+</li>
 </ul>
 </li>
 <li>Global-guide 解码器
 <ul>
 <li>响应生成
 <ul>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png)，v表示图神经网络得到的全局变量</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">，v表示图神经网络得到的全局变量
+</li>
 </ul>
 </li>
 <li>监督全局语义信息：预测问题类型
 <ul>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png)</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img">
+</li>
 </ul>
 </li>
 </ul>
@@ -3551,7 +3728,9 @@ Springboot 自动配置</p>
 <li>联合训练
 <ul>
 <li>对数似然损失+交叉熵损失</li>
-<li>![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png)![img](Control Globally, Understand Locally_ A Global-to-Local Hierarchical Graph Network for Emotional Support Conversation/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png)</li>
+<li>
+<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png" class="" title="img"><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png" class="" title="img">
+</li>
 </ul>
 </li>
 </ul>
@@ -3685,9 +3864,9 @@ Springboot 自动配置</p>
 <li>问题定义：上下文+策略+Query =&gt;响应Yt。最优策略基于当前状态和期望的长期回报（通过Q-learning预测）</li>
 </ul>
 <h2 id="method"><a class="markdownIt-Anchor" href="#method"></a> Method</h2>
-<p>![88c61f5be72a795a087441904fcd0ad9_3_Figure_2_780332990.png](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484543763-403c4648-68f4-4644-bf00-e2356c06841c.jpg)</p>
+<img data-src="/2023/DQ-HGAN/1701484543763-403c4648-68f4-4644-bf00-e2356c06841c.jpg" class="" title="88c61f5be72a795a087441904fcd0ad9_3_Figure_2_780332990.png">
 <h3 id="多源编码器"><a class="markdownIt-Anchor" href="#多源编码器"></a> 多源编码器</h3>
-<p>![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484574764-c5051f60-2b3c-40cf-a161-5848c1d67bc2.png)</p>
+<img data-src="/2023/DQ-HGAN/1701484574764-c5051f60-2b3c-40cf-a161-5848c1d67bc2.png" class="" title="img">
 <ul>
 <li>
 <p>transformer编码器（TransformerEncoder）</p>
@@ -3714,9 +3893,9 @@ Springboot 自动配置</p>
 </ul>
 </li>
 </ul>
-<h3 id="基于异构图的用户状态跟踪imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258ddpng"><a class="markdownIt-Anchor" href="#基于异构图的用户状态跟踪imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258ddpng"></a> 基于异构图的用户状态跟踪![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258dd.png)</h3>
-<h3 id="dqn强化学习imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7png"><a class="markdownIt-Anchor" href="#dqn强化学习imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7png"></a> DQN强化学习![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7.png)</h3>
-<h3 id="响应生成解码器imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762png"><a class="markdownIt-Anchor" href="#响应生成解码器imgdq-hgan_-a-heterogeneous-graph-attention-network-based-deep-q-learning-for-emotional-support-conversation-generation1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762png"></a> 响应生成解码器![img](DQ-HGAN_ A heterogeneous graph attention network based deep Q-learning for emotional support conversation generation/1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762.png)</h3>
+<h3 id="基于异构图的用户状态跟踪-swig2-"><a class="markdownIt-Anchor" href="#基于异构图的用户状态跟踪-swig2-"></a> 基于异构图的用户状态跟踪<img data-src="/2023/DQ-HGAN/1701484605842-86e4e5d2-9d20-4ffd-ae60-37220c9258dd.png" class="" title="img"></h3>
+<h3 id="dqn强化学习-swig3-"><a class="markdownIt-Anchor" href="#dqn强化学习-swig3-"></a> DQN强化学习<img data-src="/2023/DQ-HGAN/1701484626201-fde66e58-39a7-40f7-9e6e-fe70a7cd8dd7.png" class="" title="img"></h3>
+<h3 id="响应生成解码器-swig4-"><a class="markdownIt-Anchor" href="#响应生成解码器-swig4-"></a> 响应生成解码器<img data-src="/2023/DQ-HGAN/1701484638477-fd1f5c6b-b6f5-43f0-af14-a22d10dfe762.png" class="" title="img"></h3>
 <h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
 <p>Conclusion</p>
 <h1 id="关注的问题-本文的优势"><a class="markdownIt-Anchor" href="#关注的问题-本文的优势"></a> 关注的问题 / 本文的优势</h1>
@@ -3736,7 +3915,7 @@ Springboot 自动配置</p>
     <title>Feedback-Aware Double</title>
     <url>/2023/FADO/</url>
     <content><![CDATA[<p><strong>Title:</strong> Feedback-Aware Double COntrolling Network for Emotional Support Conversation</p>
-<p>![img](FADO_ Feedback-Aware Double COntrolling Network for Emotional Support Conversation/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png)</p>
+<img data-src="/2023/FADO/1701141604157-75101287-52dc-426c-abea-73184a8b8cda.png" class="" title="img">
 <span id="more"></span>
 <h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
 <h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
@@ -4030,6 +4209,168 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       <tags>
         <tag>情绪支持对话</tag>
         <tag>知识图谱</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MISC</title>
+    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
+    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
+<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
+<span id="more"></span>
+<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<ul>
+<li>先前工作的局限性
+<ul>
+<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
+<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
+</ul>
+</li>
+<li>本文提出了MISC
+<ul>
+<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
+<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<ul>
+<li>目前的工作不适用于ESC
+<ul>
+<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
+<li>只有移情反应，而不考虑解决求助者的情感问题</li>
+</ul>
+</li>
+<li>本文提出的解决方法
+<ul>
+<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
+<li>混合策略，而不是预测单一策略</li>
+<li>设计一套注意力机制</li>
+</ul>
+</li>
+<li>实验分析
+<ul>
+<li>回答策略建模的重要性，能够提高模型的共情能力</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
+<ul>
+<li>情绪感知响应生成</li>
+<li>NLP中的常识性知识</li>
+<li>策略感知对话模型</li>
+</ul>
+<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
+<ul>
+<li>ESConv数据集</li>
+<li>问题设定
+<ul>
+<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
+</ul>
+</li>
+</ul>
+<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
+<ul>
+<li>情感状态增强Encoder
+<ul>
+<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
+</ul>
+</li>
+</ul>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
+<ul>
+<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
+<li>将历史对话c输入Encoder得到C</li>
+<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
+<ul>
+<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
+<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
+<ul>
+<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>多因素感知Decoder
+<ul>
+<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
+<ul>
+<li>ESConv中的每十个话语作为一个样本</li>
+<li>评价指标
+<ul>
+<li>策略预测精度：Acc</li>
+<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
+<li>相应多样性：Distinct</li>
+<li>人类评估</li>
+</ul>
+</li>
+<li>基准模型
+<ul>
+<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
+</ul>
+</li>
+<li>具体实现</li>
+<li>实验结果
+<ul>
+<li>动态细粒度情感标签更能准确给予用户回应</li>
+<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
+<li>策略作为单独的任务进行预测比单一预测更有利</li>
+<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
+</ul>
+</li>
+</ul>
+<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
+<ul>
+<li>消融实验</li>
+<li>案例研究</li>
+<li>细粒度情感理解
+<ul>
+<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
+</ul>
+</li>
+<li>混合策略感知移情反应
+<ul>
+<li>混合策略有利于平滑的情感支持</li>
+<li>混合策略比单一策略更有效</li>
+<li>混合策略适用于ESC框架</li>
+</ul>
+</li>
+</ul>
+<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
+<ul>
+<li>引入COMET来捕捉用户的即时心理状态</li>
+<li>设计了一个混合策略感知解码器来产生支持响应</li>
+</ul>
+<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
+<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
+<ul>
+<li>长对话中的过度更加顺畅</li>
+</ul>
+<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
+<ul>
+<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
+<li>提出了不同的策略模型并在对话中给予提示</li>
+</ul>
+<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
+<ul>
+<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
+</ul>
+<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
+<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
+<ul>
+<li>以动态的方式学习混合响应策略</li>
+</ul>
+]]></content>
+      <categories>
+        <category>科研</category>
+      </categories>
+      <tags>
+        <tag>情绪支持对话</tag>
       </tags>
   </entry>
   <entry>
@@ -4349,168 +4690,6 @@ h_{t}^{\prime}=(1-\alpha) \cdot h_{t}+\alpha \cdot g^{o} \otimes h_{t}<br />
       </tags>
   </entry>
   <entry>
-    <title>MISC</title>
-    <url>/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/</url>
-    <content><![CDATA[<p><strong>Title:</strong> A MIxed Strategy-Aware Model Integrating COMET for Emotional Support Conversation</p>
-<img data-src="/2023/MISC_%20A%20MIxed%20Strategy-Aware%20Model%20Integrating%20COMET%20for%20Emotional%20Support%20Conversation/1699523191286-4f020d4d-6fee-4fc2-b943-e0443b1ca667.png" class="" title="image.png">
-<span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
-<ul>
-<li>先前工作的局限性
-<ul>
-<li>采用对话级别的情感标签，这种标签过于粗粒度，无法捕捉用户的即时精神状态</li>
-<li>大多侧重于在回应中表达同理心，而不是逐渐减轻用户的痛苦</li>
-</ul>
-</li>
-<li>本文提出了MISC
-<ul>
-<li>首先推断用户的细粒度情感状态，然后使用混合策略巧妙地响应</li>
-<li>在基准数据集上的实验结果证明了方法的有效性，并揭示了细粒度情感理解和混合策略建模的好处</li>
-</ul>
-</li>
-</ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
-<ul>
-<li>目前的工作不适用于ESC
-<ul>
-<li>粗粒度静态的对话级情感标签无法关注到对话过程中用户情感发生的变化</li>
-<li>只有移情反应，而不考虑解决求助者的情感问题</li>
-</ul>
-</li>
-<li>本文提出的解决方法
-<ul>
-<li>有选择地采用COMET（预训练生成式常识推理模型）生成的知识元组进行细粒度情感理解</li>
-<li>混合策略，而不是预测单一策略</li>
-<li>设计一套注意力机制</li>
-</ul>
-</li>
-<li>实验分析
-<ul>
-<li>回答策略建模的重要性，能够提高模型的共情能力</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>情绪感知响应生成</li>
-<li>NLP中的常识性知识</li>
-<li>策略感知对话模型</li>
-</ul>
-<h2 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h2>
-<ul>
-<li>ESConv数据集</li>
-<li>问题设定
-<ul>
-<li>通过对话历史、场景、求助者最后一句话，预测回复策略和回复内容</li>
-</ul>
-</li>
-</ul>
-<h2 id="model-misc"><a class="markdownIt-Anchor" href="#model-misc"></a> Model: MISC</h2>
-<ul>
-<li>情感状态增强Encoder
-<ul>
-<li>利用COMET提取场景situation和语句x的常识性知识，将常识性知识输入Encoder得到H’s和H’x</li>
-</ul>
-</li>
-</ul>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="bold-italic">B</mi><mi>s</mi></msup><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>N</mi><mi>r</mi></msub></munderover><mi mathvariant="normal">COMET</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi></mrow><mi>j</mi></msub><mo separator="true">,</mo><mi mathvariant="bold-italic">s</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{B}^{s}=\bigcup_{j=1}^{N_{r}}\operatorname{COMET}\left(\mathrm{rel}_{j},\boldsymbol{s}\right)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.740402em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04835em;">B</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740402em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">s</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.2532130000000006em;vertical-align:-1.4137769999999998em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8394360000000005em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">⋃</span></span></span><span style="top:-4.311105em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285719em;"><span style="top:-2.357em;margin-left:-0.10903em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4137769999999998em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mord mathrm">C</span><span class="mord mathrm">O</span><span class="mord mathrm">M</span><span class="mord mathrm">E</span><span class="mord mathrm">T</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">s</span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></span></p>
-<ul>
-<li>将H’s和H’x分别与历史对话c做cross-attention，得到Hs和Hx</li>
-<li>将历史对话c输入Encoder得到C</li>
-<li>混合策略学习模块【从VQ-VAE’s codebook文章中抄来的】
-<ul>
-<li>C输入多层感知机+softmax得到Pg（Pg大小是strategy_size）</li>
-<li>Pg作为概率分布，hg=Pg*T（T为策略嵌入）
-<ul>
-<li>长对话回复中可以引入多种策略，且模型学习灵活方便</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>多因素感知Decoder
-<ul>
-<li>将情绪状态和策略表征传入Decoder里的Cross-attention</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h2>
-<ul>
-<li>ESConv中的每十个话语作为一个样本</li>
-<li>评价指标
-<ul>
-<li>策略预测精度：Acc</li>
-<li>传统NLP指标：PPL、BLEU、ROUGE-L</li>
-<li>相应多样性：Distinct</li>
-<li>人类评估</li>
-</ul>
-</li>
-<li>基准模型
-<ul>
-<li>MT Transformer、MoEL、MIME、BlenderBot-Joint</li>
-</ul>
-</li>
-<li>具体实现</li>
-<li>实验结果
-<ul>
-<li>动态细粒度情感标签更能准确给予用户回应</li>
-<li>细粒度共情，多策略平稳过渡策略，可以更自然地表达共情并提供帮助</li>
-<li>策略作为单独的任务进行预测比单一预测更有利</li>
-<li>MISC的知识Know得分最高，成功学习到了COMET中的心理状态知识</li>
-</ul>
-</li>
-</ul>
-<h2 id="analysis"><a class="markdownIt-Anchor" href="#analysis"></a> Analysis</h2>
-<ul>
-<li>消融实验</li>
-<li>案例研究</li>
-<li>细粒度情感理解
-<ul>
-<li>用粗粒度的情感标签代替细粒度的心理信息可以显著提高指标</li>
-</ul>
-</li>
-<li>混合策略感知移情反应
-<ul>
-<li>混合策略有利于平滑的情感支持</li>
-<li>混合策略比单一策略更有效</li>
-<li>混合策略适用于ESC框架</li>
-</ul>
-</li>
-</ul>
-<h2 id="conclusions"><a class="markdownIt-Anchor" href="#conclusions"></a> Conclusions</h2>
-<ul>
-<li>引入COMET来捕捉用户的即时心理状态</li>
-<li>设计了一个混合策略感知解码器来产生支持响应</li>
-</ul>
-<h1 id="解决了什么问题-怎么解决的"><a class="markdownIt-Anchor" href="#解决了什么问题-怎么解决的"></a> 解决了什么问题 / 怎么解决的</h1>
-<h1 id="该方法的优势"><a class="markdownIt-Anchor" href="#该方法的优势"></a> 该方法的优势</h1>
-<ul>
-<li>长对话中的过度更加顺畅</li>
-</ul>
-<h1 id="有什么创新点"><a class="markdownIt-Anchor" href="#有什么创新点"></a> 有什么创新点</h1>
-<ul>
-<li>提出seq2seq模型MISC，在ESC中添加了常识性知识和混合反应策略</li>
-<li>提出了不同的策略模型并在对话中给予提示</li>
-</ul>
-<h1 id="实验结果好在哪里怎么证明的"><a class="markdownIt-Anchor" href="#实验结果好在哪里怎么证明的"></a> 实验结果好在哪里，怎么证明的</h1>
-<ul>
-<li>从SOTA延续下来的细粒度情感表现较粗粒度静态情感更好</li>
-</ul>
-<h1 id="相关工作分析"><a class="markdownIt-Anchor" href="#相关工作分析"></a> 相关工作分析</h1>
-<h1 id="可以提升的地方"><a class="markdownIt-Anchor" href="#可以提升的地方"></a> 可以提升的地方</h1>
-<ul>
-<li>以动态的方式学习混合响应策略</li>
-</ul>
-]]></content>
-      <categories>
-        <category>科研</category>
-      </categories>
-      <tags>
-        <tag>情绪支持对话</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>BlenderBot</title>
     <url>/2023/Recipes%20for%20building%20an%20open-domain%20chatbot/</url>
     <content><![CDATA[<p><strong>Title:</strong> Recipes for building an open-domain chatbot</p>
@@ -4795,6 +4974,93 @@ Discussion</p>
       </tags>
   </entry>
   <entry>
+    <title>Hexo 使用指南</title>
+    <url>/2024/Hexo/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://hexo.io/docs/">官方文档</a></p>
+</blockquote>
+<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>快速部署</td>
+<td>hexo g -d</td>
+</tr>
+<tr>
+<td>清除缓存</td>
+<td>hexo clean</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>hexo s</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>hexo d</td>
+</tr>
+<tr>
+<td>生成静态页面</td>
+<td>hexo generate</td>
+</tr>
+</tbody>
+</table>
+<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
+<p>初始化项目结构</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+<p>新增标签页，设置属性（type: “tags”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>新增分类，设置属性（type: “categories”）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<p>配置 next 主题设置</p>
+<ul>
+<li>设置 menu 菜单栏</li>
+<li>打开 code 代码复制</li>
+</ul>
+<p>Debug</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
+<p><strong>Git 上传插件</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p><strong>latex 公式</strong></p>
+<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p><strong>本地图片</strong></p>
+<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
+<p><strong>Markdown 文字高亮</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
+<p>_config.yml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
+<p><strong>添加Sitemap</strong></p>
+<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
+<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
+<p><strong>改 blockquote 颜色</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
+<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
+<p>管理员 PowerShell <code>cmd /c mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
+<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
+<blockquote>
+<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
+</blockquote>
+<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+]]></content>
+      <categories>
+        <category>开发工具</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Git 文档阅读</title>
     <url>/2024/Git/</url>
     <content><![CDATA[<p><a href="https://git-scm.com/book/zh/v2">Git 中文文档</a></p>
@@ -4911,7 +5177,7 @@ Discussion</p>
 <p>git push [OPTIONS]【推送到远程分支】</p>
 <ul>
 <li>
-<p>&lt;remote_name&gt; &lt;local_branch_name&gt;:&lt;remote_branch_name&gt;</p>
+<p>[&lt;remote_name&gt; &lt;local_branch_name&gt;:&lt;remote_branch_name&gt;]</p>
 </li>
 <li>
 <p>[&lt;remote_name&gt; --delete &lt;branch_name&gt;] 删除远程分支</p>
@@ -4921,6 +5187,9 @@ Discussion</p>
 </li>
 <li>
 <p>[–set-upstream &lt;remote_branch_name&gt; &lt;local_branch_name&gt;] 将本地分支与远程分支关联</p>
+</li>
+<li>
+<p>[–force] 强制提交，会覆盖所有 behind 的提交</p>
 </li>
 </ul>
 <p>git pull &lt;remote_name&gt; &lt;branch&gt;【<code>git fetch</code> 和 <code>git merge</code> 的组合，拉取到本地分支并合并】</p>
@@ -4932,7 +5201,7 @@ Discussion</p>
 <li>[-d] 删除标签</li>
 </ul>
 <p>git rebase &lt;cur_branch&gt; &lt;target_branch&gt; 【将提交到某一分支上的所有修改都移至另一分支上】</p>
-<p>git revert &lt;commit_id&gt;【生成一次新的commit冲抵原来的commit】</p>
+<p>git revert &lt;commit_id&gt;【生成一次新的commit冲抵原来的commit，不会修改原有的提交历史，而是通过添加新的提交来撤销更改】</p>
 <p>git merge &lt;branch&gt; 【合并指定分支到当前分支】</p>
 <p>git switch [OPTIONS] &lt;branch-name&gt; 【切换分支，与 git checkout 类似，但提供了更清晰的语义和错误检查】</p>
 <ul>
@@ -4980,97 +5249,10 @@ Discussion</p>
 <h2 id="chapter-6-github"><a class="markdownIt-Anchor" href="#chapter-6-github"></a> Chapter 6 GitHub</h2>
 ]]></content>
       <categories>
-        <category>工具</category>
+        <category>开发工具</category>
       </categories>
       <tags>
         <tag>版本管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo 使用指南</title>
-    <url>/2024/Hexo/</url>
-    <content><![CDATA[<blockquote>
-<p><a href="https://hexo.io/docs/">官方文档</a></p>
-</blockquote>
-<h1 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h1>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>代码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>快速部署</td>
-<td>hexo g -d</td>
-</tr>
-<tr>
-<td>清除缓存</td>
-<td>hexo clean</td>
-</tr>
-<tr>
-<td>预览</td>
-<td>hexo s</td>
-</tr>
-<tr>
-<td>部署</td>
-<td>hexo d</td>
-</tr>
-<tr>
-<td>生成静态页面</td>
-<td>hexo generate</td>
-</tr>
-</tbody>
-</table>
-<h1 id="初始化配置"><a class="markdownIt-Anchor" href="#初始化配置"></a> 初始化配置</h1>
-<p>初始化项目结构</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-<p>新增标签页，设置属性（type: “tags”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
-<p>新增分类，设置属性（type: “categories”）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
-<p>配置 next 主题设置</p>
-<ul>
-<li>设置 menu 菜单栏</li>
-<li>打开 code 代码复制</li>
-</ul>
-<p>Debug</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo clean --debug</span><br><span class="line">hexo s --debug</span><br></pre></td></tr></table></figure>
-<p><strong>Git 上传插件</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p><strong>latex 公式</strong></p>
-<p>安装 <code>hexo-renderer-markdown-it-plus</code> 后，Katex 与 mathJax 会重复，需要在 next 中配置</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">none</span></span><br><span class="line"><span class="attr">katex:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p><strong>本地图片</strong></p>
-<p><s>配置本地图片上传 <a href="https://bkystop.github.io/2022/01/05/hexo-markdown%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87/index.html">Link </a> <a href="https://muxiner.github.io/organize-files/">Link</a></s></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-asset-img --save  // 代替 hexo-asset-image</span><br></pre></td></tr></table></figure>
-<p><strong>Markdown 文字高亮</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-markdown-it-plus --save</span><br></pre></td></tr></table></figure>
-<p>_config.yml</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">markdown:</span></span><br><span class="line">    <span class="attr">preset:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="attr">plugins:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br></pre></td></tr></table></figure>
-<p><strong>添加Sitemap</strong></p>
-<p>为自己的网站配置sitemap，可以有效地提升SEO</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br></pre></td></tr></table></figure>
-<p>并在站点配置文件<code>_config.yml</code>的末尾添加：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br><span class="line"><span class="attr">baidusitemap:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">baidusitemap.xml</span></span><br></pre></td></tr></table></figure>
-<p><strong>改 blockquote 颜色</strong></p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#d0a7020d</span>;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">4px</span> solid <span class="number">#d0a702</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--blockquote-color);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">cite</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="备份本地博客"><a class="markdownIt-Anchor" href="#备份本地博客"></a> 备份本地博客</h1>
-<p><a href="https://blog.csdn.net/u014532291/article/details/131805350">利用mklink实现OneDrive自定义文件双向同步</a></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">MKLINK [[/D] | [/H] | [/J]] Link Target</span><br><span class="line"></span><br><span class="line">        /D      创建目录符号链接。默认为文件符号链接。</span><br><span class="line">        /H      创建硬链接而非符号链接。</span><br><span class="line">        /J      创建目录联接。</span><br><span class="line">        Link    指定新的符号链接名称。</span><br><span class="line">        Target  指定新链接引用的路径</span><br><span class="line">                (相对或绝对)。</span><br></pre></td></tr></table></figure>
-<p>管理员 PowerShell <code>cmd /c mklink /D 目标地址 源地址</code> 将博客<u>硬链接</u>到 OneDrive 文件夹下备份</p>
-<h1 id="2024423-更新主题-next"><a class="markdownIt-Anchor" href="#2024423-更新主题-next"></a> 2024.4.23 更新主题 Next</h1>
-<blockquote>
-<p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
-</blockquote>
-<p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>

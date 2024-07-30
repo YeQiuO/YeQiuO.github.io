@@ -2908,7 +2908,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>CPU 只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
 <p>进程隔离：将虚拟内存映射到物理内存，进程之间的地址空间相互隔离，互不干扰</p>
 <p>虚拟内存空间：</p>
-<style>.uwzefncxkitj{zoom:50%;}</style><img data-src="/OS/image-20240518105657086.png" class="uwzefncxkitj" alt="image-20240518105657086">
+<img data-src="os/image-20240518105657086.png" alt="image-20240518105657086" style="zoom:50%;" />
 <p>用户态虚拟内存空间是相互隔离相互独立的；内核虚拟内存空间是各个进程共享的；</p>
 <h1 id="进程管理"><a class="markdownIt-Anchor" href="#进程管理"></a> 进程管理</h1>
 <p>数据结构 PCB</p>
@@ -2939,7 +2939,7 @@ GC 回收问题：<a href="https://heapdump.cn/article/1661497">YGC</a>、<a hre
 <p>poll</p>
 <p>它使用一个 pollfd 结构来表示被监视的文件描述符及其事件，与select相比，poll没有文件描述符数量的限制，因为它基于链表来存储。<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
 <p>epoll</p>
-<img data-src="/OS/640.webp" class="" title="图片">
+<p><img data-src="os/640.webp" alt="图片" /></p>
 <ul>
 <li>epoll 只在初始时完成一次文件描述符的注册，避免了每次调用时的拷贝开销；</li>
 <li>当有一个或多个文件描述符就绪时，会调用回调函数将 Socket 集合一次性传递到就绪事件列表中，并通知用户空间，这使得 epoll 在处理大量文件描述符时仍然能保持高效；</li>

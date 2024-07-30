@@ -27,11 +27,11 @@
 <meta property="og:description" content="如果我是一串电信号，我要去向何方呢？">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/Network/12.jpg">
-<meta property="og:image" content="https://yeqiuo.github.io/Network/image-20240508140301819.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Network/image-20240730153032143.png">
 <meta property="og:image" content="https://yeqiuo.github.io/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png">
 <meta property="og:image" content="https://yeqiuo.github.io/Network/format,png-20230309230614791.png">
 <meta property="article:published_time" content="2024-03-27T07:58:22.000Z">
-<meta property="article:modified_time" content="2024-05-21T14:02:30.587Z">
+<meta property="article:modified_time" content="2024-07-30T11:31:56.859Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -145,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text"> 基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82-http"><span class="nav-number">2.</span> <span class="nav-text"> 应用层 HTTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82-tcp"><span class="nav-number">3.</span> <span class="nav-text"> 传输层 TCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82-ip"><span class="nav-number">4.</span> <span class="nav-text"> 网络层 IP</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text"> 概览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text"> 访问网站的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E5%8C%85%E6%94%B6%E5%8F%91"><span class="nav-number">1.2.</span> <span class="nav-text"> Linux 实现数据包收发</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82-http"><span class="nav-number">2.</span> <span class="nav-text"> 应用层 HTTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82-tcp"><span class="nav-number">3.</span> <span class="nav-text"> 传输层 TCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82-ip"><span class="nav-number">4.</span> <span class="nav-text"> 网络层 IP</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -158,7 +158,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -237,7 +237,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-21 22:02:30" itemprop="dateModified" datetime="2024-05-21T22:02:30+08:00">2024-05-21</time>
+      <time title="修改时间：2024-07-30 19:31:56" itemprop="dateModified" datetime="2024-07-30T19:31:56+08:00">2024-07-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -259,25 +259,55 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><blockquote>
-<p>先草率的记一下，反正记下来也背不下来，我恨八股呜呜呜</p>
-</blockquote>
-<h1 id="基础"><a class="markdownIt-Anchor" href="#基础"></a> 基础</h1>
+    <div class="post-body" itemprop="articleBody"><h1 id="概览"><a class="markdownIt-Anchor" href="#概览"></a> 概览</h1>
 <p>OSI  七层模型：应用层、表示层、会话层、传输层、网罗层、数据链路层、物理层</p>
 <p>TCP/IP 四层模型：应用层、传输层、网络层、网络接口层</p>
 <ul>
-<li>HTTP、FTP、Telnet、DNS、SMTP、DHCP</li>
-<li>TCP、UDP</li>
-<li>IP、ARP、ICMP</li>
+<li>
+<p>应用层，直接服务于用户。唯一运行在用户态的层：HTTP、FTP、Telnet、DNS、SMTP、DHCP</p>
+</li>
+<li>
+<p>传输层，应用层的技术支持。应用层数据超过 MSS 会将其切分成 TCP 段，传输层报文中包括了端口号，用于区分报文属于哪个应用：TCP、UDP</p>
+</li>
+<li>
+<p>网络层，负责数据在网络中的传输，即寻址和路由。超过 MTU 会切分，IP地址代表网络号和主机号：IP、ARP、ICMP</p>
+</li>
+<li>
+<p>传输层，关注链路级别的传输</p>
+</li>
 </ul>
-<p>数据传输结构</p>
-<ul>
-<li>TCP 分段（MSS）传输应用层数据</li>
-<li>传输层通过端口区分应用</li>
-<li>IP 分片（MTU）传输 TCP 报文</li>
-</ul>
-<style>.ifvvriwphykn{zoom: 60%;}</style><img data-src="/Network/12.jpg" class="ifvvriwphykn" alt="img">
-<style>.yyrlmcttbilu{zoom:50%;}</style><img data-src="/Network/image-20240508140301819.png" class="yyrlmcttbilu" alt="image-20240508140301819">
+<p>应用数据转换到传输块的过程：</p>
+<style>.nhgzcnwksstb{zoom: 50%;}</style><img data-src="/Network/12.jpg" class="nhgzcnwksstb" alt="img">
+<h2 id="访问网站的过程"><a class="markdownIt-Anchor" href="#访问网站的过程"></a> 访问网站的过程</h2>
+<style>.ymiuscwasyfh{zoom: 67%;}</style><img data-src="/Network/image-20240730153032143.png" class="ymiuscwasyfh" alt="image-20240730153032143">
+<ol>
+<li>解析 URL</li>
+<li>DNS 查询服务器 IP 地址（本地域名服务器-&gt;根域名服务器-&gt;顶级域名服务器）</li>
+<li>操作系统协议栈，包括传输层和网络层协议实现</li>
+<li>TCP 建立连接（SYN_SEND、SYN_RECE、ESTABLISHED）</li>
+<li>基于端口的 TCP 可靠传输</li>
+<li>基于地址的 IP 定位传输</li>
+<li>头部加上发送和接收方的 MAC 头部，ARP 查找接收端的 MAC</li>
+<li>网卡，帧校验符</li>
+<li>交换机，以太网设备，基于 MAC 地址表转发，没有缓存就广播</li>
+<li>路由器，和网卡类似，各个端口都具有 MAC 和 IP。通过路由表确定要到目的地 IP 需要走哪个端口，并替换帧的源、目标 MAC</li>
+</ol>
+<p>在网络包传输的过程中，源 IP 和目标 IP 始终是不会变的（前提：没有使用 NAT 网络的），一直变化的是 MAC 地址，因为需要 MAC 地址在以太网内进行两个设备之间的包传输</p>
+<p>校验过程：MAC 地址、IP 地址、序列号、端口</p>
+<ol start="11">
+<li>TCP 四次挥手（FIN_WAIT_1、FIN_RECE、FIN_WAIR_2、LAST_ACK）</li>
+</ol>
+<h2 id="linux-实现数据包收发"><a class="markdownIt-Anchor" href="#linux-实现数据包收发"></a> Linux 实现数据包收发</h2>
+<p><strong>发送</strong></p>
+<p>NAPI 机制：不采用中断的方式读取数据，而是首先采用中断唤醒数据接收的服务程序，然后 poll 的方法来轮询数据</p>
+<p>DMA 技术：将网络包写入到指定的内存地址，接着网卡向 CPU 发起硬件中断，当 CPU 收到硬件中断请求后，根据中断表，调用已经注册的中断处理函数</p>
+<p>硬中断先把收到的数据存在内存中，暂时屏蔽 CPU 中断，后续软中断统一处理先前的数据</p>
+<p><strong>接收</strong></p>
+<ol>
+<li>将用户待发送的数据从用户态拷贝到内核态 sk_buff 内存，并将其加入到发送缓冲区；</li>
+<li>克隆一份 sk_buff 的副本，用于网络层传输，传输层保留原始 sk_buff 直到接收到 ACK，以保证可靠传输；</li>
+<li>当 IP 层发现数据包大于 MTU 时，会申请额外的 sk_buff，并将原来的数据包拆分成多个小的 sk_buff；</li>
+</ol>
 <h1 id="应用层-http"><a class="markdownIt-Anchor" href="#应用层-http"></a> 应用层 HTTP</h1>
 <blockquote>
 <p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
@@ -335,9 +365,9 @@
 </blockquote>
 <p>TCP ：面向连接的、可靠的、基于字节流的</p>
 <p>三次握手</p>
-<style>.tscqvlcumjdp{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="tscqvlcumjdp" alt="TCP 三次握手">
+<style>.mmogpwsycrgy{zoom:50%;}</style><img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="mmogpwsycrgy" alt="TCP 三次握手">
 <p>四次挥手【closed_wait；last_ack】</p>
-<style>.mqxyqskqdgbd{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="mqxyqskqdgbd" alt="客户端主动关闭连接 —— TCP 四次挥手">
+<style>.hgyjbfhftsqt{zoom: 67%;}</style><img data-src="/Network/format,png-20230309230614791.png" class="hgyjbfhftsqt" alt="客户端主动关闭连接 —— TCP 四次挥手">
 <ul>
 <li>首先确认客户端不会再发送请求给服务端</li>
 <li>然后服务端在发送完数据后，再向客户端发送断开连接</li>

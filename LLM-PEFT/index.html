@@ -379,7 +379,7 @@
 <p>当下流行 PEFT 结构一览：</p>
 <img data-src="/LLM-PEFT/peft%E6%96%B9%E6%B3%95.jpg" class="" title="peft方法">
 <p>常用的参数高效微调方法：</p>
-<style>.cupmswgeyxkm{zoom: 50%;}</style><img data-src="/LLM-PEFT/image-20240718093213465.png" class="cupmswgeyxkm" alt="image-20240718093213465">
+<style>.tolegkspelti{zoom: 50%;}</style><img data-src="/LLM-PEFT/image-20240718093213465.png" class="tolegkspelti" alt="image-20240718093213465">
 <ul>
 <li>Selective：选择模型中的一部分参数进行微调；</li>
 <li>Additive：冻结模型原有参数，微调新增的参数和模块；
@@ -467,7 +467,7 @@
 </ul>
 <h2 id="ln-tuning"><a class="markdownIt-Anchor" href="#ln-tuning"></a> LN-Tuning</h2>
 <p>单独调整 LayerNorm 模块的 weight 和 bias 参数，训练参数量少，便于和其他的微调方法一起使用。</p>
-<style>.jdbbvrmhwqil{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723134459641.png" class="jdbbvrmhwqil" alt="image-20240723134459641">
+<style>.uqqtxtobpbgi{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723134459641.png" class="uqqtxtobpbgi" alt="image-20240723134459641">
 <p>实验表明，Prefix-Tuning + LN 的微调效果最佳。</p>
 <p>优势</p>
 <ul>
@@ -479,7 +479,7 @@
 <blockquote>
 <p>可训练模块：Embedding(virtual_token, hidden_size)</p>
 </blockquote>
-<style>.xackethlhndl{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712160012402.png" class="xackethlhndl" alt="image-20240712160012402">
+<style>.ospkftbrmnrn{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712160012402.png" class="ospkftbrmnrn" alt="image-20240712160012402">
 <p>优势：</p>
 <ul>
 <li>简化了不同任务之间的转换和迁移，使得模型可以更加灵活地应用于各种场景；</li>
@@ -508,7 +508,7 @@
 <p>past _key_values：Transformer 模型中历史计算过的 key 和 value 的结果，最早是用于生成类模型解码加速，解码逻辑是根据历史输入，每次预测一个新的 Token，然后将新的 Token 加入输入，再预测下一个 Token。这个过程中，会存在大量的重复计算，因此可以将 key 和 value 的计算结果缓存，作为 past_key_values 输入到下一次的计算中，这一技术又被称之为 kv cache。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 可训练模块：Embedding + MLP，与 P-Tuning 的区别是 prefix 映射到了模型的隐藏层上</span></span><br><span class="line">self.embedding = torch.nn.Embedding(num_virtual_tokens, token_dim)</span><br><span class="line">self.transform = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(token_dim, encoder_hidden_size),</span><br><span class="line">    torch.nn.Tanh(),</span><br><span class="line">    torch.nn.Linear(encoder_hidden_size, num_layers * <span class="number">2</span> * token_dim),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># transformers.models.bloom.BloomAttention 源码实现</span></span><br><span class="line"><span class="keyword">if</span> layer_past <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">    past_key, past_value = layer_past</span><br><span class="line">    key_layer = torch.cat((past_key, key_layer), dim=<span class="number">2</span>)</span><br><span class="line">    value_layer = torch.cat((past_value, value_layer), dim=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<style>.linzwjlvfxcc{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712161951488.png" class="linzwjlvfxcc" alt="image-20240712161951488">
+<style>.fhdncbckjmqn{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712161951488.png" class="fhdncbckjmqn" alt="image-20240712161951488">
 <p>优势：</p>
 <ul>
 <li>拟合速度快；</li>
@@ -522,7 +522,7 @@
 <h2 id="p-tuning-v2"><a class="markdownIt-Anchor" href="#p-tuning-v2"></a> P-Tuning V2</h2>
 <p>与 Prefix Tuning 最大的区别在于：移除重参数化的编码器，即没有MLP。</p>
 <p>通过共享连续提示同时优化多个任务，多任务学习是 P-Tuning v2 的可选功能，可以通过多任务共享前缀进一步提升性能。</p>
-<style>.lzsobrtfcnmr{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712162302772.png" class="lzsobrtfcnmr" alt="image-20240712162302772">
+<style>.evebluhmdtaa{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240712162302772.png" class="evebluhmdtaa" alt="image-20240712162302772">
 <p>优势：</p>
 <ul>
 <li>移除重参数化的编码器，对于较小的模型，会影响模型的表现，且对于大模型提升不大；</li>
@@ -546,7 +546,7 @@
 <p>深度网络由大量 Dense 层构成，这些参数矩阵通常是低秩的。相关工作表明，在适应特定任务时，预训练模型是过度参数化的，hidden_size 实际上存在于一个较低的内在维度上，即高维数据实际是在低维子空间中。</p>
 <p>因此，将 $$\Delta\mathbf{W}$$ 用两个更参数量更小的矩阵 $$\mathbf{A}\in\mathbb{R}^{d\times r}$$ 和 $$\mathbf{B}\in\mathbb{R}^{r\times d}$$ 低秩近似（r&lt;d）。其中，矩阵 B 通过高斯函数初始化，矩阵 A 为全零初始化，使得训练开始之前旁路对原模型不造成影响。</p>
 <p>具体而言，冻结预训练的模型权重，并将可训练的秩分解矩阵注入到大模型的每个 Attention 层的线性变换中。输入分别与原始权重和两个低秩矩阵进行计算，共同得到最终结果。</p>
-<style>.jjgktysapbhj{zoom:40%;}</style><img data-src="/LLM-PEFT/image-20240712170241205.png" class="jjgktysapbhj" alt="image-20240712170241205">
+<style>.nmhilylmefuk{zoom:40%;}</style><img data-src="/LLM-PEFT/image-20240712170241205.png" class="nmhilylmefuk" alt="image-20240712170241205">
 <p>训练完成后，可以将两个低秩矩阵与原始模型中的权重进行合并，合并后的模型与原始模型无异，避免了推理期间 Prompt 系列方法带来的额外计算量。</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">h</mi><mo>=</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold">W</mi><mn>0</mn></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><mi mathvariant="bold">W</mi><mo stretchy="false">)</mo><mi mathvariant="bold">x</mi><mo>=</mo><msub><mi mathvariant="bold">W</mi><mn>0</mn></msub><mi mathvariant="bold">x</mi><mo>+</mo><mi mathvariant="bold">B</mi><mi mathvariant="bold">A</mi><mi mathvariant="bold">x</mi></mrow><annotation encoding="application/x-tex">\mathbf{h}=(\mathbf{W}_0+\Delta\mathbf{W})\mathbf{x}=\mathbf{W}_0\mathbf{x}+\mathbf{B}\mathbf{A}\mathbf{x}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">h</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span></span><span class="mclose">)</span><span class="mord"><span class="mord mathbf">x</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83611em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathbf">x</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68611em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">B</span></span><span class="mord"><span class="mord mathbf">A</span></span><span class="mord"><span class="mord mathbf">x</span></span></span></span></span></span></p>
@@ -567,7 +567,7 @@
 <blockquote>
 <p>由于不同大模型结构不同，源码实现有差别。bloom 预训练模型的 QKV 共用 Linear 层 (hidden_size, hidden_size*3)，IA3 的可训练参数同时作用于三者之上。</p>
 </blockquote>
-<style>.sxkokumlauvf{zoom:67%;}</style><img data-src="/LLM-PEFT/image-20240718191324572.png" class="sxkokumlauvf" alt="image-20240718191324572">
+<style>.wrbdspddqqvi{zoom:67%;}</style><img data-src="/LLM-PEFT/image-20240718191324572.png" class="wrbdspddqqvi" alt="image-20240718191324572">
 <p>优势：</p>
 <ul>
 <li>调节的参数少于 Lora，微调效果也不错；</li>
@@ -597,11 +597,11 @@
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.5028259999999998em;vertical-align:-0.3997099999999999em;"></span><span class="minner"><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">⊤</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1031159999999998em;"><span style="top:-2.3002900000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathrm mtight">F</span></span></span></span><span style="top:-3.352008em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3997099999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.5028259999999998em;vertical-align:-0.3997099999999999em;"></span><span class="minner"><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span><span class="mord mathdefault">Q</span><span class="mord"><span class="mord mathdefault">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">⊤</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∥</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1031159999999998em;"><span style="top:-2.3002900000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathrm mtight">F</span></span></span></span><span style="top:-3.352008em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3997099999999999em;"><span></span></span></span></span></span></span></span></span></span></span></p>
 <p>最终，微调的损失函数为</p>
 <p><strong>重要结论</strong></p>
- <style>.ivdvskthryoa{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723112058468.png" class="ivdvskthryoa" alt="image-20240723112058468">
+ <style>.cdccbkjpdizu{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723112058468.png" class="cdccbkjpdizu" alt="image-20240723112058468">
 <p>AdaLoRA 总是倾向于将更多预算分配给 FFN 和顶层，即 FFN 模块和顶层的权重矩阵对于模型性能更为重要。</p>
 <h2 id="adapter-tuning"><a class="markdownIt-Anchor" href="#adapter-tuning"></a> Adapter Tuning</h2>
 <p>在 Transformer Layer 的 Self-Attetion 和 FFN 之后插入一个先降维再升维的 MLP（以及一层残差和Layer Normalization）来学习模型微调的知识。</p>
-<style>.kxtbbecumqer{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723101505442.png" class="kxtbbecumqer" alt="image-20240723101505442">
+<style>.kauckpimbuml{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723101505442.png" class="kauckpimbuml" alt="image-20240723101505442">
 <p>图中，Adapter 即插入的 FF Down + 非线性激活层 + FF up。在微调过程中，固定原始模型的参数，只微调适配层。</p>
 <p>不足：</p>
 <ul>
@@ -613,7 +613,7 @@
 </ul>
 <h2 id="adapterfusion"><a class="markdownIt-Anchor" href="#adapterfusion"></a> AdapterFusion</h2>
 <p>整合来自多个任务的知识的方法时，常遇到灾难性遗忘和多任务数据集平衡方面的困难。AdapterFusion 分离知识提取和知识组合这两个阶段，可以以非破坏性的方式有效地利用从多个任务中学到的表示。知识提取阶段学习Adapter 任务特定参数，其封装了特定于任务的信息；知识组合阶段将不同任务的 Adapter 组合到一起。</p>
-<style>.gdqfgpdixkmo{zoom:60%;}</style><img data-src="/LLM-PEFT/image-20240723102934378.png" class="gdqfgpdixkmo" alt="image-20240723102934378"><style>.mdqylhhigjeu{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723103303792.png" class="mdqylhhigjeu" alt="image-20240723103303792">
+<style>.ywftfdcqbyjt{zoom:60%;}</style><img data-src="/LLM-PEFT/image-20240723102934378.png" class="ywftfdcqbyjt" alt="image-20240723102934378"><style>.vfmfbxvfwieq{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723103303792.png" class="vfmfbxvfwieq" alt="image-20240723103303792">
 <p>AdapterFusion 组件将在不同任务上训练的多个适配器的输出作为输入，并学习编码信息的参数化混合器，应用于单个任务多 Adapter 的场景和多任务混合的场景。单任务场景中，可以多个 Adapter 可用于提取同一下游任务不同维度的信息，再将他们融合起来。</p>
 <p>优势：</p>
 <ul>
@@ -621,31 +621,31 @@
 </ul>
 <h2 id="adapterdrop"><a class="markdownIt-Anchor" href="#adapterdrop"></a> AdapterDrop</h2>
 <p>该方法在不影响任务性能的前提下，动态高效的移除冗余的 Adapter，可以尽可能地减少模型的参数量，提高模型在反向传播（训练）和正向传播（推理）时的效率。</p>
-<style>.myutjaprvrkt{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723103450147.png" class="myutjaprvrkt" alt="image-20240723103450147">
+<style>.zdxhynzxwfty{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723103450147.png" class="zdxhynzxwfty" alt="image-20240723103450147">
 <p>优势：</p>
 <ul>
 <li>通过从较低的 Transformer 层删除可变数量的Adaper来提升推理速度。 当对多个任务执行推理时，动态地减少了运行时的计算开销，并在很大程度上保持了任务性能；</li>
 </ul>
 <h2 id="mam-adapter"><a class="markdownIt-Anchor" href="#mam-adapter"></a> MAM Adapter</h2>
 <p>分解了最先进的参数高效迁移学习方法的设计，并提出了一个在它们之间建立联系的统一框架。</p>
-<style>.dqlcelkozxxy{zoom: 50%;}</style><img data-src="/LLM-PEFT/image-20240723104300363.png" class="dqlcelkozxxy" alt="image-20240723104300363">
+<style>.udheotukvnfm{zoom: 50%;}</style><img data-src="/LLM-PEFT/image-20240723104300363.png" class="udheotukvnfm" alt="image-20240723104300363">
 <h2 id="unipeft"><a class="markdownIt-Anchor" href="#unipeft"></a> UniPEFT</h2>
 <p>不同的 PEFT 方法在同一任务上的表现不同，因此为特定任务选择最合适的方法并非易事，特别是考虑到新 PEFT 方法和任务数量的快速增长。鉴于模型的多样性和模型选择的难度，UniPEFT 提出了一个统一的框架 UniPEFT，它将不同的PEFT 方法作为子模块，并通过门控机制学习激活最适合当前数据或任务设置的方法。</p>
-<style>.mkbejmkqymbm{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723104910206.png" class="mkbejmkqymbm" alt="image-20240723104910206">
+<style>.eypfbkqiueud{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723104910206.png" class="eypfbkqiueud" alt="image-20240723104910206">
 <h2 id="pissa"><a class="markdownIt-Anchor" href="#pissa"></a> PISSA</h2>
 <blockquote>
 <p>peft  包中有 PISSA 初始化方法 <code>self.pissa_init(adapter_name, init_lora_weights)</code></p>
 </blockquote>
 <p>PISSA 和 LoRA 主要的区别是初始化方式不同。同样基于低秩特性的假设，但 PISSA 不是去近似，而是直接基于原矩阵操作。</p>
 <p>PiSSA 对预训练模型的参数矩阵$$W\in R^{m\times n}$$ 进行奇异值分解，其中前 r 个奇异值和奇异向量用来初始化适配器 (adapter) 的两个矩阵$$A\in R^{m\times r}$$ 和$$B\in R^{r\times n}$$ ，； $$r\ll\min(m,n)$$ 剩余的奇异值和奇异向量用来构造残差矩阵$$W^{res}\in R^{m\times n}$$ ，使得$$W=AB+W^{res}$$ 。因此，适配器中的参数包含了模型的核心参数，而残差矩阵中的参数是修正参数。通过微调参数量较小的核心适配器 A、B，冻结参数量较大的残差矩阵 $$\text{Wres}$$ ，就达成了用很少的参数近似全参数微调的效果。</p>
-<style>.qrsotrddmqjq{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723093258953.png" class="qrsotrddmqjq" alt="image-20240723093258953">
+<style>.qhrkurhfftcd{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723093258953.png" class="qhrkurhfftcd" alt="image-20240723093258953">
 <p>优势</p>
 <ul>
 <li>相比于 LoRA，收敛速度更快，性能更好</li>
 </ul>
 <h2 id="vera"><a class="markdownIt-Anchor" href="#vera"></a> VeRA</h2>
 <p>区别于Lora，Vera 将 A 和 B 矩阵按照高斯分布随机初始化并冻结，只训练两组直接和A、B相乘的一维参数。虽然直观看起来A和B像两个无用的张量，但实际上它们仍然是必不可少的，实验证明即使是随机张量也可以用于微调。</p>
-<style>.vurnfvjbiohf{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723100503853.png" class="vurnfvjbiohf" alt="image-20240723100503853">
+<style>.jgtuxhsgjwdg{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723100503853.png" class="jgtuxhsgjwdg" alt="image-20240723100503853">
 <p>优势：</p>
 <ul>
 <li>VeRA显著减少了可训练参数的数量（LoRA相比参数减少了10倍），而精度没有损失；</li>
@@ -653,7 +653,7 @@
 </ul>
 <h2 id="dora"><a class="markdownIt-Anchor" href="#dora"></a> DoRA</h2>
 <p>将每个高阶矩阵都分解为 1*k 大小矩阵和 d*k 方向矩阵的乘积，LoRA 倾向于同时改变幅度和方向，DoRA可以更容易地将二者分开调整，或者用另一个的负变化来补偿一个的变化。</p>
-<style>.rqrplqmshivu{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723110508921.png" class="rqrplqmshivu" alt="image-20240723110508921">
+<style>.oyirrnihgwyb{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240723110508921.png" class="oyirrnihgwyb" alt="image-20240723110508921">
 <h2 id="slora"><a class="markdownIt-Anchor" href="#slora"></a> SLORA</h2>
 <p>一个 GPU 上并行执行多个 lora adapters 的微调</p>
 <p>S-LoRA 能够在单个 GPU 上或跨多个 GPU 以较小的开销为数千个 LoRA 适配器提供服务。该方法将所有 LoRA 模块存储在主内存中，并将当前运行的查询使用的适配器获取到 GPU 内存，提出采用统一分页技术，使用统一的内存池来管理具有不同等级的动态适配器权重和具有不同序列长度的 KV 缓存张量。此外，该方法采用新颖的张量并行策略和高度优化的定制 CUDA 内核，可视为定制化的 LoRA微调高效计算流程。</p>
@@ -670,7 +670,7 @@
 </ul>
 <h2 id="lora-2"><a class="markdownIt-Anchor" href="#lora-2"></a> LoRA+</h2>
 <p>LoRA 中的适配器矩阵 A 和 B 以相同的学习率更新，实验表明对 A 和 B 使用相同的学习率并不能实现有效的特征学习，LoRA+ 通过精心选择的固定比率为 LoRA 适配器矩阵 A 和 B 设置不同的学习率，纠正 LoRA 的这种次优性。</p>
-<style>.jjskxwmbtuoj{zoom: 67%;}</style><img data-src="/LLM-PEFT/image-20240725102452954.png" class="jjskxwmbtuoj" alt="image-20240725102452954">
+<style>.nkiikbpovjjq{zoom: 67%;}</style><img data-src="/LLM-PEFT/image-20240725102452954.png" class="nkiikbpovjjq" alt="image-20240725102452954">
 <h2 id="longlora"><a class="markdownIt-Anchor" href="#longlora"></a> LongLoRA</h2>
 <p>LongLoRA 扩展了模型的上下文，同时保留了其原始架构，并且与大多数现有技术兼容。一方面，虽然推理过程中需要密集的全局注意力，但微调过程更需要稀疏的局部注意力实现有效且高效反向传播。由此，该方法提出转移稀疏注意力</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mn>2</mn></msup><mo>−</mo><mi>A</mi><mi>t</mi><mi>t</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">S^2-Attn
@@ -682,7 +682,7 @@
 <p>rsLoRA深入研究了 LoRA 的缩放因子对学习过程的影响，并证明了 LoRA 应该除以秩的平方根而不是秩，通过使用较大的秩在训练期间增加计算资源以获得更好的微调性能，同时不改变推理计算成本。</p>
 <h2 id="llama-pro"><a class="markdownIt-Anchor" href="#llama-pro"></a> LLaMA Pro</h2>
 <p>该方法提出的Block Expansion方法，即块扩展，在保持预训练模型参数不变的基础上，增加新的block来适应新的训练任务。这些新加入的block与原有block协同工作，既保留了模型原有的知识，又能够适应新的训练数据和任务需求。</p>
-<style>.jlnhwgnhhwku{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240729142017433.png" class="jlnhwgnhhwku" alt="image-20240729142017433">
+<style>.kppigeeotutu{zoom:50%;}</style><img data-src="/LLM-PEFT/image-20240729142017433.png" class="kppigeeotutu" alt="image-20240729142017433">
 <h2 id="方法性能对比"><a class="markdownIt-Anchor" href="#方法性能对比"></a> 方法性能对比</h2>
 <p>从方法类型、是否存储高效、是否内存高效、反向传播成本、推理开销五个维度比较 PEFT 方法：</p>
 <img data-src="/LLM-PEFT/image-20240714150443014.png" class="" title="image-20240714150443014">

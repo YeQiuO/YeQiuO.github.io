@@ -19,12 +19,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Title: Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models  研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小">
+    <meta name="description" content="Title: Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models  研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AugESC">
 <meta property="og:url" content="https://yeqiuo.github.io/2023/AugESC/index.html">
 <meta property="og:site_name" content="闻">
-<meta property="og:description" content="Title: Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models  研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小">
+<meta property="og:description" content="Title: Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models  研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-07T06:24:42.000Z">
 <meta property="article:modified_time" content="2024-05-22T08:17:41.312Z">
@@ -141,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%80%9F%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text"> 论文速览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.2.</span> <span class="nav-text"> Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#related-work"><span class="nav-number">1.3.</span> <span class="nav-text"> Related Work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key-findings"><span class="nav-number">1.4.</span> <span class="nav-text"> Key Findings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methodology"><span class="nav-number">1.5.</span> <span class="nav-text"> Methodology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#augesc"><span class="nav-number">1.6.</span> <span class="nav-text"> AUGESC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quality-evaluation"><span class="nav-number">1.7.</span> <span class="nav-text"> Quality Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#interactive-evaluation"><span class="nav-number">1.8.</span> <span class="nav-text"> Interactive Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">1.9.</span> <span class="nav-text"> Conclusion</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%80%9F%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">论文速览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">1.3.</span> <span class="nav-text">Conclusion</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -254,93 +254,77 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p><strong>Title:</strong> Large-scale Data Augmentation for Emotional Support Conversation with Pre-trained Language Models</p>
+    <div class="post-body" itemprop="articleBody"><p><strong>Title:</strong> Large-scale Data Augmentation for Emotional
+Support Conversation with Pre-trained Language Models</p>
 <blockquote>
-<p>研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv 数据集大小</p>
+<p>研究开放式对话数据增强，采用大语言模型 GPT-3 拓展了 ESConv
+数据集大小</p>
 </blockquote>
 <span id="more"></span>
-<h1 id="论文速览"><a class="markdownIt-Anchor" href="#论文速览"></a> 论文速览</h1>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<h1 id="论文速览">论文速览</h1>
+<h2 id="abstract">Abstract</h2>
 <ul>
 <li>利用LLM进行数据增强，使用公开的对话帖子触发各种主题的对话</li>
 </ul>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> Introduction</h2>
+<h2 id="introduction">Introduction</h2>
 <ul>
-<li>目前工作的缺陷
+<li><p>目前工作的缺陷</p>
 <ul>
 <li>成本高、耗时长</li>
 <li>预算限制，所收集的对话规模小，主题少</li>
-</ul>
-</li>
-<li>本文主要贡献
+</ul></li>
+<li><p>本文主要贡献</p>
 <ul>
 <li>关键发现</li>
 <li>使用 GPT-J 和公开对话帖子触发各种主题的对话</li>
-<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持</li>
-</ul>
-</li>
-</ul>
-<h2 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h2>
-<ul>
-<li>预训练模型</li>
-<li>预训练模型的数据增强</li>
-</ul>
-<h2 id="key-findings"><a class="markdownIt-Anchor" href="#key-findings"></a> Key Findings</h2>
-<ul>
-<li>语言模型优于对话模型
+<li>构建机器增强数据集AUGES，具有更广泛和多样化的主题覆盖范围，可以提供更有效的情感支持
+## Related Work</li>
+</ul></li>
+<li><p>预训练模型</p></li>
+<li><p>预训练模型的数据增强 ## Key Findings</p></li>
+<li><p>语言模型优于对话模型</p>
 <ul>
 <li>语言模型存储了从大规模训练语料库中学习到的更丰富的知识，有助于更好地泛化到各种对话主题</li>
-<li>与会话模型 BlenderBot 相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
-</ul>
-</li>
-<li>语言模型比交互式仿真更适合开放式对话数据增强</li>
-<li>提示GPT不如微调GPT模型
+<li>与会话模型 BlenderBot
+相比，gpt生成的对话具有更好的对话连贯性和一致性</li>
+</ul></li>
+<li><p>语言模型比交互式仿真更适合开放式对话数据增强</p></li>
+<li><p>提示GPT不如微调GPT模型</p>
 <ul>
 <li>提示型GPT-3生成可控性差</li>
 <li>只有微调才能掌握任务场景和所需特征</li>
-</ul>
-</li>
-<li>少样本（Few-shot）微调导致更好的泛化和更高的多样性
+</ul></li>
+<li><p>少样本（Few-shot）微调导致更好的泛化和更高的多样性</p>
 <ul>
 <li>保持语言模型的内在知识</li>
 <li>增加调优样本或训练步骤会导致对域外主题的泛化能力差</li>
 <li>在大规模自动数据增强的帮助下，训练对话模型可能只需要少量手动策划的对话样本</li>
-</ul>
-</li>
-<li>信息性查询（第一个对话帖子）是触发主题对话的必要条件
+</ul></li>
+<li><p>信息性查询（第一个对话帖子）是触发主题对话的必要条件</p>
 <ul>
-<li>泛型和无信息的查询往往导致离题和肤浅的对话</li>
-</ul>
-</li>
-</ul>
-<h2 id="methodology"><a class="markdownIt-Anchor" href="#methodology"></a> Methodology</h2>
-<ul>
-<li>主干模型：GPT-3，微调后的GPT-J</li>
-<li>提示模板：对话场景+情感支持</li>
-<li>将第一个对话框作为触发查询，模型生成后续的对话</li>
-<li>不采用Prompt提示，使用ESConv微调GPT-J</li>
-<li>触发Query
+<li>泛型和无信息的查询往往导致离题和肤浅的对话 ## Methodology</li>
+</ul></li>
+<li><p>主干模型：GPT-3，微调后的GPT-J</p></li>
+<li><p>提示模板：对话场景+情感支持</p></li>
+<li><p>将第一个对话框作为触发查询，模型生成后续的对话</p></li>
+<li><p>不采用Prompt提示，使用ESConv微调GPT-J</p></li>
+<li><p>触发Query</p>
 <ul>
 <li>数据来源：EmpatheticDialogues（移情对话数据集）Reddit（心理健康相关的帖子）</li>
 <li>保留带有负面情绪的Query</li>
+</ul></li>
+<li><p>过滤结果，删除非法对话 ## AUGESC
+相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p></li>
+<li><p>ESConv中的对话话题与数据收集时期(如covid, pandemic,
+christmas)密切相关</p></li>
+<li><p>AUGESC-ED
+涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</p></li>
+<li><p>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)
+## Quality Evaluation 在信息一致性、话题一致性和对话基础等方面存在问题
+## Interactive Evaluation &gt;
+AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p></li>
 </ul>
-</li>
-<li>过滤结果，删除非法对话</li>
-</ul>
-<h2 id="augesc"><a class="markdownIt-Anchor" href="#augesc"></a> AUGESC</h2>
-<p>相比ESConv对话轮次更少，内容更长。语料库规模的扩大导致唯一二元分词的数量</p>
-<ul>
-<li>ESConv中的对话话题与数据收集时期(如covid, pandemic, christmas)密切相关</li>
-<li>AUGESC-ED 涵盖了更多关于日常生活的主题(例如，汽车、狗、房子、邻居)</li>
-<li>AUGESC-Reddit 涵盖了关于心理健康的主题(例如，抑郁、焦虑、治疗师)</li>
-</ul>
-<h2 id="quality-evaluation"><a class="markdownIt-Anchor" href="#quality-evaluation"></a> Quality Evaluation</h2>
-<p>在信息一致性、话题一致性和对话基础等方面存在问题</p>
-<h2 id="interactive-evaluation"><a class="markdownIt-Anchor" href="#interactive-evaluation"></a> Interactive Evaluation</h2>
-<blockquote>
-<p>AUGESC是对ESConv的一种补充，用AUGESC+ESConv训练出来的模型表现优于只使用ESConv的模型</p>
-</blockquote>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 <p>AUGESC能够显著增强对话模型提供情感支持的能力</p>
 
     </div>
@@ -430,7 +414,8 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
 
 

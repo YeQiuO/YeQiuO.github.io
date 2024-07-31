@@ -245,11 +245,18 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>NLP 数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词 LM、完形填空 MLM。</p>
-<p>早些年，流行的是词嵌入 Word Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
-<p>现阶段，Transformer 的出现促使三种类型的模型的出现：Encoder-only\Decoder-only\Encoder-Decoder。Encoder-only 适用于机器翻译、句子分类、命名体识别和问答；Decoder-only 适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
+    <div class="post-body" itemprop="articleBody"><p>NLP
+数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词
+LM、完形填空 MLM。</p>
+<p>早些年，流行的是词嵌入 Word
+Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
+<p>现阶段，Transformer
+的出现促使三种类型的模型的出现：Encoder-only-only-Decoder。Encoder-only
+适用于机器翻译、句子分类、命名体识别和问答；Decoder-only
+适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
 <p><strong>万物之始 Transformer</strong> Attention is all you need</p>
-<style>.btocwvllewma{zoom:70%;}</style><img data-src="/NLP/image-20240714162218754.png" class="btocwvllewma" alt="image-20240714162218754">
+<style>.lblrowvfnsrc{zoom:70%;}</style>
+<img data-src="/NLP/image-20240714162218754.png" class="lblrowvfnsrc" alt="image-20240714162218754">
 <ul>
 <li>直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
 <li>Self Attention 对于增加计算的并行性有直接帮助作用；</li>
@@ -338,7 +345,8 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha256-UF1fgpAiu3tPJN/uCqEUHNe7pnr+QR0SQDNfgglgtcM=" crossorigin="anonymous">
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
 
 

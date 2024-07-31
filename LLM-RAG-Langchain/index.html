@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#langchain"><span class="nav-number">2.</span> <span class="nav-text">Langchain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%93%BE-chain"><span class="nav-number">2.1.</span> <span class="nav-text">模型链 Chain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%AF%9D%E5%8E%86%E5%8F%B2-memory"><span class="nav-number">2.2.</span> <span class="nav-text">对话历史 Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B-prompt"><span class="nav-number">2.3.</span> <span class="nav-text">提示工程 Prompt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95-indexes"><span class="nav-number">2.4.</span> <span class="nav-text">索引 Indexes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86-agents"><span class="nav-number">2.5.</span> <span class="nav-text">代理 Agents</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">Langchain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%93%BE-Chain"><span class="nav-number">2.1.</span> <span class="nav-text">模型链 Chain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%AF%9D%E5%8E%86%E5%8F%B2-Memory"><span class="nav-number">2.2.</span> <span class="nav-text">对话历史 Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B-Prompt"><span class="nav-number">2.3.</span> <span class="nav-text">提示工程 Prompt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95-Indexes"><span class="nav-number">2.4.</span> <span class="nav-text">索引 Indexes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86-Agents"><span class="nav-number">2.5.</span> <span class="nav-text">代理 Agents</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -256,72 +256,50 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented
-Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，如果没有足够大的平台很难深入研究，因此本文主要涉及检索增强生成（RAG架构）领域知识。</p>
-<h1 id="概念">概念</h1>
-<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a
-target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP
-任务的检索增强生成</a>中提出的新思想。LLM
-通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的
-RAG 应用程序有两个主要组件：</p>
+    <div class="post-body" itemprop="articleBody"><p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented Generation，简称RAG）是大型语言模型（LLM）与专有数据之间融合贯通的最主流的两种方法。微调对数据集和硬件要求高，如果没有足够大的平台很难深入研究，因此本文主要涉及检索增强生成（RAG架构）领域知识。</p>
+<h1>概念</h1>
+<p>RAG 是一种使用额外数据增强 LLM 知识的技术，是 2020 年发表的论文 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.11401">面向知识密集型 NLP 任务的检索增强生成</a>中提出的新思想。LLM 通过外部知识源获取额外信息，从而生成更准确、更符合上下文的答案，并减少错误信息（或称为“幻觉”，即模型对用户意图的误解或在处理特定指示时产生了不准确的推断）。典型的 RAG 应用程序有两个主要组件：</p>
 <ul>
 <li>索引：用于引入源数据并对其进行<strong>索引</strong>的管道，通常离线运行。
 <ul>
 <li>加载：将数据库中的大段文本读入系统</li>
 <li>拆分：大块数据不便于搜索，且模型的上下文窗口有限，因此需要拆分数据</li>
 <li>存储：采用向量数据库和索引存储数据</li>
-</ul></li>
-<li>检索和生成：实际的 RAG
-链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
+</ul>
+</li>
+<li>检索和生成：实际的 RAG 链，它在运行时接受用户查询并从索引中检索相关数据，然后将其传递给模型。
 <ul>
-<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前
-k 个数据</li>
-<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型
-(LLM) 中，以生成所需的输出</li>
-</ul></li>
+<li>检索：将用户的查询通过嵌入模型转化为向量，以便与向量数据库中的其他上下文信息进行比对。通过这种相似性搜索，可以找到向量数据库中最匹配的前 k 个数据</li>
+<li>生成：将用户的查询和检索到的额外信息一起嵌入到一个预设的提示模板中，这个经过检索增强的提示内容会被输入到大语言模型 (LLM) 中，以生成所需的输出</li>
+</ul>
+</li>
 </ul>
 <p>从原始数据到响应生成最常见的流程图如下：</p>
 <img data-src="/LLM-RAG-Langchain/x7ta8v77.png" class="" title="x7ta8v77">
-<h1 id="langchain">Langchain</h1>
-<p>LangChain
-采用组件化设计的思想，将语言模型开发分为多个子任务：<strong>对话历史
-Memory、提示工程 Prompt、输出解析 Parase、LLM链 Chain、索引
-Indexes、代理 Agents</strong>。Langchain
-模块化设计的中心思想是提升代码维护、扩展和重用的能力，可以快速开发多轮提示以及解析输出的应用。</p>
-<p>此外，Langchain
-还提供了对话过程中需要的基本功能，如：<strong>文档加载器
-UnstructuredBaseLoader、文档分割器 TextSplitter、向量数据库存储和搜索
-BaseChatMemory、多种工具类链调用 MapReduceDocumentsChain</strong></p>
-<p>还有额外的功能如：用量记录、数据流返回 acall、缓存
-SQLite、支持多种模型接口 OpenAI、向量数据库 langchain.vectorstores</p>
-<h2 id="模型链-chain">模型链 Chain</h2>
+<h1>Langchain</h1>
+<p>LangChain 采用组件化设计的思想，将语言模型开发分为多个子任务：<strong>对话历史 Memory、提示工程 Prompt、输出解析 Parase、LLM链 Chain、索引 Indexes、代理 Agents</strong>。Langchain 模块化设计的中心思想是提升代码维护、扩展和重用的能力，可以快速开发多轮提示以及解析输出的应用。</p>
+<p>此外，Langchain 还提供了对话过程中需要的基本功能，如：<strong>文档加载器 UnstructuredBaseLoader、文档分割器 TextSplitter、向量数据库存储和搜索 BaseChatMemory、多种工具类链调用 MapReduceDocumentsChain</strong></p>
+<p>还有额外的功能如：用量记录、数据流返回 acall、缓存 SQLite、支持多种模型接口 OpenAI、向量数据库 langchain.vectorstores</p>
+<h2 id="模型链-Chain">模型链 Chain</h2>
 <blockquote>
 <p>链（Chains）通常将大语言模型（LLM）与其他组件组合在一起来构建更复杂的链。</p>
 </blockquote>
-<p>Chain 基类是所有 Chain
-对象的起点，处理输入、输出、历史和回调等功能，支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
-<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall
-方法定义调用逻辑；</p>
-<h2 id="对话历史-memory">对话历史 Memory</h2>
-<p>根据需求可以将历史存储在
-SQLite、qdrant、本地内存等地方，下面代码将历史存储在缓存中：</p>
+<p>Chain 基类是所有 Chain 对象的起点，处理输入、输出、历史和回调等功能，支持同步和异步调用，内部组件也可以通过回调进行交互；</p>
+<p>自定义 Chain 需要继承 Chain 基类，实现 _call/_acall 方法定义调用逻辑；</p>
+<h2 id="对话历史-Memory">对话历史 Memory</h2>
+<p>根据需求可以将历史存储在 SQLite、qdrant、本地内存等地方，下面代码将历史存储在缓存中：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.memory <span class="keyword">import</span> ConversationBufferMemory</span><br><span class="line">memory = ConversationBufferMemory(</span><br><span class="line">    memory_key=<span class="string">&quot;history&quot;</span>, <span class="comment"># 与 prompt 的输入变量保持一致。</span></span><br><span class="line">    return_messages=<span class="literal">True</span> <span class="comment"># 将以消息列表的形式返回聊天记录，而不是单个字符串</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h2 id="提示工程-prompt">提示工程 Prompt</h2>
-<p>Prompt 很少是写明不变的，通常从多个组件构建而成的。 PromptTemplate
-负责构建这个输入。</p>
+<h2 id="提示工程-Prompt">提示工程 Prompt</h2>
+<p>Prompt 很少是写明不变的，通常从多个组件构建而成的。 PromptTemplate 负责构建这个输入。</p>
 <p><strong>输出解析 Parase</strong> 是提示工程的一种：</p>
 <ul>
-<li><code>get_format_instructions() -&gt; str</code>：方法，返回一个包含有关如何格式化语言模型输出的字符串，即提示
-Prompt。</li>
+<li><code>get_format_instructions() -&gt; str</code>：方法，返回一个包含有关如何格式化语言模型输出的字符串，即提示 Prompt。</li>
 <li><code>parse(str) -&gt; Any</code>：方法，接受一个字符串（假定为语言模型的响应）并将其解析为某个结构。</li>
-<li><code>parse_with_prompt(str) -&gt; Any</code>：一个方法，它接受一个字符串（假设是语言模型的响应）和一个提示（假设是生成这样的响应的提示），并将其解析为某种结构。提示在此大多数情况下是为了提供信息以便
-OutputParser 重新尝试或以某种方式修复输出。</li>
+<li><code>parse_with_prompt(str) -&gt; Any</code>：一个方法，它接受一个字符串（假设是语言模型的响应）和一个提示（假设是生成这样的响应的提示），并将其解析为某种结构。提示在此大多数情况下是为了提供信息以便 OutputParser 重新尝试或以某种方式修复输出。</li>
 </ul>
-<h2 id="索引-indexes">索引 Indexes</h2>
-<p>结构化文档，以便 LLM 可以与外部文档交互。
-LangChain有许多模块可帮助您加载、结构化、存储和检索文档。<a
-href="https://yeqiuo.github.io/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/#%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93">详见</a></p>
-<h2 id="代理-agents">代理 Agents</h2>
+<h2 id="索引-Indexes">索引 Indexes</h2>
+<p>结构化文档，以便 LLM 可以与外部文档交互。 LangChain有许多模块可帮助您加载、结构化、存储和检索文档。<a href="https://yeqiuo.github.io/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/#%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93">详见</a></p>
+<h2 id="代理-Agents">代理 Agents</h2>
 <p>代理使用LLM来确定采取哪些行动以及顺序。</p>
 <ul>
 <li>使用工具并观察其输出</li>

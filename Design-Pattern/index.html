@@ -140,7 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">单例模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">模板方法模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">观察者模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">适配器模式</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">单例模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">模板方法模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">观察者模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">适配器模式</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -254,23 +254,18 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="单例模式">单例模式</h1>
+    <div class="post-body" itemprop="articleBody"><h1>单例模式</h1>
 <p>双重校验锁</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">//类对象加锁</span></span><br><span class="line">    <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (uniqueInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            uniqueInstance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="模板方法模式">模板方法模式</h1>
+<h1>模板方法模式</h1>
 <blockquote>
 <p>抽象出步骤的执行顺序作为抽象方法，具体的实现方法交给子类实现</p>
 </blockquote>
-<p>实现 AQS 抽象类的锁，需要重写 CLH 锁的
-<code>tryAcquire-tryRelease</code>、<code>tryAcquireShared-tryReleaseShared</code>、<code>isHeldExclusively</code>
-方法。</p>
-<p>重写钩子方法，可以自定义 <code>state</code>
-的含义：值为多少时代表加锁成功/失败 or
-解锁成功/失败，也可以实现共享锁或独占锁。</p>
-<h1 id="观察者模式">观察者模式</h1>
-<p>具体查看 JUC_Lock 博客的 <code>CompletableFuture</code>
-的底层实现</p>
-<h1 id="适配器模式">适配器模式</h1>
+<p>实现 AQS 抽象类的锁，需要重写 CLH 锁的 <code>tryAcquire-tryRelease</code>、<code>tryAcquireShared-tryReleaseShared</code>、<code>isHeldExclusively</code> 方法。</p>
+<p>重写钩子方法，可以自定义 <code>state</code> 的含义：值为多少时代表加锁成功/失败 or 解锁成功/失败，也可以实现共享锁或独占锁。</p>
+<h1>观察者模式</h1>
+<p>具体查看 JUC_Lock 博客的 <code>CompletableFuture</code> 的底层实现</p>
+<h1>适配器模式</h1>
 <p>具体查看 SpringMVC 博客的 <code>HandlerAdapter</code> 的底层实现</p>
 <p>开闭原则：新增代替修改</p>
 

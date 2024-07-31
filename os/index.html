@@ -143,7 +143,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="nav-number">1.1.</span> <span class="nav-text">虚拟内存</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">进程间通信方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E6%82%B2%E8%A7%82%E9%94%81"><span class="nav-number">2.2.</span> <span class="nav-text">乐观锁悲观锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%B4%A9%E6%BA%83"><span class="nav-number">2.3.</span> <span class="nav-text">线程崩溃</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">网络系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#io-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">I&#x2F;O 多路复用</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="nav-number">1.1.</span> <span class="nav-text">虚拟内存</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">进程间通信方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E6%82%B2%E8%A7%82%E9%94%81"><span class="nav-number">2.2.</span> <span class="nav-text">乐观锁悲观锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%B4%A9%E6%BA%83"><span class="nav-number">2.3.</span> <span class="nav-text">线程崩溃</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">网络系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">I&#x2F;O 多路复用</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -258,22 +258,19 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>重点：线程进程、死锁</p>
-<h1 id="内存管理">内存管理</h1>
+<h1>内存管理</h1>
 <h2 id="虚拟内存">虚拟内存</h2>
-<p>CPU
-只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
+<p>CPU 只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
 <p>进程隔离：将虚拟内存映射到物理内存，进程之间的地址空间相互隔离，互不干扰</p>
 <p>虚拟内存空间：</p>
-<style>.suldybvnbsve{zoom:50%;}</style>
-<img data-src="/OS/image-20240518105657086.png" class="suldybvnbsve" alt="image-20240518105657086">
+<style>.opbvbdjakypa{zoom:50%;}</style><img data-src="/OS/image-20240518105657086.png" class="opbvbdjakypa" alt="image-20240518105657086">
 <p>用户态虚拟内存空间是相互隔离相互独立的；内核虚拟内存空间是各个进程共享的；</p>
-<h1 id="进程管理">进程管理</h1>
+<h1>进程管理</h1>
 <p>数据结构 PCB</p>
 <p><strong>进程和线程的区别</strong></p>
 <p>线程是调度的基本单位，而进程则是资源拥有的基本单位。</p>
 <ul>
-<li>进程是资源（包括内存、打开的文件等）分配的最小单位，线程是 CPU
-调度的最小单位；</li>
+<li>进程是资源（包括内存、打开的文件等）分配的最小单位，线程是 CPU 调度的最小单位；</li>
 <li>进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈，线程之间共享地址空间和文件等资源；</li>
 <li>线程同样具有就绪、阻塞、执行三种基本状态，同样具有状态之间的转换关系；</li>
 <li>线程能减少并发执行的时间和空间开销；</li>
@@ -284,49 +281,28 @@
 <p>共享内存+信号量</p>
 <p>Socket</p>
 <h2 id="乐观锁悲观锁">乐观锁悲观锁</h2>
-<p>CAS 是乐观锁没错，但是 CAS 和自旋锁不同之处，自旋锁基于 CAS 加了while
-或者睡眠 CPU
-的操作而产生自旋的效果，加锁失败会忙等待直到拿到锁，自旋锁是要需要事先拿到锁才能修改数据的，所以算悲观锁。</p>
+<p>CAS 是乐观锁没错，但是 CAS 和自旋锁不同之处，自旋锁基于 CAS 加了while 或者睡眠 CPU 的操作而产生自旋的效果，加锁失败会忙等待直到拿到锁，自旋锁是要需要事先拿到锁才能修改数据的，所以算悲观锁。</p>
 <h2 id="线程崩溃">线程崩溃</h2>
 <p>1、如果线程是<strong>非法访问内存</strong>引起的崩溃，其对应进程一定会崩溃。</p>
-<p>2、进程崩溃的本质是：操作系统对进程发出了信号，例如非法访问内存的信号是
-SIGSEGV（序号 11）</p>
-<p>3、想要防止进程奔溃，需要自定义信号处理函数去拦截 SIGSEGV 信号。参考
-JVM 中线程崩溃但 JVM 进程不会崩溃</p>
-<h1 id="网络系统">网络系统</h1>
-<h2 id="io-多路复用">I/O 多路复用</h2>
-<p><strong>单个进程或线程同时监视多个文件描述符</strong>，如网络连接或文件句柄。当这些描述符中的任何一个就绪时，比如有数据可读或可写，多路复用机制就能够通知应用程序进行相应的读写操作。常见的IO多路复用技术包括
-select、poll 和 epoll 等。</p>
+<p>2、进程崩溃的本质是：操作系统对进程发出了信号，例如非法访问内存的信号是 SIGSEGV（序号 11）</p>
+<p>3、想要防止进程奔溃，需要自定义信号处理函数去拦截 SIGSEGV 信号。参考 JVM 中线程崩溃但 JVM 进程不会崩溃</p>
+<h1>网络系统</h1>
+<h2 id="I-O-多路复用">I/O 多路复用</h2>
+<p><strong>单个进程或线程同时监视多个文件描述符</strong>，如网络连接或文件句柄。当这些描述符中的任何一个就绪时，比如有数据可读或可写，多路复用机制就能够通知应用程序进行相应的读写操作。常见的IO多路复用技术包括 select、poll 和 epoll 等。</p>
 <p>select</p>
-<p>将已连接的 Socket 都放到一个文件描述符集合，然后调用 select
-函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此
-Socket 标记为可读或可写，
-接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的
-Socket，然后再对其处理。<strong>2
-次「遍历」文件描述符集合</strong>，<strong>2
-次「拷贝」文件描述符集合</strong>。</p>
+<p>将已连接的 Socket 都放到一个文件描述符集合，然后调用 select 函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写， 接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。<strong>2 次「遍历」文件描述符集合</strong>，<strong>2 次「拷贝」文件描述符集合</strong>。</p>
 <p>poll</p>
-<p>它使用一个 pollfd
-结构来表示被监视的文件描述符及其事件，与select相比，poll没有文件描述符数量的限制，因为它基于链表来存储。<strong>都是使用「线性结构」存储进程关注的
-Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的
-Socket，时间复杂度为
-O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
+<p>它使用一个 pollfd 结构来表示被监视的文件描述符及其事件，与select相比，poll没有文件描述符数量的限制，因为它基于链表来存储。<strong>都是使用「线性结构」存储进程关注的 Socket 集合，因此都需要遍历文件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong></p>
 <p>epoll</p>
 <img data-src="/OS/640.webp" class="" title="图片">
 <ul>
-<li>epoll
-只在初始时完成一次文件描述符的注册，避免了每次调用时的拷贝开销；</li>
-<li>当有一个或多个文件描述符就绪时，会调用回调函数将 Socket
-集合一次性传递到就绪事件列表中，并通知用户空间，这使得 epoll
-在处理大量文件描述符时仍然能保持高效；</li>
-<li>当用户调用 epoll_wait()
-返回有事件发生的文件描述符的个数，明确指出了哪些文件描述符是就绪的，无需像
-select 和 poll 遍历所有 socket 集合；</li>
+<li>epoll 只在初始时完成一次文件描述符的注册，避免了每次调用时的拷贝开销；</li>
+<li>当有一个或多个文件描述符就绪时，会调用回调函数将 Socket 集合一次性传递到就绪事件列表中，并通知用户空间，这使得 epoll 在处理大量文件描述符时仍然能保持高效；</li>
+<li>当用户调用 epoll_wait() 返回有事件发生的文件描述符的个数，明确指出了哪些文件描述符是就绪的，无需像 select 和 poll 遍历所有 socket 集合；</li>
 </ul>
 <p><strong>触发时机</strong></p>
 <ul>
-<li>边缘触发【epoll】：只有当文件描述符的状态从不就绪变为就绪时，epoll
-才会发出通知；一旦通知过后，除非状态再次发生变化，否则不会再次通知；</li>
+<li>边缘触发【epoll】：只有当文件描述符的状态从不就绪变为就绪时，epoll 才会发出通知；一旦通知过后，除非状态再次发生变化，否则不会再次通知；</li>
 <li>水平触发【select/poll】：只要文件描述符处于就绪状态，epoll就会持续发出通知，直到数据处理完毕；</li>
 </ul>
 

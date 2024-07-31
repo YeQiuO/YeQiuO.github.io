@@ -5648,6 +5648,8 @@ Discussion</p>
 <p>由于 NexT 以前使用的 swig 模版引擎停止维护，去年迁移到了 Nunjucks，但是 目录下的模版文件后缀名没有更改。原因是修改后缀名影响太广，会使用户在执行 进行更新时产生大量的冲突。这次更换仓库为了解决这些历史遗留问题，没有保留之前的 commit 历史。</p>
 </blockquote>
 <p>按照<a href="https://theme-next.js.org/docs/getting-started/">官网</a>配置</p>
+<h1 id="debug"><a class="markdownIt-Anchor" href="#debug"></a> DeBug</h1>
+<p><a href="https://blog.csdn.net/liuergo/article/details/102640098">Git 提交文件名全变小写问题</a></p>
 ]]></content>
       <categories>
         <category>开发工具</category>

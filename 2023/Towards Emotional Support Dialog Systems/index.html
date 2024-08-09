@@ -140,7 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">论文速览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">解决了什么问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">怎么解决的&#x2F;该方法的优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">有什么创新点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">实验结果好在哪里，怎么证明的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">相关工作分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">可以提升的地方</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%80%9F%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">论文速览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%E5%A5%BD%E5%9C%A8%E5%93%AA%E9%87%8C%E6%80%8E%E4%B9%88%E8%AF%81%E6%98%8E%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">实验结果好在哪里，怎么证明的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">相关工作分析</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,7 +153,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -164,7 +164,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -255,21 +255,19 @@
     
     <div class="post-body" itemprop="articleBody"><p><strong>Title:</strong> Towards Emotional Support Dialog Systems</p>
 <span id="more"></span>
-<h1>论文速览</h1>
+<h1 id="论文速览">论文速览</h1>
 <ul>
 <li>Abstract
 <ul>
 <li>本文关注于情感支持对话，提供了一个带策略的情绪支持数据集</li>
-</ul>
-</li>
+</ul></li>
 <li>Introduction
 <ul>
 <li>情感支持应用广泛</li>
 <li>情绪支持数据集应该包括exploration、understand、suggestion三个过程，还包括有用户的情绪强度变化</li>
 <li>目前的研究模型中没有具体有效的情绪支持方法；采集数据集时需要训练有素的支持者</li>
 <li>ESC框架：三个阶段，多种策略；众包做数据集；在情绪支持方面有提升</li>
-</ul>
-</li>
+</ul></li>
 <li>Related Work
 <ul>
 <li>移情、同感对话</li>
@@ -281,22 +279,17 @@
 <ul>
 <li>三个阶段：探索、理解、建议</li>
 <li>八种策略</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
+</ul></li>
 <li>Data Collection
 <ul>
 <li>获取数据集的方法</li>
-</ul>
-</li>
+</ul></li>
 <li>Data Characteristics
 <ul>
 <li>数据展示</li>
-</ul>
-</li>
+</ul></li>
 <li>Experiments
 <ul>
 <li>基准模型：BlenderBot、DialoGPT</li>
@@ -307,90 +300,72 @@
 <li>带策略的Oracle优于不带策略的Vanilla</li>
 <li>带策略的Oracle稍微弱于不带策略的Vanilla，因为一旦策略预测错误，respond会完全不同</li>
 <li>BlenderBot 变体始终比 DialoGPT 变体表现更好</li>
-</ul>
-</li>
+</ul></li>
 <li>人类互动评价结果：
 <ul>
 <li>微调后ES能力提升</li>
 <li>带策略微调后能更加适合用户需求</li>
 <li>正确的策略更重要</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>Conclusion
 <ul>
 <li>三个阶段、多种策略、ESConv</li>
-<li>道德评估</li>
+<li>道德评估 # 解决了什么问题</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h1>解决了什么问题</h1>
-<ol>
-<li>目前的对话系统没有针对情感支持的任务和语料库，因此ESC方向还没有被探索到，对话场景中缺乏情感支持。</li>
-<li>情感支持（ES）旨在减少个人的情绪困扰，帮助他们理解和应对所面临的挑战。目前的模型大都只能表示共情而不能解决问题。</li>
-<li>通过社交而不是专业咨询的方式提供情感支持。</li>
-</ol>
-<h1>怎么解决的/该方法的优势</h1>
-<ol>
-<li>基于Hill的帮助技能理论，提出了ESC框架
-<ol>
+<ol type="1">
+<li><p>目前的对话系统没有针对情感支持的任务和语料库，因此ESC方向还没有被探索到，对话场景中缺乏情感支持。</p></li>
+<li><p>情感支持（ES）旨在减少个人的情绪困扰，帮助他们理解和应对所面临的挑战。目前的模型大都只能表示共情而不能解决问题。</p></li>
+<li><p>通过社交而不是专业咨询的方式提供情感支持。 #
+怎么解决的/该方法的优势</p></li>
+<li><p>基于Hill的帮助技能理论，提出了ESC框架</p>
+<ol type="1">
 <li>情感支持过程
-<ol>
+<ol type="1">
 <li>理解遇到的困难，exploration</li>
 <li>表达理解和同情，insight/comforting</li>
 <li>提出解决问题的方法，action</li>
-</ol>
-</li>
-</ol>
-</li>
-<li>构建ESConv数据集，有丰富的注释（支持策略）
-<ol>
+</ol></li>
+</ol></li>
+<li><p>构建ESConv数据集，有丰富的注释（支持策略）</p>
+<ol type="1">
 <li>每个聊天会都会标记：
-<ol>
+<ol type="1">
 <li>问题类别</li>
 <li>用户情绪类别</li>
 <li>用户情绪强度</li>
 <li>遇到困难的简介</li>
-</ol>
-</li>
-</ol>
-</li>
-<li>ESC系统
-<ol>
+</ol></li>
+</ol></li>
+<li><p>ESC系统</p>
+<ol type="1">
 <li>选择支持策略，生成策略约束Respond</li>
 <li>情绪状态建模，跟踪用户情绪变化【待分析】</li>
-<li>提出了评估ES实验效果的新方法</li>
+<li>提出了评估ES实验效果的新方法 # 有什么创新点</li>
+</ol></li>
 </ol>
-</li>
-</ol>
-<h1>有什么创新点</h1>
-<h1>实验结果好在哪里，怎么证明的</h1>
-<h1>相关工作分析</h1>
-<ol>
+<h1 id="实验结果好在哪里怎么证明的">实验结果好在哪里，怎么证明的</h1>
+<h1 id="相关工作分析">相关工作分析</h1>
+<ol type="1">
 <li>表达情感
-<ol>
+<ol type="1">
 <li>ECM：情感对话，可以生成情感反应。有情商而不只是智商</li>
 <li>ES：有情绪支持的能力，可以减少用户情绪困扰</li>
-</ol>
-</li>
+</ol></li>
 <li>共情能力
-<ol>
+<ol type="1">
 <li>反应出同情心，不能做情绪支持</li>
-</ol>
-</li>
+</ol></li>
 <li>数据集
-<ol>
+<ol type="1">
 <li>数据集中的对话短，不适合ES任务</li>
-</ol>
-</li>
+</ol></li>
 <li>ESC系统
-<ol>
-<li>大多研究都人为预先规定好的规则和回复词典</li>
+<ol type="1">
+<li>大多研究都人为预先规定好的规则和回复词典 # 可以提升的地方</li>
+</ol></li>
 </ol>
-</li>
-</ol>
-<h1>可以提升的地方</h1>
 
     </div>
 

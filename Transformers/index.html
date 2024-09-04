@@ -19,16 +19,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="NLP 任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人 万物之始 Transformer Attention is all you need .hechjnowuojm{zoom:70%;}   直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征； Self At">
+    <meta name="description" content="Transformers &amp; NLP 相关库及实现">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Transformers 使用入门">
 <meta property="og:url" content="https://yeqiuo.github.io/Transformers/index.html">
 <meta property="og:site_name" content="闻">
-<meta property="og:description" content="NLP 任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人 万物之始 Transformer Attention is all you need .hechjnowuojm{zoom:70%;}   直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征； Self At">
+<meta property="og:description" content="Transformers &amp; NLP 相关库及实现">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/Transformers/image-20240714162218754.png">
 <meta property="article:published_time" content="2024-07-12T06:19:54.000Z">
-<meta property="article:modified_time" content="2024-08-02T02:59:04.052Z">
+<meta property="article:modified_time" content="2024-08-15T12:08:01.429Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeqiuo.github.io/Transformers/image-20240714162218754.png">
@@ -141,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#transformers%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">Transformers及相关库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nlp"><span class="nav-number">2.</span> <span class="nav-text">NLP</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#transformers%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">Transformers及相关库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83"><span class="nav-number">1.1.</span> <span class="nav-text">分布式训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nlp"><span class="nav-number">2.</span> <span class="nav-text">NLP</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -154,18 +154,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -211,7 +211,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="Transformers 使用入门 | 闻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Transformers & NLP 相关库及实现">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -233,12 +233,13 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-08-02 10:59:04" itemprop="dateModified" datetime="2024-08-02T10:59:04+08:00">2024-08-02</time>
+      <time title="修改时间：2024-08-15 20:08:01" itemprop="dateModified" datetime="2024-08-15T20:08:01+08:00">2024-08-15</time>
     </span>
 
   
 </div>
 
+            <div class="post-description">Transformers & NLP 相关库及实现</div>
         </div>
       </header>
 
@@ -248,8 +249,8 @@
     <div class="post-body" itemprop="articleBody"><p>NLP
 任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人</p>
 <p><strong>万物之始 Transformer</strong> Attention is all you need</p>
-<style>.hechjnowuojm{zoom:70%;}</style>
-<img data-src="/Transformers/image-20240714162218754.png" class="hechjnowuojm" alt="image-20240714162218754">
+<style>.fbxbnygyvgjf{zoom:70%;}</style>
+<img data-src="/Transformers/image-20240714162218754.png" class="fbxbnygyvgjf" alt="image-20240714162218754">
 <ul>
 <li>直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
 <li>Self Attention 对于增加计算的并行性有直接帮助作用；</li>
@@ -264,6 +265,8 @@
 <p>Accelerate：分布式训练，提供了分布式训练解决方案，包括大模型的加载与推理解决方案</p>
 <p>Optimum：优化加速库，支持多种后端，如Onnxruntime、OpenVino等</p>
 <p>Gradio：可视化部署库，几行代码快速实现基于Web交互的算法演示系统</p>
+<h2 id="分布式训练">分布式训练</h2>
+<p>Accelerate 包，融合了 Deepspeed、DDP、FSDP；</p>
 <h1 id="nlp">NLP</h1>
 <p>NLP
 数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词
@@ -292,8 +295,8 @@ Embedding，目标是采用向量的形式表示词元，采用一组向量表�
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/LLM-Finetune/" rel="next" title="LLM-Finetune">
-                  LLM-Finetune <i class="fa fa-angle-right"></i>
+                <a href="/LLM-RLHF/" rel="next" title="LLM-RLHF">
+                  LLM-RLHF <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

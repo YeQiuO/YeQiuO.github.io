@@ -31,33 +31,6 @@
       </tags>
   </entry>
   <entry>
-    <title>模拟面试题</title>
-    <url>/Interview-Questions/</url>
-    <content><![CDATA[<h1 id="java-basic">Java-basic</h1>
-<h1 id="jvm">JVM</h1>
-<ol type="1">
-<li>了解垃圾回收机制吗？新生代和老年代的垃圾回收是怎么样的</li>
-</ol>
-<h1 id="juc">JUC</h1>
-<ol type="1">
-<li>简要描述线程与进程的关系，区别及优缺点？</li>
-<li>线程之间哪些资源是共享的，哪些资源是私有的，为什么？</li>
-<li>说一下你对于 AQS 原理的理解。</li>
-<li>如何实现线程安全？</li>
-</ol>
-<h1 id="中间件">中间件</h1>
-<ol type="1">
-<li>了解过消息中间件吗？说一下使用场景</li>
-</ol>
-]]></content>
-      <categories>
-        <category>工作</category>
-      </categories>
-      <tags>
-        <tag>面试准备</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据结构和算法</title>
     <url>/Java-Algorithm/</url>
     <content><![CDATA[<h1 id="算法">算法</h1>
@@ -203,11 +176,13 @@ Boolean</li>
   <entry>
     <title>如何工作</title>
     <url>/How-to-Work/</url>
-    <content><![CDATA[<h1 id="方法论">方法论</h1>
-<p>不卑不亢，谦虚有礼</p>
-<p>可以竞争但要避免内斗</p>
-<p>及时和领导同步进度</p>
-<p>平和谦逊，思维敏捷，处理问题简明扼要</p>
+    <content><![CDATA[<ol type="1">
+<li>不卑不亢，谦虚有礼</li>
+<li>可以竞争但要避免内斗</li>
+<li>及时和领导同步进度</li>
+<li>平和谦逊，思维敏捷，处理问题简明扼要</li>
+</ol>
+<p>【先抄抄人家的感悟，这边文章留给未来工作了慢慢充实】</p>
 ]]></content>
       <categories>
         <category>工作</category>
@@ -269,8 +244,8 @@ chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行�
 <li>chunk_overlap
 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
 </ul>
-<style>.jjtacixvdbtg{zoom:50%;}</style>
-<img data-src="/LLM-Application/image-20240424102824838.png" class="jjtacixvdbtg" alt="langchain.text_splitter">
+<style>.oycflwfypktr{zoom:50%;}</style>
+<img data-src="/LLM-Application/image-20240424102824838.png" class="oycflwfypktr" alt="langchain.text_splitter">
 <p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
 <p><strong>A1</strong>：最大边际相关性
 <code>Maximum marginal relevance</code>
@@ -316,6 +291,8 @@ bge-large-zh-v1.5
 <p>采用 qdrant 向量库保存对话历史</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CustomQdrantMemory</span>(<span class="title class_ inherited__">BaseChatMemory</span>):</span><br><span class="line">    <span class="comment"># 访问数据库抽取最相关联的 message_limit 条数据</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buffer</span>(<span class="params">self, inputs: <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]</span>) -&gt; <span class="type">List</span>[BaseMessage]:</span><br><span class="line">        chat_messages: <span class="type">List</span>[BaseMessage] = []</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> inputs:</span><br><span class="line">            <span class="keyword">return</span> chat_messages</span><br><span class="line">        hits = self.qdrant.search(</span><br><span class="line">            collection_name=self.conversation_id,</span><br><span class="line">            query_vector=self.encoder.encode(inputs[<span class="string">&#x27;input&#x27;</span>]).tolist(),</span><br><span class="line">            limit=self.message_limit,</span><br><span class="line">        )</span><br><span class="line">        hits = <span class="built_in">sorted</span>(hits, key=<span class="keyword">lambda</span> x:x.<span class="built_in">id</span>)</span><br><span class="line">        <span class="keyword">for</span> hit <span class="keyword">in</span> hits:</span><br><span class="line">            chat_messages.append(HumanMessage(content=hit.payload[<span class="string">&#x27;human&#x27;</span>]))</span><br><span class="line">            chat_messages.append(AIMessage(content=hit.payload[<span class="string">&#x27;assistant&#x27;</span>]))</span><br><span class="line">        curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="comment"># 如果超出模型最长上下文，则弹出最早的对话历史</span></span><br><span class="line">        <span class="keyword">if</span> curr_buffer_length &gt; self.max_token_limit:</span><br><span class="line">            pruned_memory = []</span><br><span class="line">            <span class="keyword">while</span> curr_buffer_length &gt; self.max_token_limit <span class="keyword">and</span> chat_messages:</span><br><span class="line">                pruned_memory.append(chat_messages.pop())</span><br><span class="line">                curr_buffer_length = self.llm.get_num_tokens(get_buffer_string(chat_messages))</span><br><span class="line">        <span class="keyword">return</span> chat_messages        </span><br></pre></td></tr></table></figure>
 <h1 id="虚拟人设">虚拟人设</h1>
+<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github
+参考项目链接</a></p>
 <p>流程</p>
 <ul>
 <li>音视频上传
@@ -328,10 +305,6 @@ bge-large-zh-v1.5
 <li>语料 + Chroma 向量库相似度 + KNN 距离匹配</li>
 <li>组成输入，LLM 响应结果</li>
 </ul>
-<p><a href="https://github.com/LC1332/Chat-Haruhi-Suzumiya">Github
-参考项目链接</a></p>
-<h1 id="python-notes">Python Notes</h1>
-<p>def _call() 方法把这个类型的对象当作函数来使用</p>
 ]]></content>
       <categories>
         <category>LLM应用开发</category>
@@ -951,9 +924,11 @@ k 个数据</li>
 </ul>
 <p>从原始数据到响应生成最常见的流程图如下：</p>
 <img data-src="/LLM-RAG-Langchain/x7ta8v77.png" class="" title="x7ta8v77">
+<p>流程图2：</p>
+<img data-src="/LLM-RAG-Langchain/c9b5e6b82c3243f3b51817fe9c5bcc72.png" class="" title="img">
 <p>RAG 测评指标：</p>
-<style>.pvofhatyoehi{zoom:50%;}</style>
-<img data-src="/LLM-RAG-Langchain/image-20240820085527076.png" class="pvofhatyoehi" alt="image-20240820085527076">
+<style>.mgjymuwlpgyb{zoom:40%;}</style>
+<img data-src="/LLM-RAG-Langchain/image-20240820085527076.png" class="mgjymuwlpgyb" alt="image-20240820085527076">
 <h1 id="langchain">Langchain</h1>
 <p>LangChain
 采用组件化设计的思想，将语言模型开发分为多个子任务：<strong>对话历史
@@ -1051,8 +1026,8 @@ Q}\frac{\mathrm{tf}_{t,d}\cdot(k+1)}{\mathrm{tf}_{t,d}+k\cdot\left(1-b+b\cdot\fr
 <p>Bert 输出 Sentence_Embedding，拟合 cos_Similarity（回归任务）</p>
 <h1 id="评价指标">评价指标</h1>
 <p>二分类评价指标 AUC</p>
-<style>.lltkybonzgvg{zoom: 33%;}</style>
-<img data-src="/LLM-RAG-Langchain/image-20240815155230728.png" class="lltkybonzgvg" alt="image-20240815155230728">
+<style>.eypqkyblysrh{zoom: 33%;}</style>
+<img data-src="/LLM-RAG-Langchain/image-20240815155230728.png" class="eypqkyblysrh" alt="image-20240815155230728">
 <h1 id="可信度-rag">可信度 RAG</h1>
 <p>当检索返回的结果有错误或信息丢失时，会导致LLM回复出现幻觉。</p>
 <p>为解决这个问题的三个指标：可信度（Faithfulness）、答案相关性（Answer
@@ -1071,125 +1046,6 @@ Relevance）、上下文相关性（Context Relevance）</p>
       <tags>
         <tag>RAG架构</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>机器学习基础</title>
-    <url>/Machine-Learning/</url>
-    <content><![CDATA[<h1 id="偏差方差">偏差方差</h1>
-<p><a
-href="https://www.cnblogs.com/makefile/p/bias-var.html#fn2">参考文章</a></p>
-<h2 id="泛化误差">泛化误差</h2>
-<p>模型的平方预测误差的期望</p>
-<p><span
-class="math display">\[Err(\mathbf{x})=E\left[\left(y-f(\mathbf{x};D)\right)^2\right]=\mathbb{E}_D\left[\left(f(\boldsymbol{x};D)-\bar{f}\left(\boldsymbol{x}\right)\right)^2\right]+\left(\bar{f}(\boldsymbol{x})-y\right)^2+\mathbb{E}_D\left[(y_D-y)^2\right]\]</span></p>
-<h2 id="方差">方差</h2>
-<blockquote>
-<p>方差是指模型对于不同训练集的预测结果的波动程度（即泛化能力），<strong>刻画了数据扰动所造成的影响</strong>。高方差意味着模型过于复杂，对训练数据中的噪声和细节过于敏感，表示模型<strong>过拟合</strong></p>
-</blockquote>
-<p>使用样本数相同的不同训练集产生的方差</p>
-<p><span
-class="math display">\[\mathrm{var}(\mathbf{x})=\mathrm{E}_\mathrm{D}\left[\left(\mathrm{f}(\mathbf{x};\mathrm{D})-\overline{\mathrm{f}}(\mathbf{x})\right)^2\right]\]</span></p>
-<p>其中，算法 𝑓 对测试样本 𝑥 的期望预测（不同训练集 𝐷 上模型 𝑓
-对测试样本 𝑥 的预测输出的期望）为</p>
-<p><span
-class="math display">\[\overline{f}(\mathbf{x})=E_D[f\left(\mathbf{x};D\right)]\]</span></p>
-<h2 id="偏差">偏差</h2>
-<blockquote>
-<p>偏差是指模型的预测值与真实值之间的差异，<strong>模型本身的拟合能力</strong>。高偏差意味着模型过于简单，无法捕捉到数据的复杂模式，表示模型<strong>欠拟合</strong></p>
-</blockquote>
-<p>期望预测与真实标记的误差</p>
-<p><span
-class="math display">\[\mathrm{bias}^2(\mathbf{x})=\left(\overline{\mathrm{f}}(\mathbf{x})-\mathrm{y}\right)^2\]</span></p>
-<h2 id="噪声">噪声</h2>
-<blockquote>
-<p>表达了当前任务上任何模型所能达到的期望泛化误差的下界，<strong>刻画了学习问题本身的难度</strong>。</p>
-</blockquote>
-<p>真实标记与数据集中的实际标记间的偏差</p>
-<p><span
-class="math display">\[\varepsilon^2=E_D\left[(y_D-y)^2\right]\]</span></p>
-<h2 id="偏差-方差窘境">偏差-方差窘境</h2>
-<img data-src="/Machine-Learning/606386-20180722194316424-288674381.png" class="" title="bias-variance-tradeoff">
-<ul>
-<li>偏向左侧时，训练数据的扰动不足以使学习器产生显著变化，此时偏差主导泛化误差，称为<strong>欠拟合现象</strong>
-<ul>
-<li>增加模型的迭代次数；更换描述能力更强的模型；生成更多特征供训练使用；降低正则化水平</li>
-</ul></li>
-<li>偏向右侧时，模型的拟合能力非常强，数据轻微变化都能导致模型发生变化，如果过分学习训练数据的特点，则会发生<strong>过拟合现象</strong>
-<ul>
-<li>扩增训练集；减少训练使用的特征的数量；降低模型复杂度；提高正则化水平</li>
-</ul></li>
-</ul>
-<p>为了解决“偏差和方差在一定程度上是有冲突的”的问题，可以采用K折交叉验证或正则化，它们分别从数据划分和模型复杂度两个角度入手，提升模型的泛化能力和稳健性：</p>
-<ul>
-<li>K折交叉验证通过多次划分和验证，减少因数据划分不当而导致的性能估计偏差</li>
-<li>正则化在损失函数中加入一个与模型复杂度相关的惩罚项，以限制模型的复杂度并防止过拟合
-<a href="https://www.cnblogs.com/zingp/p/10375691.html">参考文章</a>
-<ul>
-<li>L1正则化是指权值向量w中各个元素的绝对值之和，可以使得参数稀疏化，即得到的参数是一个稀疏矩阵，进而可以用于特征选择。二维平面图像：<img data-src="/Machine-Learning/o_L1.png" class="" title="image"></li>
-<li>L2正则化是指权值向量w中各个元素的平方和然后再求平方根，让权值尽可能小，如果参数足够小，数据偏移得多一点也不会对结果造成什么影响，专业一点的说法是<strong>抗扰动能力强</strong>。二维平面图像：<img data-src="/Machine-Learning/o_L2.png" class="" title="image"></li>
-</ul></li>
-</ul>
-<h1 id="模型训练">模型训练</h1>
-<h2 id="优化器">优化器</h2>
-<p>Adam：自适应学习率，通过计算梯度的一阶矩（均值）和二阶矩（未中心化的方差）来调整学习率</p>
-<p>AdamW：带有权重衰减和学习率预热的Adam优化器。改进了Adam，将权重衰退和梯度更新解耦，把L2正则化移到权重更新时而不是梯度计算时</p>
-<h1 id="训练方法">训练方法</h1>
-<h2 id="监督学习">监督学习</h2>
-<p>训练数据既有特征(feature)又有标签(label)，通过训练，让机器可以自己找到特征和标签之间的联系，在面对只有特征没有标签的数据时，可以判断出标签。</p>
-<h2 id="无监督学习">无监督学习</h2>
-<p>数据只有特征(feature)无标签(label)，是一种机器学习的训练方式，它本质上是一个统计手段，在没有标签的数据里可以发现潜在的一些结构的一种训练方式。</p>
-<h2 id="半监督学习">半监督学习</h2>
-<p>利用同时包含有标签和无标签的数据来构建一个模型，使得模型能够在测试阶段更好地泛化到新的、未见过的数据。</p>
-<h2 id="强化学习">强化学习</h2>
-<p>让一个智能体（agent）在环境（Enviroment）中通过尝试和错误来学习行为（Action）策略。智能体通过与环境进行交互，根据奖励信号来调整其行为策略，以达到最大化累积奖励的目标。</p>
-<p>针对 PPO 算法的优化：</p>
-<ul>
-<li>归一化奖励分数、将奖励分数做白化处理</li>
-</ul>
-<img data-src="/Machine-Learning/overview_chatgpt.png" class="" title="overview_chatgpt">
-<h3 id="rlhf">RLHF</h3>
-<blockquote>
-<p>Reinforcement Learning from Human
-Feedback，以<strong>强化学习方式依据人类反馈优化语言模型</strong>，是
-OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
-</blockquote>
-<p>Policy Gradient</p>
-<style>.rcsshtxxrksr{zoom:50%;}</style>
-<img data-src="/Machine-Learning/image-20240716101748533.png" class="rcsshtxxrksr" alt="image-20240716101748533">
-<p>RM+PPO</p>
-<p>步骤一、预训练语言模型</p>
-<style>.glvvsqhprcsi{zoom: 50%;}</style>
-<img data-src="/Machine-Learning/image-20240715191912939.png" class="glvvsqhprcsi" alt="image-20240715191912939">
-<p>步骤二、训练奖励模型 RM</p>
-<style>.hmdmoqlgqhlt{zoom: 50%;}</style>
-<img data-src="/Machine-Learning/image-20240715191936226.png" class="hmdmoqlgqhlt" alt="image-20240715191936226">
-<p>步骤三、用强化学习 PPO 微调</p>
-<style>.hmxpzplobavc{zoom:50%;}</style>
-<img data-src="/Machine-Learning/image-20240715192056550.png" class="hmxpzplobavc" alt="image-20240715192056550">
-<p>DPO</p>
-<p>KTO</p>
-<p>ORPO</p>
-<h1 id="损失函数">损失函数</h1>
-<p>MSELoss 回归任务</p>
-<p>CrossEntropyLoss 单标签分类</p>
-<p>BCEWithLogitsLoss 多标签分类</p>
-<h1 id="torch">Torch</h1>
-<p><code>torch.nn.Parameter()</code>将一个不可训练的 tensor
-转换成可以训练的类型 parameter，并将这个 parameter 绑定到这个 module
-里面</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>LLM</title>
-    <url>/LLM/</url>
-    <content><![CDATA[<blockquote>
-<p>大模型核心技术点在于训练资源、数据清洗和数据配比等，其难点或许不在于模型训练和模型结构搭建</p>
-</blockquote>
-<p>前缀语言模型 Encoder-Decoder</p>
-<p>ChatGLM</p>
-<p>掩码语言模型 自编码模型 Encoder-Only</p>
-<p>因果语言模型 自回归模型 Decoder-Only</p>
-]]></content>
   </entry>
   <entry>
     <title>计算机网络</title>
@@ -1362,8 +1218,8 @@ ssthresh）、快重传（连续收到三个重复确认就立即重传对方尚
 只会访问虚拟内存地址，在操作总线前，通过一个地址转换硬件将虚拟内存地址转换为物理内存地址</p>
 <p>进程隔离：将虚拟内存映射到物理内存，进程之间的地址空间相互隔离，互不干扰</p>
 <p>虚拟内存空间：</p>
-<style>.nmmpgdzpdfyg{zoom:50%;}</style>
-<img data-src="/OS/image-20240518105657086.png" class="nmmpgdzpdfyg" alt="image-20240518105657086">
+<style>.pdlcjqwdkbgs{zoom:50%;}</style>
+<img data-src="/OS/image-20240518105657086.png" class="pdlcjqwdkbgs" alt="image-20240518105657086">
 <p>用户态虚拟内存空间是相互隔离相互独立的；内核虚拟内存空间是各个进程共享的；</p>
 <h1 id="进程管理">进程管理</h1>
 <p>数据结构 PCB</p>
@@ -1436,42 +1292,6 @@ select 和 poll 遍历所有 socket 集合；</li>
       </tags>
   </entry>
   <entry>
-    <title>Transformers 使用入门</title>
-    <url>/Transformers/</url>
-    <content><![CDATA[<p>NLP
-任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人</p>
-<p><strong>万物之始 Transformer</strong> Attention is all you need</p>
-<style>.fbxbnygyvgjf{zoom:70%;}</style>
-<img data-src="/Transformers/image-20240714162218754.png" class="fbxbnygyvgjf" alt="image-20240714162218754">
-<ul>
-<li>直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
-<li>Self Attention 对于增加计算的并行性有直接帮助作用；</li>
-</ul>
-<h1 id="transformers及相关库">Transformers及相关库</h1>
-<p>Transformers：核心库，模型加载、模型训练、流水线并行等</p>
-<p>Tokenizer：分词器，对数据进行预处理，文本到token序列的互相转换。具体工作包括：分词、索引、填充截断、attention_mask、token_type</p>
-<p>Datasets：数据集库，提供了数据集的加载、处理等方法</p>
-<p>Evaluate：评估函数，提供各种评价指标的计算函数</p>
-<p>Trainer：将模型训练流程打包，包括：创建优化器、创建DataLoader、tensor转移到CUDA上</p>
-<p>PEFT：高效微调模型的库，提供了几种高效微调的方法，小参数量动大模型</p>
-<p>Accelerate：分布式训练，提供了分布式训练解决方案，包括大模型的加载与推理解决方案</p>
-<p>Optimum：优化加速库，支持多种后端，如Onnxruntime、OpenVino等</p>
-<p>Gradio：可视化部署库，几行代码快速实现基于Web交互的算法演示系统</p>
-<h2 id="分布式训练">分布式训练</h2>
-<p>Accelerate 包，融合了 Deepspeed、DDP、FSDP；</p>
-<h1 id="nlp">NLP</h1>
-<p>NLP
-数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词
-LM、完形填空 MLM。</p>
-<p>早些年，流行的是词嵌入 Word
-Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
-<p>现阶段，Transformer
-的出现促使三种类型的模型的出现：Encoder-only-only-Decoder。Encoder-only
-适用于机器翻译、句子分类、命名体识别和问答；Decoder-only
-适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
-]]></content>
-  </entry>
-  <entry>
     <title>[paper]PAFT</title>
     <url>/paper-PAFT/</url>
     <content><![CDATA[<p><a
@@ -1522,61 +1342,6 @@ RAG（开卷考试）能力；</li>
       </categories>
       <tags>
         <tag>大模型微调</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>实习日志</title>
-    <url>/%E5%AE%9E%E4%B9%A0%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[<p>海康-算法实习</p>
-<p><strong>第一周</strong></p>
-<ul>
-<li>看论文看综述，还是分不清 Prompt Tuning 及其变种有什么区别；</li>
-<li>看 B 站教程，从 peft 源码理解；</li>
-<li>写大模型微调博客，狠狠沉淀自己；</li>
-</ul>
-<p><strong>第二周</strong></p>
-<ul>
-<li>Lora 微调 Qwen_1.8B，训练模型的自我认知能力，效果还可以；</li>
-<li>写微调调研报告，总结了近二十种微调方法，还有微调数据集、测评指标和微调开发包；</li>
-</ul>
-<p><strong>第三周</strong></p>
-<ul>
-<li>阅读 llamafactory 源码，基于 llamafactory 实现 AdaLora
-微调，直接调用 llamafactory 包微调，为后续封装 API 做准备；</li>
-<li>手搓 Lora、AdaLora 微调方法（当然也是调包），微调 Qwen_1.8B；AdaLora
-的实现有些问题，占用接近46G 显存；</li>
-</ul>
-<p><strong>第四周</strong></p>
-<ul>
-<li>应用两种数据预处理方法：alpaca、sharegpt</li>
-<li>在部分 NaturalConv 数据集上 lora、adalora 监督微调
-Qwen-1.8B，并测评微调结果，跑通全流程；</li>
-</ul>
-<p><strong>第五周</strong></p>
-<ul>
-<li>应用分布式微调方法：deepspeed、accelerate</li>
-<li>在全量 NaturalConv 上 lora 监督微调
-Qwen-14B、Qwen2-7B-Instruction、Llama3-8B，并测评；</li>
-</ul>
-<p><strong>第六周</strong></p>
-<ul>
-<li>新增两类数据集
-COIG-CQIA、alpaca-gpt4-data-zh，在其之上做微调和测评；</li>
-<li>调研 Llama-Factory、axolotl 开源工具的实现方法；</li>
-</ul>
-<p><strong>第七周</strong></p>
-<ul>
-<li>封装测评工具，实现功能：1. sqlite 存储微调状态；2. mutiprocess
-新建子进程后台执行模型微调和测试；3. API 获取微调状态；4. 基础功能
-swagger 文档和 logger 持久化；</li>
-<li>进一步测评 reLora、dora、loraplus 微调方法；</li>
-</ul>
-]]></content>
-      <categories>
-        <category>工作</category>
-      </categories>
-      <tags>
-        <tag>intern</tag>
       </tags>
   </entry>
   <entry>
@@ -2142,109 +1907,6 @@ BlenderBot 模型学习知识图谱的节点特征，提高模型的在 ESConv
       <tags>
         <tag>面试记录</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Control Globally, Understand Locally</title>
-    <url>/2023/Control%20Globally,%20Understand%20Locally/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A
-Global-to-Local Hierarchical Graph Network for Emotional Support
-Conversation.</p>
-<p>创新点：</p>
-<ul>
-<li>在 Encoder 和 Decoder 之间加了一层 GCNConv 和 RGCNConv</li>
-</ul>
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally/image-20240414083742062-17138602623661-17138606243731.png" class="" title="image.png">
-<span id="more"></span>
-<h1 id="论文速览">论文速览</h1>
-<h2 id="abstract">Abstract</h2>
-<ul>
-<li><p>目前研究的缺陷</p>
-<ul>
-<li>关注序列上下文信息，忽略了全局原因和局部心理意图与其的层次关系</li>
-</ul></li>
-<li><p>本文</p>
-<ul>
-<li>提出了一个全局到局部的<strong>层次图网络</strong>来捕获多源信息(全局原因、局部意图和对话历史)并建模它们之间的层次关系，该网络由一个多源编码器、一个层次图推理器和一个全局引导解码器组成</li>
-<li>设计了一个新的训练目标来监测全局的语义信息 ## Introduction</li>
-</ul></li>
-<li><p>探索求助者情绪问题的原因：<strong>全局</strong>地控制情感支持对话的整个流程</p></li>
-<li><p>了解求助者的心理意图：帮助系统<strong>局部</strong>了解求助者当前时的心理状态</p></li>
-<li><p>本文目标</p>
-<ul>
-<li>捕获全局原因和局部心理意图</li>
-<li>建模全局与局部之间的关系</li>
-</ul></li>
-<li><p>解决方法【全局到局部层次图网络GLHG】</p>
-<ul>
-<li>多源编码器：COMET提取局部心理意图</li>
-<li>层次图推理机：全局原因(对话级)、局部心理意图(句子级)和对话历史之间的层次关系进行建模</li>
-<li>解码器中设计了一个新的训练目标来监控全局原因的语义信息 ## Related
-Work</li>
-</ul></li>
-<li><p>图建模对话</p>
-<ul>
-<li>GCN 利用自我和对话者间依赖性来模拟会话上下文</li>
-<li>EGAE 使用图网络捕获面向任务对话中的对话模式</li>
-</ul></li>
-<li><p>常识性知识</p>
-<ul>
-<li>与本人有关的心理状态：xReact、xIntent ## Approach</li>
-</ul></li>
-<li><p>问题定义</p></li>
-<li><p>多源编码器</p>
-<ul>
-<li>BlenderBot Encoder + Max-pooling</li>
-<li>上下文 + 全局原因 + 局部原因</li>
-</ul></li>
-<li><p>分层图推理机</p>
-<ul>
-<li>GAT
-图注意力网络：其他邻域信息的特征传播到当前节点，具有确定节点之间重要性和相关性的优点</li>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777471738-5656cb06-b30d-458c-9dd1-432cf59fc949.png" class="" title="img">
-注意力函数（2017出版)</li>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777606138-33d97b8c-8966-4a59-9359-ce99195ba4db.webp" class="" title="image.png">
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777482262-fd172bc6-5f7f-4b43-b667-c12cd9b52505.png" class="" title="img">
-注意力机制</li>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777489757-3d64bf9e-8b95-4298-a754-239e59ec6e7b.png" class="" title="img"></li>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777519559-801ad4da-0c7f-47f2-8ab6-ed20e4e19101.png" class="" title="img">
-注意力机制</li>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777507833-1ff3f1f2-17cb-4ba0-991b-a61b42818cfc.png" class="" title="img"></li>
-</ul></li>
-<li><p>Global-guide 解码器</p>
-<ul>
-<li>响应生成
-<ul>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">
-，v表示图神经网络得到的全局变量</li>
-</ul></li>
-<li>监督全局语义信息：预测问题类型
-<ul>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img"></li>
-</ul></li>
-</ul></li>
-<li><p>联合训练</p>
-<ul>
-<li>对数似然损失+交叉熵损失</li>
-<li><img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701778036470-9378fc9b-a533-40a9-9990-69ffe0036656.png" class="" title="img">
-<img data-src="/2023/Control%20Globally,%20Understand%20Locally/1701778063569-1fc4c281-c256-4804-ba39-785ddd2e4b1e.png" class="" title="img">
-<h2 id="experiments">Experiments</h2></li>
-</ul></li>
-<li><p>指标：plexity (PPL), BLEU-n (B-n), ROUGE-L (R-L),
-Distinct-1(D-1), and Distinct-2 (D-2)</p></li>
-<li><p>由于有了意图特征，提出建议更具体有效 ## Conclusion</p></li>
-<li><p>全局到局部的层次图网络(Global-to-Local Hierarchical Graph
-network, GLHG)来捕获多源信息并从全局到局部的角度建模层次关系</p></li>
-<li><p>新的训练目标“预测Seeker遇到问题的类型” # 关注的问题 /
-本文的优势</p></li>
-</ul>
-<h1 id="解决方法-创新点">解决方法 / 创新点</h1>
-<ul>
-<li><strong>多源编码器</strong>利用情境信息并将心理意图与COMET结合，捕获全局原因和局部意图</li>
-<li><strong>分层图推理机</strong>在全局原因、局部心理意图和对话历史之间进行交互，建模不同层次的关系（hierarchical
-graph reasoner） # 实验结论</li>
-</ul>
-<h1 id="有待提升的部分">有待提升的部分</h1>
-]]></content>
   </entry>
   <entry>
     <title>Linux-Tool</title>
@@ -7040,6 +6702,282 @@ Discussion</p>
       </categories>
       <tags>
         <tag>保持专注</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>深度学习基础</title>
+    <url>/DL-basic/</url>
+    <content><![CDATA[<h1 id="偏差方差">偏差方差</h1>
+<p><a
+href="https://www.cnblogs.com/makefile/p/bias-var.html#fn2">参考文章</a></p>
+<h2 id="泛化误差">泛化误差</h2>
+<p>模型的平方预测误差的期望</p>
+<p><span
+class="math display">\[Err(\mathbf{x})=E\left[\left(y-f(\mathbf{x};D)\right)^2\right]=\mathbb{E}_D\left[\left(f(\boldsymbol{x};D)-\bar{f}\left(\boldsymbol{x}\right)\right)^2\right]+\left(\bar{f}(\boldsymbol{x})-y\right)^2+\mathbb{E}_D\left[(y_D-y)^2\right]\]</span></p>
+<h2 id="方差">方差</h2>
+<blockquote>
+<p>方差是指模型对于不同训练集的预测结果的波动程度（即泛化能力），<strong>刻画了数据扰动所造成的影响</strong>。高方差意味着模型过于复杂，对训练数据中的噪声和细节过于敏感，表示模型<strong>过拟合</strong></p>
+</blockquote>
+<p>使用样本数相同的不同训练集产生的方差</p>
+<p><span
+class="math display">\[\mathrm{var}(\mathbf{x})=\mathrm{E}_\mathrm{D}\left[\left(\mathrm{f}(\mathbf{x};\mathrm{D})-\overline{\mathrm{f}}(\mathbf{x})\right)^2\right]\]</span></p>
+<p>其中，算法 𝑓 对测试样本 𝑥 的期望预测（不同训练集 𝐷 上模型 𝑓
+对测试样本 𝑥 的预测输出的期望）<span
+class="math inline">\(\overline{f}(\mathbf{x})=E_D[f\left(\mathbf{x};D\right)]\)</span></p>
+<h2 id="偏差">偏差</h2>
+<blockquote>
+<p>偏差是指模型的预测值与真实值之间的差异，<strong>模型本身的拟合能力</strong>。高偏差意味着模型过于简单，无法捕捉到数据的复杂模式，表示模型<strong>欠拟合</strong></p>
+</blockquote>
+<p>期望预测与真实标记的误差</p>
+<p><span
+class="math display">\[\mathrm{bias}^2(\mathbf{x})=\left(\overline{\mathrm{f}}(\mathbf{x})-\mathrm{y}\right)^2\]</span></p>
+<h2 id="噪声">噪声</h2>
+<blockquote>
+<p>表达了当前任务上任何模型所能达到的期望泛化误差的下界，<strong>刻画了学习问题本身的难度</strong>。</p>
+</blockquote>
+<p>真实标记与数据集中的实际标记间的偏差</p>
+<p><span
+class="math display">\[\varepsilon^2=E_D\left[(y_D-y)^2\right]\]</span></p>
+<h2 id="偏差-方差窘境">偏差-方差窘境</h2>
+<img data-src="/DL-basic/606386-20180722194316424-288674381.png" class="" title="bias-variance-tradeoff">
+<ul>
+<li>偏向左侧时，训练数据的扰动不足以使学习器产生显著变化，此时偏差主导泛化误差，称为<strong>欠拟合现象</strong>
+<ul>
+<li>增加模型的迭代次数；更换描述能力更强的模型；生成更多特征供训练使用；降低正则化水平</li>
+</ul></li>
+<li>偏向右侧时，模型的拟合能力非常强，数据轻微变化都能导致模型发生变化，如果过分学习训练数据的特点，则会发生<strong>过拟合现象</strong>
+<ul>
+<li>扩增训练集；减少训练使用的特征的数量；降低模型复杂度；提高正则化水平</li>
+</ul></li>
+</ul>
+<p>为了解决“偏差和方差在一定程度上是有冲突的”的问题，可以采用K折交叉验证或正则化，它们分别从数据划分和模型复杂度两个角度入手，提升模型的泛化能力和稳健性：</p>
+<ul>
+<li>K折交叉验证通过多次划分和验证，减少因数据划分不当而导致的性能估计偏差</li>
+<li>正则化在损失函数中加入一个与模型复杂度相关的惩罚项，以限制模型的复杂度并防止过拟合
+<a href="https://www.cnblogs.com/zingp/p/10375691.html">参考文章</a>
+<ul>
+<li>L1正则化是指权值向量w中各个元素的绝对值之和，可以使得参数稀疏化，即得到的参数是一个稀疏矩阵，进而可以用于特征选择。二维平面图像：<img data-src="/DL-basic/o_L1.png" class="" title="image"></li>
+<li>L2正则化是指权值向量w中各个元素的平方和然后再求平方根，让权值尽可能小，如果参数足够小，数据偏移得多一点也不会对结果造成什么影响，专业一点的说法是<strong>抗扰动能力强</strong>。二维平面图像：<img data-src="/DL-basic/o_L2.png" class="" title="image"></li>
+</ul></li>
+</ul>
+<h1 id="模型训练">模型训练</h1>
+<h2 id="优化器">优化器</h2>
+<p>Adam：自适应学习率，通过计算梯度的一阶矩（均值）和二阶矩（未中心化的方差）来调整学习率</p>
+<p>AdamW：带有权重衰减和学习率预热的Adam优化器。改进了Adam，将权重衰退和梯度更新解耦，把L2正则化移到权重更新时而不是梯度计算时</p>
+<h1 id="训练方法">训练方法</h1>
+<h2 id="监督学习">监督学习</h2>
+<p>训练数据既有特征(feature)又有标签(label)，通过训练，让机器可以自己找到特征和标签之间的联系，在面对只有特征没有标签的数据时，可以判断出标签。</p>
+<h2 id="无监督学习">无监督学习</h2>
+<p>数据只有特征(feature)无标签(label)，是一种机器学习的训练方式，它本质上是一个统计手段，在没有标签的数据里可以发现潜在的一些结构的一种训练方式。</p>
+<h2 id="半监督学习">半监督学习</h2>
+<p>利用同时包含有标签和无标签的数据来构建一个模型，使得模型能够在测试阶段更好地泛化到新的、未见过的数据。</p>
+<h2 id="强化学习">强化学习</h2>
+<p>让一个智能体（agent）在环境（Enviroment）中通过尝试和错误来学习行为（Action）策略。智能体通过与环境进行交互，根据奖励信号来调整其行为策略，以达到最大化累积奖励的目标。</p>
+<p>针对 PPO 算法的优化：</p>
+<ul>
+<li>归一化奖励分数、将奖励分数做白化处理</li>
+</ul>
+<img data-src="/DL-basic/overview_chatgpt.png" class="" title="overview_chatgpt">
+<h3 id="rlhf">RLHF</h3>
+<blockquote>
+<p>Reinforcement Learning from Human
+Feedback，以<strong>强化学习方式依据人类反馈优化语言模型</strong>，是
+OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
+</blockquote>
+<p>Policy Gradient</p>
+<style>.jdowuqpugqmz{zoom:50%;}</style>
+<img data-src="/DL-basic/image-20240716101748533.png" class="jdowuqpugqmz" alt="image-20240716101748533">
+<p>RM+PPO</p>
+<p>步骤一、预训练语言模型</p>
+<style>.vbucploelowu{zoom: 50%;}</style>
+<img data-src="/DL-basic/image-20240715191912939.png" class="vbucploelowu" alt="image-20240715191912939">
+<p>步骤二、训练奖励模型 RM</p>
+<style>.wqjglklignbg{zoom: 50%;}</style>
+<img data-src="/DL-basic/image-20240715191936226.png" class="wqjglklignbg" alt="image-20240715191936226">
+<p>步骤三、用强化学习 PPO 微调</p>
+<style>.uasdjaparuuh{zoom:50%;}</style>
+<img data-src="/DL-basic/image-20240715192056550.png" class="uasdjaparuuh" alt="image-20240715192056550">
+<p>DPO</p>
+<p>KTO</p>
+<p>ORPO</p>
+<h1 id="损失函数">损失函数</h1>
+<p>MSELoss 回归任务</p>
+<p>CrossEntropyLoss 单标签分类</p>
+<p>BCEWithLogitsLoss 多标签分类</p>
+<h1 id="torch">Torch</h1>
+<p><code>torch.nn.Parameter()</code>将一个不可训练的 tensor
+转换成可以训练的类型 parameter，并将这个 parameter 绑定到这个 module
+里面</p>
+]]></content>
+      <categories>
+        <category>DL</category>
+      </categories>
+      <tags>
+        <tag>深度学习基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LLM-Basic</title>
+    <url>/LLM-Basic/</url>
+    <content><![CDATA[<blockquote>
+<p>大模型核心技术点在于训练资源、数据清洗和数据配比等，其难点或许不在于模型训练和模型结构搭建</p>
+</blockquote>
+<p><strong>万物之始 Transformer</strong> Attention is all you
+need【变形金刚之神！请保佑我！】</p>
+<style>.uzdnmhnhxbsg{zoom:70%;}</style>
+<img data-src="/LLM-Basic/image-20240714162218754.png" class="uzdnmhnhxbsg" alt="image-20240714162218754">
+<ul>
+<li>直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
+<li>Self Attention
+大大提升了计算的并行，通过上三角mask可以同时训练一句话中的所有token；</li>
+</ul>
+<h1 id="transformers及相关库">Transformers及相关库</h1>
+<blockquote>
+<p>优秀的基础知识分享 <a
+href="https://www.bilibili.com/video/BV1CB4y1R78v/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&amp;vd_source=3cc51ca1725a727b98e3f7d482a21ed1">B
+站课程</a>，<a
+href="https://github.com/datawhalechina/tiny-universe/tree/main">开源项目</a></p>
+</blockquote>
+<p>Transformers：核心库，模型加载、模型训练、流水线并行等</p>
+<p>Tokenizer：分词器，对数据进行预处理，文本到token序列的互相转换。具体工作包括：分词、索引、填充截断、attention_mask、token_type</p>
+<p>Datasets：数据集库，提供了数据集的加载、处理等方法</p>
+<p>Evaluate：评估函数，提供各种评价指标的计算函数</p>
+<p>Trainer：将模型训练流程打包，包括：创建优化器、创建DataLoader、tensor转移到CUDA上</p>
+<p>PEFT：高效微调模型的库，提供了几种高效微调的方法，小参数量动大模型</p>
+<p>Accelerate：分布式训练，提供了分布式训练解决方案，包括大模型的加载与推理解决方案</p>
+<p>Optimum：优化加速库，支持多种后端，如Onnxruntime、OpenVino等</p>
+<p>Gradio：可视化部署库，几行代码快速实现基于Web交互的算法演示系统</p>
+<h2 id="分布式训练">分布式训练</h2>
+<p>Accelerate 包，融合了 Deepspeed、DDP、FSDP；</p>
+<h1 id="nlp">NLP</h1>
+<blockquote>
+<p>NLP
+任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人</p>
+</blockquote>
+<p>NLP
+数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词
+LM、完形填空 MLM。早些年，流行的是词嵌入 Word
+Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
+<p>现阶段，Transformer 的出现促使三种类型的模型的出现：前缀语言模型
+Encoder-Decoder（prefix-lm）；掩码语言模型/自编码模型
+Encoder-Only；因果语言模型/自回归模型 Decoder-Only。</p>
+<p>Encoder-only 适用于机器翻译、句子分类、命名体识别和问答；Decoder-only
+适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
+<h1 id="qwen2-源码解读">Qwen2 源码解读</h1>
+<p><a
+href="https://github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">Link</a></p>
+<img data-src="/LLM-Basic/dccdd5360d984d2c84a9f7338c55e665.jpeg" class="" title="img">
+<p><code>modeling_qwen2.py</code> 架构</p>
+<ul>
+<li><p>Qwen2RMSNorm: RMS归一化层</p></li>
+<li><p>Qwen2RotaryEmbedding: 旋转位置编码</p></li>
+<li><p>Attention</p>
+<ul>
+<li><p>Qwen2Attention: 注意力层</p></li>
+<li><p>Qwen2FlashAttention2: 使用Flash Attention
+2.0版本加速的注意力层</p></li>
+<li><p>Qwen2SdpaAttention: 使用Sdpa（pytorch自带的加速, Scaled
+Dot-Product Attention）加速的注意力层</p></li>
+</ul></li>
+<li><p>Qwen2DecoderLayer: 编码层,核心结构,之后就是堆叠</p></li>
+<li><p>Qwen2PreTrainedModel: 预训练类</p></li>
+<li><p>Qwen2Model: 不带head的Qwen2模型</p></li>
+<li><p>Qwen2ForCausalLM: 带Causal LM head的Qwen2模型</p></li>
+<li><p>Qwen2ForSequenceClassification: 带序列分类头的Qwen2模型</p></li>
+</ul>
+<p>功能函数</p>
+<ul>
+<li><p>_get_unpad_data: 在flash
+attention的数据预处理中会用到。主要是对attention
+mask进行一些操作；</p></li>
+<li><p>rotate_half: 在旋转位置编码中用到；</p></li>
+<li><p>apply_rotary_pos_emb: 对数据主要是注意力运算中的 q,k
+做旋转位置编码；</p></li>
+<li><p>repeat_kv: 主要是在 MQA(Multi-Query Attention) 和 GQA(Group-Query
+Attention) 中用到,因为 q head 数量是 k,v head 的数量的整数倍</p></li>
+</ul>
+<h2 id="gqa">GQA</h2>
+<p>MQA 将所有注意力头的键和值共享</p>
+<p>GQA 的方式是将多个注意力头分成组，每组头共享同一组的键和值。</p>
+<h2 id="旋转位置编码pore">旋转位置编码PoRE</h2>
+<blockquote>
+<p>通过旋转编码，使得每个token既有相对位置信息，又有绝对位置信息。从结构图可以看到，Qwen
+的位置信息编码是在 attention 中计算到 KV 中的</p>
+</blockquote>
+<p>例如，对于一个维度为 512 的向量<span
+class="math inline">\(v=(v_0,v_1,v_2,v_3,...,v_{511})\)</span>，RoPE
+可能将其看作：</p>
+<ul>
+<li>第 1 对：<span class="math inline">\((v_0,v_1)\)</span></li>
+<li>第 2 对：<span class="math inline">\((v_2,v_3)\)</span></li>
+<li>...</li>
+<li>第 256 对：<span
+class="math inline">\((v_{510},v_{511})\)</span></li>
+</ul>
+<p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
+<style>.ntigmayjvblr{zoom: 67%;}</style>
+<img data-src="/LLM-Basic/ROPE3.png" class="ntigmayjvblr" alt="img">
+<h2 id="rmsnorm">RMSNorm</h2>
+<p>矩阵计算要进行归一化防止不同特征的取值过大，常用的是 layer
+norm，也就是每一项减去样本的均值，再除以样本的方差；而RMS则是去除了减去均值的操作，以便提升效率。</p>
+<ul>
+<li>LayerNorm
+通过均值和标准差对输入进行标准化，确保输入具有零均值和单位方差，这对稳定训练有帮助。</li>
+<li>RMSNorm
+则通过均方根进行归一化，<strong>不关注均值，仅对幅值进行规范化，避免了对数据的中心化处理</strong>，减少了计算复杂度，并且在某些模型中表现优越。</li>
+</ul>
+<p><span class="math inline">\(\text{LN}(x) = \frac{x - \mu}{\sigma}
+\cdot \gamma + \beta\)</span></p>
+<p>其中： - x 是输入向量（通常是模型中每一层的输出）。 - <span
+class="math inline">\(\mu\)</span> 是输入向量的均值。 - <span
+class="math inline">\(\sigma\)</span> 是输入向量的标准差。 - <span
+class="math inline">\(\gamma\)</span> 和 <span
+class="math inline">\(\beta\)</span> 是可学习的缩放和偏移参数。</p>
+<p>LN 会计算整个输入的均值 ( ) 和标准差 (
+)，并用它们对输入进行标准化。</p>
+<p><span class="math inline">\(\text{RMSNorm}(x) =
+\frac{x}{\text{RMS}(x)} \cdot \gamma\)</span> 其中：</p>
+<ul>
+<li><span class="math inline">\(\text{RMS}(x) = \sqrt{\frac{1}{n}
+\sum_{i=1}^n x_i^2}\)</span>是输入向量的均方根。</li>
+<li>$$ 是可学习的缩放参数。</li>
+<li>不使用均值和偏移参数 <span class="math inline">\(\beta\)</span>
+。</li>
+</ul>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li>RMSNorm 只关注输入的
+<strong>范数（幅值）</strong>，而不考虑均值，避免了对数据的中心化处理。</li>
+<li>它是一种更轻量级的标准化方法，在某些情况下可以提高训练效率和收敛速度。</li>
+</ul>
+<h2 id="激活函数是swiglu">激活函数是SwiGLU</h2>
+]]></content>
+  </entry>
+  <entry>
+    <title>面试常见题收集</title>
+    <url>/#developer/Java-Interview/</url>
+    <content><![CDATA[<h1 id="java-basic">Java-basic</h1>
+<h1 id="jvm">JVM</h1>
+<ol type="1">
+<li>了解垃圾回收机制吗？新生代和老年代的垃圾回收是怎么样的</li>
+</ol>
+<h1 id="juc">JUC</h1>
+<ol type="1">
+<li>简要描述线程与进程的关系，区别及优缺点？</li>
+<li>线程之间哪些资源是共享的，哪些资源是私有的，为什么？</li>
+<li>说一下你对于 AQS 原理的理解。</li>
+<li>如何实现线程安全？</li>
+</ol>
+<h1 id="中间件">中间件</h1>
+<ol type="1">
+<li>了解过消息中间件吗？说一下使用场景</li>
+</ol>
+]]></content>
+      <categories>
+        <category>工作</category>
+      </categories>
+      <tags>
+        <tag>面试准备</tag>
       </tags>
   </entry>
 </search>

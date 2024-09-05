@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="线程池的创建、使用方法，以及如何正确构造有父子关系、先后关系、与或关系的多线程并发场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadPoolExecutor 和 CompletableFuture 实践">
+<meta property="og:url" content="https://yeqiuo.github.io/#developer/JUC-ThreadPool/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="线程池的创建、使用方法，以及如何正确构造有父子关系、先后关系、与或关系的多线程并发场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="og:image" content="https://yeqiuo.github.io/">
+<meta property="article:published_time" content="2024-04-18T02:22:18.000Z">
+<meta property="article:modified_time" content="2024-07-11T09:26:16.010Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="Java并发">
+<meta property="article:tag" content="Java线程池">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/#developer/JUC-ThreadPool/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/#developer/JUC-ThreadPool/","path":"#developer/JUC-ThreadPool/","title":"ThreadPoolExecutor 和 CompletableFuture 实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ThreadPoolExecutor 和 CompletableFuture 实践 | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#threadpoolexecutor-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">ThreadPoolExecutor
+线程池实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">底层结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97-blockingqueue"><span class="nav-number">1.1.1.</span> <span class="nav-text">阻塞队列 BlockingQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E5%B7%A5%E5%8E%82%E7%B1%BB-threadfactory"><span class="nav-number">1.1.2.</span> <span class="nav-text">创建线程工厂类 ThreadFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E6%8B%92%E7%BB%9D%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.3.</span> <span class="nav-text">任务拒绝策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.2.</span> <span class="nav-text">线程池实现接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#executors-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%B7%A5%E5%8E%82%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">Executors 线程池工厂类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#completablefuture-%E5%BC%82%E6%AD%A5%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">CompletableFuture
+异步执行结果类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.1.</span> <span class="nav-text">注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%BC%9A%E5%AF%BC%E8%87%B4%E6%AD%BB%E9%94%81"><span class="nav-number">3.1.1.</span> <span class="nav-text">线程池循环引用会导致死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5rpc%E8%B0%83%E7%94%A8%E6%B3%A8%E6%84%8F%E4%B8%8D%E8%A6%81%E9%98%BB%E5%A1%9Eio%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">3.1.2.</span> <span class="nav-text">异步RPC调用注意不要阻塞IO线程池</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.</span> <span class="nav-text">实际使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E4%BE%9D%E8%B5%96-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.1.</span> <span class="nav-text">零依赖-构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E4%BE%9D%E8%B5%96-%E5%BC%82%E6%AD%A5%E5%9B%9E%E8%B0%83"><span class="nav-number">3.2.2.</span> <span class="nav-text">一元依赖-异步回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%85%83%E4%BE%9D%E8%B5%96-%E5%A4%9A%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.2.3.</span> <span class="nav-text">二元依赖-多任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E4%BE%9D%E8%B5%96"><span class="nav-number">3.2.4.</span> <span class="nav-text">多元依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.1.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%BB%93%E6%9E%9C%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.2.</span> <span class="nav-text">获取结果方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%9B%9E%E8%B0%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.3.</span> <span class="nav-text">异步回调方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.4.</span> <span class="nav-text">异常处理方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E7%BB%84%E5%90%88%E5%9B%9E%E8%B0%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.5.</span> <span class="nav-text">多任务组合回调方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E4%BB%A3%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text">底层代码</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/#developer/JUC-ThreadPool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ThreadPoolExecutor 和 CompletableFuture 实践 | 闻">
+      <meta itemprop="description" content="线程池的创建、使用方法，以及如何正确构造有父子关系、先后关系、与或关系的多线程并发场景。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ThreadPoolExecutor 和 CompletableFuture 实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-18 10:22:18" itemprop="dateCreated datePublished" datetime="2024-04-18T10:22:18+08:00">2024-04-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-07-11 17:26:16" itemprop="dateModified" datetime="2024-07-11T17:26:16+08:00">2024-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">线程池的创建、使用方法，以及如何正确构造有父子关系、先后关系、与或关系的多线程并发场景。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>池化思想，维护一个池子，减少创建/销毁的开销，合理分配系统资源，但会增加调度开销。<a
+target="_blank" rel="noopener" href="https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html">参考美团技术博客</a>：底层设计思想、业务实现</p>
+<h1 id="threadpoolexecutor-线程池实现类">ThreadPoolExecutor
+线程池实现类</h1>
+<p><strong>执行流程图</strong></p>
+<img data-src="/" class="" title="图2 ThreadPoolExecutor运行流程">
+<p><strong>线程池生命周期</strong></p>
+<img data-src="/" class="" title="图3 线程池生命周期">
+<p><strong>任务调度流程</strong></p>
+<p>所有任务的调度都是由execute方法完成的，这部分完成的工作是：检查现在线程池的运行状态、运行线程数、运行策略，决定接下来执行的流程，是直接申请线程执行，或是缓冲到队列中执行，亦或是直接拒绝该任务。其执行过程如下：</p>
+<ol type="1">
+<li>首先检测线程池运行状态，如果不是<code>RUNNING</code>，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。</li>
+<li>如果<code>workerCount &lt; corePoolSize</code>，则创建并启动一个线程来执行新提交的任务。</li>
+<li>如果<code>workerCount &gt;= corePoolSize，且线程池内的阻塞队列未满</code>，则将任务添加到该阻塞队列中。</li>
+<li>如果<code>workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize，且线程池内的阻塞队列已满</code>，则创建并启动一个线程来执行新提交的任务。</li>
+<li>如果<code>workerCount &gt;= maximumPoolSize，并且线程池内的阻塞队列已满</code>,
+则根据<u>拒绝策略</u>来处理该任务, 默认的处理方式是直接抛异常。</li>
+</ol>
+<img data-src="/" class="" title="图4 任务调度流程">
+<h2 id="底层结构">底层结构</h2>
+<p><strong>ThreadPoolExecutor 构造函数</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="type">int</span> corePoolSize,  //线程池的核心线程数量</span></span><br><span class="line"><span class="params">    <span class="type">int</span> maximumPoolSize,  //线程池的最大线程数</span></span><br><span class="line"><span class="params">    <span class="type">long</span> keepAliveTime,  //当线程数大于核心线程数时，多余的空闲线程存活的最长时间</span></span><br><span class="line"><span class="params">    TimeUnit unit,  //时间单位</span></span><br><span class="line"><span class="params">    BlockingQueue&lt;Runnable&gt; workQueue,  //任务队列，用来储存等待执行任务的队列</span></span><br><span class="line"><span class="params">    ThreadFactory threadFactory,  //线程工厂，用来创建线程，一般默认即可</span></span><br><span class="line"><span class="params">    RejectedExecutionHandler handler  //拒绝策略，当提交的任务过多而不能及时处理时，我们可以定制策略来处理任务</span></span><br><span class="line"><span class="params">)</span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>核心线程数：CPU 密集型任务(N+1) I/O 密集型任务(2N) CPU 核心数 N</p>
+<h3 id="阻塞队列-blockingqueue">阻塞队列 BlockingQueue</h3>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6999798721269465102">Link</a></p>
+<p>阻塞队列中保存即将运行的任务，BlockingQueue 与 Queue
+的主要区别是：</p>
+<ul>
+<li>通过在入队和出队时进行加锁，保证了队列线程安全</li>
+<li>支持阻塞的入队和出队方法：当队列满时，会阻塞入队的线程，直到队列不满；当队列为空时，会阻塞出队的线程，直到队列中有元素。</li>
+</ul>
+<p>底层实现</p>
+<ul>
+<li>采用 ReentrantLock 同步队列实现加锁解锁、阻塞释放</li>
+<li>队列为空或已满的情况，采用条件队列 Condition</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>阻塞队列</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ArrayBlockingQueue</td>
+<td>有界队列</td>
+</tr>
+<tr class="even">
+<td>LinkedBlockingQueue</td>
+<td>不设置大小的话，默认无界队列</td>
+</tr>
+<tr class="odd">
+<td>SynchronousQueue</td>
+<td>如果有空闲线程，则使用空闲线程来处理；否则新建一个线程来处理任务</td>
+</tr>
+<tr class="even">
+<td>DelayedWorkQueue</td>
+<td>内部元素并不是按照放入的时间排序，而是会按照延迟的时间长短对任务进行排序</td>
+</tr>
+<tr class="odd">
+<td>PriorityBlockingQueue</td>
+<td>优先级阻塞队列</td>
+</tr>
+</tbody>
+</table>
+<h3 id="创建线程工厂类-threadfactory">创建线程工厂类 ThreadFactory</h3>
+<blockquote>
+<p>参数可以设定线程名</p>
+</blockquote>
+<ul>
+<li>java rt包：原生 ThreadFactory 类</li>
+<li>hutool： ThreadFactoryBuilder</li>
+<li>google guava.jar： ThreadFactoryBuilder</li>
+</ul>
+<p>自定义线程工厂</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">testThreadPoolFactory</span> <span class="keyword">implements</span> <span class="title class_">ThreadFactory</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">AtomicInteger</span> <span class="variable">threadIdx</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String threadNamePrefix;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">testThreadPoolFactory</span><span class="params">(String Prefix)</span> &#123;</span><br><span class="line">        threadNamePrefix = Prefix;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Thread <span class="title function_">newThread</span><span class="params">(Runnable r)</span> &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(r);</span><br><span class="line">        thread.setName(threadNamePrefix + <span class="string">&quot;-xxljob-&quot;</span> + threadIdx.getAndIncrement());</span><br><span class="line">        <span class="keyword">return</span> thread;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="任务拒绝策略">任务拒绝策略</h3>
+<blockquote>
+<p>在使用线程池并且使用有界队列的时候，如果队列满了，任务添加到线程池的时候就会拒绝，具体的拒绝策略可以设定</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>拒绝策略</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AbortPolicy</td>
+<td>线程池队列满了丢掉这个任务并且抛出 RejectedExecutionException
+异常</td>
+</tr>
+<tr class="even">
+<td>DiscardPolicy</td>
+<td>如果线程池队列满了，会直接丢掉这个任务并且不会有任何异常</td>
+</tr>
+<tr class="odd">
+<td>DiscardOldestPolicy</td>
+<td>如果队列满了，会将最早进入队列的任务删掉腾出空间，再尝试加入队列</td>
+</tr>
+<tr class="even">
+<td>CallerRunsPolicy</td>
+<td>如果添加到线程池失败，那么主线程会自己去执行该任务</td>
+</tr>
+</tbody>
+</table>
+<p>自定义拒绝策略</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyRejectPolicy</span> <span class="keyword">implements</span> <span class="title class_">RejectedExecutionHandler</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> &#123;</span><br><span class="line">        <span class="comment">//Sender是我的Runnable类，里面有message字段</span></span><br><span class="line">        <span class="keyword">if</span> (r <span class="keyword">instanceof</span> Sender) &#123;</span><br><span class="line">            <span class="type">Sender</span> <span class="variable">sender</span> <span class="operator">=</span> (Sender) r;</span><br><span class="line">            <span class="comment">//直接打印</span></span><br><span class="line">            System.out.println(sender.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="线程池实现接口">线程池实现接口</h2>
+<img data-src="/" class="" title="图1 ThreadPoolExecutor UML类图">
+<p>ExecutorService接口：（1）扩充执行任务的能力，补充可以为<strong>一个或一批异步任务</strong>生成
+Future
+的方法；（2）提供了<strong>管控线程池</strong>的方法，比如停止线程池的运行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ExecutorService</span> <span class="keyword">extends</span> <span class="title class_">Executor</span> &#123;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//不再接受新任务，待所有任务执行完毕后关闭 ExecutorService  </span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">shutdown</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//不再接受新任务，直接关闭 ExecutorService，返回没有执行的任务列表  </span></span><br><span class="line">    List&lt;Runnable&gt; <span class="title function_">shutdownNow</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//判断ExecutorService是否关闭  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isShutdown</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//判断ExecutorService是否终止  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isTerminated</span><span class="params">()</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//等待ExecutorService到达终止状态  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">awaitTermination</span><span class="params">(<span class="type">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException;  </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//当task执行成功的时候future.get()返回执行结果</span></span><br><span class="line">    &lt;T&gt; Future&lt;T&gt; <span class="title function_">submit</span><span class="params">(Callable&lt;T&gt; task)</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//当task执行成功的时候future.get()返回result  </span></span><br><span class="line">    &lt;T&gt; Future&lt;T&gt; <span class="title function_">submit</span><span class="params">(Runnable task, T result)</span>;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//当task执行成功的时候future.get()返回null  </span></span><br><span class="line">    Future&lt;?&gt; submit(Runnable task);  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//批量提交任务并获得他们的future，Task列表与Future列表一一对应  </span></span><br><span class="line">    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; <span class="title function_">invokeAll</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</span> <span class="keyword">throws</span> InterruptedException;  </span><br><span class="line"> </span><br><span class="line">    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; <span class="title function_">invokeAll</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, <span class="type">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//批量提交任务并获得一个已经成功执行的任务的结果  </span></span><br><span class="line">    &lt;T&gt; T <span class="title function_">invokeAny</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</span> <span class="keyword">throws</span> InterruptedException, ExecutionException;  </span><br><span class="line">  </span><br><span class="line">    &lt;T&gt; T <span class="title function_">invokeAny</span><span class="params">(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, <span class="type">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException, ExecutionException, TimeoutException;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+<p>顶层接口 Executor
+：==将任务提交和任务执行进行解耦==。用户无需关注如何创建线程，如何调度线程来执行任务，用户只需提供Runnable对象，将任务的运行逻辑提交到执行器(Executor)中，由Executor框架完成线程的调配和任务的执行部分。
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Executor</span> &#123;</span><br><span class="line">    <span class="comment">// 在未来的某个时间执行 command （方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否）</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(Runnable command)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="executors-线程池工厂类">Executors 线程池工厂类</h1>
+<p><strong>FixedThreadPool 固定线程数</strong></p>
+<p>运行中的 FixedThreadPool（未执行 shutdown()或
+shutdownNow()）不会拒绝任务，在任务比较多的时候会导致
+OOM（内存溢出）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title function_">newFixedThreadPool</span><span class="params">(<span class="type">int</span> nThreads)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img data-src="/" class="" title="img">
+<p><strong>SingleThreadExecutor
+只有一个线程的线程池</strong>（FixedThreadPool 的特例）</p>
+<p><strong>CachedThreadPool 根据需要创建新线程的线程池</strong></p>
+<img data-src="/" class="" title="img">
+<h1 id="completablefuture-异步执行结果类">CompletableFuture
+异步执行结果类</h1>
+<blockquote>
+<p>RxJava、Reactor 比 CompletableFuture
+增加了操作融合、延迟执行、回压等特性</p>
+</blockquote>
+<p>CompletableFuture实现 Future、CompletionStage 接口。</p>
+<ul>
+<li>Future
+表示异步<strong>计算的结果</strong>，可以通过<code>Future</code>
+类获取到耗时任务的执行结果</li>
+<li>CompletionStage
+用于表示异步执行过程中的一个<strong>步骤</strong>（Stage），这个步骤可能是由另外一个
+CompletionStage 触发的，随着当前步骤的完成，也可能会触发其他一系列
+CompletionStage
+的执行。从而我们可以根据实际业务对这些步骤进行多样化的<strong>编排组合</strong>，CompletionStage
+接口正是定义了这样的能力，我们可以通过其提供的 thenAppy、thenCompose
+等函数式编程方法来组合编排这些步骤。</li>
+</ul>
+<p><code>FutureTask</code>相当于对<code>Callable</code>
+进行了封装，管理着任务执行的情况，存储了 <code>Callable</code> 的
+<code>call</code> 方法的任务执行结果</p>
+<h2 id="注意事项">注意事项</h2>
+<ul>
+<li>Future 需要获取返回值，才能获取异常信息（即线程需要实现
+<code>Callable</code> 接口，而 <code>Runnable</code>
+接口创建线程不会返回结果或抛出检查异常）</li>
+<li>CompletableFuture 的 get() 方法是阻塞等待的</li>
+<li>异步调用强制传自定义线程池，做好线程池隔离</li>
+<li>自定义线程池时，仔细考虑延迟队列满时，应采取什么拒绝策略</li>
+</ul>
+<p><strong>Q1</strong>：程序执行在哪个线程上？</p>
+<p><strong>A1</strong>：</p>
+<p>同步方法（即不带Async后缀的方法）有两种情况。</p>
+<ul>
+<li><p>如果注册时被依赖的操作已经执行完成，则直接由当前线程执行。</p></li>
+<li><p>如果注册时被依赖的操作还未执行完，则由回调线程（按照当前 CF
+运行情况区分）执行。</p></li>
+</ul>
+<p>异步方法（即带Async后缀的方法）：可以选择是否传递线程池参数Executor运行在指定线程池中；当不传递Executor时，会使用ForkJoinPool中的共用线程池CommonPool</p>
+<p><strong>Q2</strong>：同步回调和异步回调的区别</p>
+<p><strong>A2</strong>：</p>
+<p>同步回调：把函数 b 传递给函数 a。执行 a 的时候，回调了 b，a
+要一直等到 b 执行完才能继续执行；</p>
+<p>异步回调：把函数 b 传递给函数 a。执行 a 的时候，回调了 b，然后 a
+就继续往后执行，b 独自执行。</p>
+<h3 id="线程池循环引用会导致死锁">线程池循环引用会导致死锁</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">doGet</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">ExecutorService</span> <span class="variable">threadPool1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">0L</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> <span class="title class_">ArrayBlockingQueue</span>&lt;&gt;(<span class="number">100</span>));</span><br><span class="line">  <span class="type">CompletableFuture</span> <span class="variable">cf1</span> <span class="operator">=</span> CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  <span class="comment">//do sth</span></span><br><span class="line">    <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;child&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;child&quot;</span>;</span><br><span class="line">      &#125;, threadPool1).join();<span class="comment">//子任务</span></span><br><span class="line">    &#125;, threadPool1);</span><br><span class="line">  <span class="keyword">return</span> cf1.join();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>threadPool1 大小为 10，当同一时刻有 10 个请求到达，则 threadPool1
+被打满，子任务请求线程时进入阻塞队列排队，但是父任务的完成又依赖于子任务，这时由于子任务得不到线程，父任务无法完成。主线程执行
+cf1.join() 进入阻塞状态，并且永远无法恢复。</p>
+<h3
+id="异步rpc调用注意不要阻塞io线程池">异步RPC调用注意不要阻塞IO线程池</h3>
+<p>如果是使用基于 NIO（比如Netty）的异步 RPC，则返回结果是由 IO
+线程负责设置的，即==回调方法由 IO 线程触发==，CompletableFuture
+同步回调（如thenApply、thenAccept等无Async后缀的方法）如果依赖的异步 RPC
+调用的返回结果，那么这些==同步回调将运行在IO线程==上，而整个服务只有一个IO线程池，这时需要==保证同步回调中不能有阻塞等耗时过长的逻辑==，否则在这些逻辑执行完成前，IO线程将一直被占用，影响整个服务的响应。</p>
+<h2 id="实际使用场景">实际使用场景</h2>
+<blockquote>
+<p><a
+target="_blank" rel="noopener" href="https://tech.meituan.com/2022/05/12/principles-and-practices-of-completablefuture.html">美团技术博客</a></p>
+</blockquote>
+<p>服务端和客户端信息交换频繁，提升系统吞吐量</p>
+<p>I/O密集型任务，对内<strong>调度</strong>各个下游服务获取数据进行<strong>聚合</strong></p>
+<p>对业务流程进行编排，降低任务依赖导致的阻塞</p>
+<p>避免 guava 的 ListenableFuture 回调所导致的回调地狱</p>
+<h3 id="零依赖-构造方法">零依赖-构造方法</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">ExecutorService</span> <span class="variable">executor</span> <span class="operator">=</span> Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line"><span class="comment">//1、使用runAsync或supplyAsync发起异步调用</span></span><br><span class="line">CompletableFuture&lt;String&gt; cf1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result1&quot;</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line"><span class="comment">//2、CompletableFuture.completedFuture()直接创建一个已完成状态的CompletableFuture</span></span><br><span class="line">CompletableFuture&lt;String&gt; cf2 = CompletableFuture.completedFuture(<span class="string">&quot;result2&quot;</span>);</span><br><span class="line"><span class="comment">//3、先初始化一个未完成的CompletableFuture，然后通过complete()、completeExceptionally()，完成该CompletableFuture</span></span><br><span class="line">CompletableFuture&lt;String&gt; cf = <span class="keyword">new</span> <span class="title class_">CompletableFuture</span>&lt;&gt;();</span><br><span class="line">cf.complete(<span class="string">&quot;success&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="一元依赖-异步回调">一元依赖-异步回调</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; cf3 = cf1.thenApply(result1 -&gt; &#123;</span><br><span class="line">  <span class="comment">//result1为CF1的结果</span></span><br><span class="line">  <span class="comment">//......</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result3&quot;</span>;</span><br><span class="line">&#125;);</span><br><span class="line">CompletableFuture&lt;String&gt; cf5 = cf2.thenApply(result2 -&gt; &#123;</span><br><span class="line">  <span class="comment">//result2为CF2的结果</span></span><br><span class="line">  <span class="comment">//......</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result5&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="二元依赖-多任务">二元依赖-多任务</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; cf4 = cf1.thenCombine(cf2, (result1, result2) -&gt; &#123;</span><br><span class="line">  <span class="comment">//result1和result2分别为cf1和cf2的结果</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result4&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="多元依赖">多元依赖</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; cf6 = CompletableFuture.allOf(cf3, cf4, cf5);</span><br><span class="line">CompletableFuture&lt;String&gt; result = cf6.thenApply(v -&gt; &#123;</span><br><span class="line">  <span class="comment">//这里的join并不会阻塞，因为传给thenApply的函数是在CF3、CF4、CF5全部完成时，才会执行 。</span></span><br><span class="line">  result3 = cf3.join();</span><br><span class="line">  result4 = cf4.join();</span><br><span class="line">  result5 = cf5.join();</span><br><span class="line">  <span class="comment">//根据result3、result4、result5组装最终result;</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;result&quot;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="使用方法">使用方法</h2>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/647743286">方法汇总</a></p>
+<h3 id="构造方法">构造方法</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 使用默认内置线程池ForkJoinPool.commonPool()，根据supplier构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span>  </span><br><span class="line">    </span><br><span class="line"><span class="comment">// 自定义线程池，根据supplier构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier, Executor executor)</span>  </span><br><span class="line">    </span><br><span class="line"><span class="comment">// 使用默认内置线程池ForkJoinPool.commonPool()，根据runnable构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable)</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">// 自定义线程池，根据runnable构建执行任务  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title function_">runAsync</span><span class="params">(Runnable runnable, Executor executor)</span>  </span><br></pre></td></tr></table></figure>
+<h3 id="获取结果方法">获取结果方法</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> T <span class="title function_">get</span><span class="params">()</span>  </span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">get</span><span class="params">(<span class="type">long</span> timeout, TimeUnit unit)</span>  </span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">getNow</span><span class="params">(T valueIfAbsent)</span>  </span><br><span class="line"><span class="comment">// 不抛出异常 </span></span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">join</span><span class="params">()</span>  </span><br></pre></td></tr></table></figure>
+<h3 id="异步回调方法"><strong>异步回调方法</strong></h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 执行第二个任务时，则第二个任务和第一个任务是共用同一个线程池</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenRunAsync</span><span class="params">(Runnable action)</span>;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 执行第二个任务时，使用给定的线程池</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenRunAsync</span><span class="params">(Runnable action, Executor executor)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第二个回调方法任务，会将该任务的执行结果，作为入参，传递到回调方法中，但是回调方法是没有返回值的</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenAcceptAsync</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> T&gt; action)</span>;</span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title function_">thenAcceptAsync</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> T&gt; action, Executor executor)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行第二个回调方法任务，会将第一个任务的执行结果，作为入参，传递到回调方法中，并且回调方法是有返回值的</span></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenApplyAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T,? extends U&gt; fn)</span>;</span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenApplyAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T,? extends U&gt; fn, Executor executor)</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="异常处理方法"><strong>异常处理</strong>方法</h3>
+<p>由于异步执行的任务在其他线程上执行，而异常信息存储在线程栈中，因此当前线程除非阻塞等待返回结果，否则无法通过try。CompletableFuture提供了异常捕获回调exceptionally，相当于同步调用中的try。使用方法如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> WmOrderAdditionInfoThriftService wmOrderAdditionInfoThriftService;<span class="comment">//内部接口</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;Integer&gt; <span class="title function_">getCancelTypeAsync</span><span class="params">(<span class="type">long</span> orderId)</span> &#123;</span><br><span class="line">    CompletableFuture&lt;WmOrderOpRemarkResult&gt; remarkResultFuture = wmOrderAdditionInfoThriftService.findOrderCancelledRemarkByOrderIdAsync(orderId);<span class="comment">//业务方法，内部会发起异步rpc调用</span></span><br><span class="line">    <span class="keyword">return</span> remarkResultFuture</span><br><span class="line">          .thenApply(result -&gt; &#123;<span class="comment">//这里增加了一个回调方法thenApply，如果发生异常thenApply内部会通过new CompletionException(throwable) 对异常进行包装</span></span><br><span class="line">      <span class="comment">//这里是一些业务操作</span></span><br><span class="line">        &#125;)</span><br><span class="line">      .exceptionally(err -&gt; &#123;<span class="comment">//通过exceptionally 捕获异常，这里的err已经被thenApply包装过，因此需要通过Throwable.getCause()提取异常</span></span><br><span class="line">         log.error(<span class="string">&quot;WmOrderRemarkService.getCancelTypeAsync Exception orderId=&#123;&#125;&quot;</span>, orderId, ExceptionUtils.extractRealException(err));</span><br><span class="line">         <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">      &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ExceptionUtils</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Throwable <span class="title function_">extractRealException</span><span class="params">(Throwable throwable)</span> &#123;</span><br><span class="line">          <span class="comment">//这里判断异常类型是否为CompletionException、ExecutionException，如果是则进行提取，否则直接返回。</span></span><br><span class="line">        <span class="keyword">if</span> (throwable <span class="keyword">instanceof</span> CompletionException || throwable <span class="keyword">instanceof</span> ExecutionException) &#123;</span><br><span class="line">            <span class="keyword">if</span> (throwable.getCause() != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> throwable.getCause();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> throwable;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当 CompletableFuture 的任务不论是正常完成还是出现异常它都会调用
+<code>whenComplete</code> 这回调函数。</p>
+<ul>
+<li>正常完成：<code>whenComplete</code> 返回结果和上级任务一致，异常为
+null；</li>
+<li>出现异常：<code>whenComplete</code> 返回结果为
+null，异常为上级任务的异常；</li>
+</ul>
+<h3 id="多任务组合回调方法"><strong>多任务组合回调方法</strong></h3>
+<p>thenCompose
+可以用于组合多个CompletableFuture，将前一个任务的返回结果作为下一个任务的参数，它们之间存在着<strong>业务逻辑</strong>上的先后顺序，前后线程执行是同步的，前面阻塞后面不会执行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenCompose</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span>;</span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenComposeAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span> ;</span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title function_">thenComposeAsync</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn, Executor executor)</span> ;</span><br></pre></td></tr></table></figure>
+<p>thenCombine 第一个入参 CompletionStage
+是异步的，合并结果的BiFunction是同步的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U,V&gt; CompletionStage&lt;V&gt; <span class="title function_">thenCombine</span> <span class="params">(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? <span class="built_in">super</span> T,? <span class="built_in">super</span> U,? extends V&gt; fn)</span>;</span><br></pre></td></tr></table></figure>
+<p>applyToEither方法返回一个新的CompletionStage，当此阶段或另一个给定阶段正常完成时，将使用相应的结果作为所提供函数的参数来执行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; CompletionStage&lt;U&gt; <span class="title function_">applyToEither</span> <span class="params">(CompletionStage&lt;? extends T&gt; other, Function&lt;? <span class="built_in">super</span> T, U&gt; fn)</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="底层代码">底层代码</h2>
+<img data-src="/" class="" title="图10 CF基本结构">
+<p>result
+用于存储当前CF的结果，stack（Completion）表示当前CF完成后需要触发的依赖动作（Dependency
+Actions），去触发依赖它的CF的计算，依赖动作可以有多个（表示有多个依赖它的CF），以栈（Treiber
+stack）的形式存储，stack表示栈顶元素。</p>
+<p><strong>观察者模式</strong>：依赖动作（Dependency
+Action）都封装在一个单独Completion子类中。CompletableFuture
+中的每个方法都对应了图中的一个 Completion
+的子类，Completion本身是<strong>观察者</strong>的基类。</p>
+<img data-src="/" class="" title="图11 CF类图">
+<p>一元依赖中的 thenApply 为例，举例“观察者模式”的设计思想</p>
+<img data-src="/" class="" title="图12 thenApply简图">
+<p><strong>被观察者</strong></p>
+<ol type="1">
+<li>每个CompletableFuture都可以被看作一个被观察者，其内部有一个Completion类型的链表成员变量stack，用来存储注册到其中的所有观察者。当被观察者执行完成后会弹栈stack属性，依次通知注册到其中的观察者。上面例子中步骤fn2就是作为观察者被封装在UniApply中。</li>
+<li>被观察者CF中的result属性，用来存储返回结果数据。这里可能是一次RPC调用的返回值，也可能是任意对象，在上面的例子中对应步骤fn1的执行结果。</li>
+</ol>
+<p><strong>观察者</strong></p>
+<p>CompletableFuture支持很多回调方法，例如thenAccept、thenApply、exceptionally等，这些方法接收一个函数类型的参数
+f，生成一个 Completion 类型的对象（即观察者），并将入参函数 f 赋值给
+Completion 的成员变量 fn，然后检查当前 CF 是否已处于完成状态（即result
+!= null），如果已完成直接触发 fn，否则将观察者 Completion 加入到 CF
+的观察者链 stack
+中，再次尝试触发，如果被观察者未执行完则其执行完毕之后通知触发。</p>
+<ol type="1">
+<li>观察者中的 dep 属性：指向其对应的 CompletableFuture，在上面的例子中
+dep 指向 CF2。</li>
+<li>观察者中的 src 属性：指向其依赖的 CompletableFuture，在上面的例子中
+src 指向 CF1。</li>
+<li>观察者 Completion 中的 fn
+属性：用来存储具体的等待被回调的函数。这里需要注意的是<u>不同的回调方法</u>（thenAccept、thenApply、exceptionally等）<u>接收的函数类型也不同</u>，即fn的类型有很多种，在上面的例子中fn指向fn2。</li>
+</ol>
+<p><strong>Q1</strong>：为什么要在入栈前和入栈后都检查<code>result == null</code></p>
+<p><strong>A1</strong>：因为查 result 和判断 result==null
+是两个操作，CompletableFuture
+没有对其加锁，若被观察者在这两个操作数之间完成，会导致观察者得不到通知</p>
+<p><strong>Q2</strong>：当依赖多个CF时，观察者会被压入所有依赖的CF的栈中，每个CF完成的时候都会进行，那么会不会导致一个操作被多次执行呢
+？如下图所示，即当CF1、CF2同时完成时，如何避免CF3被多次触发。</p>
+<img data-src="/" class="" title="图15 多次触发">
+<p><strong>A2</strong>：CompletableFuture的实现是这样解决该问题的：观察者在执行之前会先通过CAS操作设置一个状态位，将status由0改为1。如果观察者已经执行过了，那么CAS操作将会失败，取消执行。</p>
+<p>CompletableFuture 处理并行问题的整体流程图：</p>
+<img data-src="/" class="" title="图16 完整流程">
+<p><strong>二元依赖</strong></p>
+<p>thenCombine 操作表示依赖两个 CompletableFuture。其观察者实现类为
+BiApply，如上图所示，BiApply 通过 src 和 snd 两个属性关联被依赖的两个
+CF，fn 属性的类型为
+BiFunction。与单个依赖不同的是，在依赖的CF未完成的情况下，thenCombine
+会尝试将 BiApply 压入这两个被依赖的 CF 的栈中，每个被依赖的 CF
+成时都会尝试触发观察者 BiApply，BiApply
+会检查两个依赖是否都完成，如果完成则开始执行。这里为了解决重复触发的问题，同样用的是上一章节提到的
+CAS 操作，执行时会先通过 CAS 设置状态位，避免重复触发。</p>
+<img data-src="/" class="" title="图17 二元依赖数据结构">
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 状态位 Status 定义于 ForkJoinTask 类中</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Completion</span> <span class="keyword">extends</span> <span class="title class_">ForkJoinTask</span>&lt;Void&gt; <span class="keyword">implements</span> <span class="title class_">Runnable</span>, AsynchronousCompletionTask&#123;...&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">ForkJoinTask</span>&lt;V&gt; <span class="keyword">implements</span> <span class="title class_">Future</span>&lt;V&gt;&#123;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> status;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>多元依赖</strong></p>
+<p>依赖多个CompletableFuture的回调方法包括<code>allOf</code>、<code>anyOf</code>，区别在于<code>allOf</code>观察者实现类为BiRelay，需要所有被依赖的CF完成后才会执行回调；而<code>anyOf</code>观察者实现类为OrRelay，任意一个被依赖的CF完成后就会触发。二者的实现方式都是将多个被依赖的CF构建成一棵平衡二叉树，执行结果层层通知，直到根节点，触发回调监听。</p>
+<img data-src="/" class="" title="图18 多元依赖结构树">
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java%E5%B9%B6%E5%8F%91/" rel="tag"># Java并发</a>
+              <a href="/tags/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="tag"># Java线程池</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="#developer/Rpc/" rel="prev" title="Rpc 中间件">
+                  <i class="fa fa-angle-left"></i> Rpc 中间件
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/LLM-RAG-Langchain/" rel="next" title="RAG 架构和 Langchain 框架">
+                  RAG 架构和 Langchain 框架 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

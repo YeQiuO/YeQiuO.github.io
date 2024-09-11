@@ -27,10 +27,8 @@
 <meta property="og:description" content="Transformers &amp; NLP 相关库及实现">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Basic/image-20240714162218754.png">
-<meta property="og:image" content="https://yeqiuo.github.io/LLM-Basic/dccdd5360d984d2c84a9f7338c55e665.jpeg">
-<meta property="og:image" content="https://yeqiuo.github.io/LLM-Basic/ROPE3.png">
 <meta property="article:published_time" content="2024-07-12T06:19:54.000Z">
-<meta property="article:modified_time" content="2024-09-05T08:44:59.499Z">
+<meta property="article:modified_time" content="2024-09-10T11:12:15.914Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeqiuo.github.io/LLM-Basic/image-20240714162218754.png">
@@ -143,7 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#transformers%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">Transformers及相关库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83"><span class="nav-number">1.1.</span> <span class="nav-text">分布式训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nlp"><span class="nav-number">2.</span> <span class="nav-text">NLP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#qwen2-%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="nav-number">3.</span> <span class="nav-text">Qwen2 源码解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#gqa"><span class="nav-number">3.1.</span> <span class="nav-text">GQA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81pore"><span class="nav-number">3.2.</span> <span class="nav-text">旋转位置编码PoRE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rmsnorm"><span class="nav-number">3.3.</span> <span class="nav-text">RMSNorm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%98%AFswiglu"><span class="nav-number">3.4.</span> <span class="nav-text">激活函数是SwiGLU</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#llm-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">LLM 基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">预训练显存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">优化器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#adam"><span class="nav-number">1.2.1.</span> <span class="nav-text">Adam</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%8F%E5%B0%91%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">减少显存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%87%E6%A0%B7"><span class="nav-number">1.4.</span> <span class="nav-text">采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#embedding-%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">Embedding 模型的结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#coding"><span class="nav-number">2.</span> <span class="nav-text">Coding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#transformers%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">Transformers及相关库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83"><span class="nav-number">2.2.</span> <span class="nav-text">分布式训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#llama-factory-%E6%BA%90%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">LLaMA-Factory 源码</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -156,7 +154,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -235,7 +233,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-05 16:44:59" itemprop="dateModified" datetime="2024-09-05T16:44:59+08:00">2024-09-05</time>
+      <time title="修改时间：2024-09-10 19:12:15" itemprop="dateModified" datetime="2024-09-10T19:12:15+08:00">2024-09-10</time>
     </span>
 
   
@@ -251,16 +249,74 @@
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>大模型核心技术点在于训练资源、数据清洗和数据配比等，其难点或许不在于模型训练和模型结构搭建</p>
 </blockquote>
-<p><strong>万物之始 Transformer</strong> Attention is all you
-need【变形金刚之神！请保佑我！】</p>
-<style>.uzdnmhnhxbsg{zoom:70%;}</style>
-<img data-src="/LLM-Basic/image-20240714162218754.png" class="uzdnmhnhxbsg" alt="image-20240714162218754">
+<p><strong>【变形金刚之神！保佑我找到工作！】</strong></p>
+<style>.bedxoocjqfvx{zoom:70%;}</style>
+<img data-src="/LLM-Basic/image-20240714162218754.png" class="bedxoocjqfvx" alt="image-20240714162218754">
 <ul>
-<li>直接将句子中任意两个单词的联系通过一个计算步骤直接联系起来，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
+<li>相较于 RNN，Transformer
+直接将句子中<strong>任意两个单词的联系通过一个计算步骤直接联系起来</strong>，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
 <li>Self Attention
-大大提升了计算的并行，通过上三角mask可以同时训练一句话中的所有token；</li>
+大大提升了<strong>计算的并行</strong>，通过上三角mask可以同时训练一句话中的所有token；</li>
 </ul>
-<h1 id="transformers及相关库">Transformers及相关库</h1>
+<p>NLP
+任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人。</p>
+<p>NLP
+数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词
+LM、完形填空 MLM。早些年，流行的是词嵌入 Word
+Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
+<p>现阶段，Transformer 的出现促使三种类型的模型的出现：前缀语言模型
+Encoder-Decoder（prefix-lm）；掩码语言模型/自编码模型
+Encoder-Only；因果语言模型/自回归模型 Decoder-Only。Encoder-only
+适用于机器翻译、句子分类、命名体识别和问答（大概）；Decoder-only
+适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
+<h1 id="llm-基础知识">LLM 基础知识</h1>
+<h2 id="预训练显存占用">预训练显存占用</h2>
+<p>样例：大小为 n B的模型，Adam 优化器，混合精度 fp16，
+b(batch_size)，s(sequence len)，h(hidden size)</p>
+<ol type="1">
+<li>输入输出：sbh*2 byte</li>
+<li>模型大小：n*2 GB</li>
+<li>梯度大小：n*2 GB</li>
+<li>优化器大小：(4+4+4) *n
+GB。模型更新时，梯度很小，学习率也很小，精度丢失会影响模型收敛效果，所以优化器中的数据全都是
+fp32 精度。</li>
+<li>激活值大小：sbh(34+5*a*s/h)*L byte <a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/673916177">分析</a></li>
+</ol>
+<h2 id="优化器">优化器</h2>
+<p>在石器时代，人们直接使用 <code>loss.backward()</code>
+计算梯度，乘以固定的学习率，得到所有参数更新的幅度。然而，使用固定的学习率，在梯度变化剧烈的地方，会导致更新不稳定或收敛慢。</p>
+<p>为提高收敛效果，出现了很多优化器，它们被收藏在
+<code>torch.optim</code> 里面，最出名的应该是
+<code>Adam</code>、<code>AdamW</code>、<code>SGD</code>三大天王，待我娓娓道来。</p>
+<h3 id="adam">Adam</h3>
+<p>自适应学习率： Adam
+通过计算一阶和二阶矩估计来为每个参数自适应地调整学习率；</p>
+<p>偏差校正：
+初始阶段梯度估计可能偏低，通过偏差校正可以加速初期的学习速率；</p>
+<p>适应性强： Adam 在很多不同的模型和数据集上都表现出了良好的性能；</p>
+<h2 id="减少显存占用">减少显存占用</h2>
+<p>混合精度训练：FP16
+速度快，占用小，适合前向传播、反向传播、矩阵计算；FP32
+精度高，适合梯度累积、权重更新、归一化、softmax（可以通过动态损失缩放减少精度损失）</p>
+<p>梯度累积：
+<code>loss = loss / self.args.gradient_accumulation_steps</code>，更稳定的梯度估计</p>
+<p>梯度检查点：<code>gradient_checkpointing=True</code>
+只保存计算代价大且显存占用少的中间激活值，在反向传播时重新计算未保存的激活值</p>
+<h2 id="采样">采样</h2>
+<p>top_k
+(int)：每次保留概率最大的几个序列，再按照概率选择保留的序列（不适用于概率分布平滑的情况）</p>
+<p>top_p (float: 0~1)：保留前n个概率和大于 p
+的序列，再按照概率选择保留的序列（适用于概率分布平滑的情况，按照概率采样，提高响应多样性）</p>
+<p>temperature：优化了 Softmax 函数改为 <span
+class="math inline">\(p(x_i)=\frac{e^{\frac{x_i}t}}{\sum_{j=1}^ne^{\frac{x_j}t}}\)</span>，温度越小
+softmax 的概率分配越尖锐（确定性），反之越平滑（随机性）</p>
+<p>num_beams：每次保留概率最大的几个序列，最后输出概率最大的值（上面三个方法已足够，束搜索未包含在
+OpenAI API 中）</p>
+<h2 id="embedding-模型的结构">Embedding 模型的结构</h2>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">BertModel(</span><br><span class="line">  (embeddings): BertEmbeddings(</span><br><span class="line">    (word<span class="built_in">_</span>embeddings): Embedding(21152, 1024, padding<span class="built_in">_</span>idx=0)</span><br><span class="line">    (position<span class="built_in">_</span>embeddings): Embedding(512, 1024)</span><br><span class="line">    (token<span class="built_in">_</span>type<span class="built_in">_</span>embeddings): Embedding(2, 1024)</span><br><span class="line">    (LayerNorm): </span><br><span class="line">    (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">  )</span><br><span class="line">  (encoder): BertEncoder(</span><br><span class="line">    (layer): ModuleList(</span><br><span class="line">      (0-23): 24 x BertLayer(</span><br><span class="line">        (attention): BertAttention(</span><br><span class="line">          (self): BertSdpaSelfAttention(</span><br><span class="line">            (query): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (key): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (value): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">          )</span><br><span class="line">          (output): BertSelfOutput(</span><br><span class="line">            (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (LayerNorm): </span><br><span class="line">            (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">          )</span><br><span class="line">        )</span><br><span class="line">        (intermediate): BertIntermediate(</span><br><span class="line">          (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=4096, bias=True)</span><br><span class="line">          (intermediate<span class="built_in">_</span>act<span class="built_in">_</span>fn): GELUActivation()</span><br><span class="line">        )</span><br><span class="line">        (output): BertOutput(</span><br><span class="line">          (dense): Linear(in<span class="built_in">_</span>features=4096, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">          (LayerNorm): </span><br><span class="line">          (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">        )</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (pooler): BertPooler(</span><br><span class="line">    (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">    (activation): Tanh()</span><br><span class="line">  )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h1 id="coding">Coding</h1>
+<h2 id="transformers及相关库">Transformers及相关库</h2>
 <blockquote>
 <p>优秀的基础知识分享 <a
 target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1CB4y1R78v/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&amp;vd_source=3cc51ca1725a727b98e3f7d482a21ed1">B
@@ -278,108 +334,10 @@ target="_blank" rel="noopener" href="https://github.com/datawhalechina/tiny-univ
 <p>Gradio：可视化部署库，几行代码快速实现基于Web交互的算法演示系统</p>
 <h2 id="分布式训练">分布式训练</h2>
 <p>Accelerate 包，融合了 Deepspeed、DDP、FSDP；</p>
-<h1 id="nlp">NLP</h1>
-<blockquote>
-<p>NLP
-任务：情感分析、文本生成、命名体识别、阅读理解、掩码填充、文本摘要、机器翻译、特征提取、对话机器人</p>
-</blockquote>
-<p>NLP
-数据集大多是未标注的文档，因此采用自监督学习的方式训练模型，如预测下一个词
-LM、完形填空 MLM。早些年，流行的是词嵌入 Word
-Embedding，目标是采用向量的形式表示词元，采用一组向量表示一段话，可以用于计算词/句子相似度。</p>
-<p>现阶段，Transformer 的出现促使三种类型的模型的出现：前缀语言模型
-Encoder-Decoder（prefix-lm）；掩码语言模型/自编码模型
-Encoder-Only；因果语言模型/自回归模型 Decoder-Only。</p>
-<p>Encoder-only 适用于机器翻译、句子分类、命名体识别和问答；Decoder-only
-适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
-<h1 id="qwen2-源码解读">Qwen2 源码解读</h1>
-<p><a
-target="_blank" rel="noopener" href="https://github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">Link</a></p>
-<img data-src="/LLM-Basic/dccdd5360d984d2c84a9f7338c55e665.jpeg" class="" title="img">
-<p><code>modeling_qwen2.py</code> 架构</p>
-<ul>
-<li><p>Qwen2RMSNorm: RMS归一化层</p></li>
-<li><p>Qwen2RotaryEmbedding: 旋转位置编码</p></li>
-<li><p>Attention</p>
-<ul>
-<li><p>Qwen2Attention: 注意力层</p></li>
-<li><p>Qwen2FlashAttention2: 使用Flash Attention
-2.0版本加速的注意力层</p></li>
-<li><p>Qwen2SdpaAttention: 使用Sdpa（pytorch自带的加速, Scaled
-Dot-Product Attention）加速的注意力层</p></li>
-</ul></li>
-<li><p>Qwen2DecoderLayer: 编码层,核心结构,之后就是堆叠</p></li>
-<li><p>Qwen2PreTrainedModel: 预训练类</p></li>
-<li><p>Qwen2Model: 不带head的Qwen2模型</p></li>
-<li><p>Qwen2ForCausalLM: 带Causal LM head的Qwen2模型</p></li>
-<li><p>Qwen2ForSequenceClassification: 带序列分类头的Qwen2模型</p></li>
-</ul>
-<p>功能函数</p>
-<ul>
-<li><p>_get_unpad_data: 在flash
-attention的数据预处理中会用到。主要是对attention
-mask进行一些操作；</p></li>
-<li><p>rotate_half: 在旋转位置编码中用到；</p></li>
-<li><p>apply_rotary_pos_emb: 对数据主要是注意力运算中的 q,k
-做旋转位置编码；</p></li>
-<li><p>repeat_kv: 主要是在 MQA(Multi-Query Attention) 和 GQA(Group-Query
-Attention) 中用到,因为 q head 数量是 k,v head 的数量的整数倍</p></li>
-</ul>
-<h2 id="gqa">GQA</h2>
-<p>MQA 将所有注意力头的键和值共享</p>
-<p>GQA 的方式是将多个注意力头分成组，每组头共享同一组的键和值。</p>
-<h2 id="旋转位置编码pore">旋转位置编码PoRE</h2>
-<blockquote>
-<p>通过旋转编码，使得每个token既有相对位置信息，又有绝对位置信息。从结构图可以看到，Qwen
-的位置信息编码是在 attention 中计算到 KV 中的</p>
-</blockquote>
-<p>例如，对于一个维度为 512 的向量<span
-class="math inline">\(v=(v_0,v_1,v_2,v_3,...,v_{511})\)</span>，RoPE
-可能将其看作：</p>
-<ul>
-<li>第 1 对：<span class="math inline">\((v_0,v_1)\)</span></li>
-<li>第 2 对：<span class="math inline">\((v_2,v_3)\)</span></li>
-<li>...</li>
-<li>第 256 对：<span
-class="math inline">\((v_{510},v_{511})\)</span></li>
-</ul>
-<p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.ntigmayjvblr{zoom: 67%;}</style>
-<img data-src="/LLM-Basic/ROPE3.png" class="ntigmayjvblr" alt="img">
-<h2 id="rmsnorm">RMSNorm</h2>
-<p>矩阵计算要进行归一化防止不同特征的取值过大，常用的是 layer
-norm，也就是每一项减去样本的均值，再除以样本的方差；而RMS则是去除了减去均值的操作，以便提升效率。</p>
-<ul>
-<li>LayerNorm
-通过均值和标准差对输入进行标准化，确保输入具有零均值和单位方差，这对稳定训练有帮助。</li>
-<li>RMSNorm
-则通过均方根进行归一化，<strong>不关注均值，仅对幅值进行规范化，避免了对数据的中心化处理</strong>，减少了计算复杂度，并且在某些模型中表现优越。</li>
-</ul>
-<p><span class="math inline">\(\text{LN}(x) = \frac{x - \mu}{\sigma}
-\cdot \gamma + \beta\)</span></p>
-<p>其中： - x 是输入向量（通常是模型中每一层的输出）。 - <span
-class="math inline">\(\mu\)</span> 是输入向量的均值。 - <span
-class="math inline">\(\sigma\)</span> 是输入向量的标准差。 - <span
-class="math inline">\(\gamma\)</span> 和 <span
-class="math inline">\(\beta\)</span> 是可学习的缩放和偏移参数。</p>
-<p>LN 会计算整个输入的均值 ( ) 和标准差 (
-)，并用它们对输入进行标准化。</p>
-<p><span class="math inline">\(\text{RMSNorm}(x) =
-\frac{x}{\text{RMS}(x)} \cdot \gamma\)</span> 其中：</p>
-<ul>
-<li><span class="math inline">\(\text{RMS}(x) = \sqrt{\frac{1}{n}
-\sum_{i=1}^n x_i^2}\)</span>是输入向量的均方根。</li>
-<li>$$ 是可学习的缩放参数。</li>
-<li>不使用均值和偏移参数 <span class="math inline">\(\beta\)</span>
-。</li>
-</ul>
-<p><strong>关键点</strong>：</p>
-<ul>
-<li>RMSNorm 只关注输入的
-<strong>范数（幅值）</strong>，而不考虑均值，避免了对数据的中心化处理。</li>
-<li>它是一种更轻量级的标准化方法，在某些情况下可以提高训练效率和收敛速度。</li>
-</ul>
-<h2 id="激活函数是swiglu">激活函数是SwiGLU</h2>
+<h2 id="llama-factory-源码">LLaMA-Factory 源码</h2>
+<p>trainargs.main_process_first() 只有在主进程里面进行数据处理</p>
+<p>高效打包策略，替换 transformers 包的
+<code>_get_unpad_data</code>，以区分每个 batch 中的不同序列</p>
 
     </div>
 

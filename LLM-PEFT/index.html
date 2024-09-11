@@ -52,9 +52,9 @@
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-PEFT/image-20240714150443014.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-PEFT/image-20240714150638355.png">
 <meta property="article:published_time" content="2024-07-12T03:15:17.000Z">
-<meta property="article:modified_time" content="2024-09-03T02:26:26.525Z">
+<meta property="article:modified_time" content="2024-09-10T07:55:47.168Z">
 <meta property="article:author" content="ZheWen Wang">
-<meta property="article:tag" content="PEFT">
+<meta property="article:tag" content="LLM微调">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeqiuo.github.io/LLM-PEFT/peft%E6%96%B9%E6%B3%95.jpg">
 
@@ -179,7 +179,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -258,7 +258,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-03 10:26:26" itemprop="dateModified" datetime="2024-09-03T10:26:26+08:00">2024-09-03</time>
+      <time title="修改时间：2024-09-10 15:55:47" itemprop="dateModified" datetime="2024-09-10T15:55:47+08:00">2024-09-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -266,7 +266,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/LLM%E5%BE%AE%E8%B0%83/" itemprop="url" rel="index"><span itemprop="name">LLM微调</span></a>
+          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
         </span>
     </span>
 
@@ -356,8 +356,8 @@ GB 的预训练大模型相比，几乎可以忽略。</p>
 <p>当下流行 PEFT 结构一览：</p>
 <img data-src="/LLM-PEFT/peft%E6%96%B9%E6%B3%95.jpg" class="" title="peft方法">
 <p>常用的参数高效微调方法：</p>
-<style>.mqgaymmenrwv{zoom: 50%;}</style>
-<img data-src="/LLM-PEFT/image-20240718093213465.png" class="mqgaymmenrwv" alt="image-20240718093213465">
+<style>.jmrhorrsmmqe{zoom: 50%;}</style>
+<img data-src="/LLM-PEFT/image-20240718093213465.png" class="jmrhorrsmmqe" alt="image-20240718093213465">
 <ul>
 <li>Selective：选择模型中的一部分参数进行微调；</li>
 <li>Additive：冻结模型原有参数，微调新增的参数和模块；
@@ -465,8 +465,8 @@ Prefix-Tuning</p>
 <h2 id="ln-tuning">LN-Tuning</h2>
 <p>单独调整 LayerNorm 模块的 weight 和 bias
 参数，训练参数量少，便于和其他的微调方法一起使用。</p>
-<style>.cxrzgdqunenw{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723134459641.png" class="cxrzgdqunenw" alt="image-20240723134459641">
+<style>.cxetfmyfjkhe{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723134459641.png" class="cxetfmyfjkhe" alt="image-20240723134459641">
 <p>实验表明，Prefix-Tuning + LN 的微调效果最佳。</p>
 <p>优势</p>
 <ul>
@@ -483,8 +483,8 @@ prompt 的效果，后续研究提出了 P-Tuning。</p>
 <blockquote>
 <p>可训练模块：Embedding(virtual_token, hidden_size)</p>
 </blockquote>
-<style>.gjmdcubthnqi{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240712160012402.png" class="gjmdcubthnqi" alt="image-20240712160012402">
+<style>.iqysdyofjaup{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240712160012402.png" class="iqysdyofjaup" alt="image-20240712160012402">
 <p>优势：</p>
 <ul>
 <li>简化了不同任务之间的转换和迁移，使得模型可以更加灵活地应用于各种场景；</li>
@@ -522,8 +522,8 @@ Token。这个过程中，会存在大量的重复计算，因此可以将 key �
 输入到下一次的计算中，这一技术又被称之为 kv cache。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 可训练模块：Embedding + MLP，与 P-Tuning 的区别是 prefix 映射到了模型的隐藏层上</span></span><br><span class="line">self.embedding = torch.nn.Embedding(num_virtual_tokens, token_dim)</span><br><span class="line">self.transform = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(token_dim, encoder_hidden_size),</span><br><span class="line">    torch.nn.Tanh(),</span><br><span class="line">    torch.nn.Linear(encoder_hidden_size, num_layers * <span class="number">2</span> * token_dim),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># transformers.models.bloom.BloomAttention 源码实现</span></span><br><span class="line"><span class="keyword">if</span> layer_past <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">    past_key, past_value = layer_past</span><br><span class="line">    key_layer = torch.cat((past_key, key_layer), dim=<span class="number">2</span>)</span><br><span class="line">    value_layer = torch.cat((past_value, value_layer), dim=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<style>.tygcieeyswur{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240712161951488.png" class="tygcieeyswur" alt="image-20240712161951488">
+<style>.qethgpxhwpke{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240712161951488.png" class="qethgpxhwpke" alt="image-20240712161951488">
 <p>优势：</p>
 <ul>
 <li>拟合速度快；</li>
@@ -540,8 +540,8 @@ Token。这个过程中，会存在大量的重复计算，因此可以将 key �
 最大的区别在于：移除重参数化的编码器，即没有MLP。</p>
 <p>通过共享连续提示同时优化多个任务，多任务学习是 P-Tuning v2
 的可选功能，可以通过多任务共享前缀进一步提升性能。</p>
-<style>.fsmqrthxupgc{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240712162302772.png" class="fsmqrthxupgc" alt="image-20240712162302772">
+<style>.clrtxutfylrb{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240712162302772.png" class="clrtxutfylrb" alt="image-20240712162302772">
 <p>优势：</p>
 <ul>
 <li>移除重参数化的编码器，对于较小的模型，会影响模型的表现，且对于大模型提升不大；</li>
@@ -579,8 +579,8 @@ class="math inline">\(\mathbf{A}\in\mathbb{R}^{d\times r}\)</span> 和
 <p>具体而言，冻结预训练的模型权重，并将可训练的秩分解矩阵注入到大模型的每个
 Attention
 层的线性变换中。输入分别与原始权重和两个低秩矩阵进行计算，共同得到最终结果。</p>
-<style>.uopkimhqgseu{zoom:40%;}</style>
-<img data-src="/LLM-PEFT/image-20240712170241205.png" class="uopkimhqgseu" alt="image-20240712170241205">
+<style>.qrrvdbrknmap{zoom:40%;}</style>
+<img data-src="/LLM-PEFT/image-20240712170241205.png" class="qrrvdbrknmap" alt="image-20240712170241205">
 <p>训练完成后，可以将两个低秩矩阵与原始模型中的权重进行合并，合并后的模型与原始模型无异，避免了推理期间
 Prompt 系列方法带来的额外计算量。</p>
 <p><span
@@ -611,8 +611,8 @@ K、V、FFN三部分的值，针对不同 batch
 Linear 层 (hidden_size, hidden_size*3)，IA3
 的可训练参数同时作用于三者之上。</p>
 </blockquote>
-<style>.hnzhimvyfkvp{zoom:67%;}</style>
-<img data-src="/LLM-PEFT/image-20240718191324572.png" class="hnzhimvyfkvp" alt="image-20240718191324572">
+<style>.idpokvuwxedw{zoom:67%;}</style>
+<img data-src="/LLM-PEFT/image-20240718191324572.png" class="idpokvuwxedw" alt="image-20240718191324572">
 <p>优势：</p>
 <ul>
 <li>调节的参数少于 Lora，微调效果也不错；</li>
@@ -652,16 +652,16 @@ otherwise}&amp;\end{cases}\]</span></p>
 P-I\right\|_\mathrm{F}^2+\left\|QQ^\top-I\right\|_\mathrm{F}^2\]</span></p>
 <p>最终，微调的损失函数为</p>
 <p><strong>重要结论</strong></p>
-<style>.muxykhodbssi{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723112058468.png" class="muxykhodbssi" alt="image-20240723112058468">
+<style>.jakpvqicvokb{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723112058468.png" class="jakpvqicvokb" alt="image-20240723112058468">
 <p>AdaLoRA 总是倾向于将更多预算分配给 FFN 和顶层，即 FFN
 模块和顶层的权重矩阵对于模型性能更为重要。</p>
 <h2 id="adapter-tuning">Adapter Tuning</h2>
 <p>在 Transformer Layer 的 Self-Attetion 和 FFN
 之后插入一个先降维再升维的 MLP（以及一层残差和Layer
 Normalization）来学习模型微调的知识。</p>
-<style>.rkpuwvtgpxjy{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723101505442.png" class="rkpuwvtgpxjy" alt="image-20240723101505442">
+<style>.ksuighhudboa{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723101505442.png" class="ksuighhudboa" alt="image-20240723101505442">
 <p>图中，Adapter 即插入的 FF Down + 非线性激活层 + FF
 up。在微调过程中，固定原始模型的参数，只微调适配层。</p>
 <p>不足：</p>
@@ -679,10 +679,10 @@ MLP 模块之后和 LayerNorm 之后使用适配器层</li>
 分离知识提取和知识组合这两个阶段，可以以非破坏性的方式有效地利用从多个任务中学到的表示。知识提取阶段学习Adapter
 任务特定参数，其封装了特定于任务的信息；知识组合阶段将不同任务的 Adapter
 组合到一起。</p>
-<style>.fqsvwkiyqncl{zoom:60%;}</style>
-<img data-src="/LLM-PEFT/image-20240723102934378.png" class="fqsvwkiyqncl" alt="image-20240723102934378">
-<style>.juuidhgfhpif{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723103303792.png" class="juuidhgfhpif" alt="image-20240723103303792">
+<style>.fikhiheopykm{zoom:60%;}</style>
+<img data-src="/LLM-PEFT/image-20240723102934378.png" class="fikhiheopykm" alt="image-20240723102934378">
+<style>.vlkvobrhgdmr{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723103303792.png" class="vlkvobrhgdmr" alt="image-20240723103303792">
 <p>AdapterFusion
 组件将在不同任务上训练的多个适配器的输出作为输入，并学习编码信息的参数化混合器，应用于单个任务多
 Adapter 的场景和多任务混合的场景。单任务场景中，可以多个 Adapter
@@ -696,8 +696,8 @@ Adapter 的场景和多任务混合的场景。单任务场景中，可以多个
 <h2 id="adapterdrop">AdapterDrop</h2>
 <p>该方法在不影响任务性能的前提下，动态高效的移除冗余的
 Adapter，可以尽可能地减少模型的参数量，提高模型在反向传播（训练）和正向传播（推理）时的效率。</p>
-<style>.cnrqbhqmcgzg{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723103450147.png" class="cnrqbhqmcgzg" alt="image-20240723103450147">
+<style>.dmzpkmxttqwi{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723103450147.png" class="dmzpkmxttqwi" alt="image-20240723103450147">
 <p>优势：</p>
 <ul>
 <li>通过从较低的 Transformer 层删除可变数量的Adaper来提升推理速度。
@@ -705,16 +705,16 @@ Adapter，可以尽可能地减少模型的参数量，提高模型在反向传�
 </ul>
 <h2 id="mam-adapter">MAM Adapter</h2>
 <p>分解了最先进的参数高效迁移学习方法的设计，并提出了一个在它们之间建立联系的统一框架。</p>
-<style>.svruklvbktit{zoom: 50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723104300363.png" class="svruklvbktit" alt="image-20240723104300363">
+<style>.oejyymegfcec{zoom: 50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723104300363.png" class="oejyymegfcec" alt="image-20240723104300363">
 <h2 id="unipeft">UniPEFT</h2>
 <p>不同的 PEFT
 方法在同一任务上的表现不同，因此为特定任务选择最合适的方法并非易事，特别是考虑到新
 PEFT 方法和任务数量的快速增长。鉴于模型的多样性和模型选择的难度，UniPEFT
 提出了一个统一的框架 UniPEFT，它将不同的PEFT
 方法作为子模块，并通过门控机制学习激活最适合当前数据或任务设置的方法。</p>
-<style>.xnlmrxehdbtj{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723104910206.png" class="xnlmrxehdbtj" alt="image-20240723104910206">
+<style>.isalhwspibcz{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723104910206.png" class="isalhwspibcz" alt="image-20240723104910206">
 <h2 id="pissa">PISSA</h2>
 <blockquote>
 <p>peft 包中有 PISSA 初始化方法
@@ -735,8 +735,8 @@ class="math display">\[W=AB+W^{res}\]</span>
 A、B，冻结参数量较大的残差矩阵 <span
 class="math display">\[\text{Wres}\]</span>
 ，就达成了用很少的参数近似全参数微调的效果。</p>
-<style>.qzfudtmrbgax{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723093258953.png" class="qzfudtmrbgax" alt="image-20240723093258953">
+<style>.ektoftlnufjl{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723093258953.png" class="ektoftlnufjl" alt="image-20240723093258953">
 <p>优势</p>
 <ul>
 <li>相比于 LoRA，收敛速度更快，性能更好</li>
@@ -744,8 +744,8 @@ class="math display">\[\text{Wres}\]</span>
 <h2 id="vera">VeRA</h2>
 <p>区别于Lora，Vera 将 A 和 B
 矩阵按照高斯分布随机初始化并冻结，只训练两组直接和A、B相乘的一维参数。虽然直观看起来A和B像两个无用的张量，但实际上它们仍然是必不可少的，实验证明即使是随机张量也可以用于微调。</p>
-<style>.cvbmapxkbpip{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723100503853.png" class="cvbmapxkbpip" alt="image-20240723100503853">
+<style>.ntpkkhpuewqs{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723100503853.png" class="ntpkkhpuewqs" alt="image-20240723100503853">
 <p>优势：</p>
 <ul>
 <li>VeRA显著减少了可训练参数的数量（LoRA相比参数减少了10倍），而精度没有损失；</li>
@@ -754,8 +754,8 @@ class="math display">\[\text{Wres}\]</span>
 <h2 id="dora">DoRA</h2>
 <p>将每个高阶矩阵都分解为 1*k 大小矩阵和 d*k 方向矩阵的乘积，LoRA
 倾向于同时改变幅度和方向，DoRA可以更容易地将二者分开调整，或者用另一个的负变化来补偿一个的变化。</p>
-<style>.eusjkhbdllby{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240723110508921.png" class="eusjkhbdllby" alt="image-20240723110508921">
+<style>.blkcrwkrlicp{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240723110508921.png" class="blkcrwkrlicp" alt="image-20240723110508921">
 <h2 id="slora">SLORA</h2>
 <p>一个 GPU 上并行执行多个 lora adapters 的微调</p>
 <p>S-LoRA 能够在单个 GPU 上或跨多个 GPU 以较小的开销为数千个 LoRA
@@ -781,8 +781,8 @@ n}\]</span> 缓慢变化的低秩结构，而不是试图将权重矩阵本身�
 <p>LoRA 中的适配器矩阵 A 和 B 以相同的学习率更新，实验表明对 A 和 B
 使用相同的学习率并不能实现有效的特征学习，LoRA+ 通过精心选择的固定比率为
 LoRA 适配器矩阵 A 和 B 设置不同的学习率，纠正 LoRA 的这种次优性。</p>
-<style>.gjrcvwtzefci{zoom: 67%;}</style>
-<img data-src="/LLM-PEFT/image-20240725102452954.png" class="gjrcvwtzefci" alt="image-20240725102452954">
+<style>.pnfbvsmaffmo{zoom: 67%;}</style>
+<img data-src="/LLM-PEFT/image-20240725102452954.png" class="pnfbvsmaffmo" alt="image-20240725102452954">
 <h2 id="longlora">LongLoRA</h2>
 <p>LongLoRA
 扩展了模型的上下文，同时保留了其原始架构，并且与大多数现有技术兼容。一方面，虽然推理过程中需要密集的全局注意力，但微调过程更需要稀疏的局部注意力实现有效且高效反向传播。由此，该方法提出转移稀疏注意力</p>
@@ -795,13 +795,13 @@ LoRA 适配器矩阵 A 和 B 设置不同的学习率，纠正 LoRA 的这种次
 <p>LoRA通过在选定层添加可训练的低秩Adapter来实现参数有效的微调。每个LoRA由两个低秩矩阵乘积组成，并乘以一个与秩相关的因子，传统的LoRA采用“直接除以秩的因子”的方法过于激进，导致高秩Adapter的学习速度减缓，性能受限。因此，在实际应用中，LoRA通常仅限于使用非常低的秩。</p>
 <p>rsLoRA深入研究了 LoRA 的缩放因子对学习过程的影响，并证明了 LoRA
 应该除以秩的平方根而不是秩，通过使用较大的秩在训练期间增加计算资源以获得更好的微调性能，同时不改变推理计算成本。</p>
-<style>.fblydzasdnll{zoom:67%;}</style>
-<img data-src="/LLM-PEFT/image-20240903102620304.png" class="fblydzasdnll" alt="image-20240903102620304">
+<style>.hysucyjjmvqz{zoom:67%;}</style>
+<img data-src="/LLM-PEFT/image-20240903102620304.png" class="hysucyjjmvqz" alt="image-20240903102620304">
 <h2 id="llama-pro">LLaMA Pro</h2>
 <p>该方法提出的Block
 Expansion方法，即块扩展，在保持预训练模型参数不变的基础上，增加新的block来适应新的训练任务。这些新加入的block与原有block协同工作，既保留了模型原有的知识，又能够适应新的训练数据和任务需求。</p>
-<style>.igqfesfrmusl{zoom:50%;}</style>
-<img data-src="/LLM-PEFT/image-20240729142017433.png" class="igqfesfrmusl" alt="image-20240729142017433">
+<style>.mbgynyifgfkf{zoom:50%;}</style>
+<img data-src="/LLM-PEFT/image-20240729142017433.png" class="mbgynyifgfkf" alt="image-20240729142017433">
 <h2 id="方法性能对比">方法性能对比</h2>
 <p>从方法类型、是否存储高效、是否内存高效、反向传播成本、推理开销五个维度比较
 PEFT 方法：</p>
@@ -849,7 +849,7 @@ PEFT），其核心思想在于固定PLM的大部分参数，仅调整一小部�
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/PEFT/" rel="tag"># PEFT</a>
+              <a href="/tags/LLM%E5%BE%AE%E8%B0%83/" rel="tag"># LLM微调</a>
           </div>
 
         

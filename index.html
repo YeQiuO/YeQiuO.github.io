@@ -149,7 +149,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -209,7 +209,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/LLM-Model/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/LLM-Model/" class="post-title-link" itemprop="url">LLM-Model</a>
         </h2>
 
         <div class="post-meta-container">
@@ -227,7 +227,16 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-11 11:11:36" itemprop="dateModified" datetime="2024-09-11T11:11:36+08:00">2024-09-11</time>
+      <time title="修改时间：2024-09-11 13:52:43" itemprop="dateModified" datetime="2024-09-11T13:52:43+08:00">2024-09-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
+        </span>
     </span>
 
   
@@ -240,157 +249,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <table>
-<tbody>
-<tr class="odd">
-<td>title： LLM-Model</td>
-</tr>
-<tr class="even">
-<td>tags：</td>
-</tr>
-<tr class="odd">
-<td>- 大模型结构</td>
-</tr>
-<tr class="even">
-<td>categories：</td>
-</tr>
-<tr class="odd">
-<td>- LLM</td>
-</tr>
-<tr class="even">
-<td>date： 2024-09-10 09：48：52</td>
-</tr>
-<tr class="odd">
-<td>description： LLM 结构、源码解读</td>
-</tr>
-</tbody>
-</table>
-<h1 id="llm-改进技术">LLM 改进技术</h1>
-<h2 id="滑动窗口注意力机制">滑动窗口注意力机制</h2>
-<p>sliding window attention: Longformer</p>
-<img data-src="/LLM-Model/swa.png" class="" title="img">
-<p><a
-target="_blank" rel="noopener" href="https://amaarora.github.io/posts/2024-07-04%20SWA.html#sliding-window-attention-in-pytorch">技术博客</a></p>
-<h2 id="稀疏注意力机制">稀疏注意力机制</h2>
-<p>Generating Long Sequences with Sparse
-Transformers，核心是只让设置好的像素点参与自注意力的计算（注意这里不是只选取设置好位置上的像素点，其他mask掉，因为这样并不能降低模型的复杂度），引入一个名为连接模式(Connectivity
-Pattern)的变量，连接模式只作用在<span
-class="math inline">\(K\)</span>和<span
-class="math inline">\(V\)</span>的计算上，(bs, head_num, seq_len,
-head_dim) 中的 seq_len 只选取连接模式中选择的。</p>
-<p>连接模式（注意力核）的选择：局部稀疏模式、分块稀疏模式、对角块稀疏模式</p>
-<img data-src="/LLM-Model/2.png" class="" title="img">
-<p><a
-target="_blank" rel="noopener" href="https://fengyan-wby.fun/2023/08/22/%E3%80%90%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%E3%80%91Generating-Long-Sequences-with-Sparse-Transformers/">技术博客</a></p>
-<h1 id="qwen2-源码解读">Qwen2 源码解读</h1>
-<p><a
-href="https：//github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">Link</a></p>
-<img data-src="/LLM-Model/dccdd5360d984d2c84a9f7338c55e665.jpeg" class="" title="img">
-<p><code>modeling_qwen2.py</code> 架构</p>
-<ul>
-<li><p>Qwen2RMSNorm： RMS归一化层</p></li>
-<li><p>Qwen2RotaryEmbedding： 旋转位置编码</p></li>
-<li><p>Attention</p>
-<ul>
-<li><p>Qwen2Attention： 注意力层</p></li>
-<li><p>Qwen2FlashAttention2： 使用Flash Attention
-2.0版本加速的注意力层</p></li>
-<li><p>Qwen2SdpaAttention： 使用Sdpa（pytorch自带的加速， Scaled
-Dot-Product Attention）加速的注意力层</p></li>
-</ul></li>
-<li><p>Qwen2DecoderLayer： 编码层，核心结构，之后就是堆叠</p></li>
-<li><p>Qwen2PreTrainedModel： 预训练类</p></li>
-<li><p>Qwen2Model： 不带head的Qwen2模型</p></li>
-<li><p>Qwen2ForCausalLM： 带Causal LM head的Qwen2模型</p></li>
-<li><p>Qwen2ForSequenceClassification： 带序列分类头的Qwen2模型</p></li>
-</ul>
-<p>功能函数</p>
-<ul>
-<li><p>_get_unpad_data： 在flash attention的数据预处理中会用到。主要是对
-attention mask 进行一些操作；</p></li>
-<li><p>rotate_half： 在旋转位置编码中用到；</p></li>
-<li><p>apply_rotary_pos_emb： 对数据主要是注意力运算中的 q，k
-做旋转位置编码；</p></li>
-<li><p>repeat_kv： 主要是在 MQA（Multi-Query Attention）和
-GQA（Group-Query Attention）中用到，因为 q head 数量是 k，v head
-的数量的整数倍</p></li>
-</ul>
-<p>优化注意力机制，降低处理长序列时的计算复杂度。</p>
-<h2 id="分组查询注意力机制-gqa">分组查询注意力机制 GQA</h2>
-<p>MQA 将所有注意力头的键和值共享</p>
-<p>GQA 的方式是将多个注意力头分成组，每组头共享同一组的键和值。</p>
-<img data-src="/LLM-Model/v2-8a907719f9e3ced8347a051d9a66c732_720w.webp" class="" title="img">
-<p>实现方式：<code>transformers.models.llama.modeling_llama.repeat_kv</code>
-复制多次 KV，使用 <code>expand</code> 而不是 <code>repeat</code> 是因为
-KV 的参数是组内共享的</p>
-<h2 id="旋转位置编码-pore">旋转位置编码 PoRE</h2>
-<blockquote>
-<p>通过旋转编码，使得每个 token
-既有相对位置信息，又有绝对位置信息，Qwen2 的位置信息编码是在 attention
-中计算到 KV 中的</p>
-</blockquote>
-<p>例如，对于一个维度为 512 的向量<span
-class="math inline">\(v=(v_0,v_1,v_2,v_3，...，v_{511})\)</span>，RoPE
-可能将其看作：</p>
-<ul>
-<li>第 1 对：<span class="math inline">\((v_0,v_1)\)</span></li>
-<li>第 2 对：<span class="math inline">\((v_2,v_3)\)</span></li>
-<li>...</li>
-<li>第 256 对：<span
-class="math inline">\((v_{510},v_{511})\)</span></li>
-</ul>
-<p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.rbsfduycypzn{zoom： 67%;}</style>
-<img data-src="/LLM-Model/ROPE3.png" class="rbsfduycypzn" alt="img">
-<p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和
-<code>apply_rotary_pos_emb</code> 方法，
-<code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin
-数据， <code>apply_rotary_pos_emb</code> 方法将位置信息作用到<span
-class="math inline">\(K\)</span>和<span
-class="math inline">\(V\)</span>上。</p>
-<h2 id="均方根归一化-rmsnorm">均方根归一化 RMSNorm</h2>
-<p>矩阵计算要进行归一化防止不同特征的取值过大，常用的是 layer
-norm，也就是每一项减去样本的均值，再除以样本的方差；而 RMS
-则是去除了减去均值的操作，以便提升效率。</p>
-<ul>
-<li>LayerNorm
-通过均值和标准差对输入进行标准化，确保输入具有<strong>零均值和单位方差</strong>，这对稳定训练有帮助。</li>
-<li>RMSNorm
-则通过均方根进行归一化，<strong>不关注均值，仅对幅值进行规范化，避免了对数据的中心化处理</strong>，减少了计算复杂度，并且在某些模型中表现优越。</li>
-</ul>
-<p><span class="math inline">\(\text{LN}(x) = \frac{x - \mu}{\sigma}
-\cdot \gamma + \beta\)</span></p>
-<ul>
-<li>x 是输入向量（通常是模型中每一层的输出）。</li>
-<li><span class="math inline">\(\mu\)</span> 是输入向量的均值。</li>
-<li><span class="math inline">\(\sigma\)</span>
-是输入向量的标准差。</li>
-<li><span class="math inline">\(\gamma\)</span> 和 <span
-class="math inline">\(\beta\)</span> 是可学习的缩放和偏移参数。</li>
-</ul>
-<p>LN 会计算整个输入的均值 <span class="math inline">\(\mu\)</span>
-和标准差 $ $，并用它们对输入进行标准化。</p>
-<p><span class="math inline">\(\text{RMSNorm}(x) =
-\frac{x}{\text{RMS}(x)} \cdot \gamma\)</span></p>
-<ul>
-<li><span class="math inline">\(\text{RMS}(x) = \sqrt{\frac{1}{n}
-\sum_{i=1}^n x_i^2}\)</span>是输入向量的均方根；</li>
-<li>$$ 是可学习的缩放参数；</li>
-<li>不使用均值和偏移参数 <span class="math inline">\(\beta\)</span>
-；</li>
-</ul>
-<p>RMSNorm 只关注输入的
-<strong>范数（幅值）</strong>，而不考虑均值，避免了对数据的中心化处理。</p>
-<p>它是一种更轻量级的标准化方法，在某些情况下可以提高训练效率和收敛速度。</p>
-<h2 id="激活函数-swiglu">激活函数 SwiGLU</h2>
-<p>SwiGLU 将 GLU 的门控改为 <code>Swish</code> ，后验证实其在 GLU
-的众多变体里效果最好，优于 Transformer 一开始使用的
-<code>ReLU</code>。</p>
-<p><span class="math inline">\(F.silu(self.w1(x)) *
-self.w2(x)\)</span>，其中 silu 公式为 <span
-class="math inline">\(\mathrm{Swish}_\beta(x)=x\otimes\sigma(\beta
-x)\)</span></p>
-
+          <p>LLM 结构、源码解读</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/LLM-Model/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -520,7 +387,7 @@ x)\)</span></p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/paper-PAFT/" class="post-title-link" itemprop="url">[paper]PAFT</a>
+          <a href="/paper-PAFT/" class="post-title-link" itemprop="url">论文阅读 RAFT</a>
         </h2>
 
         <div class="post-meta-container">
@@ -538,7 +405,7 @@ x)\)</span></p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-08-16 11:02:26" itemprop="dateModified" datetime="2024-08-16T11:02:26+08:00">2024-08-16</time>
+      <time title="修改时间：2024-09-11 13:59:05" itemprop="dateModified" datetime="2024-09-11T13:59:05+08:00">2024-09-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -560,93 +427,10 @@ x)\)</span></p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>RAFT:Adapting Language Model to Domain Specific RAG 提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能</p>
+          <p>《Adapting Language Model to Domain Specific RAG》提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/paper-PAFT/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/LLM-RLHF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ZheWen Wang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="闻">
-      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 闻">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/LLM-RLHF/" class="post-title-link" itemprop="url">LLM-RLHF</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-08-12 20:26:00" itemprop="dateCreated datePublished" datetime="2024-08-12T20:26:00+08:00">2024-08-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-10 11:00:27" itemprop="dateModified" datetime="2024-09-10T11:00:27+08:00">2024-09-10</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>LLM人工对齐算法</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/LLM-RLHF/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -713,7 +497,16 @@ x)\)</span></p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-10 19:12:15" itemprop="dateModified" datetime="2024-09-10T19:12:15+08:00">2024-09-10</time>
+      <time title="修改时间：2024-09-11 13:52:57" itemprop="dateModified" datetime="2024-09-11T13:52:57+08:00">2024-09-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
+        </span>
     </span>
 
   
@@ -1216,8 +1009,100 @@ x)\)</span></p>
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/#developer/Java-Interview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 闻">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="#developer/Java-Interview/" class="post-title-link" itemprop="url">面试常见题收集</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-05-17 09:12:50" itemprop="dateCreated datePublished" datetime="2024-05-17T09:12:50+08:00">2024-05-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-05 14:11:30" itemprop="dateModified" datetime="2024-09-05T14:11:30+08:00">2024-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E4%BD%9C/" itemprop="url" rel="index"><span itemprop="name">工作</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>汇总记录面试题，方便复习和面试模拟</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="#developer/Java-Interview/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

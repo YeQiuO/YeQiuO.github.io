@@ -886,18 +886,6 @@ PEFT），其核心思想在于固定PLM的大部分参数，仅调整一小部�
       </tags>
   </entry>
   <entry>
-    <title>LLM-RLHF</title>
-    <url>/LLM-RLHF/</url>
-    <content><![CDATA[<p>TODOLIST</p>
-<p>RM + PPO</p>
-<p>DPO <a
-href="https://www.bilibili.com/video/BV1GF4m1L7Nt/?spm_id_from=333.999.0.0">Link</a></p>
-<p>ReMax</p>
-<p>GRPO</p>
-<p>RLOO</p>
-]]></content>
-  </entry>
-  <entry>
     <title>RAG 架构和 Langchain 框架</title>
     <url>/LLM-RAG-Langchain/</url>
     <content><![CDATA[<p>当下，微调（Fine-Tuning）和检索增强生成（Retrieval-Augmented
@@ -1294,7 +1282,7 @@ select 和 poll 遍历所有 socket 集合；</li>
       </tags>
   </entry>
   <entry>
-    <title>[paper]PAFT</title>
+    <title>论文阅读 RAFT</title>
     <url>/paper-PAFT/</url>
     <content><![CDATA[<p><a
 href="https://gorilla.cs.berkeley.edu/blogs/9_raft.html">Paper</a></p>
@@ -6825,8 +6813,8 @@ OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
 <p>大模型核心技术点在于训练资源、数据清洗和数据配比等，其难点或许不在于模型训练和模型结构搭建</p>
 </blockquote>
 <p><strong>【变形金刚之神！保佑我找到工作！】</strong></p>
-<style>.bedxoocjqfvx{zoom:70%;}</style>
-<img data-src="/LLM-Basic/image-20240714162218754.png" class="bedxoocjqfvx" alt="image-20240714162218754">
+<style>.pasvgldwgbip{zoom:70%;}</style>
+<img data-src="/LLM-Basic/image-20240714162218754.png" class="pasvgldwgbip" alt="image-20240714162218754">
 <ul>
 <li>相较于 RNN，Transformer
 直接将句子中<strong>任意两个单词的联系通过一个计算步骤直接联系起来</strong>，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
@@ -6914,6 +6902,12 @@ href="https://github.com/datawhalechina/tiny-universe/tree/main">开源项目</a
 <p>高效打包策略，替换 transformers 包的
 <code>_get_unpad_data</code>，以区分每个 batch 中的不同序列</p>
 ]]></content>
+      <categories>
+        <category>LLM</category>
+      </categories>
+      <tags>
+        <tag>大模型基础</tag>
+      </tags>
   </entry>
   <entry>
     <title>面试常见题收集</title>
@@ -6943,34 +6937,9 @@ href="https://github.com/datawhalechina/tiny-universe/tree/main">开源项目</a
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>LLM-Model</title>
     <url>/LLM-Model/</url>
-    <content><![CDATA[<table>
-<tbody>
-<tr class="odd">
-<td>title： LLM-Model</td>
-</tr>
-<tr class="even">
-<td>tags：</td>
-</tr>
-<tr class="odd">
-<td>- 大模型结构</td>
-</tr>
-<tr class="even">
-<td>categories：</td>
-</tr>
-<tr class="odd">
-<td>- LLM</td>
-</tr>
-<tr class="even">
-<td>date： 2024-09-10 09：48：52</td>
-</tr>
-<tr class="odd">
-<td>description： LLM 结构、源码解读</td>
-</tr>
-</tbody>
-</table>
-<h1 id="llm-改进技术">LLM 改进技术</h1>
+    <content><![CDATA[<h1 id="llm-改进技术">LLM 改进技术</h1>
 <h2 id="滑动窗口注意力机制">滑动窗口注意力机制</h2>
 <p>sliding window attention: Longformer</p>
 <img data-src="/LLM-Model/swa.png" class="" title="img">
@@ -7045,8 +7014,8 @@ class="math inline">\(v=(v_0,v_1,v_2,v_3，...，v_{511})\)</span>，RoPE
 class="math inline">\((v_{510},v_{511})\)</span></li>
 </ul>
 <p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.rbsfduycypzn{zoom： 67%;}</style>
-<img data-src="/LLM-Model/ROPE3.png" class="rbsfduycypzn" alt="img">
+<style>.towfpflgynup{zoom： 67%;}</style>
+<img data-src="/LLM-Model/ROPE3.png" class="towfpflgynup" alt="img">
 <p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和
 <code>apply_rotary_pos_emb</code> 方法，
 <code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin
@@ -7096,5 +7065,11 @@ self.w2(x)\)</span>，其中 silu 公式为 <span
 class="math inline">\(\mathrm{Swish}_\beta(x)=x\otimes\sigma(\beta
 x)\)</span></p>
 ]]></content>
+      <categories>
+        <category>LLM</category>
+      </categories>
+      <tags>
+        <tag>大模型结构</tag>
+      </tags>
   </entry>
 </search>

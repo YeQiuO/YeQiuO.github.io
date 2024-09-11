@@ -19,21 +19,22 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="title： LLM-Model   tags：   - 大模型结构   categories：   - LLM   date： 2024-09-10 09：48：52   description： LLM 结构、源码解读    LLM 改进技术 滑动窗口注意力机制 sliding window attention: Longformer">
+    <meta name="description" content="LLM 结构、源码解读">
 <meta property="og:type" content="article">
-<meta property="og:title" content="闻">
+<meta property="og:title" content="LLM-Model">
 <meta property="og:url" content="https://yeqiuo.github.io/LLM-Model/index.html">
 <meta property="og:site_name" content="闻">
-<meta property="og:description" content="title： LLM-Model   tags：   - 大模型结构   categories：   - LLM   date： 2024-09-10 09：48：52   description： LLM 结构、源码解读    LLM 改进技术 滑动窗口注意力机制 sliding window attention: Longformer">
+<meta property="og:description" content="LLM 结构、源码解读">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/swa.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/2.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/dccdd5360d984d2c84a9f7338c55e665.jpeg">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/v2-8a907719f9e3ced8347a051d9a66c732_720w.webp">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/ROPE3.png">
-<meta property="article:published_time" content="2024-09-10T01:48:52.614Z">
-<meta property="article:modified_time" content="2024-09-11T03:11:36.624Z">
+<meta property="article:published_time" content="2024-09-10T01:48:52.000Z">
+<meta property="article:modified_time" content="2024-09-11T05:52:43.991Z">
 <meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="大模型结构">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeqiuo.github.io/LLM-Model/swa.png">
 
@@ -42,10 +43,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/LLM-Model/","path":"LLM-Model/","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/LLM-Model/","path":"LLM-Model/","title":"LLM-Model"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title> | 闻</title>
+<title>LLM-Model | 闻</title>
   
 
 
@@ -158,7 +159,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -169,7 +170,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -214,12 +215,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 闻">
-      <meta itemprop="description" content="">
+      <meta itemprop="name" content="LLM-Model | 闻">
+      <meta itemprop="description" content="LLM 结构、源码解读">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          LLM-Model
         </h1>
 
         <div class="post-meta-container">
@@ -237,44 +238,29 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-11 11:11:36" itemprop="dateModified" datetime="2024-09-11T11:11:36+08:00">2024-09-11</time>
+      <time title="修改时间：2024-09-11 13:52:43" itemprop="dateModified" datetime="2024-09-11T13:52:43+08:00">2024-09-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
+        </span>
     </span>
 
   
 </div>
 
+            <div class="post-description">LLM 结构、源码解读</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><table>
-<tbody>
-<tr class="odd">
-<td>title： LLM-Model</td>
-</tr>
-<tr class="even">
-<td>tags：</td>
-</tr>
-<tr class="odd">
-<td>- 大模型结构</td>
-</tr>
-<tr class="even">
-<td>categories：</td>
-</tr>
-<tr class="odd">
-<td>- LLM</td>
-</tr>
-<tr class="even">
-<td>date： 2024-09-10 09：48：52</td>
-</tr>
-<tr class="odd">
-<td>description： LLM 结构、源码解读</td>
-</tr>
-</tbody>
-</table>
-<h1 id="llm-改进技术">LLM 改进技术</h1>
+    <div class="post-body" itemprop="articleBody"><h1 id="llm-改进技术">LLM 改进技术</h1>
 <h2 id="滑动窗口注意力机制">滑动窗口注意力机制</h2>
 <p>sliding window attention: Longformer</p>
 <img data-src="/LLM-Model/swa.png" class="" title="img">
@@ -349,8 +335,8 @@ class="math inline">\(v=(v_0,v_1,v_2,v_3，...，v_{511})\)</span>，RoPE
 class="math inline">\((v_{510},v_{511})\)</span></li>
 </ul>
 <p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.rbsfduycypzn{zoom： 67%;}</style>
-<img data-src="/LLM-Model/ROPE3.png" class="rbsfduycypzn" alt="img">
+<style>.towfpflgynup{zoom： 67%;}</style>
+<img data-src="/LLM-Model/ROPE3.png" class="towfpflgynup" alt="img">
 <p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和
 <code>apply_rotary_pos_emb</code> 方法，
 <code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin
@@ -407,6 +393,9 @@ x)\)</span></p>
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84/" rel="tag"># 大模型结构</a>
+          </div>
 
         
 

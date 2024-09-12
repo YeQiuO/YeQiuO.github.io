@@ -289,9 +289,9 @@ bge-large-zh-v1.5
     <content><![CDATA[<blockquote>
 <p>大模型核心技术点在于训练资源、数据清洗和数据配比等，其难点或许不在于模型训练和模型结构搭建</p>
 </blockquote>
-<p><strong>【变形金刚之神！保佑我找到工作！】</strong></p>
-<style>.sjuckojubugb{zoom:70%;}</style>
-<img data-src="/LLM-Basic/image-20240714162218754.png" class="sjuckojubugb" alt="image-20240714162218754">
+<p><strong>【变形金刚之神！Bless Me】</strong></p>
+<style>.immeskkwgkju{zoom:70%;}</style>
+<img data-src="/LLM-Basic/image-20240714162218754.png" class="immeskkwgkju" alt="image-20240714162218754">
 <ul>
 <li>相较于 RNN，Transformer
 直接将句子中<strong>任意两个单词的联系通过一个计算步骤直接联系起来</strong>，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
@@ -309,7 +309,7 @@ Encoder-Decoder（prefix-lm）；掩码语言模型/自编码模型
 Encoder-Only；因果语言模型/自回归模型 Decoder-Only。Encoder-only
 适用于机器翻译、句子分类、命名体识别和问答（大概）；Decoder-only
 适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
-<h1 id="llm-基础知识">LLM 基础知识</h1>
+<h1 id="基础知识">基础知识</h1>
 <h2 id="预训练显存占用">预训练显存占用</h2>
 <p>样例：大小为 n B的模型，Adam 优化器，混合精度 fp16，
 b(batch_size)，s(sequence len)，h(hidden size)</p>
@@ -323,6 +323,30 @@ fp32 精度。</li>
 <li>激活值大小：sbh(34+5*a*s/h)*L byte <a
 href="https://zhuanlan.zhihu.com/p/673916177">分析</a></li>
 </ol>
+<h2 id="数据获取和清洗">数据获取和清洗</h2>
+<blockquote>
+<p>少量高质量数据优于大量低质量数据</p>
+</blockquote>
+<h2 id="tokenizer">Tokenizer</h2>
+<p>特殊 Token</p>
+<ul>
+<li>[PAD] 填充至固定长度</li>
+<li>[CLS] 分类任务</li>
+<li>[SEP] 分隔符</li>
+<li>[MASK] 自监督任务，序列填空</li>
+<li>[BOS] / [EOS] 自回归任务，约束文本生成的边界</li>
+<li>[UNK] 无法识别的词</li>
+<li>[SPE] 词汇表预留的标志</li>
+</ul>
+<p>[Q] Tokenizer 是选左 Padding 还是右 Padding？</p>
+<p>训练和推理阶段的 &lt;PAD&gt; 标记是填充在左边还是右边都可以</p>
+<ul>
+<li>训练阶段，每一轮的 batch 都是独立的，<code>attention mask</code>
+会把与有效序列无关的部分都屏蔽了，因此两者都行；</li>
+<li>推理阶段，存在自回归的推理过程，当并发 <code>batch infer</code>
+时，左 padding 可以直接将推理得到的下一跳 Token 合并到
+<code>input_ids</code> 尾部，简化编码过程；</li>
+</ul>
 <h2 id="优化器">优化器</h2>
 <p>在石器时代，人们直接使用 <code>loss.backward()</code>
 计算梯度，乘以固定的学习率，得到所有参数更新的幅度。然而，使用固定的学习率，在梯度变化剧烈的地方，会导致更新不稳定或收敛慢。</p>
@@ -353,9 +377,10 @@ class="math inline">\(p(x_i)=\frac{e^{\frac{x_i}t}}{\sum_{j=1}^ne^{\frac{x_j}t}}
 softmax 的概率分配越尖锐（确定性），反之越平滑（随机性）</p>
 <p>num_beams：每次保留概率最大的几个序列，最后输出概率最大的值（上面三个方法已足够，束搜索未包含在
 OpenAI API 中）</p>
-<h2 id="embedding-模型的结构">Embedding 模型的结构</h2>
+<h2 id="模型结构">模型结构</h2>
+<p>SentencBert</p>
 <figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">BertModel(</span><br><span class="line">  (embeddings): BertEmbeddings(</span><br><span class="line">    (word<span class="built_in">_</span>embeddings): Embedding(21152, 1024, padding<span class="built_in">_</span>idx=0)</span><br><span class="line">    (position<span class="built_in">_</span>embeddings): Embedding(512, 1024)</span><br><span class="line">    (token<span class="built_in">_</span>type<span class="built_in">_</span>embeddings): Embedding(2, 1024)</span><br><span class="line">    (LayerNorm): </span><br><span class="line">    (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">  )</span><br><span class="line">  (encoder): BertEncoder(</span><br><span class="line">    (layer): ModuleList(</span><br><span class="line">      (0-23): 24 x BertLayer(</span><br><span class="line">        (attention): BertAttention(</span><br><span class="line">          (self): BertSdpaSelfAttention(</span><br><span class="line">            (query): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (key): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (value): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">          )</span><br><span class="line">          (output): BertSelfOutput(</span><br><span class="line">            (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (LayerNorm): </span><br><span class="line">            (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">          )</span><br><span class="line">        )</span><br><span class="line">        (intermediate): BertIntermediate(</span><br><span class="line">          (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=4096, bias=True)</span><br><span class="line">          (intermediate<span class="built_in">_</span>act<span class="built_in">_</span>fn): GELUActivation()</span><br><span class="line">        )</span><br><span class="line">        (output): BertOutput(</span><br><span class="line">          (dense): Linear(in<span class="built_in">_</span>features=4096, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">          (LayerNorm): </span><br><span class="line">          (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">        )</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (pooler): BertPooler(</span><br><span class="line">    (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">    (activation): Tanh()</span><br><span class="line">  )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h1 id="coding">Coding</h1>
+<h1 id="编程">编程</h1>
 <h2 id="transformers及相关库">Transformers及相关库</h2>
 <blockquote>
 <p>优秀的基础知识分享 <a
@@ -375,9 +400,11 @@ href="https://github.com/datawhalechina/tiny-universe/tree/main">开源项目</a
 <h2 id="分布式训练">分布式训练</h2>
 <p>Accelerate 包，融合了 Deepspeed、DDP、FSDP；</p>
 <h2 id="llama-factory-源码">LLaMA-Factory 源码</h2>
-<p>trainargs.main_process_first() 只有在主进程里面进行数据处理</p>
-<p>高效打包策略，替换 transformers 包的
-<code>_get_unpad_data</code>，以区分每个 batch 中的不同序列</p>
+<p>trainargs.main_process_first()
+内的代码只在主进程里面运行，适用于数据处理；</p>
+<p>为实现高效打包，替换 transformers 包内模型的
+<code>_get_unpad_data</code>方法，实现4Dmask，以区分每个 batch
+中的不同序列；</p>
 ]]></content>
       <categories>
         <category>LLM</category>
@@ -532,13 +559,16 @@ Boolean</li>
   <entry>
     <title>LLM-Model</title>
     <url>/LLM-Model/</url>
-    <content><![CDATA[<h1 id="llm-改进技术">LLM 改进技术</h1>
-<h2 id="滑动窗口注意力机制">滑动窗口注意力机制</h2>
+    <content><![CDATA[<h1 id="优化技术">优化技术</h1>
+<blockquote>
+<p>大模型领域针对 Transformer 计算过程的一些优化</p>
+</blockquote>
+<h2 id="滑动窗口注意力">滑动窗口注意力</h2>
 <p>sliding window attention: Longformer</p>
 <img data-src="/LLM-Model/swa.png" class="" title="img">
 <p><a
 href="https://amaarora.github.io/posts/2024-07-04%20SWA.html#sliding-window-attention-in-pytorch">技术博客</a></p>
-<h2 id="稀疏注意力机制">稀疏注意力机制</h2>
+<h2 id="稀疏注意力">稀疏注意力</h2>
 <p>Generating Long Sequences with Sparse
 Transformers，核心是只让设置好的像素点参与自注意力的计算（注意这里不是只选取设置好位置上的像素点，其他mask掉，因为这样并不能降低模型的复杂度），引入一个名为连接模式(Connectivity
 Pattern)的变量，连接模式只作用在<span
@@ -549,10 +579,18 @@ head_dim) 中的 seq_len 只选取连接模式中选择的。</p>
 <img data-src="/LLM-Model/2.png" class="" title="img">
 <p><a
 href="https://fengyan-wby.fun/2023/08/22/%E3%80%90%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%E3%80%91Generating-Long-Sequences-with-Sparse-Transformers/">技术博客</a></p>
-<h1 id="qwen2-源码解读">Qwen2 源码解读</h1>
-<p><a
-href="https：//github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">Link</a></p>
+<h2 id="flash-attention">Flash Attention</h2>
+<p>其核心思想是将原始的注意力矩阵分解成更小的子矩阵，然后分别对这些子矩阵进行计算，只要这个子矩阵的大小可以在
+SRAM 内存放，那么不就可以在计算过程中只访问 SRAM 了。</p>
+<p>采用了 Recomputation
+(重算）方法，这算是在深度学习优化中的老概念了，它是一种算力换内存的把戏。</p>
+<p>Tiling 方法将 NxN 的 softmax 分数矩阵划分为块，核心是
+<strong>分块SoftMax算法</strong>，详细推导过程见<a
+href="http://fancyerii.github.io/2023/10/23/flashattention/">技术博客</a>。</p>
+<h1 id="qwen2-模块">Qwen2 模块</h1>
 <img data-src="/LLM-Model/dccdd5360d984d2c84a9f7338c55e665.jpeg" class="" title="img">
+<p><a
+href="https://github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">DataWhale社区教程</a></p>
 <p><code>modeling_qwen2.py</code> 架构</p>
 <ul>
 <li><p>Qwen2RMSNorm： RMS归一化层</p></li>
@@ -583,7 +621,7 @@ GQA（Group-Query Attention）中用到，因为 q head 数量是 k，v head
 的数量的整数倍</p></li>
 </ul>
 <p>优化注意力机制，降低处理长序列时的计算复杂度。</p>
-<h2 id="分组查询注意力机制-gqa">分组查询注意力机制 GQA</h2>
+<h2 id="分组查询注意力-gqa">分组查询注意力 GQA</h2>
 <p>MQA 将所有注意力头的键和值共享</p>
 <p>GQA 的方式是将多个注意力头分成组，每组头共享同一组的键和值。</p>
 <img data-src="/LLM-Model/v2-8a907719f9e3ced8347a051d9a66c732_720w.webp" class="" title="img">
@@ -607,8 +645,8 @@ class="math inline">\(v=(v_0,v_1,v_2,v_3，...，v_{511})\)</span>，RoPE
 class="math inline">\((v_{510},v_{511})\)</span></li>
 </ul>
 <p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.vinukmbreaew{zoom： 67%;}</style>
-<img data-src="/LLM-Model/ROPE3.png" class="vinukmbreaew" alt="img">
+<style>.enmngxxrkwik{zoom： 67%;}</style>
+<img data-src="/LLM-Model/ROPE3.png" class="enmngxxrkwik" alt="img">
 <p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和
 <code>apply_rotary_pos_emb</code> 方法，
 <code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin
@@ -2586,9 +2624,8 @@ id="基于异构图的用户状态跟踪">基于异构图的用户状态跟踪<i
   <entry>
     <title>Control Globally, Understand Locally</title>
     <url>/-2023/Control%20Globally,%20Understand%20Locally/</url>
-    <content><![CDATA[<p><strong>Title:</strong> Control Globally, Understand Locally. A
-Global-to-Local Hierarchical Graph Network for Emotional Support
-Conversation.</p>
+    <content><![CDATA[<p>《Control Globally, Understand Locally. A Global-to-Local
+Hierarchical Graph Network for Emotional Support Conversation.》</p>
 <p>创新点：</p>
 <ul>
 <li>在 Encoder 和 Decoder 之间加了一层 GCNConv 和 RGCNConv</li>
@@ -2652,15 +2689,8 @@ Work</li>
 </ul></li>
 <li><p>Global-guide 解码器</p>
 <ul>
-<li>响应生成
-<ul>
-<li><img data-src="/-2023/Control%20Globally,%20Understand%20Locally/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">
-，v表示图神经网络得到的全局变量</li>
-</ul></li>
-<li>监督全局语义信息：预测问题类型
-<ul>
-<li><img data-src="/-2023/Control%20Globally,%20Understand%20Locally/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img"></li>
-</ul></li>
+<li>响应生成<img data-src="/-2023/Control%20Globally,%20Understand%20Locally/1701777873314-d88aa900-555f-40b2-8a87-4589351ce738.png" class="" title="img">，v表示图神经网络得到的全局变量</li>
+<li>监督全局语义信息：预测问题类型<img data-src="/-2023/Control%20Globally,%20Understand%20Locally/1701777996376-86594b70-a6b5-4f21-90e2-e6bbdbc222b0.png" class="" title="img"></li>
 </ul></li>
 <li><p>联合训练</p>
 <ul>
@@ -3705,6 +3735,10 @@ docker 主机，比如快速的给 100 台服务器安装上 docker；</li>
 &lt;file&gt;【已修改文件与已暂存文件的内容差异】</p>
 <ul>
 <li>[--staged] 显示暂存区和上一次提交的差异</li>
+</ul>
+<p>git blame [OPTIONS]【追踪代码提交历史】</p>
+<ul>
+<li>[ -L 200,300 &lt;file&gt;] 追踪某些行代码修改的历史 commit</li>
 </ul>
 <p>git rm [OPTIONS] &lt;file&gt; 【删除文件】</p>
 <ul>
@@ -6860,6 +6894,94 @@ class="citation" data-cites="RequestMapping">@RequestMapping</span>
       </categories>
       <tags>
         <tag>SpringMVC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Faiss 基础</title>
+    <url>/Faiss/</url>
+    <content><![CDATA[<h1 id="faiss-索引类型">Faiss 索引类型</h1>
+<p><a
+href="https://github.com/facebookresearch/faiss/blob">官方教程</a></p>
+<h2 id="平面索引-flat">平面索引 FLAT</h2>
+<p>平面索引就是暴力搜索，将 <code>queries</code> 于
+<code>database</code>中的所有向量计算，时间复杂度是 <span
+class="math inline">\(O({n^2})\)</span>。</p>
+<p>不同索引计算相似度的方法不同，<code>IndexFlatIP</code>
+是点积，<code>IndexFlatL2</code> 是 L2
+距离，如果需要计算余弦相似度则需要在点积前 L2 归一化
+<code>faiss.normalize_L2(vector)</code>，L2 归一化公式为 <span
+class="math inline">\(\mathbf{X}=\left(\frac{x_1}{\left\|\mathbf{x}\right\|},\frac{x_2}{\left\|\mathbf{x}\right\|},\cdots,\frac{x_n}{\left\|\mathbf{x}\right\|}\right)\)</span></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index = faiss.IndexFlatL2(d)</span><br><span class="line">index.add(database)</span><br><span class="line">D, I = index.search(queries[:<span class="number">5</span>], k)</span><br></pre></td></tr></table></figure>
+<p><span class="math inline">\(D\)</span>
+表示具体的相似度<code>D.shape = (query_len, similarity)</code>，取值范围是
+[0, 1]</p>
+<p><span class="math inline">\(I\)</span> 表示与 <span
+class="math inline">\(D\)</span> 相对应的索引
+<code>I.shape = (query_len, index)</code>，取值范围是 [0, data_num]</p>
+<h2 id="分区索引-ivf">分区索引 IVF</h2>
+<p>对索引数据进行分区优化，将数据通过“沃罗诺伊图单元”（也被叫做泰森多边形）来进行切割（类似传统数据库分库分表）。在搜索时，仅将查询
+queries 所在单元中包含的数据库向量 database
+以及一些相邻的向量与查询向量进行比较，找到 queries
+向量所属的泰森多边形单元就是在<strong>质心集中找到该向量的最近邻居</strong>。</p>
+<p><code>index.train()</code>训练了一个聚类模型，如
+K-means。生成多个聚类中心，聚类的数量由索引的 <code>nlist</code>
+参数决定。</p>
+<p>倒排索引（IVF）把“文档→单词”的形式变为“单词→文档”的形式。</p>
+<p><code>search</code> 有两个参数： <code>nlist</code> （单元格数量）和
+<code>nprobe</code>
+（为执行搜索而访问的质心集单元数量，在<code>nlist</code>之外），设置
+<code>nprobe = nlist</code> 给出与暴力搜索相同的结果。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">quantizer = faiss.IndexFlatL2(d)</span><br><span class="line">index = faiss.IndexIVFFlat(quantizer, d, nlist, faiss.METRIC_L2)</span><br><span class="line">index.train(database)</span><br><span class="line">index.add(database)</span><br><span class="line">index.nprobe = <span class="number">10</span></span><br><span class="line">D, I = index.search(queries, k)</span><br></pre></td></tr></table></figure>
+<h2 id="量化索引-pq">量化索引 PQ</h2>
+<p>基于乘积量化器的有损压缩来压缩存储的向量，压缩方法和量化级别参考<a
+href="https://inria.hal.science/file/index/docid/514462/filename/paper_hal.pdf">论文</a>。</p>
+<p>建立索引时：</p>
+<ul>
+<li>向量被分配到最近的聚类（同 IVF）</li>
+<li>每个向量被划分为 m
+个子向量，分别在各自的子空间中进行量化，存储为对应的量化代码</li>
+</ul>
+<p>查询时：</p>
+<ul>
+<li>查询向量通过倒排索引（IVF） 来确定最接近的聚类中心</li>
+<li>查询向量被划分为 m 个子向量</li>
+<li>查询子向量与存储的量化代码进行匹配，基于每个子空间的距离查表来计算近似距离</li>
+<li>将所有子空间的距离相加，得到查询向量与候选向量的总距离</li>
+</ul>
+<p>这个例子，将 64 个 32 位浮点数压缩为 8 个字节，因此压缩因子为
+32。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># d 必须是 m 的倍数</span></span><br><span class="line">quantizer = faiss.IndexFlatL2(d)</span><br><span class="line"><span class="comment"># 量化器数量 m、指定每个子向量编码为 8 byte(32 bit)</span></span><br><span class="line">index = faiss.IndexIVFPQ(quantizer, d, nlist, m, <span class="number">8</span>)</span><br><span class="line"><span class="comment"># 可以简写为 index = faiss.index_factory(d, &quot;IVF100,PQ8&quot;)</span></span><br><span class="line">index.train(database)</span><br><span class="line">index.add(database)</span><br><span class="line">index.nprobe = <span class="number">10</span></span><br><span class="line">D, I = index.search(queries, k)</span><br></pre></td></tr></table></figure>
+<h1 id="功能">功能</h1>
+<h2 id="索引的量化功能">索引的量化功能</h2>
+<p>对向量进行编码量化</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index.sa_encode(vectors)</span><br></pre></td></tr></table></figure>
+<p>针对非量化索引，也会返回 <code>uint8</code>
+类型的更紧凑的离散表示</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">xq[0][:5]</span><br><span class="line"><span class="params">##</span> array([0.81432974, 0.7409969 , 0.8915324 , 0.02642949, 0.24954738], dtype=float32)</span><br><span class="line">index.sa<span class="built_in">_</span>encode(xq[:1, :])[0, :5]</span><br><span class="line"><span class="params">##</span> array([ 93, 234, 119,  80,  63], dtype=uint8)</span><br></pre></td></tr></table></figure>
+<h2 id="获取原始数据向量">获取原始数据/向量</h2>
+<p>基于根据 index</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index.reconstruct(vector_id)</span><br></pre></td></tr></table></figure>
+<p>为了追求更快的查询性能，IndexIVF 和向量 ID IndexBinaryIVF
+都存储在倒排列表中，无法通过向量 ID
+来反查索引中的内容，如果我们想要得到某个数据的内容，需要手动重建索引</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index.make_direct_map()</span><br><span class="line">index.reconstruct(vector_id)</span><br></pre></td></tr></table></figure>
+<h2 id="获取原文档">获取原文档</h2>
+<p>FAISS 内置了 <code>docstore</code> 和
+<code>index_to_docstore_id</code> ，在每次加入向量时同时存储 doc
+内容，且以字典的形式储存 index 与 doc
+的映射关系，方便后续查找原文档。</p>
+<h1 id="bm25-实现">BM25 实现</h1>
+<p>额外记录一下 <code>BM25</code> 的实现方法</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> langchain.schema <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> langchain_community.retrievers <span class="keyword">import</span> BM25Retriever</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_bm25_retriever</span>(<span class="params">docs, top_k</span>):</span><br><span class="line">    bm25_retriever = BM25Retriever.from_documents(</span><br><span class="line">        docs,</span><br><span class="line">        preprocess_func=jieba.lcut_for_search,</span><br><span class="line">    )</span><br><span class="line">    bm25_retriever.k = top_k</span><br><span class="line">    <span class="keyword">return</span> bm25_retriever</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    docs = [</span><br><span class="line">        Document(page_content=<span class="string">&quot;这是一篇关于机器学习的文档。&quot;</span>),</span><br><span class="line">        Document(page_content=<span class="string">&quot;自然语言处理是人工智能的一个重要领域。&quot;</span>),</span><br><span class="line">        Document(page_content=<span class="string">&quot;深度学习是机器学习的一个子集。&quot;</span>),</span><br><span class="line">    ]</span><br><span class="line">    top_k = <span class="number">2</span></span><br><span class="line">    bm25_retriever = create_bm25_retriever(docs, top_k)</span><br><span class="line">    query = <span class="string">&quot;机器学习&quot;</span></span><br><span class="line">    results = bm25_retriever.get_relevant_documents(query)</span><br><span class="line">    <span class="keyword">for</span> rank, doc <span class="keyword">in</span> <span class="built_in">enumerate</span>(results, start=<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Rank <span class="subst">&#123;rank&#125;</span>: <span class="subst">&#123;doc&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>Debug 查看分词结果
+<code>bm25_retriever.vectorizer.doc_freqs</code></p>
+<img data-src="/Faiss/image-20240911200426522.png" class="" title="image-20240911200426522">
+]]></content>
+      <categories>
+        <category>向量数据库</category>
+      </categories>
+      <tags>
+        <tag>faiss</tag>
       </tags>
   </entry>
 </search>

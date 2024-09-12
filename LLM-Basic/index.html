@@ -19,16 +19,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Transformers &amp; NLP 相关库及实现">
+    <meta name="description" content="模型是如何诞生的，在训练过程中需要哪些技术">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LLM-Basic">
 <meta property="og:url" content="https://yeqiuo.github.io/LLM-Basic/index.html">
 <meta property="og:site_name" content="闻">
-<meta property="og:description" content="Transformers &amp; NLP 相关库及实现">
+<meta property="og:description" content="模型是如何诞生的，在训练过程中需要哪些技术">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Basic/image-20240714162218754.png">
 <meta property="article:published_time" content="2024-07-12T06:19:54.000Z">
-<meta property="article:modified_time" content="2024-09-11T05:52:57.969Z">
+<meta property="article:modified_time" content="2024-09-12T07:07:17.295Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="大模型基础">
 <meta name="twitter:card" content="summary">
@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#llm-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">LLM 基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">预训练显存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">优化器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#adam"><span class="nav-number">1.2.1.</span> <span class="nav-text">Adam</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%8F%E5%B0%91%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">减少显存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%87%E6%A0%B7"><span class="nav-number">1.4.</span> <span class="nav-text">采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#embedding-%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">Embedding 模型的结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#coding"><span class="nav-number">2.</span> <span class="nav-text">Coding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#transformers%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">Transformers及相关库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83"><span class="nav-number">2.2.</span> <span class="nav-text">分布式训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#llama-factory-%E6%BA%90%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">LLaMA-Factory 源码</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">预训练显存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96%E5%92%8C%E6%B8%85%E6%B4%97"><span class="nav-number">1.2.</span> <span class="nav-text">数据获取和清洗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tokenizer"><span class="nav-number">1.3.</span> <span class="nav-text">Tokenizer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">1.4.</span> <span class="nav-text">优化器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#adam"><span class="nav-number">1.4.1.</span> <span class="nav-text">Adam</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%8F%E5%B0%91%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8"><span class="nav-number">1.5.</span> <span class="nav-text">减少显存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%87%E6%A0%B7"><span class="nav-number">1.6.</span> <span class="nav-text">采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="nav-number">1.7.</span> <span class="nav-text">模型结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#transformers%E5%8F%8A%E7%9B%B8%E5%85%B3%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">Transformers及相关库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83"><span class="nav-number">2.2.</span> <span class="nav-text">分布式训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#llama-factory-%E6%BA%90%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">LLaMA-Factory 源码</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -155,18 +155,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -212,7 +212,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="LLM-Basic | 闻">
-      <meta itemprop="description" content="Transformers & NLP 相关库及实现">
+      <meta itemprop="description" content="模型是如何诞生的，在训练过程中需要哪些技术">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -234,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-11 13:52:57" itemprop="dateModified" datetime="2024-09-11T13:52:57+08:00">2024-09-11</time>
+      <time title="修改时间：2024-09-12 15:07:17" itemprop="dateModified" datetime="2024-09-12T15:07:17+08:00">2024-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -249,7 +249,7 @@
   
 </div>
 
-            <div class="post-description">Transformers & NLP 相关库及实现</div>
+            <div class="post-description">模型是如何诞生的，在训练过程中需要哪些技术</div>
         </div>
       </header>
 
@@ -259,9 +259,9 @@
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>大模型核心技术点在于训练资源、数据清洗和数据配比等，其难点或许不在于模型训练和模型结构搭建</p>
 </blockquote>
-<p><strong>【变形金刚之神！保佑我找到工作！】</strong></p>
-<style>.sjuckojubugb{zoom:70%;}</style>
-<img data-src="/LLM-Basic/image-20240714162218754.png" class="sjuckojubugb" alt="image-20240714162218754">
+<p><strong>【变形金刚之神！Bless Me】</strong></p>
+<style>.immeskkwgkju{zoom:70%;}</style>
+<img data-src="/LLM-Basic/image-20240714162218754.png" class="immeskkwgkju" alt="image-20240714162218754">
 <ul>
 <li>相较于 RNN，Transformer
 直接将句子中<strong>任意两个单词的联系通过一个计算步骤直接联系起来</strong>，远距离依赖特征之间的距离被极大缩短，有利于有效地利用这些特征；</li>
@@ -279,7 +279,7 @@ Encoder-Decoder（prefix-lm）；掩码语言模型/自编码模型
 Encoder-Only；因果语言模型/自回归模型 Decoder-Only。Encoder-only
 适用于机器翻译、句子分类、命名体识别和问答（大概）；Decoder-only
 适用于文本预测；Encoder-Decoder 适用于文本压缩。</p>
-<h1 id="llm-基础知识">LLM 基础知识</h1>
+<h1 id="基础知识">基础知识</h1>
 <h2 id="预训练显存占用">预训练显存占用</h2>
 <p>样例：大小为 n B的模型，Adam 优化器，混合精度 fp16，
 b(batch_size)，s(sequence len)，h(hidden size)</p>
@@ -293,6 +293,30 @@ fp32 精度。</li>
 <li>激活值大小：sbh(34+5*a*s/h)*L byte <a
 target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/673916177">分析</a></li>
 </ol>
+<h2 id="数据获取和清洗">数据获取和清洗</h2>
+<blockquote>
+<p>少量高质量数据优于大量低质量数据</p>
+</blockquote>
+<h2 id="tokenizer">Tokenizer</h2>
+<p>特殊 Token</p>
+<ul>
+<li>[PAD] 填充至固定长度</li>
+<li>[CLS] 分类任务</li>
+<li>[SEP] 分隔符</li>
+<li>[MASK] 自监督任务，序列填空</li>
+<li>[BOS] / [EOS] 自回归任务，约束文本生成的边界</li>
+<li>[UNK] 无法识别的词</li>
+<li>[SPE] 词汇表预留的标志</li>
+</ul>
+<p>[Q] Tokenizer 是选左 Padding 还是右 Padding？</p>
+<p>训练和推理阶段的 &lt;PAD&gt; 标记是填充在左边还是右边都可以</p>
+<ul>
+<li>训练阶段，每一轮的 batch 都是独立的，<code>attention mask</code>
+会把与有效序列无关的部分都屏蔽了，因此两者都行；</li>
+<li>推理阶段，存在自回归的推理过程，当并发 <code>batch infer</code>
+时，左 padding 可以直接将推理得到的下一跳 Token 合并到
+<code>input_ids</code> 尾部，简化编码过程；</li>
+</ul>
 <h2 id="优化器">优化器</h2>
 <p>在石器时代，人们直接使用 <code>loss.backward()</code>
 计算梯度，乘以固定的学习率，得到所有参数更新的幅度。然而，使用固定的学习率，在梯度变化剧烈的地方，会导致更新不稳定或收敛慢。</p>
@@ -323,9 +347,10 @@ class="math inline">\(p(x_i)=\frac{e^{\frac{x_i}t}}{\sum_{j=1}^ne^{\frac{x_j}t}}
 softmax 的概率分配越尖锐（确定性），反之越平滑（随机性）</p>
 <p>num_beams：每次保留概率最大的几个序列，最后输出概率最大的值（上面三个方法已足够，束搜索未包含在
 OpenAI API 中）</p>
-<h2 id="embedding-模型的结构">Embedding 模型的结构</h2>
+<h2 id="模型结构">模型结构</h2>
+<p>SentencBert</p>
 <figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">BertModel(</span><br><span class="line">  (embeddings): BertEmbeddings(</span><br><span class="line">    (word<span class="built_in">_</span>embeddings): Embedding(21152, 1024, padding<span class="built_in">_</span>idx=0)</span><br><span class="line">    (position<span class="built_in">_</span>embeddings): Embedding(512, 1024)</span><br><span class="line">    (token<span class="built_in">_</span>type<span class="built_in">_</span>embeddings): Embedding(2, 1024)</span><br><span class="line">    (LayerNorm): </span><br><span class="line">    (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">  )</span><br><span class="line">  (encoder): BertEncoder(</span><br><span class="line">    (layer): ModuleList(</span><br><span class="line">      (0-23): 24 x BertLayer(</span><br><span class="line">        (attention): BertAttention(</span><br><span class="line">          (self): BertSdpaSelfAttention(</span><br><span class="line">            (query): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (key): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (value): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">          )</span><br><span class="line">          (output): BertSelfOutput(</span><br><span class="line">            (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">            (LayerNorm): </span><br><span class="line">            (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">          )</span><br><span class="line">        )</span><br><span class="line">        (intermediate): BertIntermediate(</span><br><span class="line">          (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=4096, bias=True)</span><br><span class="line">          (intermediate<span class="built_in">_</span>act<span class="built_in">_</span>fn): GELUActivation()</span><br><span class="line">        )</span><br><span class="line">        (output): BertOutput(</span><br><span class="line">          (dense): Linear(in<span class="built_in">_</span>features=4096, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">          (LayerNorm): </span><br><span class="line">          (dropout): Dropout(p=0.1, inplace=False)</span><br><span class="line">        )</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (pooler): BertPooler(</span><br><span class="line">    (dense): Linear(in<span class="built_in">_</span>features=1024, out<span class="built_in">_</span>features=1024, bias=True)</span><br><span class="line">    (activation): Tanh()</span><br><span class="line">  )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h1 id="coding">Coding</h1>
+<h1 id="编程">编程</h1>
 <h2 id="transformers及相关库">Transformers及相关库</h2>
 <blockquote>
 <p>优秀的基础知识分享 <a
@@ -345,9 +370,11 @@ target="_blank" rel="noopener" href="https://github.com/datawhalechina/tiny-univ
 <h2 id="分布式训练">分布式训练</h2>
 <p>Accelerate 包，融合了 Deepspeed、DDP、FSDP；</p>
 <h2 id="llama-factory-源码">LLaMA-Factory 源码</h2>
-<p>trainargs.main_process_first() 只有在主进程里面进行数据处理</p>
-<p>高效打包策略，替换 transformers 包的
-<code>_get_unpad_data</code>，以区分每个 batch 中的不同序列</p>
+<p>trainargs.main_process_first()
+内的代码只在主进程里面运行，适用于数据处理；</p>
+<p>为实现高效打包，替换 transformers 包内模型的
+<code>_get_unpad_data</code>方法，实现4Dmask，以区分每个 batch
+中的不同序列；</p>
 
     </div>
 

@@ -16,8 +16,6 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
@@ -293,8 +291,8 @@ MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本�
 中每一张表的数据都存放在一个独立的 .ibd 文件。</li>
 </ul>
 <p><strong>表空间文件的结构</strong></p>
-<style>.ojlyfvlpznpl{zoom:67%;}</style>
-<img data-src="/-developer/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="ojlyfvlpznpl" alt="img">
+<style>.ttsdsjkcxkzj{zoom:67%;}</style>
+<img data-src="/-developer/MySQL/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" class="ttsdsjkcxkzj" alt="img">
 <h2 id="innodb-行格式">InnoDB 行格式</h2>
 <p>共有 Redundant、Compact、Dynamic、Compressed 四种，下图时 Compact
 行格式的结构</p>
@@ -302,8 +300,8 @@ MySQL 5.6.6 版本开始，它的默认值就是 1 了，因此从这个版本�
 <h2 id="innodb-页格式">InnoDB 页格式</h2>
 <p>InnoDB 的数据是按「数据页」为单位来读写的，数据页的默认大小是
 16KB</p>
-<style>.bubyqzkbvhzk{zoom:50%;}</style>
-<img data-src="/-developer/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="bubyqzkbvhzk" alt="243b1466779a9e107ae3ef0155604a17">
+<style>.rzvztsqpordr{zoom:50%;}</style>
+<img data-src="/-developer/MySQL/243b1466779a9e107ae3ef0155604a17-17146246150216.webp" class="rzvztsqpordr" alt="243b1466779a9e107ae3ef0155604a17">
 <table>
 <thead>
 <tr class="header">
@@ -786,8 +784,8 @@ Pool 的脏页刷新到了磁盘中，redo log
 对应的记录也就没用了，这时候我们需要擦除这些旧记录，以腾出空间记录新的更新操作。重做日志文件组由有
 2 个 redo log
 文件组成，以循环写的方式工作，从头开始写，写到末尾就又回到开头，相当于一个环形。</p>
-<style>.tdayehqhpqlr{zoom: 50%;}</style>
-<img data-src="/-developer/MySQL/checkpoint.png" class="tdayehqhpqlr" alt="img">
+<style>.udkuqmkwbwci{zoom: 50%;}</style>
+<img data-src="/-developer/MySQL/checkpoint.png" class="udkuqmkwbwci" alt="img">
 <ul>
 <li>write pos ～ checkpoint
 之间的部分（图中红色部分）：记录新的更新操作；</li>
@@ -812,8 +810,8 @@ binlog，等之后事务提交的时候，会将该事物执行过程中产生�
 是全量日志，保存了所有数据变更的情况，可以恢复整个数据库所有数据；</li>
 </ul>
 <h3 id="主从复制">主从复制</h3>
-<style>.jpcljmlnofuq{zoom:67%;}</style>
-<img data-src="/-developer/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="jpcljmlnofuq" alt="MySQL 主从复制过程">
+<style>.hsgovvbxihun{zoom:67%;}</style>
+<img data-src="/-developer/MySQL/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png" class="hsgovvbxihun" alt="MySQL 主从复制过程">
 <ul>
 <li>写入 Binlog：数据修改 -&gt; 主库写 binlog 日志 -&gt; commit 事务
 -&gt; 持久化本地数据 -&gt; 提交事务成功；</li>
@@ -832,8 +830,8 @@ binlog，并更新从库中的数据。</li>
 <li>半同步复制：只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端；</li>
 </ul>
 <h3 id="binlog-刷盘">binlog 刷盘</h3>
-<style>.ijvunoucfuff{zoom: 67%;}</style>
-<img data-src="/-developer/MySQL/binlogcache.drawio.png" class="ijvunoucfuff" alt="binlog cach">
+<style>.jwoyoeyfaijs{zoom: 67%;}</style>
+<img data-src="/-developer/MySQL/binlogcache.drawio.png" class="jwoyoeyfaijs" alt="binlog cach">
 <ul>
 <li>图中的 write，把<strong>日志写入到 binlog 文件（文件系统的 page
 cache 里）</strong>，但是并没有把数据持久化到磁盘；</li>
@@ -858,8 +856,8 @@ fsync；</li>
 个阶段，分别是准备阶段和提交阶段（不是 commit
 语句），每个阶段都由协调者和参与者共同完成。</p>
 <h3 id="内部-xa-事务">内部 XA 事务</h3>
-<style>.iqojrwcgskjh{zoom:50%;}</style>
-<img data-src="/-developer/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="iqojrwcgskjh" alt="两阶段提交">
+<style>.ikscoksrplzf{zoom:50%;}</style>
+<img data-src="/-developer/MySQL/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4.drawio.png" class="ikscoksrplzf" alt="两阶段提交">
 <p>为了保证这两个日志的一致性，MySQL 使用了内部 XA 事务。内部 XA 事务由
 binlog 作为协调者，存储引擎是参与者，可以实现跨数据库事务。将 redo log
 的写入拆成了<strong>两个状态：prepare 和
@@ -950,15 +948,15 @@ List，管理脏页+干净页，将经常查询或可能将要查询的数据缓
 <p>每当需要从磁盘中加载一个页到 Buffer Pool 中时，就从
 Free链表中取一个空闲的缓存页，并且把该缓存页对应的控制块的信息填上，然后把该缓存页对应的控制块从
 Free 链表中移除</p>
-<style>.vvsjroypcpqq{zoom: 67%;}</style>
-<img data-src="/-developer/MySQL/freelist.drawio.png" class="vvsjroypcpqq" alt="img">
+<style>.ipfyyspouvev{zoom: 67%;}</style>
+<img data-src="/-developer/MySQL/freelist.drawio.png" class="ipfyyspouvev" alt="img">
 <p><strong>Flush 链表</strong>：使用链表结构，快速找到脏页；（结构类似于
 Free 链表）</p>
 <p>脏页落盘时，后台线程遍历 Flush 链表</p>
 <h2 id="提高缓存命中率">提高缓存命中率</h2>
 <p>Buffer Pool 有三种页和链表用来管理数据</p>
-<style>.vwcagqdfqpyg{zoom:67%;}</style>
-<img data-src="/-developer/MySQL/bufferpoll_page.png" class="vwcagqdfqpyg" alt="img">
+<style>.cdvalxxbkpoj{zoom:67%;}</style>
+<img data-src="/-developer/MySQL/bufferpoll_page.png" class="cdvalxxbkpoj" alt="img">
 <ul>
 <li>Free Page（空闲页），表示此页未被使用，位于 Free 链表；</li>
 <li>Clean Page（干净页），表示此页已被使用，但是页面未发生修改，位于LRU
@@ -1070,7 +1068,6 @@ target="_blank" rel="noopener" href="https://www.cnblogs.com/yanggb/p/11058707.h
 
 
 
-  <script src="/js/third-party/pace.js"></script>
 
 
   

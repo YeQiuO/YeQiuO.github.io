@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -16,12 +16,14 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="记录LLM应用开发过程遇到的问题，和对应的解决方法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LLM 应用开发">
+<meta property="og:title" content="LLM 应用开发实践">
 <meta property="og:url" content="https://yeqiuo.github.io/LLM-Application/index.html">
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="记录LLM应用开发过程遇到的问题，和对应的解决方法">
@@ -30,10 +32,9 @@
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Application/image-20240424102824838.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Application/image-20240424140419971.png">
 <meta property="article:published_time" content="2024-04-20T03:31:48.000Z">
-<meta property="article:modified_time" content="2024-09-05T06:21:53.409Z">
+<meta property="article:modified_time" content="2024-09-17T04:26:54.335Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="Langchain">
-<meta property="article:tag" content="向量数据库">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeqiuo.github.io/LLM-Application/image-20240424102449161.png">
 
@@ -42,10 +43,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/LLM-Application/","path":"LLM-Application/","title":"LLM 应用开发"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/LLM-Application/","path":"LLM-Application/","title":"LLM 应用开发实践"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>LLM 应用开发 | 闻</title>
+<title>LLM 应用开发实践 | 闻</title>
   
 
 
@@ -156,20 +157,14 @@
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">41</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -214,12 +209,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="LLM 应用开发 | 闻">
+      <meta itemprop="name" content="LLM 应用开发实践 | 闻">
       <meta itemprop="description" content="记录LLM应用开发过程遇到的问题，和对应的解决方法">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LLM 应用开发
+          LLM 应用开发实践
         </h1>
 
         <div class="post-meta-container">
@@ -237,7 +232,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-05 14:21:53" itemprop="dateModified" datetime="2024-09-05T14:21:53+08:00">2024-09-05</time>
+      <time title="修改时间：2024-09-17 12:26:54" itemprop="dateModified" datetime="2024-09-17T12:26:54+08:00">2024-09-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -245,7 +240,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/LLM%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">LLM应用开发</span></a>
+          <a href="/categories/LLM%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">LLM开发</span></a>
         </span>
     </span>
 
@@ -308,8 +303,8 @@ chunk_size(块大小) 和 chunk_overlap(块与块之间的重叠大小) 进行�
 <li>chunk_overlap
 指两个块之间共享的字符数量，用于保持上下文的连贯性，避免分割丢失上下文信息</li>
 </ul>
-<style>.gtauehutcqmz{zoom:50%;}</style>
-<img data-src="/LLM-Application/image-20240424102824838.png" class="gtauehutcqmz" alt="langchain.text_splitter">
+<style>.npwbxubefsjv{zoom:50%;}</style>
+<img data-src="/LLM-Application/image-20240424102824838.png" class="npwbxubefsjv" alt="langchain.text_splitter">
 <p><strong>Q1</strong>：如何加强搜索结果的多样性？</p>
 <p><strong>A1</strong>：最大边际相关性
 <code>Maximum marginal relevance</code>
@@ -379,15 +374,14 @@ bge-large-zh-v1.5
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Langchain/" rel="tag"># Langchain</a>
-              <a href="/tags/%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 向量数据库</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/LLM-RAG-Langchain/" rel="prev" title="RAG 架构和 Langchain 框架">
-                  <i class="fa fa-angle-left"></i> RAG 架构和 Langchain 框架
+                <a href="/LLM-RAG-Langchain/" rel="prev" title="基于 Langchain 的 RAG 架构底层原理">
+                  <i class="fa fa-angle-left"></i> 基于 Langchain 的 RAG 架构底层原理
                 </a>
             </div>
             <div class="post-nav-item">
@@ -437,6 +431,7 @@ bge-large-zh-v1.5
 
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
@@ -448,6 +443,7 @@ bge-large-zh-v1.5
 
 
 
+  <script src="/js/third-party/pace.js"></script>
 
 
   

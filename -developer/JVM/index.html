@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -16,6 +16,8 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
@@ -165,20 +167,14 @@
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">41</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -349,14 +345,14 @@ TLAB）</li>
 <li>Java 堆中将会划分出一块内存来作为句柄池，reference
 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针。</li>
 </ul>
-<style>.uunqxbnjcjkh{zoom:50%;}</style>
-<img data-src="/-developer/JVM/image-20240429100643112.png" class="uunqxbnjcjkh" alt="image-20240429100643112">
+<style>.vwpqxudtlcdy{zoom:50%;}</style>
+<img data-src="/-developer/JVM/image-20240429100643112.png" class="vwpqxudtlcdy" alt="image-20240429100643112">
 <ul>
 <li>直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销，HotSpot
 采用的是直接指针</li>
 </ul>
-<style>.lnfkbkhxtrxy{zoom:50%;}</style>
-<img data-src="/-developer/JVM/image-20240429100908916.png" class="lnfkbkhxtrxy" alt="image-20240429100908916">
+<style>.mnjgsoepkleo{zoom:50%;}</style>
+<img data-src="/-developer/JVM/image-20240429100908916.png" class="mnjgsoepkleo" alt="image-20240429100908916">
 <h2 id="对象的内存布局">对象的内存布局</h2>
 <p>Mark Word
 是一个具有动态定义的数据结构，以便在极小的空间内存储尽量多的数据，根据对象的状态复用自己的存储空间。</p>
@@ -529,8 +525,8 @@ target="_blank" rel="noopener" href="https://heapdump.cn/article/1661497">YGC</a
 target="_blank" rel="noopener" href="https://heapdump.cn/article/1870333">FGC</a></p>
 <h1 id="类加载过程">类加载过程</h1>
 <strong>类的生命周期</strong>：加载、连接、初始化、使用、卸载
-<style>.krbneqhngdou{zoom:67%;}</style>
-<img data-src="/-developer/JVM/image-20240429095206248.png" class="krbneqhngdou" alt="image-20240429095206248">
+<style>.fxhndtshshik{zoom:67%;}</style>
+<img data-src="/-developer/JVM/image-20240429095206248.png" class="fxhndtshshik" alt="image-20240429095206248">
 <ul>
 <li>加载：通过全类名获取定义此类的二进制字节流；将字节流所代表的静态存储结构转换为方法区的运行时数据结构；在内存中生成一个代表该类的
 <code>Class</code>
@@ -657,6 +653,7 @@ target="_blank" rel="noopener" href="https://javaguide.cn/java/jvm/classloader.h
 
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
@@ -668,6 +665,7 @@ target="_blank" rel="noopener" href="https://javaguide.cn/java/jvm/classloader.h
 
 
 
+  <script src="/js/third-party/pace.js"></script>
 
 
   

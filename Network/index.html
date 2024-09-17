@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -16,12 +16,14 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="如果我是一串电信号，我要去向何方呢？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计算机网络">
+<meta property="og:title" content="计算机网络知识点">
 <meta property="og:url" content="https://yeqiuo.github.io/Network/index.html">
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="如果我是一串电信号，我要去向何方呢？">
@@ -31,7 +33,7 @@
 <meta property="og:image" content="https://yeqiuo.github.io/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png">
 <meta property="og:image" content="https://yeqiuo.github.io/Network/format,png-20230309230614791.png">
 <meta property="article:published_time" content="2024-03-27T07:58:22.000Z">
-<meta property="article:modified_time" content="2024-07-30T11:31:56.859Z">
+<meta property="article:modified_time" content="2024-09-17T04:29:12.688Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -42,10 +44,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Network/","path":"Network/","title":"计算机网络"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Network/","path":"Network/","title":"计算机网络知识点"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>计算机网络 | 闻</title>
+<title>计算机网络知识点 | 闻</title>
   
 
 
@@ -156,20 +158,14 @@
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">41</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -214,12 +210,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="计算机网络 | 闻">
+      <meta itemprop="name" content="计算机网络知识点 | 闻">
       <meta itemprop="description" content="如果我是一串电信号，我要去向何方呢？">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          计算机网络
+          计算机网络知识点
         </h1>
 
         <div class="post-meta-container">
@@ -237,7 +233,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-07-30 19:31:56" itemprop="dateModified" datetime="2024-07-30T19:31:56+08:00">2024-07-30</time>
+      <time title="修改时间：2024-09-17 12:29:12" itemprop="dateModified" datetime="2024-09-17T12:29:12+08:00">2024-09-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -272,11 +268,11 @@
 <li><p>传输层，关注链路级别的传输</p></li>
 </ul>
 <p>应用数据转换到传输块的过程：</p>
-<style>.dfmdiiofvsmq{zoom: 50%;}</style>
-<img data-src="/Network/12.jpg" class="dfmdiiofvsmq" alt="img">
+<style>.xrvagxmvfmct{zoom: 50%;}</style>
+<img data-src="/Network/12.jpg" class="xrvagxmvfmct" alt="img">
 <h2 id="访问网站的过程">访问网站的过程</h2>
-<style>.fpluckfblsye{zoom: 67%;}</style>
-<img data-src="/Network/image-20240730153032143.png" class="fpluckfblsye" alt="image-20240730153032143">
+<style>.bbpvmsdfxrol{zoom: 67%;}</style>
+<img data-src="/Network/image-20240730153032143.png" class="bbpvmsdfxrol" alt="image-20240730153032143">
 <ol type="1">
 <li>解析 URL</li>
 <li>DNS 查询服务器 IP
@@ -378,11 +374,11 @@ pre-master key</li>
 </blockquote>
 <p>TCP ：面向连接的、可靠的、基于字节流的</p>
 <p>三次握手</p>
-<style>.avhkjfbgyitd{zoom:50%;}</style>
-<img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="avhkjfbgyitd" alt="TCP 三次握手">
+<style>.omxlvfnljkbi{zoom:50%;}</style>
+<img data-src="/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="omxlvfnljkbi" alt="TCP 三次握手">
 <p>四次挥手【closed_wait；last_ack】</p>
-<style>.emlkhleglncy{zoom: 67%;}</style>
-<img data-src="/Network/format,png-20230309230614791.png" class="emlkhleglncy" alt="客户端主动关闭连接 —— TCP 四次挥手">
+<style>.wghfockkbgjy{zoom: 67%;}</style>
+<img data-src="/Network/format,png-20230309230614791.png" class="wghfockkbgjy" alt="客户端主动关闭连接 —— TCP 四次挥手">
 <ul>
 <li>首先确认客户端不会再发送请求给服务端</li>
 <li>然后服务端在发送完数据后，再向客户端发送断开连接</li>
@@ -476,6 +472,7 @@ ssthresh）、快重传（连续收到三个重复确认就立即重传对方尚
 
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
@@ -487,6 +484,7 @@ ssthresh）、快重传（连续收到三个重复确认就立即重传对方尚
 
 
 
+  <script src="/js/third-party/pace.js"></script>
 
 
   

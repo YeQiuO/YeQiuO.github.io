@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -16,12 +16,14 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="LLM 相较于 Transformers 在结构上的创新点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LLM-Model">
+<meta property="og:title" content="LLM 结构和创新点">
 <meta property="og:url" content="https://yeqiuo.github.io/LLM-Model/index.html">
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="LLM 相较于 Transformers 在结构上的创新点">
@@ -32,7 +34,7 @@
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/v2-8a907719f9e3ced8347a051d9a66c732_720w.webp">
 <meta property="og:image" content="https://yeqiuo.github.io/LLM-Model/ROPE3.png">
 <meta property="article:published_time" content="2024-09-10T01:48:52.000Z">
-<meta property="article:modified_time" content="2024-09-12T05:56:27.274Z">
+<meta property="article:modified_time" content="2024-09-17T04:32:03.591Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="大模型结构">
 <meta name="twitter:card" content="summary">
@@ -43,10 +45,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/LLM-Model/","path":"LLM-Model/","title":"LLM-Model"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/LLM-Model/","path":"LLM-Model/","title":"LLM 结构和创新点"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>LLM-Model | 闻</title>
+<title>LLM 结构和创新点 | 闻</title>
   
 
 
@@ -157,20 +159,14 @@
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">41</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -215,12 +211,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="LLM-Model | 闻">
+      <meta itemprop="name" content="LLM 结构和创新点 | 闻">
       <meta itemprop="description" content="LLM 相较于 Transformers 在结构上的创新点">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LLM-Model
+          LLM 结构和创新点
         </h1>
 
         <div class="post-meta-container">
@@ -238,7 +234,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-09-12 13:56:27" itemprop="dateModified" datetime="2024-09-12T13:56:27+08:00">2024-09-12</time>
+      <time title="修改时间：2024-09-17 12:32:03" itemprop="dateModified" datetime="2024-09-17T12:32:03+08:00">2024-09-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -246,7 +242,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
+          <a href="/categories/LLM%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">LLM基础</span></a>
         </span>
     </span>
 
@@ -346,8 +342,8 @@ class="math inline">\(v=(v_0,v_1,v_2,v_3，...，v_{511})\)</span>，RoPE
 class="math inline">\((v_{510},v_{511})\)</span></li>
 </ul>
 <p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.enmngxxrkwik{zoom： 67%;}</style>
-<img data-src="/LLM-Model/ROPE3.png" class="enmngxxrkwik" alt="img">
+<style>.odyjbghoasxw{zoom： 67%;}</style>
+<img data-src="/LLM-Model/ROPE3.png" class="odyjbghoasxw" alt="img">
 <p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和
 <code>apply_rotary_pos_emb</code> 方法，
 <code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin
@@ -412,13 +408,13 @@ x)\)</span></p>
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/Linux-Tool/" rel="prev" title="Linux-Tool">
-                  <i class="fa fa-angle-left"></i> Linux-Tool
+                <a href="/Linux-Tool/" rel="prev" title="Linux 开发工具">
+                  <i class="fa fa-angle-left"></i> Linux 开发工具
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/Faiss/" rel="next" title="Faiss 基础">
-                  Faiss 基础 <i class="fa fa-angle-right"></i>
+                <a href="/Faiss/" rel="next" title="Faiss 向量数据库">
+                  Faiss 向量数据库 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -463,6 +459,7 @@ x)\)</span></p>
 
 
   
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
@@ -474,6 +471,7 @@ x)\)</span></p>
 
 
 
+  <script src="/js/third-party/pace.js"></script>
 
 
   

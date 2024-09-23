@@ -22,24 +22,24 @@
     <meta name="description" content="faiss 索引类型、代码实践">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Faiss 向量数据库">
-<meta property="og:url" content="https://yeqiuo.github.io/Faiss/index.html">
+<meta property="og:url" content="https://yeqiuo.github.io/-NLP/Faiss/index.html">
 <meta property="og:site_name" content="闻">
 <meta property="og:description" content="faiss 索引类型、代码实践">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yeqiuo.github.io/Faiss/image-20240911200426522.png">
+<meta property="og:image" content="https://yeqiuo.github.io/-NLP/Faiss/image-20240911200426522.png">
 <meta property="article:published_time" content="2024-09-11T07:30:17.000Z">
 <meta property="article:modified_time" content="2024-09-17T06:11:24.793Z">
 <meta property="article:author" content="ZheWen Wang">
 <meta property="article:tag" content="faiss">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeqiuo.github.io/Faiss/image-20240911200426522.png">
+<meta name="twitter:image" content="https://yeqiuo.github.io/-NLP/Faiss/image-20240911200426522.png">
 
 
-<link rel="canonical" href="https://yeqiuo.github.io/Faiss/">
+<link rel="canonical" href="https://yeqiuo.github.io/-NLP/Faiss/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Faiss/","path":"Faiss/","title":"Faiss 向量数据库"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/-NLP/Faiss/","path":"-NLP/Faiss/","title":"Faiss 向量数据库"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Faiss 向量数据库 | 闻</title>
@@ -192,7 +192,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/Faiss/">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/-NLP/Faiss/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -326,7 +326,7 @@ target="_blank" rel="noopener" href="https://inria.hal.science/inria-00514462v2/
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> langchain.schema <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> langchain_community.retrievers <span class="keyword">import</span> BM25Retriever</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_bm25_retriever</span>(<span class="params">docs, top_k</span>):</span><br><span class="line">    bm25_retriever = BM25Retriever.from_documents(</span><br><span class="line">        docs,</span><br><span class="line">        preprocess_func=jieba.lcut_for_search,</span><br><span class="line">    )</span><br><span class="line">    bm25_retriever.k = top_k</span><br><span class="line">    <span class="keyword">return</span> bm25_retriever</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    docs = [</span><br><span class="line">        Document(page_content=<span class="string">&quot;这是一篇关于机器学习的文档。&quot;</span>),</span><br><span class="line">        Document(page_content=<span class="string">&quot;自然语言处理是人工智能的一个重要领域。&quot;</span>),</span><br><span class="line">        Document(page_content=<span class="string">&quot;深度学习是机器学习的一个子集。&quot;</span>),</span><br><span class="line">    ]</span><br><span class="line">    top_k = <span class="number">2</span></span><br><span class="line">    bm25_retriever = create_bm25_retriever(docs, top_k)</span><br><span class="line">    query = <span class="string">&quot;机器学习&quot;</span></span><br><span class="line">    results = bm25_retriever.get_relevant_documents(query)</span><br><span class="line">    <span class="keyword">for</span> rank, doc <span class="keyword">in</span> <span class="built_in">enumerate</span>(results, start=<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Rank <span class="subst">&#123;rank&#125;</span>: <span class="subst">&#123;doc&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>Debug 查看分词结果
 <code>bm25_retriever.vectorizer.doc_freqs</code></p>
-<img data-src="/Faiss/image-20240911200426522.png" class="" title="image-20240911200426522">
+<img data-src="/-NLP/Faiss/image-20240911200426522.png" class="" title="image-20240911200426522">
 
     </div>
 
@@ -343,7 +343,7 @@ target="_blank" rel="noopener" href="https://inria.hal.science/inria-00514462v2/
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/LLM-Model/" rel="prev" title="LLM 结构和创新点">
+                <a href="/-NLP/LLM-Model/" rel="prev" title="LLM 结构和创新点">
                   <i class="fa fa-angle-left"></i> LLM 结构和创新点
                 </a>
             </div>

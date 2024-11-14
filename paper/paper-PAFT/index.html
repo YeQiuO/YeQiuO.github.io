@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="《Adapting Language Model to Domain Specific RAG》提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读 RAFT">
+<meta property="og:url" content="https://yeqiuo.github.io/paper/paper-PAFT/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="《Adapting Language Model to Domain Specific RAG》提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/paper/paper-PAFT/image-20240815185100137.png">
+<meta property="article:published_time" content="2024-08-15T09:15:57.000Z">
+<meta property="article:modified_time" content="2024-09-17T04:45:13.561Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="大模型微调">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/paper/paper-PAFT/image-20240815185100137.png">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/paper/paper-PAFT/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/paper/paper-PAFT/","path":"paper/paper-PAFT/","title":"论文阅读 RAFT"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>论文阅读 RAFT | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">创新点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.2.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/paper/paper-PAFT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="论文阅读 RAFT | 闻">
+      <meta itemprop="description" content="《Adapting Language Model to Domain Specific RAG》提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          论文阅读 RAFT
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-08-15 17:15:57" itemprop="dateCreated datePublished" datetime="2024-08-15T17:15:57+08:00">2024-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-17 12:45:13" itemprop="dateModified" datetime="2024-09-17T12:45:13+08:00">2024-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E8%AE%BA%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">读论文</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E8%AE%BA%E6%96%87/LLM%E5%BE%AE%E8%B0%83/" itemprop="url" rel="index"><span itemprop="name">LLM微调</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">《Adapting Language Model to Domain Specific RAG》提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://gorilla.cs.berkeley.edu/blogs/9_raft.html">Paper</a></p>
+<h1>创新点</h1>
+<p>提出了新颖的特定 RAG 场景下的大模型微调方法（有明确文档域的 RAG）；</p>
+<p>基于 COT，进一步完善了模型的推理能力；</p>
+<h1>背景</h1>
+<p>当前的开放域对话模型做的是”闭卷考试“；</p>
+<p>RAG 做的是”开卷考试“，其结果依赖于检索器的效果；</p>
+<p>PAFT 应用于”特定领域的开卷考试“，模型先在特定域文档内学习如何做”开卷考试“，可以提高模型 RAG 的能力，还能减少幻觉的产生；</p>
+<h1>实验</h1>
+<h2 id="方法">方法</h2>
+<p>前置条件：$\mathrm{Q}$问题； $\mathrm{A}^{<em>}$ 答案； $\mathrm{D}^{</em>}$ 答案来源文档； $D_n$ 无关文档。</p>
+<p>正例样本：$Q+ \mathrm{D^<em>} +D_1+D_2+\dots+D_k=&gt;\mathrm{A}^{</em>}$</p>
+<p>负例样本：<br>
+$\mathrm{Q}+\mathbf{D}<em>{1}+\mathbf{D}</em>{2}+\dots+\mathbf{D}_{\mathbf{k}}=&gt;\mathbf{A}^{\star}$</p>
+<p>论文中基于数据集做全量 SFT 训练</p>
+<h2 id="数据集">数据集</h2>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">Question: The Oberoi family is part of a hotel company that has a head office in what city?</span><br><span class="line"></span><br><span class="line">context: [The Oberoi family is an Indian family that is famous for its involvement in hotels, namely through The Oberoi Group]...[It is located in city center of Jakarta, near Mega Kuningan, adjacent to the sister JW Marriott Hotel. It is operated by The Ritz-Carlton Hotel Company. The complex has two towers that comprises a hotel and the Airlangga Apartment respectively]...[The Oberoi Group is a hotel company with its head office in Delhi.]</span><br><span class="line"></span><br><span class="line">Instruction: Given the question, context and answer above, provide a logical reasoning for that answer. Please use the format of: <span class="params">##</span>Reason: &#123;reason&#125; <span class="params">##</span>Answer: &#123;answer&#125;.</span><br><span class="line"></span><br><span class="line">CoT Answer: <span class="params">##</span>Reason: The document <span class="params">##</span>begin<span class="built_in">_</span>quote<span class="params">##</span> The Oberoi family is an Indian family that is famous for its involvement in hotels, namely through The Oberoi Group. <span class="params">##</span>end<span class="built_in">_</span>quote<span class="params">##</span> establishes that the Oberoi family is involved in the Oberoi group, and the document <span class="params">##</span>begin<span class="built_in">_</span>quote<span class="params">##</span> The Oberoi Group is a hotel company with its head office in Delhi. <span class="params">##</span>end<span class="built_in">_</span>quote<span class="params">##</span> establishes the head office of The Oberoi Group. Therefore, the Oberoi family is part of a hotel company whose head office is in Delhi. <span class="params">##</span>Answer: Delhi</span><br></pre></td></tr></table></figure>
+<p>从数据集 <code>Answer</code> 中可以看出，提问者引导模型以思维链的方式去回答问题，先说原因 <code>Reason</code> 再说答案 <code>Answer</code></p>
+<p>文中采用 ##begin_quote## 和 ##end_quote## 表示直接从上下文复制粘贴的引用，研究人员发现这是防止模型产生幻觉并坚持提供的上下文的有效方法。</p>
+<h2 id="实验结果">实验结果</h2>
+<p>DSF（Domain-Specific Finetuning）：特定领域内微调</p>
+<p>PAFT：特定领域微调+特定领域 RAG</p>
+<img data-src="/paper/paper-PAFT/image-20240815185100137.png" class="" title="image-20240815185100137">
+<h1>总结</h1>
+<p>将模型在特定领域的文档上做思维链微调</p>
+<ul>
+<li>通过特定领域微调，模型可以学会如何做“开卷考试“；</li>
+<li>当领域内数据发生一些变化时，模型依然能找到答案，即使没有正确答案也不会出现幻觉；</li>
+<li>可以认为，模型需要专业的微调来训练其在特定领域的 RAG（开卷考试）能力；</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/" rel="tag"># 大模型微调</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/JavaDevelop/Java-Interview/" rel="prev" title="开发面试常见问题和知识点">
+                  <i class="fa fa-angle-left"></i> 开发面试常见问题和知识点
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/LLMDevelop/Linux-Tool/" rel="next" title="Linux 开发工具">
+                  Linux 开发工具 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

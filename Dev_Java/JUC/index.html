@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="JMM、ThreadLocal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 并发基础">
+<meta property="og:url" content="https://yeqiuo.github.io/Dev_Java/JUC/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="JMM、ThreadLocal">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_Java/JUC/image-20240516133953621.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_Java/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_Java/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp">
+<meta property="article:published_time" content="2024-04-09T09:11:06.000Z">
+<meta property="article:modified_time" content="2024-07-11T09:26:16.001Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="Java并发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/Dev_Java/JUC/image-20240516133953621.png">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/Dev_Java/JUC/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Dev_Java/JUC/","path":"Dev_Java/JUC/","title":"Java 并发基础"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java 并发基础 | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#threadlocal"><span class="nav-number">1.</span> <span class="nav-text">ThreadLocal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-number">1.1.</span> <span class="nav-text">Q&amp;A</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jmm"><span class="nav-number">2.</span> <span class="nav-text">JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#happens-before-%E5%8E%9F%E5%88%99"><span class="nav-number">2.2.</span> <span class="nav-text">happens-before 原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7"><span class="nav-number">2.3.</span> <span class="nav-text">并发的三大特性</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/Dev_Java/JUC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java 并发基础 | 闻">
+      <meta itemprop="description" content="JMM、ThreadLocal">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java 并发基础
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-09 17:11:06" itemprop="dateCreated datePublished" datetime="2024-04-09T17:11:06+08:00">2024-04-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-07-11 17:26:16" itemprop="dateModified" datetime="2024-07-11T17:26:16+08:00">2024-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">JMM、ThreadLocal</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><img data-src="/Dev_Java/JUC/image-20240516133953621.png" class="" title="image-20240516133953621">
+<h1 id="threadlocal">ThreadLocal</h1>
+<p>每一个线程都有自己的专属本地变量，通过空间换时间的方式避免并发下线程安全问题</p>
+<ul>
+<li>完整的一次请求处理，于唯一一个线程中执行，可以通过 ThreadLocal
+共享数据</li>
+<li>ThreadLocal.set 方法是将值存储到 <strong>Thread 线程本身的
+ThreadLocalMap</strong> 里面</li>
+</ul>
+<p><strong>原理</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadLocal</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ThreadLocalMap</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span> <span class="keyword">extends</span> <span class="title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="built_in">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 存放数据</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整体结构图</p>
+<style>.knbbkjbnhllx{zoom:50%;}</style>
+<img data-src="/Dev_Java/JUC/v2-ce5b8a32cd1245c7c8af5fc15ffcc39f_1440w.webp" class="knbbkjbnhllx" alt="img">
+<p>引用关系图</p>
+<style>.uiahgvsyctqp{zoom:50%;}</style>
+<img data-src="/Dev_Java/JUC/v2-6875e31029e2c834cce5feb04bc22474_1440w.webp" class="uiahgvsyctqp" alt="img">
+<h2 id="qa">Q&amp;A</h2>
+<p><strong>Entry的key为什么设计成弱引用？</strong></p>
+<p>ThreadLocal 变量生命周期结束后，ThreadLocal 对象就可以被回收；</p>
+<p><strong>ThreadLocal为什么会导致内存泄露，如何解决？</strong></p>
+<p>虽然 get、set 或 remove 方法会回收 key 为 null 的 value
+值，但是如果没有调用这些方法，Entry 和ThreadLocalMap
+将会长期存在下去，会导致内存泄露；</p>
+<p>使用完 ThreadLocal 对象之后，调用 remove 方法；</p>
+<p><strong>ThreadLocal 是如何定位数据的？</strong></p>
+<p><code>int i = key.threadLocalHashCode &amp; (len-1);</code></p>
+<p>如果有冲突就通过线性探测再散列，直到找到空 bin；</p>
+<blockquote>
+<p>其他Hash冲突解决方法：开放寻址法（再散列）、拉链法</p>
+</blockquote>
+<p><strong>ThreadLocal 是如何扩容的？</strong></p>
+<p><strong>父子线程如何共享数据？</strong></p>
+<p>InheritableThreadLocal：初始化时会拷贝一份父线程中 ThreadLocal
+值，到子线程 InheritableThreadLocal 中；</p>
+<p><strong>ThreadLocal 作为成员变量时，为什么定义成 static
+更好？</strong></p>
+<p>将 ThreadLocal 定义为 static 可以确保所有线程都访问同一个 ThreadLocal
+实例，但它们各自存储的数据是独立的；</p>
+<p>确保它们的生命周期与线程的生命周期一致，而不是与类的实例的生命周期一致；</p>
+<p><strong>使用 InheritableThreadLocal
+时，如果父线程中重新set值，在子线程中能够正确的获取修改后的新值吗？</strong></p>
+<p>不会影响到已经存在的子线程中 InheritableThreadLocal
+的值，子线程将保持它在创建时从父线程中继承的原始值；</p>
+<h1 id="jmm">JMM</h1>
+<ul>
+<li><p>抽象了 happens-before
+原则来解决这个指令重排序问题，保证多线程环境下数据的一致性和可见性。</p></li>
+<li><p>抽象了线程和主内存之间的关系，提供一套内存模型以屏蔽系统差异</p></li>
+</ul>
+<h2 id="概念">概念</h2>
+<p>CPU 高速缓存：为解决 CPU 处理速度和内存不匹配的问题；</p>
+<p>指令重排序【编译器优化重排 —&gt; 指令并行重排 —&gt;
+内存系统重排】：指令重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致；</p>
+<blockquote>
+<p>内存屏障可以禁止处理器指令发生重排序，从而保障指令执行的有序性。此外，还能保证指令执行的可见性。</p>
+</blockquote>
+<h2 id="happens-before-原则">happens-before 原则</h2>
+<p>前一个操作的结果对于后一个操作是可见的，无论这两个操作是否在同一个线程里</p>
+<ul>
+<li>只要不改变程序的执行结果，编译器和处理器怎么进行重排序优化都行；</li>
+<li>会改变程序执行结果的重排序，JMM
+要求编译器和处理器必须禁止这种重排序；</li>
+</ul>
+<h2 id="并发的三大特性">并发的三大特性</h2>
+<p>原子性：一次操作或者多次操作，要么所有的操作全部都得到执行并且不会受到任何因素的干扰而中断，要么都不执行</p>
+<ul>
+<li>synchronized、各种 Lock 以及各种原子类；</li>
+</ul>
+<p>可见性：当一个线程对共享变量进行了修改，那么另外的线程都是立即可以看到修改后的最新值</p>
+<ul>
+<li>synchronized、Volatile 以及各种 Lock 实现可见性；</li>
+</ul>
+<p>有序性：代码的执行顺序未必就是编写代码时候的顺序</p>
+<ul>
+<li><p>Volatile
+关键字：<strong>保证变量的可见性和代码执行的有序性</strong>，但无法在多线程读写变量时保证操作原子性；</p></li>
+<li><p>内存屏障：<code>Unsafe</code> 类的 <code>fullFence()</code>
+可以避免代码重排序；</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java%E5%B9%B6%E5%8F%91/" rel="tag"># Java并发</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Programmer/Network/" rel="prev" title="计算机网络知识点">
+                  <i class="fa fa-angle-left"></i> 计算机网络知识点
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/Others/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" rel="next" title="实习笔试题汇总">
+                  实习笔试题汇总 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

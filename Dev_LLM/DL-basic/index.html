@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="机器学习是采用真实世界中采样的一小部分数据,并且希望模型能够对于未知数据有不错的泛化性能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习基础概念">
+<meta property="og:url" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="机器学习是采用真实世界中采样的一小部分数据,并且希望模型能够对于未知数据有不错的泛化性能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/606386-20180722194316424-288674381.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/o_L1.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/o_L2.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/overview_chatgpt.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/image-20240716101748533.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/image-20240715191912939.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/image-20240715191936226.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/image-20240715192056550.png">
+<meta property="article:published_time" content="2024-06-24T01:28:08.000Z">
+<meta property="article:modified_time" content="2024-09-17T04:22:34.273Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="深度学习基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/Dev_LLM/DL-basic/606386-20180722194316424-288674381.png">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/Dev_LLM/DL-basic/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Dev_LLM/DL-basic/","path":"Dev_LLM/DL-basic/","title":"深度学习基础概念"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深度学习基础概念 | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE%E6%96%B9%E5%B7%AE"><span class="nav-number">1.</span> <span class="nav-text">偏差方差</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%9B%E5%8C%96%E8%AF%AF%E5%B7%AE"><span class="nav-number">1.1.</span> <span class="nav-text">泛化误差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE"><span class="nav-number">1.2.</span> <span class="nav-text">方差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE"><span class="nav-number">1.3.</span> <span class="nav-text">偏差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%99%AA%E5%A3%B0"><span class="nav-number">1.4.</span> <span class="nav-text">噪声</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE-%E6%96%B9%E5%B7%AE%E7%AA%98%E5%A2%83"><span class="nav-number">1.5.</span> <span class="nav-text">偏差-方差窘境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">2.</span> <span class="nav-text">模型训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">优化器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">训练方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.1.</span> <span class="nav-text">监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.2.</span> <span class="nav-text">无监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.3.</span> <span class="nav-text">半监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.4.</span> <span class="nav-text">强化学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rlhf"><span class="nav-number">3.4.1.</span> <span class="nav-text">RLHF</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch"><span class="nav-number">5.</span> <span class="nav-text">Torch</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/Dev_LLM/DL-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深度学习基础概念 | 闻">
+      <meta itemprop="description" content="机器学习是采用真实世界中采样的一小部分数据,并且希望模型能够对于未知数据有不错的泛化性能。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习基础概念
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-06-24 09:28:08" itemprop="dateCreated datePublished" datetime="2024-06-24T09:28:08+08:00">2024-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-17 12:22:34" itemprop="dateModified" datetime="2024-09-17T12:22:34+08:00">2024-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/LLM%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">LLM基础</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">机器学习是采用真实世界中采样的一小部分数据,并且希望模型能够对于未知数据有不错的泛化性能。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="偏差方差">偏差方差</h1>
+<p><a
+target="_blank" rel="noopener" href="https://www.cnblogs.com/makefile/p/bias-var.html#fn2">参考文章</a></p>
+<h2 id="泛化误差">泛化误差</h2>
+<p>模型的平方预测误差的期望</p>
+<p><span
+class="math display">\[Err(\mathbf{x})=E\left[\left(y-f(\mathbf{x};D)\right)^2\right]=\mathbb{E}_D\left[\left(f(\boldsymbol{x};D)-\bar{f}\left(\boldsymbol{x}\right)\right)^2\right]+\left(\bar{f}(\boldsymbol{x})-y\right)^2+\mathbb{E}_D\left[(y_D-y)^2\right]\]</span></p>
+<h2 id="方差">方差</h2>
+<blockquote>
+<p>方差是指模型对于不同训练集的预测结果的波动程度（即泛化能力），<strong>刻画了数据扰动所造成的影响</strong>。高方差意味着模型过于复杂，对训练数据中的噪声和细节过于敏感，表示模型<strong>过拟合</strong></p>
+</blockquote>
+<p>使用样本数相同的不同训练集产生的方差</p>
+<p><span
+class="math display">\[\mathrm{var}(\mathbf{x})=\mathrm{E}_\mathrm{D}\left[\left(\mathrm{f}(\mathbf{x};\mathrm{D})-\overline{\mathrm{f}}(\mathbf{x})\right)^2\right]\]</span></p>
+<p>其中，算法 𝑓 对测试样本 𝑥 的期望预测（不同训练集 𝐷 上模型 𝑓
+对测试样本 𝑥 的预测输出的期望）<span
+class="math inline">\(\overline{f}(\mathbf{x})=E_D[f\left(\mathbf{x};D\right)]\)</span></p>
+<h2 id="偏差">偏差</h2>
+<blockquote>
+<p>偏差是指模型的预测值与真实值之间的差异，<strong>模型本身的拟合能力</strong>。高偏差意味着模型过于简单，无法捕捉到数据的复杂模式，表示模型<strong>欠拟合</strong></p>
+</blockquote>
+<p>期望预测与真实标记的误差</p>
+<p><span
+class="math display">\[\mathrm{bias}^2(\mathbf{x})=\left(\overline{\mathrm{f}}(\mathbf{x})-\mathrm{y}\right)^2\]</span></p>
+<h2 id="噪声">噪声</h2>
+<blockquote>
+<p>表达了当前任务上任何模型所能达到的期望泛化误差的下界，<strong>刻画了学习问题本身的难度</strong>。</p>
+</blockquote>
+<p>真实标记与数据集中的实际标记间的偏差</p>
+<p><span
+class="math display">\[\varepsilon^2=E_D\left[(y_D-y)^2\right]\]</span></p>
+<h2 id="偏差-方差窘境">偏差-方差窘境</h2>
+<img data-src="/Dev_LLM/DL-basic/606386-20180722194316424-288674381.png" class="" title="bias-variance-tradeoff">
+<ul>
+<li>偏向左侧时，训练数据的扰动不足以使学习器产生显著变化，此时偏差主导泛化误差，称为<strong>欠拟合现象</strong>
+<ul>
+<li>增加模型的迭代次数；更换描述能力更强的模型；生成更多特征供训练使用；降低正则化水平</li>
+</ul></li>
+<li>偏向右侧时，模型的拟合能力非常强，数据轻微变化都能导致模型发生变化，如果过分学习训练数据的特点，则会发生<strong>过拟合现象</strong>
+<ul>
+<li>扩增训练集；减少训练使用的特征的数量；降低模型复杂度；提高正则化水平</li>
+</ul></li>
+</ul>
+<p>为了解决“偏差和方差在一定程度上是有冲突的”的问题，可以采用K折交叉验证或正则化，它们分别从数据划分和模型复杂度两个角度入手，提升模型的泛化能力和稳健性：</p>
+<ul>
+<li>K折交叉验证通过多次划分和验证，减少因数据划分不当而导致的性能估计偏差</li>
+<li>正则化在损失函数中加入一个与模型复杂度相关的惩罚项，以限制模型的复杂度并防止过拟合
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zingp/p/10375691.html">参考文章</a>
+<ul>
+<li>L1正则化是指权值向量w中各个元素的绝对值之和，可以使得参数稀疏化，即得到的参数是一个稀疏矩阵，进而可以用于特征选择。二维平面图像：<img data-src="/Dev_LLM/DL-basic/o_L1.png" class="" title="image"></li>
+<li>L2正则化是指权值向量w中各个元素的平方和然后再求平方根，让权值尽可能小，如果参数足够小，数据偏移得多一点也不会对结果造成什么影响，专业一点的说法是<strong>抗扰动能力强</strong>。二维平面图像：<img data-src="/Dev_LLM/DL-basic/o_L2.png" class="" title="image"></li>
+</ul></li>
+</ul>
+<h1 id="模型训练">模型训练</h1>
+<h2 id="优化器">优化器</h2>
+<p>Adam：自适应学习率，通过计算梯度的一阶矩（均值）和二阶矩（未中心化的方差）来调整学习率</p>
+<p>AdamW：带有权重衰减和学习率预热的Adam优化器。改进了Adam，将权重衰退和梯度更新解耦，把L2正则化移到权重更新时而不是梯度计算时</p>
+<h1 id="训练方法">训练方法</h1>
+<h2 id="监督学习">监督学习</h2>
+<p>训练数据既有特征(feature)又有标签(label)，通过训练，让机器可以自己找到特征和标签之间的联系，在面对只有特征没有标签的数据时，可以判断出标签。</p>
+<h2 id="无监督学习">无监督学习</h2>
+<p>数据只有特征(feature)无标签(label)，是一种机器学习的训练方式，它本质上是一个统计手段，在没有标签的数据里可以发现潜在的一些结构的一种训练方式。</p>
+<h2 id="半监督学习">半监督学习</h2>
+<p>利用同时包含有标签和无标签的数据来构建一个模型，使得模型能够在测试阶段更好地泛化到新的、未见过的数据。</p>
+<h2 id="强化学习">强化学习</h2>
+<p>让一个智能体（agent）在环境（Enviroment）中通过尝试和错误来学习行为（Action）策略。智能体通过与环境进行交互，根据奖励信号来调整其行为策略，以达到最大化累积奖励的目标。</p>
+<p>针对 PPO 算法的优化：</p>
+<ul>
+<li>归一化奖励分数、将奖励分数做白化处理</li>
+</ul>
+<img data-src="/Dev_LLM/DL-basic/overview_chatgpt.png" class="" title="overview_chatgpt">
+<h3 id="rlhf">RLHF</h3>
+<blockquote>
+<p>Reinforcement Learning from Human
+Feedback，以<strong>强化学习方式依据人类反馈优化语言模型</strong>，是
+OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
+</blockquote>
+<p>Policy Gradient</p>
+<style>.occoglyrtsiu{zoom:50%;}</style>
+<img data-src="/Dev_LLM/DL-basic/image-20240716101748533.png" class="occoglyrtsiu" alt="image-20240716101748533">
+<p>RM+PPO</p>
+<p>步骤一、预训练语言模型</p>
+<style>.uyiensarkmmc{zoom: 50%;}</style>
+<img data-src="/Dev_LLM/DL-basic/image-20240715191912939.png" class="uyiensarkmmc" alt="image-20240715191912939">
+<p>步骤二、训练奖励模型 RM</p>
+<style>.hmpkozygjxco{zoom: 50%;}</style>
+<img data-src="/Dev_LLM/DL-basic/image-20240715191936226.png" class="hmpkozygjxco" alt="image-20240715191936226">
+<p>步骤三、用强化学习 PPO 微调</p>
+<style>.bwshksgyvgvy{zoom:50%;}</style>
+<img data-src="/Dev_LLM/DL-basic/image-20240715192056550.png" class="bwshksgyvgvy" alt="image-20240715192056550">
+<p>DPO</p>
+<p>KTO</p>
+<p>ORPO</p>
+<h1 id="损失函数">损失函数</h1>
+<p>MSELoss 回归任务</p>
+<p>CrossEntropyLoss 单标签分类</p>
+<p>BCEWithLogitsLoss 多标签分类</p>
+<h1 id="torch">Torch</h1>
+<p><code>torch.nn.Parameter()</code>将一个不可训练的 tensor
+转换成可以训练的类型 parameter，并将这个 parameter 绑定到这个 module
+里面</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/" rel="tag"># 深度学习基础</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Programmer/Docker/" rel="prev" title="Docker">
+                  <i class="fa fa-angle-left"></i> Docker
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/Others/How-to-Work/" rel="next" title="我爱上班">
+                  我爱上班 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

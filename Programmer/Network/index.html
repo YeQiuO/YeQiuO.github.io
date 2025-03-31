@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="如果我是一串电信号，我要去向何方呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络知识点">
+<meta property="og:url" content="https://yeqiuo.github.io/Programmer/Network/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="如果我是一串电信号，我要去向何方呢？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeqiuo.github.io/Programmer/Network/12.jpg">
+<meta property="og:image" content="https://yeqiuo.github.io/Programmer/Network/image-20240730153032143.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Programmer/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png">
+<meta property="og:image" content="https://yeqiuo.github.io/Programmer/Network/format,png-20230309230614791.png">
+<meta property="article:published_time" content="2024-03-27T07:58:22.000Z">
+<meta property="article:modified_time" content="2024-11-14T08:30:01.240Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeqiuo.github.io/Programmer/Network/12.jpg">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/Programmer/Network/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Programmer/Network/","path":"Programmer/Network/","title":"计算机网络知识点"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算机网络知识点 | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">访问网站的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E5%8C%85%E6%94%B6%E5%8F%91"><span class="nav-number">1.2.</span> <span class="nav-text">Linux 实现数据包收发</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82-http"><span class="nav-number">2.</span> <span class="nav-text">应用层 HTTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82-tcp"><span class="nav-number">3.</span> <span class="nav-text">传输层 TCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82-ip"><span class="nav-number">4.</span> <span class="nav-text">网络层 IP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE"><span class="nav-number">5.</span> <span class="nav-text">网络协议</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/Programmer/Network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算机网络知识点 | 闻">
+      <meta itemprop="description" content="如果我是一串电信号，我要去向何方呢？">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络知识点
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-27 15:58:22" itemprop="dateCreated datePublished" datetime="2024-03-27T15:58:22+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-11-14 16:30:01" itemprop="dateModified" datetime="2024-11-14T16:30:01+08:00">2024-11-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">如果我是一串电信号，我要去向何方呢？</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="概览">概览</h1>
+<p>OSI
+七层模型：应用层、表示层、会话层、传输层、网罗层、数据链路层、物理层</p>
+<p>TCP/IP 四层模型：应用层、传输层、网络层、网络接口层</p>
+<ul>
+<li><p>应用层，直接服务于用户。唯一运行在用户态的层：HTTP、FTP、Telnet、DNS、SMTP、DHCP</p></li>
+<li><p>传输层，应用层的技术支持。应用层数据超过 MSS 会将其切分成 TCP
+段，传输层报文中包括了端口号，用于区分报文属于哪个应用：TCP、UDP</p></li>
+<li><p>网络层，负责数据在网络中的传输，即寻址和路由。超过 MTU
+会切分，IP地址代表网络号和主机号：IP、ARP、ICMP</p></li>
+<li><p>传输层，关注链路级别的传输</p></li>
+</ul>
+<p>应用数据转换到传输块的过程：</p>
+<style>.wexkktrrpaet{zoom: 50%;}</style>
+<img data-src="/Programmer/Network/12.jpg" class="wexkktrrpaet" alt="img">
+<h2 id="访问网站的过程">访问网站的过程</h2>
+<style>.fiqznfzksimo{zoom: 67%;}</style>
+<img data-src="/Programmer/Network/image-20240730153032143.png" class="fiqznfzksimo" alt="image-20240730153032143">
+<ol type="1">
+<li>解析 URL</li>
+<li>DNS 查询服务器 IP
+地址（本地域名服务器-&gt;根域名服务器-&gt;顶级域名服务器）</li>
+<li>操作系统协议栈，包括传输层和网络层协议实现</li>
+<li>TCP 建立连接（SYN_SEND、SYN_RECE、ESTABLISHED）</li>
+<li>基于端口的 TCP 可靠传输</li>
+<li>基于地址的 IP 定位传输</li>
+<li>头部加上发送和接收方的 MAC 头部，ARP 查找接收端的 MAC</li>
+<li>网卡，帧校验符</li>
+<li>交换机，以太网设备，基于 MAC 地址表转发，没有缓存就广播</li>
+<li>路由器，和网卡类似，各个端口都具有 MAC 和
+IP。通过路由表确定要到目的地 IP 需要走哪个端口，并替换帧的源、目标
+MAC</li>
+</ol>
+<p>在网络包传输的过程中，源 IP 和目标 IP 始终是不会变的（前提：没有使用
+NAT 网络的），一直变化的是 MAC 地址，因为需要 MAC
+地址在以太网内进行两个设备之间的包传输</p>
+<p>校验过程：MAC 地址、IP 地址、序列号、端口</p>
+<ol start="11" type="1">
+<li>TCP 四次挥手（FIN_WAIT_1、FIN_RECE、FIN_WAIR_2、LAST_ACK）</li>
+</ol>
+<h2 id="linux-实现数据包收发">Linux 实现数据包收发</h2>
+<p><strong>发送</strong></p>
+<p>NAPI
+机制：不采用中断的方式读取数据，而是首先采用中断唤醒数据接收的服务程序，然后
+poll 的方法来轮询数据</p>
+<p>DMA 技术：将网络包写入到指定的内存地址，接着网卡向 CPU
+发起硬件中断，当 CPU
+收到硬件中断请求后，根据中断表，调用已经注册的中断处理函数</p>
+<p>硬中断先把收到的数据存在内存中，暂时屏蔽 CPU
+中断，后续软中断统一处理先前的数据</p>
+<p><strong>接收</strong></p>
+<ol type="1">
+<li>将用户待发送的数据从用户态拷贝到内核态 sk_buff
+内存，并将其加入到发送缓冲区；</li>
+<li>克隆一份 sk_buff 的副本，用于网络层传输，传输层保留原始 sk_buff
+直到接收到 ACK，以保证可靠传输；</li>
+<li>当 IP 层发现数据包大于 MTU 时，会申请额外的
+sk_buff，并将原来的数据包拆分成多个小的 sk_buff；</li>
+</ol>
+<h1 id="应用层-http">应用层 HTTP</h1>
+<blockquote>
+<p>HTTP
+是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
+</blockquote>
+<p>字段</p>
+<ul>
+<li>Content-Length：HTTP 协议，通过设置回车符、换行符作为 HTTP header
+的边界；通过 Content-Length 字段作为 HTTP body
+的边界。这两个方式都是为了解决“粘包”的问题。</li>
+</ul>
+<p>HTTP 缓存技术：</p>
+<ul>
+<li>强制缓存，缓存如果没有过期浏览器就直接使用；</li>
+<li>协商缓存，304状态码，表示直接使用本地已过期的缓存，因为服务器数据未更新</li>
+</ul>
+<p>HTTP/1.0</p>
+<ul>
+<li>无状态；</li>
+<li>每发起一个请求，都要新建一次 TCP 连接；</li>
+</ul>
+<p>HTTP/1.1</p>
+<ul>
+<li>长连接，复用 TCP 连接</li>
+<li>基于管道传输，可以同时发出多个请求，而不需要等到收到前一个个请求的响应，再发送下一个请求。解决了请求的对头阻塞问题，但依然存在
+HTTP 层的队头阻塞问题。</li>
+</ul>
+<p>请求的对头阻塞：前一个请求结束后才能处理下一个请求；</p>
+<p>HTTP
+层队头阻塞：服务端需要按顺序响应收到的请求，如果服务端处理某个请求消耗的时间比较长，那么只能等响应完这个请求后，
+才能处理下一个请求；</p>
+<p>TCP 层队头阻塞：一旦发生丢包，就会阻塞住所有的 HTTP 请求；</p>
+<p>HTTP/2</p>
+<ul>
+<li>头部压缩</li>
+<li>二进制格式数据代替报文</li>
+<li>并发传输，多个请求复用一个 TCP 连接，解决了HTTP
+层的队头阻塞，但依然存在 TCP 层的队头阻塞问题</li>
+<li>服务端主动推送</li>
+<li>二进制帧格式传输</li>
+</ul>
+<p>HTTP/3</p>
+<ul>
+<li>提出了 QUIC 传输层协议代替 tcp。QUIC
+是基于udp实现的，在无连接的基础上实现了可靠和安全
+<ul>
+<li>更快的请求多路复用，解决 TCP 层队头阻塞问题</li>
+<li>建立连接更快</li>
+</ul></li>
+</ul>
+<p>HTTPS</p>
+<ul>
+<li>在 HTTP 的基础上
+<ul>
+<li>在三次握手后，还需要 SSL/TLS 的握手过程，使得报文能够加密传输；</li>
+<li>使用时需要向 CA 申请数字证书，来保证服务器的身份是可信的；</li>
+</ul></li>
+<li>加密传输
+<ul>
+<li>混合加密【机密性，防窃听】：建立连接用非对称加密：数字签名，通过「私钥加密，公钥解密」的方式，来确认消息的身份；传输数据用对称加密：一个密钥，信息传输；</li>
+<li>摘要算法【完整性，防篡改】：用摘要算法（哈希函数）来计算出内容的哈希值，哈希值是唯一的，且无法通过哈希值推导出内容；</li>
+<li>数字证书【防冒充】：通过第三方 CA
+保证服务器的公钥私钥没有被别人替换过</li>
+</ul></li>
+<li>【TLS 握手阶段】RSA算法
+<ul>
+<li>客户端向服务器索要并验证服务器的公钥
+<ul>
+<li>ClientHello 客 ==&gt; 服：随机数 Client Random、TLS
+版本号、密码套件；</li>
+<li>SeverHello 服 ==&gt; 客：随机数 Server Random、TLS 版本号
+ACK、使用密码套件 RSA、数字证书；</li>
+</ul></li>
+<li>双方协商生产「会话秘钥」
+<ul>
+<li>客户端回应 客 ==&gt; 服：获取 CA
+证书中的服务器公钥确认服务端数字证书、「会话秘钥」加密通信通知、公钥加密随机数
+pre-master key；</li>
+<li>服 ==&gt;
+客；三个随机数算出<strong>会话密钥</strong>，双方都通知对方后续请求都使用会话密钥加密通信；</li>
+</ul></li>
+<li>双方采用「会话秘钥」进行加密通信</li>
+</ul></li>
+</ul>
+<h1 id="传输层-tcp">传输层 TCP</h1>
+<blockquote>
+<p>负责为应用层提供网络支持，实现应用到应用的数据传输</p>
+</blockquote>
+<p>TCP ：面向连接的、可靠的、基于字节流的</p>
+<p>三次握手</p>
+<style>.hiyrikmetvcd{zoom:50%;}</style>
+<img data-src="/Programmer/Network/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" class="hiyrikmetvcd" alt="TCP 三次握手">
+<p>四次挥手【closed_wait；last_ack】</p>
+<style>.vhkaorawwumo{zoom: 67%;}</style>
+<img data-src="/Programmer/Network/format,png-20230309230614791.png" class="vhkaorawwumo" alt="客户端主动关闭连接 —— TCP 四次挥手">
+<ul>
+<li>首先确认客户端不会再发送请求给服务端</li>
+<li>然后服务端在发送完数据后，再向客户端发送断开连接</li>
+</ul>
+<p>为什么这么设计？因为TCP是双向通信的可靠的协议，需要确保客户端和服务端都有收发数据包的能力；为后续传输做准备：序列号</p>
+<p>流量控制、超时重传、拥塞控制</p>
+<p><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/dl962454/article/details/115796513">拥塞控制</a>：慢开始（每经过一个传输轮次，拥塞窗口
+cwnd 就加倍）、拥塞避免（慢开始门限
+ssthresh）、快重传（连续收到三个重复确认就立即重传对方尚未收到的报文段，不等待重传计时器到期）、快恢复</p>
+<h1 id="网络层-ip">网络层 IP</h1>
+<blockquote>
+<p>负责路径传输过程中路径和节点的选择，实现设备到设备的数据传输</p>
+</blockquote>
+<p>寻址能力：网络号+主机号（子网掩码）</p>
+<p>路由：数据包每到达一个节点，通过路由算法决定下一步走哪条路径</p>
+<p>分片重组：以太网的 MTU（最大传输单元）是 1500
+字节。在分片传输中，一旦某个分片丢失，则会造成<strong>整个 IP
+数据报作废</strong>，所以 TCP 引入了 MSS 也就是在 TCP 层进行分片不由 IP
+层分片，那么对于 UDP 我们尽量不要发送一个大于 MTU 的数据报文</p>
+<h1 id="网络协议">网络协议</h1>
+<p>DNS：域名解析</p>
+<p>NAT：私有网络与公共网络之间转换 IP 地址</p>
+<p>ICMP：传输控制信息（不用于传输应用层数据），以帮助管理和维护网络</p>
+<p>DHCP：自动为网络中的设备分配 IP
+地址及其他网络配置参数，如子网掩码、网关和 DNS 服务器</p>
+<p>ARP：下一跳的 MAC 地址</p>
+<p>IGMP：组播</p>
+<p>命令<code>ip router</code> 查看路由表</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Dev_Java/Java-Algorithm/" rel="prev" title="数据结构和算法">
+                  <i class="fa fa-angle-left"></i> 数据结构和算法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/Dev_Java/JUC/" rel="next" title="Java 并发基础">
+                  Java 并发基础 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

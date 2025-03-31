@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yeqiuo.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":3,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Title: A Knowledge Graph for Distress Management Conversations">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读 HEAL">
+<meta property="og:url" content="https://yeqiuo.github.io/Research_Paper/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/index.html">
+<meta property="og:site_name" content="闻">
+<meta property="og:description" content="Title: A Knowledge Graph for Distress Management Conversations">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-24T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-17T04:32:43.287Z">
+<meta property="article:author" content="ZheWen Wang">
+<meta property="article:tag" content="情绪支持对话">
+<meta property="article:tag" content="知识图谱">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://yeqiuo.github.io/Research_Paper/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yeqiuo.github.io/Research_Paper/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/","path":"Research_Paper/HEAL_ A Knowledge Graph for Distress Management Conversations/","title":"论文阅读 HEAL"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>论文阅读 HEAL | 闻</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">闻</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Yesterday is history, tomorrow is a mystery but today is a gift.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%80%9F%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">论文速览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text">Abstract</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E7%9A%84%E9%97%AE%E9%A2%98-%E6%9C%AC%E6%96%87%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">2.</span> <span class="nav-text">关注的问题 &#x2F; 本文的优势</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZheWen Wang</p>
+  <div class="site-description" itemprop="description">夜色难免黑凉 前行必有曙光</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yeqiuo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yeqiuo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeqiuo.github.io/Research_Paper/HEAL_%20A%20Knowledge%20Graph%20for%20Distress%20Management%20Conversations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZheWen Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="闻">
+      <meta itemprop="description" content="夜色难免黑凉 前行必有曙光">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="论文阅读 HEAL | 闻">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          论文阅读 HEAL
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-09-24 12:00:00" itemprop="dateCreated datePublished" datetime="2023-09-24T12:00:00+08:00">2023-09-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-17 12:32:43" itemprop="dateModified" datetime="2024-09-17T12:32:43+08:00">2024-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E8%AE%BA%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">读论文</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><strong>Title:</strong> A Knowledge Graph for Distress Management
+Conversations</p>
+<span id="more"></span>
+<h1 id="论文速览">论文速览</h1>
+<h2 id="abstract">Abstract</h2>
+<ul>
+<li><p>相比于seq2seq的不确定性，聊天机器人利用知识图谱进行推理，被视为端到端模型的高效、万无一失的解决方案</p></li>
+<li><p>提出HEAL知识图谱</p>
+<ul>
+<li>基于1M痛苦叙述及其相应的安慰回应而开发的知识图谱</li>
+<li>图谱可视化：表现了对话双方的情绪动态和帮助缓解情绪的有效方法</li>
+<li>组成部分
+<ul>
+<li>22k Node 节点：识别不同类型的stressors, speaker expectations,
+responses, feedback types</li>
+<li>104k Edge 连接：不同类型的节点之间的关系</li>
+<li>每个节点和41种情绪状态相关联 ## Introduction</li>
+</ul></li>
+</ul></li>
+<li><p>神经网络架构模型缺乏可控性和黑箱性质，导致其并不可靠</p></li>
+<li><p>使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应</p></li>
+<li><p>相关工作</p>
+<ul>
+<li>ConceptNet、ATOMIC主要是通过捕获事实知识，在开放对话中嵌入常识推理辅助对话，不适用于移情对话</li>
+</ul></li>
+<li><p>本文，通过子Reddit精心选择的对压力事件叙述和回应，生成了一个压力对话管理知识图谱HEAL</p>
+<ul>
+<li>五类节点：压力源、期望、回应类型、反馈类型、情感状态</li>
+<li>可以准确描述以痛苦为导向对话的潜在背景，使对话模型可以检索到更具体的上下文响应。提取响应会导致的反馈类型和是否能达到期望等信息，从而产生更为合适的反应
+## Related Work</li>
+</ul></li>
+<li><p>知识图谱可以帮助NLP理解用户的输入，拓展用户输入中的事实和常识性知识</p></li>
+<li><p>目前工作关注于知识感知和推理对话，不会捕捉情感推理和移情反应 ##
+Methodology</p></li>
+<li><p>数据集管理</p>
+<ul>
+<li>采用reddit数据集，通过Pushshift
+API，收集和处理8个子reddit对话主题：mentalhealthsupport、offmychest、sad、anxietyhelp、depression、suicidewatch、depressed、depressionhelp</li>
+<li>数据预处理</li>
+</ul></li>
+<li><p>概要</p>
+<ul>
+<li>针对过长而超出预训练语言模型输入上限的对话，本文采用SMMRY摘要算法保留叙事本质</li>
+</ul></li>
+<li><p>凝聚聚类</p>
+<ul>
+<li>自动聚类：区分对话中的压力源、期望、响应和反馈类型</li>
+<li>凝聚聚类法：递归地合并增加最小链接距离的簇对</li>
+<li>链接距离：对SentenceBERT生成的embedding使用余弦相似度计算</li>
+</ul></li>
+<li><p>定义压力源</p>
+<ul>
+<li>每个阈值计算了各种聚类质量指标，结果显示以0.85的相似度阈值区分压力源最合适，将压力源中的4.7%分为了4363个类。</li>
+<li>将聚类结果按照TF-IDF建模，可以明显区分压力源，表明聚类结果的可靠性。</li>
+</ul></li>
+<li><p>期望、回复、反馈类型</p>
+<ul>
+<li>提取带有❓的句子作为问题，以此问题提取相关的响应和反馈。使用NLTK分离响应和反馈中的单个对话，方便后续对其进行单一种类的聚类。</li>
+<li>聚类方法与压力源一致，每个集群至少有两个不同的集群元素。</li>
+</ul></li>
+<li><p>情感状态建模</p>
+<ul>
+<li>使用Pu提出的基于BERT的情感分类器，将每一个簇与某一情感状态相关联，共有41种情感状态。先将每一个簇下的每个文本进行分类，再按照情感出现次数和分类置信度排序，选取最相关的情感状态。
+## Statistical Analysis</li>
+</ul></li>
+<li><p>HEAL知识图谱：2.2k集群节点和情感状态，104k连接</p></li>
+<li><p>反馈集群中，负面情绪明显减少，证明HEAL中存在帮助人们降低负面情感状态的有用响应
+## Visualization and Interpretation</p></li>
+<li><p>表示大多数回答都是正向积极反馈 ## Evaluating the Utility of HEAL
+in Responding to Distress Prompts</p></li>
+<li><p>获取共情响应</p>
+<ul>
+<li>从测试集中选取和压力源中现有叙述相似性高于0.75的新对话</li>
+<li>根据压力源和响应之间边权的权重、响应簇大小进行排序，选择排名高的响应</li>
+</ul></li>
+<li><p>自动评估</p>
+<ul>
+<li>HEAL的响应更加多样化，可以根据给定的情况给出特定的响应</li>
+<li>在其他自动指标BLEU、METEOR和ROUGE方面表现不佳</li>
+</ul></li>
+<li><p>人类评估【DOI: 10.18653/v1/d16-1230】</p>
+<ul>
+<li>HEAL模型变现更好 ## Discussion and Conclusion</li>
+</ul></li>
+<li><p>HEAL：利用Reddit上约1M个与痛苦相关的对话得出的知识图谱。在不同类型的压力源、说话者期望、求助者反应和求助者反馈类型之间形成联系，同时将每个节点与41种情感状态中的一种联系起来</p></li>
+<li></li>
+</ul>
+<h1 id="关注的问题-本文的优势">关注的问题 / 本文的优势</h1>
+<ul>
+<li><p>端到端对话经常会产生通用和重复性对话，缺乏可控性。使用常识推理和知识图结构表示，可以生成适合的、可预测的、多策略的回应。</p></li>
+<li><p>目前的知识图谱不适用于移情对话。移情领域缺乏数据集和模型帮助产生移情反应，还缺乏具有上下文-相应之间关系的知识图谱。
+# 解决方法 / 创新点</p></li>
+<li><p>开发大规模知识图谱HEAL，识别不同的压力源、期望、响应、反馈和该对话的情感状态</p></li>
+<li><p>统计和可视化分析，识别导致情绪强度降低的有利反应</p></li>
+<li><p>评估通过HEAL检索到的回应，在解决情感困扰问题上的共情性、多样性、可靠性
+# 实验结论</p></li>
+<li><p>与RoBERTa、Blender进行比较，HEAL能够产生更多样化、更移情的反应</p></li>
+<li><p>统计和可视化分析证实了在HEAL中存在有用的反应策略，这些策略降低了遭受痛苦的人的负面情感状态</p></li>
+<li><p>使用纯生成模型来解决痛苦存在危险，HEAL通过战略性地识别与给定提示相关的特定压力源来避免不适当的反应
+# 有待提升的部分</p></li>
+<li><p>只使用了压力源与回复的边缘权重，进一步可以通过将边缘权重与说话者的期望和反馈结合起来来开发</p></li>
+<li><p>知识图的信息可以用于增强神经反应生成模型，并为这些模型引入更多的可控性和可解释性，从而提高可靠性</p></li>
+<li><p>仅限于识别≈4K的压力源，可以从网络上获取更多数据来增强知识图谱，这将帮助其能够处理更大范围的压力源和期望</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%83%85%E7%BB%AA%E6%94%AF%E6%8C%81%E5%AF%B9%E8%AF%9D/" rel="tag"># 情绪支持对话</a>
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag"># 知识图谱</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Research_Paper/FADO/" rel="prev" title="论文阅读 Feedback-Aware Double">
+                  <i class="fa fa-angle-left"></i> 论文阅读 Feedback-Aware Double
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/Research_Paper/Knowledge-enhanced%20Mixed-initiative%20Dialogue%20System%20for%20Emotional%20Support%20Conversations/" rel="next" title="论文阅读 KEMI">
+                  论文阅读 KEMI <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

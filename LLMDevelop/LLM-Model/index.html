@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">优化技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.1.</span> <span class="nav-text">滑动窗口注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%80%E7%96%8F%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.2.</span> <span class="nav-text">稀疏注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flash-Attention"><span class="nav-number">1.3.</span> <span class="nav-text">Flash Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">Qwen2 模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2%E6%B3%A8%E6%84%8F%E5%8A%9B-GQA"><span class="nav-number">2.1.</span> <span class="nav-text">分组查询注意力 GQA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-PoRE"><span class="nav-number">2.2.</span> <span class="nav-text">旋转位置编码 PoRE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%87%E6%96%B9%E6%A0%B9%E5%BD%92%E4%B8%80%E5%8C%96-RMSNorm"><span class="nav-number">2.3.</span> <span class="nav-text">均方根归一化 RMSNorm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-SwiGLU"><span class="nav-number">2.4.</span> <span class="nav-text">激活函数 SwiGLU</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF"><span class="nav-number">1.</span> <span class="nav-text">优化技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.1.</span> <span class="nav-text">滑动窗口注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%80%E7%96%8F%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.2.</span> <span class="nav-text">稀疏注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flash-attention"><span class="nav-number">1.3.</span> <span class="nav-text">Flash Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#qwen2-%E6%A8%A1%E5%9D%97"><span class="nav-number">2.</span> <span class="nav-text">Qwen2 模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2%E6%B3%A8%E6%84%8F%E5%8A%9B-gqa"><span class="nav-number">2.1.</span> <span class="nav-text">分组查询注意力 GQA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-pore"><span class="nav-number">2.2.</span> <span class="nav-text">旋转位置编码 PoRE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%87%E6%96%B9%E6%A0%B9%E5%BD%92%E4%B8%80%E5%8C%96-rmsnorm"><span class="nav-number">2.3.</span> <span class="nav-text">均方根归一化 RMSNorm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-swiglu"><span class="nav-number">2.4.</span> <span class="nav-text">激活函数 SwiGLU</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -245,6 +245,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">LLM 相较于 Transformers 在结构上的创新点</div>
@@ -254,124 +269,142 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1>优化技术</h1>
+    <div class="post-body" itemprop="articleBody"><h1 id="优化技术">优化技术</h1>
 <blockquote>
 <p>大模型领域针对 Transformer 计算过程的一些优化</p>
 </blockquote>
 <h2 id="滑动窗口注意力">滑动窗口注意力</h2>
 <p>sliding window attention: Longformer</p>
 <img data-src="/LLMDevelop/LLM-Model/swa.png" class="" title="img">
-<p><a target="_blank" rel="noopener" href="https://amaarora.github.io/posts/2024-07-04%20SWA.html#sliding-window-attention-in-pytorch">技术博客</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://amaarora.github.io/posts/2024-07-04%20SWA.html#sliding-window-attention-in-pytorch">技术博客</a></p>
 <h2 id="稀疏注意力">稀疏注意力</h2>
-<p>Generating Long Sequences with Sparse Transformers，核心是只让设置好的像素点参与自注意力的计算（注意这里不是只选取设置好位置上的像素点，其他mask掉，因为这样并不能降低模型的复杂度），引入一个名为连接模式(Connectivity Pattern)的变量，连接模式只作用在$K$和$V$的计算上，(bs, head_num, seq_len, head_dim) 中的 seq_len 只选取连接模式中选择的。</p>
+<p>Generating Long Sequences with Sparse
+Transformers，核心是只让设置好的像素点参与自注意力的计算（注意这里不是只选取设置好位置上的像素点，其他mask掉，因为这样并不能降低模型的复杂度），引入一个名为连接模式(Connectivity
+Pattern)的变量，连接模式只作用在<span
+class="math inline">\(K\)</span>和<span
+class="math inline">\(V\)</span>的计算上，(bs, head_num, seq_len,
+head_dim) 中的 seq_len 只选取连接模式中选择的。</p>
 <p>连接模式（注意力核）的选择：局部稀疏模式、分块稀疏模式、对角块稀疏模式</p>
 <img data-src="/LLMDevelop/LLM-Model/2.png" class="" title="img">
-<p><a target="_blank" rel="noopener" href="https://fengyan-wby.fun/2023/08/22/%E3%80%90%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%E3%80%91Generating-Long-Sequences-with-Sparse-Transformers/">技术博客</a></p>
-<h2 id="Flash-Attention">Flash Attention</h2>
-<p>其核心思想是将原始的注意力矩阵分解成更小的子矩阵，然后分别对这些子矩阵进行计算，只要这个子矩阵的大小可以在 SRAM 内存放，那么不就可以在计算过程中只访问 SRAM 了。</p>
-<p>采用了 Recomputation (重算）方法，这算是在深度学习优化中的老概念了，它是一种算力换内存的把戏。</p>
-<p>Tiling 方法将 NxN 的 softmax 分数矩阵划分为块，核心是 <strong>分块SoftMax算法</strong>，详细推导过程见<a target="_blank" rel="noopener" href="http://fancyerii.github.io/2023/10/23/flashattention/">技术博客</a>。</p>
-<h1>Qwen2 模块</h1>
+<p><a
+target="_blank" rel="noopener" href="https://fengyan-wby.fun/2023/08/22/%E3%80%90%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%E3%80%91Generating-Long-Sequences-with-Sparse-Transformers/">技术博客</a></p>
+<h2 id="flash-attention">Flash Attention</h2>
+<p>其核心思想是将原始的注意力矩阵分解成更小的子矩阵，然后分别对这些子矩阵进行计算，只要这个子矩阵的大小可以在
+SRAM 内存放，那么不就可以在计算过程中只访问 SRAM 了。</p>
+<p>采用了 Recomputation
+(重算）方法，这算是在深度学习优化中的老概念了，它是一种算力换内存的把戏。</p>
+<p>Tiling 方法将 NxN 的 softmax 分数矩阵划分为块，核心是
+<strong>分块SoftMax算法</strong>，详细推导过程见<a
+target="_blank" rel="noopener" href="http://fancyerii.github.io/2023/10/23/flashattention/">技术博客</a>。</p>
+<h1 id="qwen2-模块">Qwen2 模块</h1>
 <img data-src="/LLMDevelop/LLM-Model/dccdd5360d984d2c84a9f7338c55e665.jpeg" class="" title="img">
-<p><a target="_blank" rel="noopener" href="https://github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">DataWhale社区教程</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://github.com/datawhalechina/tiny-universe/tree/main/content/Qwen-blog">DataWhale社区教程</a></p>
 <p><code>modeling_qwen2.py</code> 架构</p>
 <ul>
-<li>
-<p>Qwen2RMSNorm： RMS归一化层</p>
-</li>
-<li>
-<p>Qwen2RotaryEmbedding： 旋转位置编码</p>
-</li>
-<li>
-<p>Attention</p>
+<li><p>Qwen2RMSNorm： RMS归一化层</p></li>
+<li><p>Qwen2RotaryEmbedding： 旋转位置编码</p></li>
+<li><p>Attention</p>
 <ul>
-<li>
-<p>Qwen2Attention： 注意力层</p>
-</li>
-<li>
-<p>Qwen2FlashAttention2： 使用Flash Attention 2.0版本加速的注意力层</p>
-</li>
-<li>
-<p>Qwen2SdpaAttention： 使用Sdpa（pytorch自带的加速， Scaled Dot-Product Attention）加速的注意力层</p>
-</li>
-</ul>
-</li>
-<li>
-<p>Qwen2DecoderLayer： 编码层，核心结构，之后就是堆叠</p>
-</li>
-<li>
-<p>Qwen2PreTrainedModel： 预训练类</p>
-</li>
-<li>
-<p>Qwen2Model： 不带head的Qwen2模型</p>
-</li>
-<li>
-<p>Qwen2ForCausalLM： 带Causal LM head的Qwen2模型</p>
-</li>
-<li>
-<p>Qwen2ForSequenceClassification： 带序列分类头的Qwen2模型</p>
-</li>
+<li><p>Qwen2Attention： 注意力层</p></li>
+<li><p>Qwen2FlashAttention2： 使用Flash Attention
+2.0版本加速的注意力层</p></li>
+<li><p>Qwen2SdpaAttention： 使用Sdpa（pytorch自带的加速， Scaled
+Dot-Product Attention）加速的注意力层</p></li>
+</ul></li>
+<li><p>Qwen2DecoderLayer： 编码层，核心结构，之后就是堆叠</p></li>
+<li><p>Qwen2PreTrainedModel： 预训练类</p></li>
+<li><p>Qwen2Model： 不带head的Qwen2模型</p></li>
+<li><p>Qwen2ForCausalLM： 带Causal LM head的Qwen2模型</p></li>
+<li><p>Qwen2ForSequenceClassification： 带序列分类头的Qwen2模型</p></li>
 </ul>
 <p>功能函数</p>
 <ul>
-<li>
-<p>_get_unpad_data： 在flash attention的数据预处理中会用到。主要是对 attention mask 进行一些操作；</p>
-</li>
-<li>
-<p>rotate_half： 在旋转位置编码中用到；</p>
-</li>
-<li>
-<p>apply_rotary_pos_emb： 对数据主要是注意力运算中的 q，k 做旋转位置编码；</p>
-</li>
-<li>
-<p>repeat_kv： 主要是在 MQA（Multi-Query Attention）和 GQA（Group-Query Attention）中用到，因为 q head 数量是 k，v head 的数量的整数倍</p>
-</li>
+<li><p>_get_unpad_data： 在flash attention的数据预处理中会用到。主要是对
+attention mask 进行一些操作；</p></li>
+<li><p>rotate_half： 在旋转位置编码中用到；</p></li>
+<li><p>apply_rotary_pos_emb： 对数据主要是注意力运算中的 q，k
+做旋转位置编码；</p></li>
+<li><p>repeat_kv： 主要是在 MQA（Multi-Query Attention）和
+GQA（Group-Query Attention）中用到，因为 q head 数量是 k，v head
+的数量的整数倍</p></li>
 </ul>
 <p>优化注意力机制，降低处理长序列时的计算复杂度。</p>
-<h2 id="分组查询注意力-GQA">分组查询注意力 GQA</h2>
+<h2 id="分组查询注意力-gqa">分组查询注意力 GQA</h2>
 <p>MQA 将所有注意力头的键和值共享</p>
 <p>GQA 的方式是将多个注意力头分成组，每组头共享同一组的键和值。</p>
 <img data-src="/LLMDevelop/LLM-Model/v2-8a907719f9e3ced8347a051d9a66c732_720w.webp" class="" title="img">
-<p>实现方式：<code>transformers.models.llama.modeling_llama.repeat_kv</code> 复制多次 KV，使用 <code>expand</code> 而不是 <code>repeat</code> 是因为 KV 的参数是组内共享的</p>
-<h2 id="旋转位置编码-PoRE">旋转位置编码 PoRE</h2>
+<p>实现方式：<code>transformers.models.llama.modeling_llama.repeat_kv</code>
+复制多次 KV，使用 <code>expand</code> 而不是 <code>repeat</code> 是因为
+KV 的参数是组内共享的</p>
+<h2 id="旋转位置编码-pore">旋转位置编码 PoRE</h2>
 <blockquote>
-<p>通过旋转编码，使得每个 token 既有相对位置信息，又有绝对位置信息，Qwen2 的位置信息编码是在 attention 中计算到 KV 中的</p>
+<p>通过旋转编码，使得每个 token
+既有相对位置信息，又有绝对位置信息，Qwen2 的位置信息编码是在 attention
+中计算到 KV 中的</p>
 </blockquote>
-<p>例如，对于一个维度为 512 的向量$v=(v_0,v_1,v_2,v_3，…，v_{511})$，RoPE 可能将其看作：</p>
+<p>例如，对于一个维度为 512 的向量<span
+class="math inline">\(v=(v_0,v_1,v_2,v_3，...，v_{511})\)</span>，RoPE
+可能将其看作：</p>
 <ul>
-<li>第 1 对：$(v_0,v_1)$</li>
-<li>第 2 对：$(v_2,v_3)$</li>
-<li>…</li>
-<li>第 256 对：$(v_{510},v_{511})$</li>
+<li>第 1 对：<span class="math inline">\((v_0,v_1)\)</span></li>
+<li>第 2 对：<span class="math inline">\((v_2,v_3)\)</span></li>
+<li>...</li>
+<li>第 256 对：<span
+class="math inline">\((v_{510},v_{511})\)</span></li>
 </ul>
 <p>然后，通过旋转矩阵分别对每一对进行旋转，使得每一对的旋转角度与相对位置相对应。</p>
-<style>.ffdxhpwcbeyb{zoom： 67%;}</style><img data-src="/LLMDevelop/LLM-Model/ROPE3.png" class="ffdxhpwcbeyb" alt="img">
-<p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和 <code>apply_rotary_pos_emb</code> 方法， <code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin 数据， <code>apply_rotary_pos_emb</code> 方法将位置信息作用到$K$和$V$上。</p>
-<h2 id="均方根归一化-RMSNorm">均方根归一化 RMSNorm</h2>
-<p>矩阵计算要进行归一化防止不同特征的取值过大，常用的是 layer norm，也就是每一项减去样本的均值，再除以样本的方差；而 RMS 则是去除了减去均值的操作，以便提升效率。</p>
+<style>.olculgejyzmm{zoom： 67%;}</style>
+<img data-src="/LLMDevelop/LLM-Model/ROPE3.png" class="olculgejyzmm" alt="img">
+<p>代码层面，Qwen2 构造 <code>Qwen2RotaryEmbedding</code> 类和
+<code>apply_rotary_pos_emb</code> 方法，
+<code>Qwen2RotaryEmbedding</code> 类基于 seq_len 返回缓存的 cos 和 sin
+数据， <code>apply_rotary_pos_emb</code> 方法将位置信息作用到<span
+class="math inline">\(K\)</span>和<span
+class="math inline">\(V\)</span>上。</p>
+<h2 id="均方根归一化-rmsnorm">均方根归一化 RMSNorm</h2>
+<p>矩阵计算要进行归一化防止不同特征的取值过大，常用的是 layer
+norm，也就是每一项减去样本的均值，再除以样本的方差；而 RMS
+则是去除了减去均值的操作，以便提升效率。</p>
 <ul>
-<li>LayerNorm 通过均值和标准差对输入进行标准化，确保输入具有<strong>零均值和单位方差</strong>，这对稳定训练有帮助。</li>
-<li>RMSNorm 则通过均方根进行归一化，<strong>不关注均值，仅对幅值进行规范化，避免了对数据的中心化处理</strong>，减少了计算复杂度，并且在某些模型中表现优越。</li>
+<li>LayerNorm
+通过均值和标准差对输入进行标准化，确保输入具有<strong>零均值和单位方差</strong>，这对稳定训练有帮助。</li>
+<li>RMSNorm
+则通过均方根进行归一化，<strong>不关注均值，仅对幅值进行规范化，避免了对数据的中心化处理</strong>，减少了计算复杂度，并且在某些模型中表现优越。</li>
 </ul>
-<p>$\text{LN}(x) = \frac{x - \mu}{\sigma} \cdot \gamma + \beta$</p>
+<p><span class="math inline">\(\text{LN}(x) = \frac{x - \mu}{\sigma}
+\cdot \gamma + \beta\)</span></p>
 <ul>
-<li>x  是输入向量（通常是模型中每一层的输出）。</li>
-<li>$\mu$  是输入向量的均值。</li>
-<li>$\sigma$  是输入向量的标准差。</li>
-<li>$\gamma$  和  $\beta$  是可学习的缩放和偏移参数。</li>
+<li>x 是输入向量（通常是模型中每一层的输出）。</li>
+<li><span class="math inline">\(\mu\)</span> 是输入向量的均值。</li>
+<li><span class="math inline">\(\sigma\)</span>
+是输入向量的标准差。</li>
+<li><span class="math inline">\(\gamma\)</span> 和 <span
+class="math inline">\(\beta\)</span> 是可学习的缩放和偏移参数。</li>
 </ul>
-<p>LN 会计算整个输入的均值  $\mu$ 和标准差 $ \sigma $，并用它们对输入进行标准化。</p>
-<p>$\text{RMSNorm}(x) = \frac{x}{\text{RMS}(x)} \cdot \gamma$</p>
+<p>LN 会计算整个输入的均值 <span class="math inline">\(\mu\)</span>
+和标准差 $ $，并用它们对输入进行标准化。</p>
+<p><span class="math inline">\(\text{RMSNorm}(x) =
+\frac{x}{\text{RMS}(x)} \cdot \gamma\)</span></p>
 <ul>
-<li>$\text{RMS}(x) = \sqrt{\frac{1}{n} \sum_{i=1}^n x_i^2}$是输入向量的均方根；</li>
-<li>$\gamma $ 是可学习的缩放参数；</li>
-<li>不使用均值和偏移参数  $\beta$ ；</li>
+<li><span class="math inline">\(\text{RMS}(x) = \sqrt{\frac{1}{n}
+\sum_{i=1}^n x_i^2}\)</span>是输入向量的均方根；</li>
+<li>$$ 是可学习的缩放参数；</li>
+<li>不使用均值和偏移参数 <span class="math inline">\(\beta\)</span>
+；</li>
 </ul>
-<p>RMSNorm 只关注输入的 <strong>范数（幅值）</strong>，而不考虑均值，避免了对数据的中心化处理。</p>
+<p>RMSNorm 只关注输入的
+<strong>范数（幅值）</strong>，而不考虑均值，避免了对数据的中心化处理。</p>
 <p>它是一种更轻量级的标准化方法，在某些情况下可以提高训练效率和收敛速度。</p>
-<h2 id="激活函数-SwiGLU">激活函数 SwiGLU</h2>
-<p>SwiGLU 将 GLU 的门控改为 <code>Swish</code> ，后验证实其在 GLU 的众多变体里效果最好，优于 Transformer 一开始使用的 <code>ReLU</code>。</p>
-<p>$F.silu(self.w1(x)) * self.w2(x)$，其中 silu 公式为 $\mathrm{Swish}_\beta(x)=x\otimes\sigma(\beta x)$</p>
+<h2 id="激活函数-swiglu">激活函数 SwiGLU</h2>
+<p>SwiGLU 将 GLU 的门控改为 <code>Swish</code> ，后验证实其在 GLU
+的众多变体里效果最好，优于 Transformer 一开始使用的
+<code>ReLU</code>。</p>
+<p><span class="math inline">\(F.silu(self.w1(x)) *
+self.w2(x)\)</span>，其中 silu 公式为 <span
+class="math inline">\(\mathrm{Swish}_\beta(x)=x\otimes\sigma(\beta
+x)\)</span></p>
 
     </div>
 
@@ -380,6 +413,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/LLMDevelop/LLM-Model/" title="LLM 结构和创新点">https://yeqiuo.github.io/LLMDevelop/LLM-Model/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84/" rel="tag"># 大模型结构</a>
           </div>
@@ -415,12 +465,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -439,7 +505,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

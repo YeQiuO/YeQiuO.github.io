@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://yeqiuo.github.io/LLMDevelop/DL-basic/o_L2.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLMDevelop/DL-basic/overview_chatgpt.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLMDevelop/DL-basic/image-20240716101748533.png">
-<meta property="og:image" content="https://yeqiuo.github.io/gvxnqwwwybyh">
+<meta property="og:image" content="https://yeqiuo.github.io/LLMDevelop/DL-basic/image-20240715191912939.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLMDevelop/DL-basic/image-20240715191936226.png">
 <meta property="og:image" content="https://yeqiuo.github.io/LLMDevelop/DL-basic/image-20240715192056550.png">
 <meta property="article:published_time" content="2024-06-24T01:28:08.000Z">
@@ -149,7 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">偏差方差</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%9B%E5%8C%96%E8%AF%AF%E5%B7%AE"><span class="nav-number">1.1.</span> <span class="nav-text">泛化误差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE"><span class="nav-number">1.2.</span> <span class="nav-text">方差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE"><span class="nav-number">1.3.</span> <span class="nav-text">偏差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%99%AA%E5%A3%B0"><span class="nav-number">1.4.</span> <span class="nav-text">噪声</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE-%E6%96%B9%E5%B7%AE%E7%AA%98%E5%A2%83"><span class="nav-number">1.5.</span> <span class="nav-text">偏差-方差窘境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">模型训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">优化器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">训练方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.1.</span> <span class="nav-text">监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.2.</span> <span class="nav-text">无监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.3.</span> <span class="nav-text">半监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.4.</span> <span class="nav-text">强化学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RLHF"><span class="nav-number">3.4.1.</span> <span class="nav-text">RLHF</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">Torch</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE%E6%96%B9%E5%B7%AE"><span class="nav-number">1.</span> <span class="nav-text">偏差方差</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%9B%E5%8C%96%E8%AF%AF%E5%B7%AE"><span class="nav-number">1.1.</span> <span class="nav-text">泛化误差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE"><span class="nav-number">1.2.</span> <span class="nav-text">方差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE"><span class="nav-number">1.3.</span> <span class="nav-text">偏差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%99%AA%E5%A3%B0"><span class="nav-number">1.4.</span> <span class="nav-text">噪声</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E5%B7%AE-%E6%96%B9%E5%B7%AE%E7%AA%98%E5%A2%83"><span class="nav-number">1.5.</span> <span class="nav-text">偏差-方差窘境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">2.</span> <span class="nav-text">模型训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">优化器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">训练方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.1.</span> <span class="nav-text">监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.2.</span> <span class="nav-text">无监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.3.</span> <span class="nav-text">半监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.4.</span> <span class="nav-text">强化学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rlhf"><span class="nav-number">3.4.1.</span> <span class="nav-text">RLHF</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch"><span class="nav-number">5.</span> <span class="nav-text">Torch</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -248,6 +248,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">机器学习是采用真实世界中采样的一小部分数据,并且希望模型能够对于未知数据有不错的泛化性能。</div>
@@ -257,59 +272,64 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1>偏差方差</h1>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/makefile/p/bias-var.html#fn2">参考文章</a></p>
+    <div class="post-body" itemprop="articleBody"><h1 id="偏差方差">偏差方差</h1>
+<p><a
+target="_blank" rel="noopener" href="https://www.cnblogs.com/makefile/p/bias-var.html#fn2">参考文章</a></p>
 <h2 id="泛化误差">泛化误差</h2>
 <p>模型的平方预测误差的期望</p>
-<p>$$Err(\mathbf{x})=E\left[\left(y-f(\mathbf{x};D)\right)<sup>2\right]=\mathbb{E}_D\left[\left(f(\boldsymbol{x};D)-\bar{f}\left(\boldsymbol{x}\right)\right)</sup>2\right]+\left(\bar{f}(\boldsymbol{x})-y\right)<sup>2+\mathbb{E}_D\left[(y_D-y)</sup>2\right]$$</p>
+<p><span
+class="math display">\[Err(\mathbf{x})=E\left[\left(y-f(\mathbf{x};D)\right)^2\right]=\mathbb{E}_D\left[\left(f(\boldsymbol{x};D)-\bar{f}\left(\boldsymbol{x}\right)\right)^2\right]+\left(\bar{f}(\boldsymbol{x})-y\right)^2+\mathbb{E}_D\left[(y_D-y)^2\right]\]</span></p>
 <h2 id="方差">方差</h2>
 <blockquote>
 <p>方差是指模型对于不同训练集的预测结果的波动程度（即泛化能力），<strong>刻画了数据扰动所造成的影响</strong>。高方差意味着模型过于复杂，对训练数据中的噪声和细节过于敏感，表示模型<strong>过拟合</strong></p>
 </blockquote>
 <p>使用样本数相同的不同训练集产生的方差</p>
-<p>$$\mathrm{var}(\mathbf{x})=\mathrm{E}_\mathrm{D}\left[\left(\mathrm{f}(\mathbf{x};\mathrm{D})-\overline{\mathrm{f}}(\mathbf{x})\right)^2\right]$$</p>
-<p>其中，算法 𝑓 对测试样本 𝑥 的期望预测（不同训练集 𝐷 上模型 𝑓 对测试样本 𝑥 的预测输出的期望）$\overline{f}(\mathbf{x})=E_D[f\left(\mathbf{x};D\right)]$</p>
+<p><span
+class="math display">\[\mathrm{var}(\mathbf{x})=\mathrm{E}_\mathrm{D}\left[\left(\mathrm{f}(\mathbf{x};\mathrm{D})-\overline{\mathrm{f}}(\mathbf{x})\right)^2\right]\]</span></p>
+<p>其中，算法 𝑓 对测试样本 𝑥 的期望预测（不同训练集 𝐷 上模型 𝑓
+对测试样本 𝑥 的预测输出的期望）<span
+class="math inline">\(\overline{f}(\mathbf{x})=E_D[f\left(\mathbf{x};D\right)]\)</span></p>
 <h2 id="偏差">偏差</h2>
 <blockquote>
 <p>偏差是指模型的预测值与真实值之间的差异，<strong>模型本身的拟合能力</strong>。高偏差意味着模型过于简单，无法捕捉到数据的复杂模式，表示模型<strong>欠拟合</strong></p>
 </blockquote>
 <p>期望预测与真实标记的误差</p>
-<p>$$\mathrm{bias}<sup>2(\mathbf{x})=\left(\overline{\mathrm{f}}(\mathbf{x})-\mathrm{y}\right)</sup>2$$</p>
+<p><span
+class="math display">\[\mathrm{bias}^2(\mathbf{x})=\left(\overline{\mathrm{f}}(\mathbf{x})-\mathrm{y}\right)^2\]</span></p>
 <h2 id="噪声">噪声</h2>
 <blockquote>
 <p>表达了当前任务上任何模型所能达到的期望泛化误差的下界，<strong>刻画了学习问题本身的难度</strong>。</p>
 </blockquote>
 <p>真实标记与数据集中的实际标记间的偏差</p>
-<p>$$\varepsilon<sup>2=E_D\left[(y_D-y)</sup>2\right]$$</p>
+<p><span
+class="math display">\[\varepsilon^2=E_D\left[(y_D-y)^2\right]\]</span></p>
 <h2 id="偏差-方差窘境">偏差-方差窘境</h2>
 <img data-src="/LLMDevelop/DL-basic/606386-20180722194316424-288674381.png" class="" title="bias-variance-tradeoff">
 <ul>
 <li>偏向左侧时，训练数据的扰动不足以使学习器产生显著变化，此时偏差主导泛化误差，称为<strong>欠拟合现象</strong>
 <ul>
 <li>增加模型的迭代次数；更换描述能力更强的模型；生成更多特征供训练使用；降低正则化水平</li>
-</ul>
-</li>
+</ul></li>
 <li>偏向右侧时，模型的拟合能力非常强，数据轻微变化都能导致模型发生变化，如果过分学习训练数据的特点，则会发生<strong>过拟合现象</strong>
 <ul>
 <li>扩增训练集；减少训练使用的特征的数量；降低模型复杂度；提高正则化水平</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <p>为了解决“偏差和方差在一定程度上是有冲突的”的问题，可以采用K折交叉验证或正则化，它们分别从数据划分和模型复杂度两个角度入手，提升模型的泛化能力和稳健性：</p>
 <ul>
 <li>K折交叉验证通过多次划分和验证，减少因数据划分不当而导致的性能估计偏差</li>
-<li>正则化在损失函数中加入一个与模型复杂度相关的惩罚项，以限制模型的复杂度并防止过拟合 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/zingp/p/10375691.html">参考文章</a>
+<li>正则化在损失函数中加入一个与模型复杂度相关的惩罚项，以限制模型的复杂度并防止过拟合
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zingp/p/10375691.html">参考文章</a>
 <ul>
 <li>L1正则化是指权值向量w中各个元素的绝对值之和，可以使得参数稀疏化，即得到的参数是一个稀疏矩阵，进而可以用于特征选择。二维平面图像：<img data-src="/LLMDevelop/DL-basic/o_L1.png" class="" title="image"></li>
 <li>L2正则化是指权值向量w中各个元素的平方和然后再求平方根，让权值尽可能小，如果参数足够小，数据偏移得多一点也不会对结果造成什么影响，专业一点的说法是<strong>抗扰动能力强</strong>。二维平面图像：<img data-src="/LLMDevelop/DL-basic/o_L2.png" class="" title="image"></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h1>模型训练</h1>
+<h1 id="模型训练">模型训练</h1>
 <h2 id="优化器">优化器</h2>
 <p>Adam：自适应学习率，通过计算梯度的一阶矩（均值）和二阶矩（未中心化的方差）来调整学习率</p>
 <p>AdamW：带有权重衰减和学习率预热的Adam优化器。改进了Adam，将权重衰退和梯度更新解耦，把L2正则化移到权重更新时而不是梯度计算时</p>
-<h1>训练方法</h1>
+<h1 id="训练方法">训练方法</h1>
 <h2 id="监督学习">监督学习</h2>
 <p>训练数据既有特征(feature)又有标签(label)，通过训练，让机器可以自己找到特征和标签之间的联系，在面对只有特征没有标签的数据时，可以判断出标签。</p>
 <h2 id="无监督学习">无监督学习</h2>
@@ -323,28 +343,36 @@
 <li>归一化奖励分数、将奖励分数做白化处理</li>
 </ul>
 <img data-src="/LLMDevelop/DL-basic/overview_chatgpt.png" class="" title="overview_chatgpt">
-<h3 id="RLHF">RLHF</h3>
+<h3 id="rlhf">RLHF</h3>
 <blockquote>
-<p>Reinforcement Learning from Human Feedback，以<strong>强化学习方式依据人类反馈优化语言模型</strong>，是 OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
+<p>Reinforcement Learning from Human
+Feedback，以<strong>强化学习方式依据人类反馈优化语言模型</strong>，是
+OpenAI 提出的生成领域（Decoder_only）的新训练范式</p>
 </blockquote>
 <p>Policy Gradient</p>
-<style>.orufdeccrwvv{zoom:50%;}</style><img data-src="/LLMDevelop/DL-basic/image-20240716101748533.png" class="orufdeccrwvv" alt="image-20240716101748533">
+<style>.bptaqgxhsyfn{zoom:50%;}</style>
+<img data-src="/LLMDevelop/DL-basic/image-20240716101748533.png" class="bptaqgxhsyfn" alt="image-20240716101748533">
 <p>RM+PPO</p>
 <p>步骤一、预训练语言模型</p>
-<style>.gvxnqwwwybyh{zoom: 50%;}</style><img data-src="/gvxnqwwwybyh" class="" title="&#x2F;LLMDevelop&#x2F;DL-basic&#x2F;image-20240715191912939.png &quot;&quot;&quot;image-20240715191912939&quot;">
+<style>.eeryineosiyz{zoom: 50%;}</style>
+<img data-src="/LLMDevelop/DL-basic/image-20240715191912939.png" class="eeryineosiyz" alt="image-20240715191912939">
 <p>步骤二、训练奖励模型 RM</p>
-<style>.myeehbsrhjnz{zoom: 50%;}</style><img data-src="/LLMDevelop/DL-basic/image-20240715191936226.png" class="myeehbsrhjnz" alt="image-20240715191936226">
+<style>.ylgjslkicdjn{zoom: 50%;}</style>
+<img data-src="/LLMDevelop/DL-basic/image-20240715191936226.png" class="ylgjslkicdjn" alt="image-20240715191936226">
 <p>步骤三、用强化学习 PPO 微调</p>
-<style>.plokkvxjbnym{zoom:50%;}</style><img data-src="/LLMDevelop/DL-basic/image-20240715192056550.png" class="plokkvxjbnym" alt="image-20240715192056550">
+<style>.jddmxoxrpczx{zoom:50%;}</style>
+<img data-src="/LLMDevelop/DL-basic/image-20240715192056550.png" class="jddmxoxrpczx" alt="image-20240715192056550">
 <p>DPO</p>
 <p>KTO</p>
 <p>ORPO</p>
-<h1>损失函数</h1>
+<h1 id="损失函数">损失函数</h1>
 <p>MSELoss 回归任务</p>
 <p>CrossEntropyLoss 单标签分类</p>
 <p>BCEWithLogitsLoss 多标签分类</p>
-<h1>Torch</h1>
-<p><code>torch.nn.Parameter()</code>将一个不可训练的 tensor 转换成可以训练的类型 parameter，并将这个 parameter 绑定到这个 module 里面</p>
+<h1 id="torch">Torch</h1>
+<p><code>torch.nn.Parameter()</code>将一个不可训练的 tensor
+转换成可以训练的类型 parameter，并将这个 parameter 绑定到这个 module
+里面</p>
 
     </div>
 
@@ -353,6 +381,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/LLMDevelop/DL-basic/" title="深度学习基础概念">https://yeqiuo.github.io/LLMDevelop/DL-basic/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/" rel="tag"># 深度学习基础</a>
           </div>
@@ -388,12 +433,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -412,7 +473,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

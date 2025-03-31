@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">创新点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.2.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">创新点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.2.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -245,6 +245,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">《Adapting Language Model to Domain Specific RAG》提出了检索增强微调（Retrieval Augmented Fine Tuning）方法，微调模型使其学习“如何忽略任何检索到的、无助于回答给定问题的文档，且不产生幻觉”，使 LLM 具有特定于域的 RAG 功能</div>
@@ -254,35 +269,47 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://gorilla.cs.berkeley.edu/blogs/9_raft.html">Paper</a></p>
-<h1>创新点</h1>
-<p>提出了新颖的特定 RAG 场景下的大模型微调方法（有明确文档域的 RAG）；</p>
+    <div class="post-body" itemprop="articleBody"><p><a
+target="_blank" rel="noopener" href="https://gorilla.cs.berkeley.edu/blogs/9_raft.html">Paper</a></p>
+<h1 id="创新点">创新点</h1>
+<p>提出了新颖的特定 RAG 场景下的大模型微调方法（有明确文档域的
+RAG）；</p>
 <p>基于 COT，进一步完善了模型的推理能力；</p>
-<h1>背景</h1>
+<h1 id="背景">背景</h1>
 <p>当前的开放域对话模型做的是”闭卷考试“；</p>
 <p>RAG 做的是”开卷考试“，其结果依赖于检索器的效果；</p>
-<p>PAFT 应用于”特定领域的开卷考试“，模型先在特定域文档内学习如何做”开卷考试“，可以提高模型 RAG 的能力，还能减少幻觉的产生；</p>
-<h1>实验</h1>
+<p>PAFT
+应用于”特定领域的开卷考试“，模型先在特定域文档内学习如何做”开卷考试“，可以提高模型
+RAG 的能力，还能减少幻觉的产生；</p>
+<h1 id="实验">实验</h1>
 <h2 id="方法">方法</h2>
-<p>前置条件：$\mathrm{Q}$问题； $\mathrm{A}^{<em>}$ 答案； $\mathrm{D}^{</em>}$ 答案来源文档； $D_n$ 无关文档。</p>
-<p>正例样本：$Q+ \mathrm{D^<em>} +D_1+D_2+\dots+D_k=&gt;\mathrm{A}^{</em>}$</p>
-<p>负例样本：<br>
-$\mathrm{Q}+\mathbf{D}<em>{1}+\mathbf{D}</em>{2}+\dots+\mathbf{D}_{\mathbf{k}}=&gt;\mathbf{A}^{\star}$</p>
+<p>前置条件：<span class="math inline">\(\mathrm{Q}\)</span>问题； <span
+class="math inline">\(\mathrm{A}^{*}\)</span> 答案； <span
+class="math inline">\(\mathrm{D}^{*}\)</span> 答案来源文档； <span
+class="math inline">\(D_n\)</span> 无关文档。</p>
+<p>正例样本：<span class="math inline">\(Q+ \mathrm{D^*}
++D_1+D_2+\dots+D_k=&gt;\mathrm{A}^{*}\)</span></p>
+<p>负例样本： <span
+class="math inline">\(\mathrm{Q}+\mathbf{D}_{1}+\mathbf{D}_{2}+\dots+\mathbf{D}_{\mathbf{k}}=&gt;\mathbf{A}^{\star}\)</span></p>
 <p>论文中基于数据集做全量 SFT 训练</p>
 <h2 id="数据集">数据集</h2>
 <figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">Question: The Oberoi family is part of a hotel company that has a head office in what city?</span><br><span class="line"></span><br><span class="line">context: [The Oberoi family is an Indian family that is famous for its involvement in hotels, namely through The Oberoi Group]...[It is located in city center of Jakarta, near Mega Kuningan, adjacent to the sister JW Marriott Hotel. It is operated by The Ritz-Carlton Hotel Company. The complex has two towers that comprises a hotel and the Airlangga Apartment respectively]...[The Oberoi Group is a hotel company with its head office in Delhi.]</span><br><span class="line"></span><br><span class="line">Instruction: Given the question, context and answer above, provide a logical reasoning for that answer. Please use the format of: <span class="params">##</span>Reason: &#123;reason&#125; <span class="params">##</span>Answer: &#123;answer&#125;.</span><br><span class="line"></span><br><span class="line">CoT Answer: <span class="params">##</span>Reason: The document <span class="params">##</span>begin<span class="built_in">_</span>quote<span class="params">##</span> The Oberoi family is an Indian family that is famous for its involvement in hotels, namely through The Oberoi Group. <span class="params">##</span>end<span class="built_in">_</span>quote<span class="params">##</span> establishes that the Oberoi family is involved in the Oberoi group, and the document <span class="params">##</span>begin<span class="built_in">_</span>quote<span class="params">##</span> The Oberoi Group is a hotel company with its head office in Delhi. <span class="params">##</span>end<span class="built_in">_</span>quote<span class="params">##</span> establishes the head office of The Oberoi Group. Therefore, the Oberoi family is part of a hotel company whose head office is in Delhi. <span class="params">##</span>Answer: Delhi</span><br></pre></td></tr></table></figure>
-<p>从数据集 <code>Answer</code> 中可以看出，提问者引导模型以思维链的方式去回答问题，先说原因 <code>Reason</code> 再说答案 <code>Answer</code></p>
-<p>文中采用 ##begin_quote## 和 ##end_quote## 表示直接从上下文复制粘贴的引用，研究人员发现这是防止模型产生幻觉并坚持提供的上下文的有效方法。</p>
+<p>从数据集 <code>Answer</code>
+中可以看出，提问者引导模型以思维链的方式去回答问题，先说原因
+<code>Reason</code> 再说答案 <code>Answer</code></p>
+<p>文中采用 ##begin_quote## 和 ##end_quote##
+表示直接从上下文复制粘贴的引用，研究人员发现这是防止模型产生幻觉并坚持提供的上下文的有效方法。</p>
 <h2 id="实验结果">实验结果</h2>
 <p>DSF（Domain-Specific Finetuning）：特定领域内微调</p>
 <p>PAFT：特定领域微调+特定领域 RAG</p>
 <img data-src="/paper/paper-PAFT/image-20240815185100137.png" class="" title="image-20240815185100137">
-<h1>总结</h1>
+<h1 id="总结">总结</h1>
 <p>将模型在特定领域的文档上做思维链微调</p>
 <ul>
 <li>通过特定领域微调，模型可以学会如何做“开卷考试“；</li>
 <li>当领域内数据发生一些变化时，模型依然能找到答案，即使没有正确答案也不会出现幻觉；</li>
-<li>可以认为，模型需要专业的微调来训练其在特定领域的 RAG（开卷考试）能力；</li>
+<li>可以认为，模型需要专业的微调来训练其在特定领域的
+RAG（开卷考试）能力；</li>
 </ul>
 
     </div>
@@ -292,6 +319,23 @@ $\mathrm{Q}+\mathbf{D}<em>{1}+\mathbf{D}</em>{2}+\dots+\mathbf{D}_{\mathbf{k}}=&
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/paper/paper-PAFT/" title="论文阅读 RAFT">https://yeqiuo.github.io/paper/paper-PAFT/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/" rel="tag"># 大模型微调</a>
           </div>
@@ -327,12 +371,28 @@ $\mathrm{Q}+\mathbf{D}<em>{1}+\mathbf{D}</em>{2}+\dots+\mathbf{D}_{\mathbf{k}}=&
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -351,7 +411,6 @@ $\mathrm{Q}+\mathbf{D}<em>{1}+\mathbf{D}</em>{2}+\dots+\mathbf{D}_{\mathbf{k}}=&
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

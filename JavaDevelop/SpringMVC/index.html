@@ -143,7 +143,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Tomcat</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet"><span class="nav-number">1.1.</span> <span class="nav-text">Servlet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">SpringMVC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">系统权限</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tomcat"><span class="nav-number">1.</span> <span class="nav-text">Tomcat</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#servlet"><span class="nav-number">1.1.</span> <span class="nav-text">Servlet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#springmvc"><span class="nav-number">2.</span> <span class="nav-text">SpringMVC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9D%83%E9%99%90"><span class="nav-number">3.</span> <span class="nav-text">系统权限</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -242,6 +242,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>914</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">复习JavaWeb开发，SpringMVC流程</div>
@@ -251,23 +266,41 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1>Tomcat</h1>
-<p>Tomcat 是基于 HTTP 协议的 Web 服务器，工作流程图 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_19782019/article/details/80292110">Link</a></p>
+    <div class="post-body" itemprop="articleBody"><h1 id="tomcat">Tomcat</h1>
+<p>Tomcat 是基于 HTTP 协议的 Web 服务器，工作流程图 <a
+target="_blank" rel="noopener" href="https://blog.csdn.net/qq_19782019/article/details/80292110">Link</a></p>
 <img data-src="/JavaDevelop/SpringMVC/2018120522281643.gif" class="" title="img">
-<h2 id="Servlet">Servlet</h2>
-<p>Servlet 接口定义了 Servlet 与 servlet容器 之间的契约。这个契约是：Servlet容器将Servlet类载入内存，并产生 Servlet 实例和调用它具体的方法。但是要注意的是，<strong>在一个应用程序中，每种 Servlet 类型只能有一个实例</strong>。类比 SpringMVC 中每一个 Mapping 对应一个控制层方法【不确定】</p>
+<h2 id="servlet">Servlet</h2>
+<p>Servlet 接口定义了 Servlet 与 servlet容器
+之间的契约。这个契约是：Servlet容器将Servlet类载入内存，并产生 Servlet
+实例和调用它具体的方法。但是要注意的是，<strong>在一个应用程序中，每种
+Servlet 类型只能有一个实例</strong>。类比 SpringMVC 中每一个 Mapping
+对应一个控制层方法【不确定】</p>
 <p>对于每一个应用程序，Servlet容器还会创建一个ServletContext对象。这个对象中封装了上下文（应用程序）的环境详情。每个应用程序只有一个ServletContext。每个Servlet对象也都有一个封装Servlet配置的ServletConfig对象。</p>
-<h1>SpringMVC</h1>
+<h1 id="springmvc">SpringMVC</h1>
 <p>流程图</p>
 <img data-src="/JavaDevelop/SpringMVC/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5q2i5q2l5YmN6KGM,size_20,color_FFFFFF,t_70,g_se,x_16.png" class="" title="SpringMVC流程图">
 <ul>
-<li>由<code>DispatcherServlet</code> 从<code>HandlerMappings</code>中匹配对应的<code>Handler</code>。此时只是获取到了对应的<code>Handler</code>，然后拿着这个<code>Handler</code>去寻找对应的适配器，即：<code>HandlerAdapter</code>：让固定参数的 Servlet 处理方法调用灵活的 Handler 来处理；</li>
-<li>执行 <code>Controller</code> 处理业务逻辑， 执行完成之后返回一个 <code>ModeAndView</code> 或 Json 格式数据；</li>
+<li>由<code>DispatcherServlet</code>
+从<code>HandlerMappings</code>中匹配对应的<code>Handler</code>。此时只是获取到了对应的<code>Handler</code>，然后拿着这个<code>Handler</code>去寻找对应的适配器，即：<code>HandlerAdapter</code>：让固定参数的
+Servlet 处理方法调用灵活的 Handler 来处理；</li>
+<li>执行 <code>Controller</code> 处理业务逻辑， 执行完成之后返回一个
+<code>ModeAndView</code> 或 Json 格式数据；</li>
 </ul>
 <p>HandlerMapping/HandlerAdapter 的<strong>适配器模式</strong>：</p>
-<p>SpringMVC 的 Handler 有多种实现方式（如继承 Controller 接口、继承 HttpRequestHandler 接口、基于注解 @Controller 的控制器）。由于实现方式不一样，调用方式就不确定，就需要适配器模式将所有实现方式都统一成同一个接口。把任何一个 Handler 都适配成一个HandlerAdapter，从而可以做统一的流程处理，不用耦合具体的处理器，模糊掉具体的实现。</p>
-<p>Spring MVC会为每一个标记了 @Controller 的类创建一个控制器实例（bean），并且根据这些类中的 @RequestMapping 注解来配置 URL 到方法的映射。这些映射信息通常会被存储在一个叫做 <code>HandlerMapping</code> 的组件中</p>
-<h1>系统权限</h1>
+<p>SpringMVC 的 Handler 有多种实现方式（如继承 Controller 接口、继承
+HttpRequestHandler 接口、基于注解 <span class="citation"
+data-cites="Controller">@Controller</span>
+的控制器）。由于实现方式不一样，调用方式就不确定，就需要适配器模式将所有实现方式都统一成同一个接口。把任何一个
+Handler
+都适配成一个HandlerAdapter，从而可以做统一的流程处理，不用耦合具体的处理器，模糊掉具体的实现。</p>
+<p>Spring MVC会为每一个标记了 <span class="citation"
+data-cites="Controller">@Controller</span>
+的类创建一个控制器实例（bean），并且根据这些类中的 <span
+class="citation" data-cites="RequestMapping">@RequestMapping</span>
+注解来配置 URL 到方法的映射。这些映射信息通常会被存储在一个叫做
+<code>HandlerMapping</code> 的组件中</p>
+<h1 id="系统权限">系统权限</h1>
 <p>JWT 是无状态的，适合在分布式系统中使用</p>
 
     </div>
@@ -277,6 +310,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/JavaDevelop/SpringMVC/" title="SpringMVC">https://yeqiuo.github.io/JavaDevelop/SpringMVC/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/SpringMVC/" rel="tag"># SpringMVC</a>
           </div>
@@ -312,12 +362,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -336,7 +402,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

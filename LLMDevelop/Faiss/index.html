@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Faiss 索引类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E9%9D%A2%E7%B4%A2%E5%BC%95-FLAT"><span class="nav-number">1.1.</span> <span class="nav-text">平面索引 FLAT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E7%B4%A2%E5%BC%95-IVF"><span class="nav-number">1.2.</span> <span class="nav-text">分区索引 IVF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8F%E5%8C%96%E7%B4%A2%E5%BC%95-PQ"><span class="nav-number">1.3.</span> <span class="nav-text">量化索引 PQ</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E9%87%8F%E5%8C%96%E5%8A%9F%E8%83%BD"><span class="nav-number">2.1.</span> <span class="nav-text">索引的量化功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE-%E5%90%91%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">获取原始数据&#x2F;向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8E%9F%E6%96%87%E6%A1%A3"><span class="nav-number">2.3.</span> <span class="nav-text">获取原文档</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">BM25 实现</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#faiss-%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">Faiss 索引类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E9%9D%A2%E7%B4%A2%E5%BC%95-flat"><span class="nav-number">1.1.</span> <span class="nav-text">平面索引 FLAT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E7%B4%A2%E5%BC%95-ivf"><span class="nav-number">1.2.</span> <span class="nav-text">分区索引 IVF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8F%E5%8C%96%E7%B4%A2%E5%BC%95-pq"><span class="nav-number">1.3.</span> <span class="nav-text">量化索引 PQ</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E9%87%8F%E5%8C%96%E5%8A%9F%E8%83%BD"><span class="nav-number">2.1.</span> <span class="nav-text">索引的量化功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E5%90%91%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">获取原始数据&#x2F;向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%8E%9F%E6%96%87%E6%A1%A3"><span class="nav-number">2.3.</span> <span class="nav-text">获取原文档</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bm25-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">BM25 实现</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -241,6 +241,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">faiss 索引类型、代码实践</div>
@@ -250,28 +265,49 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1>Faiss 索引类型</h1>
-<p><a target="_blank" rel="noopener" href="https://github.com/facebookresearch/faiss/blob">官方教程</a></p>
+    <div class="post-body" itemprop="articleBody"><h1 id="faiss-索引类型">Faiss 索引类型</h1>
+<p><a
+target="_blank" rel="noopener" href="https://github.com/facebookresearch/faiss/blob">官方教程</a></p>
 <p>IndexFlatIP 内积：方向；</p>
 <p>IndexFlatL2 L2距离：几何距离；</p>
-<h2 id="平面索引-FLAT">平面索引 FLAT</h2>
-<p>平面索引就是暴力搜索，将 <code>queries</code> 于 <code>database</code>中的所有向量计算，时间复杂度是 $O({n^2})$。</p>
-<p>不同索引计算相似度的方法不同，<code>IndexFlatIP</code> 是点积，<code>IndexFlatL2</code> 是 L2 距离，如果需要计算余弦相似度则需要在点积前 L2 归一化 <code>faiss.normalize_L2(vector)</code>，L2 归一化公式为 $\mathbf{X}=\left(\frac{x_1}{\left|\mathbf{x}\right|},\frac{x_2}{\left|\mathbf{x}\right|},\cdots,\frac{x_n}{\left|\mathbf{x}\right|}\right)$</p>
+<h2 id="平面索引-flat">平面索引 FLAT</h2>
+<p>平面索引就是暴力搜索，将 <code>queries</code> 于
+<code>database</code>中的所有向量计算，时间复杂度是 <span
+class="math inline">\(O({n^2})\)</span>。</p>
+<p>不同索引计算相似度的方法不同，<code>IndexFlatIP</code>
+是点积，<code>IndexFlatL2</code> 是 L2
+距离，如果需要计算余弦相似度则需要在点积前 L2 归一化
+<code>faiss.normalize_L2(vector)</code>，L2 归一化公式为 <span
+class="math inline">\(\mathbf{X}=\left(\frac{x_1}{\left\|\mathbf{x}\right\|},\frac{x_2}{\left\|\mathbf{x}\right\|},\cdots,\frac{x_n}{\left\|\mathbf{x}\right\|}\right)\)</span></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index = faiss.IndexFlatL2(d)</span><br><span class="line">index.add(database)</span><br><span class="line">D, I = index.search(queries[:<span class="number">5</span>], k)</span><br></pre></td></tr></table></figure>
-<p>$D$ 表示具体的相似度<code>D.shape = (query_len, similarity)</code>，取值范围是 [0, 1]</p>
-<p>$I$ 表示与 $D$ 相对应的索引 <code>I.shape = (query_len, index)</code>，取值范围是 [0, data_num]</p>
-<h2 id="分区索引-IVF">分区索引 IVF</h2>
-<p>对索引数据进行分区优化，将数据通过“沃罗诺伊图单元”（也被叫做泰森多边形）来进行切割（类似传统数据库分库分表）。在搜索时，仅将查询 queries 所在单元中包含的数据库向量 database 以及一些相邻的向量与查询向量进行比较，找到 queries 向量所属的泰森多边形单元就是在<strong>质心集中找到该向量的最近邻居</strong>。</p>
-<p><code>index.train()</code>训练了一个聚类模型，如 K-means。生成多个聚类中心，聚类的数量由索引的 <code>nlist</code> 参数决定。</p>
+<p><span class="math inline">\(D\)</span>
+表示具体的相似度<code>D.shape = (query_len, similarity)</code>，取值范围是
+[0, 1]</p>
+<p><span class="math inline">\(I\)</span> 表示与 <span
+class="math inline">\(D\)</span> 相对应的索引
+<code>I.shape = (query_len, index)</code>，取值范围是 [0, data_num]</p>
+<h2 id="分区索引-ivf">分区索引 IVF</h2>
+<p>对索引数据进行分区优化，将数据通过“沃罗诺伊图单元”（也被叫做泰森多边形）来进行切割（类似传统数据库分库分表）。在搜索时，仅将查询
+queries 所在单元中包含的数据库向量 database
+以及一些相邻的向量与查询向量进行比较，找到 queries
+向量所属的泰森多边形单元就是在<strong>质心集中找到该向量的最近邻居</strong>。</p>
+<p><code>index.train()</code>训练了一个聚类模型，如
+K-means。生成多个聚类中心，聚类的数量由索引的 <code>nlist</code>
+参数决定。</p>
 <p>倒排索引（IVF）把“文档→单词”的形式变为“单词→文档”的形式。</p>
-<p><code>search</code> 有两个参数： <code>nlist</code> （单元格数量）和 <code>nprobe</code> （为执行搜索而访问的质心集单元数量，在<code>nlist</code>之外），设置 <code>nprobe = nlist</code> 给出与暴力搜索相同的结果。</p>
+<p><code>search</code> 有两个参数： <code>nlist</code> （单元格数量）和
+<code>nprobe</code>
+（为执行搜索而访问的质心集单元数量，在<code>nlist</code>之外），设置
+<code>nprobe = nlist</code> 给出与暴力搜索相同的结果。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">quantizer = faiss.IndexFlatL2(d)</span><br><span class="line">index = faiss.IndexIVFFlat(quantizer, d, nlist, faiss.METRIC_L2)</span><br><span class="line">index.train(database)</span><br><span class="line">index.add(database)</span><br><span class="line">index.nprobe = <span class="number">10</span></span><br><span class="line">D, I = index.search(queries, k)</span><br></pre></td></tr></table></figure>
-<h2 id="量化索引-PQ">量化索引 PQ</h2>
-<p>基于乘积量化器的有损压缩来压缩存储的向量，压缩方法和量化级别参考<a target="_blank" rel="noopener" href="https://inria.hal.science/inria-00514462v2/document">论文</a>。</p>
+<h2 id="量化索引-pq">量化索引 PQ</h2>
+<p>基于乘积量化器的有损压缩来压缩存储的向量，压缩方法和量化级别参考<a
+target="_blank" rel="noopener" href="https://inria.hal.science/inria-00514462v2/document">论文</a>。</p>
 <p>建立索引时：</p>
 <ul>
 <li>向量被分配到最近的聚类（同 IVF）</li>
-<li>每个向量被划分为 m 个子向量，分别在各自的子空间中进行量化，存储为对应的量化代码</li>
+<li>每个向量被划分为 m
+个子向量，分别在各自的子空间中进行量化，存储为对应的量化代码</li>
 </ul>
 <p>查询时：</p>
 <ul>
@@ -280,26 +316,35 @@
 <li>查询子向量与存储的量化代码进行匹配，基于每个子空间的距离查表来计算近似距离</li>
 <li>将所有子空间的距离相加，得到查询向量与候选向量的总距离</li>
 </ul>
-<p>这个例子，将 64 个 32 位浮点数压缩为 8 个字节，因此压缩因子为 32。</p>
+<p>这个例子，将 64 个 32 位浮点数压缩为 8 个字节，因此压缩因子为
+32。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># d 必须是 m 的倍数</span></span><br><span class="line">quantizer = faiss.IndexFlatL2(d)</span><br><span class="line"><span class="comment"># 量化器数量 m、指定每个子向量编码为 8 byte(32 bit)</span></span><br><span class="line">index = faiss.IndexIVFPQ(quantizer, d, nlist, m, <span class="number">8</span>)</span><br><span class="line"><span class="comment"># 可以简写为 index = faiss.index_factory(d, &quot;IVF100,PQ8&quot;)</span></span><br><span class="line">index.train(database)</span><br><span class="line">index.add(database)</span><br><span class="line">index.nprobe = <span class="number">10</span></span><br><span class="line">D, I = index.search(queries, k)</span><br></pre></td></tr></table></figure>
-<h1>功能</h1>
+<h1 id="功能">功能</h1>
 <h2 id="索引的量化功能">索引的量化功能</h2>
 <p>对向量进行编码量化</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index.sa_encode(vectors)</span><br></pre></td></tr></table></figure>
-<p>针对非量化索引，也会返回 <code>uint8</code> 类型的更紧凑的离散表示</p>
+<p>针对非量化索引，也会返回 <code>uint8</code>
+类型的更紧凑的离散表示</p>
 <figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">xq[0][:5]</span><br><span class="line"><span class="params">##</span> array([0.81432974, 0.7409969 , 0.8915324 , 0.02642949, 0.24954738], dtype=float32)</span><br><span class="line">index.sa<span class="built_in">_</span>encode(xq[:1, :])[0, :5]</span><br><span class="line"><span class="params">##</span> array([ 93, 234, 119,  80,  63], dtype=uint8)</span><br></pre></td></tr></table></figure>
-<h2 id="获取原始数据-向量">获取原始数据/向量</h2>
+<h2 id="获取原始数据向量">获取原始数据/向量</h2>
 <p>基于根据 index</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index.reconstruct(vector_id)</span><br></pre></td></tr></table></figure>
-<p>为了追求更快的查询性能，IndexIVF 和向量 ID IndexBinaryIVF 都存储在倒排列表中，无法通过向量 ID 来反查索引中的内容，如果我们想要得到某个数据的内容，需要手动重建索引</p>
+<p>为了追求更快的查询性能，IndexIVF 和向量 ID IndexBinaryIVF
+都存储在倒排列表中，无法通过向量 ID
+来反查索引中的内容，如果我们想要得到某个数据的内容，需要手动重建索引</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index.make_direct_map()</span><br><span class="line">index.reconstruct(vector_id)</span><br></pre></td></tr></table></figure>
 <h2 id="获取原文档">获取原文档</h2>
-<p>FAISS 内置了 <code>docstore</code> 和 <code>index_to_docstore_id</code> ，在每次加入向量时同时存储 doc 内容，且以字典的形式储存 index 与 doc 的映射关系，方便后续查找原文档。</p>
-<h1>BM25 实现</h1>
+<p>FAISS 内置了 <code>docstore</code> 和
+<code>index_to_docstore_id</code> ，在每次加入向量时同时存储 doc
+内容，且以字典的形式储存 index 与 doc
+的映射关系，方便后续查找原文档。</p>
+<h1 id="bm25-实现">BM25 实现</h1>
 <p>额外记录一下 <code>BM25</code> 的实现方法</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> langchain.schema <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> langchain_community.retrievers <span class="keyword">import</span> BM25Retriever</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_bm25_retriever</span>(<span class="params">docs, top_k</span>):</span><br><span class="line">    bm25_retriever = BM25Retriever.from_documents(</span><br><span class="line">        docs,</span><br><span class="line">        preprocess_func=jieba.lcut_for_search,</span><br><span class="line">    )</span><br><span class="line">    bm25_retriever.k = top_k</span><br><span class="line">    <span class="keyword">return</span> bm25_retriever</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    docs = [</span><br><span class="line">        Document(page_content=<span class="string">&quot;这是一篇关于机器学习的文档。&quot;</span>),</span><br><span class="line">        Document(page_content=<span class="string">&quot;自然语言处理是人工智能的一个重要领域。&quot;</span>),</span><br><span class="line">        Document(page_content=<span class="string">&quot;深度学习是机器学习的一个子集。&quot;</span>),</span><br><span class="line">    ]</span><br><span class="line">    top_k = <span class="number">2</span></span><br><span class="line">    bm25_retriever = create_bm25_retriever(docs, top_k)</span><br><span class="line">    query = <span class="string">&quot;机器学习&quot;</span></span><br><span class="line">    results = bm25_retriever.get_relevant_documents(query)</span><br><span class="line">    <span class="keyword">for</span> rank, doc <span class="keyword">in</span> <span class="built_in">enumerate</span>(results, start=<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Rank <span class="subst">&#123;rank&#125;</span>: <span class="subst">&#123;doc&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>Debug  查看分词结果 <code>bm25_retriever.vectorizer.doc_freqs</code></p>
+<p>Debug 查看分词结果
+<code>bm25_retriever.vectorizer.doc_freqs</code></p>
 <img data-src="/LLMDevelop/Faiss/image-20240911200426522.png" class="" title="image-20240911200426522">
+
     </div>
 
     
@@ -307,6 +352,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/LLMDevelop/Faiss/" title="Faiss 向量数据库">https://yeqiuo.github.io/LLMDevelop/Faiss/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/faiss/" rel="tag"># faiss</a>
           </div>
@@ -342,12 +404,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -366,7 +444,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%B9%E5%99%A8%E5%8C%96-Java-%E5%BA%94%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">如何容器化 Java 应用</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5"><span class="nav-number">2.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%B9%E5%99%A8%E5%8C%96-java-%E5%BA%94%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">如何容器化 Java 应用</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -241,6 +241,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">容器虚拟化技术，待后续进一步学习 k8s</div>
@@ -252,34 +267,43 @@
     
     <div class="post-body" itemprop="articleBody"><img data-src="/other/Docker/576507-docker1.png" class="" title="img">
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-compose.html">Docker Compose</a>：用于定义和运行<strong>多容器 Docker 应用程序</strong>的工具，使多个容器可以在隔离环境中一起运行；</li>
-<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-dockerfile.html">Dockerfile</a>：用来构建镜像的文本文件，包含了一条条<strong>构建镜像</strong>所需的指令和说明；</li>
-<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-machine.html">Docker Machine</a>：是一个简化 Docker 安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker；可以集中<strong>管理</strong>所有的 docker 主机，比如快速的给 100 台服务器安装上 docker；</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-compose.html">Docker
+Compose</a>：用于定义和运行<strong>多容器 Docker
+应用程序</strong>的工具，使多个容器可以在隔离环境中一起运行；</li>
+<li><a
+target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-dockerfile.html">Dockerfile</a>：用来构建镜像的文本文件，包含了一条条<strong>构建镜像</strong>所需的指令和说明；</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-machine.html">Docker
+Machine</a>：是一个简化 Docker
+安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker；可以集中<strong>管理</strong>所有的
+docker 主机，比如快速的给 100 台服务器安装上 docker；</li>
 </ul>
-<h1>常用命令</h1>
-<p>docker run &lt;IMAGE&gt; [COMMAND] [ARG…]【创建一个新的容器并运行一个命令】</p>
+<h1 id="常用命令">常用命令</h1>
+<p>docker run &lt;IMAGE&gt; [COMMAND]
+[ARG...]【创建一个新的容器并运行一个命令】</p>
 <ul>
 <li>[-d] 后台运行容器</li>
 <li>[-p] 指定端口映射</li>
 <li>[-v] 映射主机文件卷</li>
-<li>[–name &lt;NAME&gt;] 命名容器</li>
+<li>[--name &lt;NAME&gt;] 命名容器</li>
 <li>[-e] 设置环境变量</li>
 </ul>
 <p>docker ps [OPTIONS]【列出容器】</p>
 <ul>
 <li>[-a] 显示所有的容器，包括未运行的</li>
 </ul>
-<p>docker rm [OPTIONS] &lt;CONTAINER &gt; 【删除一个或多个已经停止的容器】</p>
+<p>docker rm [OPTIONS] &lt;CONTAINER &gt;
+【删除一个或多个已经停止的容器】</p>
 <ul>
 <li>[-f] 强制删除正在运行的容器</li>
 <li>[-v] 删除容器挂载的卷</li>
 </ul>
-<p>docker build  [OPTIONS] &lt;PATH&gt; 【创建镜像】</p>
+<p>docker build [OPTIONS] &lt;PATH&gt; 【创建镜像】</p>
 <ul>
 <li>[-f] 指定要使用的 Dockerfile 路径</li>
-<li>[–rm] 设置镜像成功后删除中间容器</li>
+<li>[--rm] 设置镜像成功后删除中间容器</li>
 </ul>
-<p>docker save [OPTIONS] &lt;IMAGE&gt; 【将指定镜像保存成 tar 归档文件】</p>
+<p>docker save [OPTIONS] &lt;IMAGE&gt; 【将指定镜像保存成 tar
+归档文件】</p>
 <ul>
 <li>[-o &lt;xxx.tar&gt;]</li>
 </ul>
@@ -287,9 +311,10 @@
 <ul>
 <li>[-i &lt;xxx.tar&gt;] 指定导入的文件</li>
 </ul>
-<p>docker top [OPTIONS] &lt;CONTAINER&gt; 【查看容器中运行的进程信息，支持 ps 命令参数】</p>
-<h1>实践</h1>
-<h2 id="如何容器化-Java-应用">如何容器化 Java 应用</h2>
+<p>docker top [OPTIONS] &lt;CONTAINER&gt;
+【查看容器中运行的进程信息，支持 ps 命令参数】</p>
+<h1 id="实践">实践</h1>
+<h2 id="如何容器化-java-应用">如何容器化 Java 应用</h2>
 <p>Docker Compose：</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span>  </span><br><span class="line"><span class="attr">services:</span>  </span><br><span class="line">  <span class="attr">db:</span>  </span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:5.7</span>  </span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span>  </span><br><span class="line">    <span class="attr">environment:</span>  </span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">example</span>  </span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">mydb</span>  </span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">myuser</span>  </span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">mypassword</span>  </span><br><span class="line">    <span class="attr">ports:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3608:3306&quot;</span>  <span class="comment"># 将宿主机的 3608 端口映射到容器的 3306 端口  </span></span><br><span class="line">  </span><br><span class="line">  <span class="attr">java-app:</span>  </span><br><span class="line">    <span class="attr">build:</span>  </span><br><span class="line">      <span class="attr">context:</span> <span class="string">.</span>  <span class="comment"># 假设 Dockerfile 在当前目录下  </span></span><br><span class="line">      <span class="attr">dockerfile:</span> <span class="string">Dockerfile</span>  </span><br><span class="line">    <span class="attr">depends_on:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span>  </span><br><span class="line">    <span class="attr">environment:</span>  </span><br><span class="line">      <span class="attr">DB_HOST:</span> <span class="string">db</span>  <span class="comment"># Java 程序将连接到名为 &quot;db&quot; 的服务（即 MySQL 容器）  </span></span><br><span class="line">      <span class="attr">DB_PORT:</span> <span class="number">3306</span>  <span class="comment"># 在容器内部，MySQL 仍然监听 3306 端口  </span></span><br><span class="line">      <span class="attr">DB_USER:</span> <span class="string">myuser</span>  </span><br><span class="line">      <span class="attr">DB_PASSWORD:</span> <span class="string">mypassword</span>  </span><br><span class="line">      <span class="attr">DB_NAME:</span> <span class="string">mydb</span>  </span><br><span class="line">    <span class="attr">ports:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span>  <span class="comment"># 假设 Java 程序监听 8080 端口</span></span><br></pre></td></tr></table></figure>
 <p>Dockerfile：</p>
@@ -302,6 +327,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/other/Docker/" title="Docker">https://yeqiuo.github.io/other/Docker/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E5%AE%B9%E5%99%A8%E8%99%9A%E6%8B%9F%E5%8C%96/" rel="tag"># 容器虚拟化</a>
           </div>
@@ -337,12 +379,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -361,7 +419,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

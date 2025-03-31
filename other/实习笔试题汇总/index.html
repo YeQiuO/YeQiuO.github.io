@@ -140,7 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">2024.4.27 美团笔试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">2024.4.25 华为测评</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">2024.4.16 携程笔试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">2024.4.9 恒生笔试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">2024.3.31 腾讯笔试</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BE%8E%E5%9B%A2%E7%AC%94%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text">2024.4.27 美团笔试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%8E%E4%B8%BA%E6%B5%8B%E8%AF%84"><span class="nav-number">2.</span> <span class="nav-text">2024.4.25 华为测评</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%BA%E7%A8%8B%E7%AC%94%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">2024.4.16 携程笔试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%81%92%E7%94%9F%E7%AC%94%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">2024.4.9 恒生笔试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%85%BE%E8%AE%AF%E7%AC%94%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">2024.3.31 腾讯笔试</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -239,6 +239,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">2024 实习投递笔试题目汇总</div>
@@ -248,17 +263,19 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><ol start="2024">
+    <div class="post-body" itemprop="articleBody"><ol start="2024" type="1">
 <li></li>
 </ol>
-<h1>2024.4.27 美团笔试</h1>
+<h1 id="美团笔试">2024.4.27 美团笔试</h1>
 <p>和携程差不多，签到题速通，后续疯狂折磨人，过不了一点。感觉题目难度差的好大，要么我秒杀它，要么它秒杀我</p>
 <p><strong>第三题</strong></p>
 <blockquote>
 <p>回溯写了半天，结果只能过20%。看别人是用前缀和+dp，那就是和腾讯第四题类似了，当时学会了现在又忘了，真难崩。</p>
 </blockquote>
-<p>小美拿到了一个数组，她每次操作可以将两个相邻元素合并为一个元素，合并后的元素为原来两个元素之和。小美希望最终数组的最小值不小于 k。她想知道有多少种不同的合并结果?</p>
-<p>输入描述：第一行输入两个正整数n,k，代表数组大小和数组的最大值。第二行输入几个正整数q:，代表小美拿到的数组。1 ≤ n,k,ai &lt; 200</p>
+<p>小美拿到了一个数组，她每次操作可以将两个相邻元素合并为一个元素，合并后的元素为原来两个元素之和。小美希望最终数组的最小值不小于
+k。她想知道有多少种不同的合并结果?</p>
+<p>输入描述：第一行输入两个正整数n,k，代表数组大小和数组的最大值。第二行输入几个正整数q:，代表小美拿到的数组。1
+≤ n,k,ai &lt; 200</p>
 <p>输出描述：输出一个整数，代表小美可以得到多少种不同的结果。由于结果可能很大，输出对10^9+7取模的结果。</p>
 <p>eg：</p>
 <figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">4 4</span><br><span class="line">2 3 4 5</span><br></pre></td></tr></table></figure>
@@ -267,23 +284,32 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution_3</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] dp;</span><br><span class="line">    <span class="type">int</span>[] a;</span><br><span class="line">    <span class="type">int</span> k;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">solve</span><span class="params">(<span class="type">int</span>[] a, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.dp = <span class="keyword">new</span> <span class="title class_">int</span>[a.length];</span><br><span class="line">        <span class="built_in">this</span>.a = a;</span><br><span class="line">        <span class="built_in">this</span>.k = k;</span><br><span class="line">        Arrays.fill(dp, -<span class="number">1</span>);</span><br><span class="line">        System.out.println(backtrack(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span> sum, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (index==a.length) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (sum==<span class="number">0</span> &amp;&amp; dp[index]!=-<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">return</span> dp[index];</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isBegin</span> <span class="operator">=</span> sum==<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=index; i&lt;a.length; i++) &#123;</span><br><span class="line">            sum += a[i];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (sum&gt;=k) &#123;</span><br><span class="line">                cnt += backtrack(<span class="number">0</span>, i+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isBegin) dp[index] = cnt;</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt(), k = in.nextInt();</span><br><span class="line">        <span class="type">int</span>[] a = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;n; i++) &#123;</span><br><span class="line">            a[i] = in.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Solution_3</span>().solve(a, k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>自己试试写<strong>前缀和+dp</strong>（思路重要真的很重要，二十分钟就写出来了）</p>
 <blockquote>
-<p>dp[i] 表示<s>数字 0-i 的方案数</s>[0, i) 的字串可以拆分的种类，状态转移方程为$dp[i] = \sum dp[j]$（j-i 大于等于 k 的数量总和，用前缀和求出）</p>
+<p>dp[i] 表示<del>数字 0-i 的方案数</del>[0, i)
+的字串可以拆分的种类，状态转移方程为<span class="math inline">\(dp[i] =
+\sum dp[j]\)</span>（j-i 大于等于 k 的数量总和，用前缀和求出）</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt(), k = in.nextInt();</span><br><span class="line">        <span class="type">int</span>[] sum = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        sum[<span class="number">1</span>] = in.nextInt();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">2</span>; i&lt;=n; i++) &#123;</span><br><span class="line">            sum[i] += sum[i-<span class="number">1</span>] + in.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span>[] dp = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (sum[i] - sum[j] &gt;= k) &#123;</span><br><span class="line">                    dp[i] += dp[j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(dp[n]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Q1</strong>：前缀和算法初始化时为什么都要设置 <code>[0, 0] = 1</code> 呢？ 如: <code>dp[0] = 1</code> or <code>map.put(0,1)</code></p>
-<p><strong>A1</strong>：想不明白呢，需要对状态转移数组 dp[] 的理解非常正确才行</p>
+<p><strong>Q1</strong>：前缀和算法初始化时为什么都要设置
+<code>[0, 0] = 1</code> 呢？ 如: <code>dp[0] = 1</code> or
+<code>map.put(0,1)</code></p>
+<p><strong>A1</strong>：想不明白呢，需要对状态转移数组 dp[]
+的理解非常正确才行</p>
 <p><strong>第四题</strong></p>
 <p>小美拿到了一棵树，其中有一些节点被染成红色。</p>
 <blockquote>
 <p>大佬的思路：预打表小质数，然后dfs遍历连通块，统计块内每个红点的质因子，得到结点编号的乘积的质因子分解形式，根据质因子数量计算因子个数。对于我来说，需要背一下并查集的模板。</p>
 </blockquote>
-<p>小美定义一个红色连通块的权值为:所有节点编号乘积的因子数量。小美想知道，所有红色连通块的权值之和是多少?由于答案过大，请对10^9+ 7取模。</p>
+<p>小美定义一个红色连通块的权值为:所有节点编号乘积的因子数量。小美想知道，所有红色连通块的权值之和是多少?由于答案过大，请对10^9+
+7取模。</p>
 <p><strong>输入描述</strong>：</p>
-<p>第一行输入一个正整数n，代表节点数量。第二行输入一个长度为几的、仅由’R&quot;和&quot;W组成的字符串，第i个字符为’R’代表;号节点被染成红色，&quot;W代表未被染色。保证至少有一个节点被染成红色。</p>
-<p>接下来的n - 1行，每行输入2个正整数4,U，代表u号节点和u号节点有一条边连接。1 ≤n ≤ 10^5, 1 ≤u,v≤n</p>
+<p>第一行输入一个正整数n，代表节点数量。
+第二行输入一个长度为几的、仅由'R"和"W组成的字符串，第i个字符为'R'代表;号节点被染成红色，"W代表未被染色。保证至少有一个节点被染成红色。</p>
+<p>接下来的n -
+1行，每行输入2个正整数4,U，代表u号节点和u号节点有一条边连接。1 ≤n ≤
+10^5, 1 ≤u,v≤n</p>
 <p><strong>输出描述</strong>：</p>
 <p>一个整数，代表所有红色连通块的权值之和。</p>
-<h1>2024.4.25 华为测评</h1>
+<h1 id="华为测评">2024.4.25 华为测评</h1>
 <p>华子免笔试，只有测评了。看网上好多人测评挂了我都惊呆了，还好没和其他的厂一样直接做测评而是上我搜了下，其他的厂可以不去但华子我必然拿下（小心谨慎哈哈哈）</p>
 <p>华子要什么样性格的人？（前后回答要一致）</p>
 <ul>
@@ -292,21 +318,27 @@
 <li>热爱工作，吃苦耐劳，积极向上</li>
 </ul>
 <p>（准备了又好像没准备，就这样吧，希望能过！阿弥陀佛财神爷保佑！）</p>
-<p><strong>复盘</strong>：有些过于没有压力了，前面每一题都认真思考结果 40min 过完才做了一半，人家都是 40min 就做完了，实在是有些拖拉（但这个要认真选真的很难啊，得回忆自己平常的所思所想所做才然后选个答案，后续时间紧张直接主观臆断速度还是很快的）。<strong>只要时间不紧张就慢慢做，一旦时间紧张了才开始全神贯注做，这可真的是一个坏毛病，得改。</strong></p>
+<p><strong>复盘</strong>：有些过于没有压力了，前面每一题都认真思考结果
+40min 过完才做了一半，人家都是 40min
+就做完了，实在是有些拖拉（但这个要认真选真的很难啊，得回忆自己平常的所思所想所做才然后选个答案，后续时间紧张直接主观臆断速度还是很快的）。<strong>只要时间不紧张就慢慢做，一旦时间紧张了才开始全神贯注做，这可真的是一个坏毛病，得改。</strong></p>
 <p>后续学习工作中都应该有这个意识，主动养成专注的习惯，要做就认真仔细专注的做事情！</p>
-<h1>2024.4.16 携程笔试</h1>
+<h1 id="携程笔试">2024.4.16 携程笔试</h1>
 <p>前两道签到题，后面一个半小时纯折磨</p>
 <p>第三题</p>
 <p>游游拿到了一个数组，她每次操作可以将相邻的两个素数元素进山314行合并，合并后的新数为原来的两个数之和，并删除原来两个数。游游希望最终数组的元素数量尽可能少，你能帮帮她吗?</p>
 <blockquote>
-<p>第一行输入一个正整数n，代表数组的大小。第二行输入几个正整数a_i，代表数组的元素<br>
-1 ≤ n &lt; 10^5<br>
-1 ≤ a_i &lt; 10^6</p>
+<p>第一行输入一个正整数n，代表数组的大小。
+第二行输入几个正整数a_i，代表数组的元素 1 ≤ n &lt; 10^5 1 ≤ a_i &lt;
+10^6</p>
 </blockquote>
 <p>返回合并结束后的元素的数量</p>
-<p><strong>题目分析</strong>：素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了 2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
-<p>因此只要先把所有 2 和素数合并，后续只需要判断还有多少相邻的素数即可。</p>
-<p>做题的时候没有考虑到 <code>7 2 2 3</code> 这种情况，即素数和 2 合并完的结果如果是素数，还需要和判断他的左边还有没有 2，有的话还要合并，即代码中的 <code>i--</code> 部分。</p>
+<p><strong>题目分析</strong>：素数是只能被1和自身整除的数。针对这道题可以用到，它的一大特性：除了
+2 之外两个素数之和一定是偶数（即，一定不是素数）</p>
+<p>因此只要先把所有 2
+和素数合并，后续只需要判断还有多少相邻的素数即可。</p>
+<p>做题的时候没有考虑到 <code>7 2 2 3</code> 这种情况，即素数和 2
+合并完的结果如果是素数，还需要和判断他的左边还有没有
+2，有的话还要合并，即代码中的 <code>i--</code> 部分。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PrimeMerge</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">        List&lt;Integer&gt; numbers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取数组元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            numbers.add(scanner.nextInt());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并素数，优先处理2</span></span><br><span class="line">        mergePrimesWithPriorityToTwo(numbers);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 输出最终数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : numbers) &#123;</span><br><span class="line">            System.out.print(num + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查一个数是否是素数的辅助函数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isPrime</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (num &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i * i &lt;= num; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num % i == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">mergePrimesWithPriorityToTwo</span><span class="params">(List&lt;Integer&gt; numbers)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并2与其相邻的素数，得到一个新的素数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size(); ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (numbers.get(i) == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="comment">// 检查左边是否有素数可以合并</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    numbers.set(i - <span class="number">1</span>, numbers.get(i - <span class="number">1</span>) + <span class="number">2</span>);</span><br><span class="line">                    numbers.remove(i);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; numbers.size() - <span class="number">1</span> &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>) + <span class="number">2</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 检查右边是否有素数可以合并</span></span><br><span class="line">                    numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                    numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">                    i--;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 没有可以合并的素数，继续下一个数</span></span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并剩余的素数对</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; numbers.size() - <span class="number">1</span>; ) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isPrime(numbers.get(i)) &amp;&amp; isPrime(numbers.get(i + <span class="number">1</span>))) &#123;</span><br><span class="line">                numbers.set(i, numbers.get(i) + numbers.get(i + <span class="number">1</span>));</span><br><span class="line">                numbers.remove(i + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>第四题</p>
 <p>定义一棵树的直径为：任意两个节点的距离的最大值。现在定义f(i)：对i号节点上再连接一个新的子叶节点后，树的直径长度。现在要求f(1)到f(n)的值。</p>
@@ -315,24 +347,31 @@
 <p>变量的范围：1≤n≤10的五次方，1≤u，v≤n。</p>
 <p><strong>题目分析：</strong> 树的直径引出树形 dp 算法</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    List&lt;TreeNode&gt; children;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TreeNode</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">        children = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeDiameter</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] f; <span class="comment">// 存储每个节点的最大直径</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> scanner.nextInt(); <span class="comment">// 树的节点数量</span></span><br><span class="line"></span><br><span class="line">        f = <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        TreeNode[] nodes = <span class="keyword">new</span> <span class="title class_">TreeNode</span>[n + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            nodes[i] = <span class="keyword">new</span> <span class="title class_">TreeNode</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 连接节点之间的关系</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">u</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">            nodes[u].children.add(nodes[v]);</span><br><span class="line">            nodes[v].children.add(nodes[u]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历每个节点，添加一个新的子叶节点，计算f(i)</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            <span class="comment">// 添加新的子叶节点</span></span><br><span class="line">            nodes[i].children.add(<span class="keyword">new</span> <span class="title class_">TreeNode</span>(-<span class="number">1</span>));</span><br><span class="line">            <span class="comment">// 计算当前最大直径</span></span><br><span class="line">            dfs(nodes[i], <span class="literal">null</span>, i);</span><br><span class="line">            <span class="comment">// 删除添加的子叶节点</span></span><br><span class="line">            nodes[i].children.remove(nodes[i].children.size()-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            System.out.print(f[i] + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 递归计算以当前节点为根的子树的直径</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, TreeNode parent, <span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth1</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 最大深度</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">maxDepth2</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">// 次大深度</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历当前节点的子节点</span></span><br><span class="line">        <span class="keyword">for</span> (TreeNode child : node.children) &#123;</span><br><span class="line">            <span class="keyword">if</span> (child == parent) <span class="keyword">continue</span>; <span class="comment">// 不访问父节点，防止死循环</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">childDepth</span> <span class="operator">=</span> dfs(child, node, i) + <span class="number">1</span>; <span class="comment">// 递归计算子节点的深度</span></span><br><span class="line">            <span class="keyword">if</span> (childDepth &gt; maxDepth1) &#123;</span><br><span class="line">                maxDepth2 = maxDepth1;</span><br><span class="line">                maxDepth1 = childDepth;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDepth &gt; maxDepth2) &#123;</span><br><span class="line">                maxDepth2 = childDepth;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新当前状态的最大直径</span></span><br><span class="line">        f[i] = Math.max(f[i], maxDepth1 + maxDepth2);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxDepth1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1>2024.4.9 恒生笔试</h1>
-<ol>
+<h1 id="恒生笔试">2024.4.9 恒生笔试</h1>
+<ol type="1">
 <li>下列代码的返回值</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5</span>/<span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>*<span class="number">3</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html#jls-14.20.2">根据Java语言规范文档规定</a>。在 try-catch-finally 语句块中，finally 语句块中的 return/抛出异常（立即结束语句）的优先级最高，程序会优先返回 finally 语句块中的立即结束语句的结果，此时 try-catch 语句块中的 return/抛出异常（立即结束语句）的结果就会被丢弃掉。</p>
-<ol start="2">
+<p><a
+target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html#jls-14.20.2">根据Java语言规范文档规定</a>。在
+try-catch-finally 语句块中，finally 语句块中的
+return/抛出异常（立即结束语句）的优先级最高，程序会优先返回 finally
+语句块中的立即结束语句的结果，此时 try-catch 语句块中的
+return/抛出异常（立即结束语句）的结果就会被丢弃掉。</p>
+<ol start="2" type="1">
 <li>SQL 语句</li>
 </ol>
 <p>联结语法、INNER JOIN 语法</p>
-<ol start="3">
+<ol start="3" type="1">
 <li>初始资金 M，N 天价格信息，K 次交易后，能赚多少钱？（动态规划）</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 根据输入计算最大收益</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> M double浮点型 初始资金</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> N int整型 历史价格天数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> historyPrices double浮点型一维数组 N天历史价格</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> K int整型 最大允许交易次数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> double浮点型</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">get_max_profit</span> <span class="params">(<span class="type">double</span> M, <span class="type">int</span> N, <span class="type">double</span>[] historyPrices, <span class="type">int</span> K)</span> &#123;</span><br><span class="line">    <span class="type">double</span>[][] dp = <span class="keyword">new</span> <span class="title class_">double</span>[K+<span class="number">1</span>][N];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">        dp[<span class="number">0</span>][j] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>; i&lt;=K; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j=<span class="number">1</span>; j&lt;N; j++) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">max</span> <span class="operator">=</span> dp[i][j-<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> t=<span class="number">0</span>; t&lt;j; t++) &#123;</span><br><span class="line">                <span class="type">double</span> <span class="variable">rest</span> <span class="operator">=</span> dp[i-<span class="number">1</span>][t]%historyPrices[t], buy = (dp[i-<span class="number">1</span>][t]-rest)/historyPrices[t];</span><br><span class="line">                max = Math.max(max, buy*historyPrices[j]+rest);</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[K][N-<span class="number">1</span>]-dp[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1>2024.3.31 腾讯笔试</h1>
-<p>没做好记录，只记了没做出来的第四题，其他四道题 AC 了三道，还有一道通过 97% 我怀疑是样例有问题[手动狗头]</p>
-<ol start="4">
-<li>给你 n 个数，这 n 个数要被拆成 k 份，对每份中的数字求异或，求各份异或总和的最大值（和恒生第二题的思路基本一样）</li>
+<h1 id="腾讯笔试">2024.3.31 腾讯笔试</h1>
+<p>没做好记录，只记了没做出来的第四题，其他四道题 AC
+了三道，还有一道通过 97% 我怀疑是样例有问题[手动狗头]</p>
+<ol start="4" type="1">
+<li>给你 n 个数，这 n 个数要被拆成 k
+份，对每份中的数字求异或，求各份异或总和的最大值（和恒生第二题的思路基本一样）</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> in.nextInt();</span><br><span class="line">    <span class="type">long</span>[][] dp = <span class="keyword">new</span> <span class="title class_">long</span>[k + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[<span class="number">1</span>][i + <span class="number">1</span>] = in.nextInt() ^ dp[<span class="number">1</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span>[] prefix = dp[<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// 拆分为 i 份</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= k; i++) &#123;</span><br><span class="line">        <span class="comment">// 从头到尾遍历：将第 1~j 个元素拆成 i 份</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 将第 [1,s] 个元素拆成 i-1 份，(s,j] 是最后一份</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> j - <span class="number">1</span>; s &gt;= i - <span class="number">1</span>; s--) &#123;</span><br><span class="line">                <span class="comment">// 异或的优先级小于加减法</span></span><br><span class="line">                max = Math.max(max, dp[i - <span class="number">1</span>][s] + (prefix[j] ^ prefix[s]));</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i][j] = max;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(dp[k][n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -343,6 +382,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/other/%E5%AE%9E%E4%B9%A0%E7%AC%94%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" title="实习笔试题汇总">https://yeqiuo.github.io/other/实习笔试题汇总/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E7%AC%94%E8%AF%95/" rel="tag"># 笔试</a>
           </div>
@@ -378,12 +434,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -402,7 +474,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

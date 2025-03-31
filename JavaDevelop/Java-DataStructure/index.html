@@ -142,7 +142,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text">扩容机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E-LinkedList-%E7%9A%84%E5%BC%82%E5%90%8C"><span class="nav-number">1.2.</span> <span class="nav-text">与 LinkedList 的异同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">常用方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">HashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6-2"><span class="nav-number">3.1.</span> <span class="nav-text">扩容机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">LinkedHashMap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">CopyOnWriteList</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">PriorityQueue</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#arraylist"><span class="nav-number">1.</span> <span class="nav-text">ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text">扩容机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E-linkedlist-%E7%9A%84%E5%BC%82%E5%90%8C"><span class="nav-number">1.2.</span> <span class="nav-text">与 LinkedList 的异同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linkedlist"><span class="nav-number">2.</span> <span class="nav-text">LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">常用方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hashmap"><span class="nav-number">3.</span> <span class="nav-text">HashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6-1"><span class="nav-number">3.1.</span> <span class="nav-text">扩容机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#concurrenthashmap"><span class="nav-number">4.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linkedhashmap"><span class="nav-number">5.</span> <span class="nav-text">LinkedHashMap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#copyonwritelist"><span class="nav-number">6.</span> <span class="nav-text">CopyOnWriteList</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#priorityqueue"><span class="nav-number">7.</span> <span class="nav-text">PriorityQueue</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -241,6 +241,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
             <div class="post-description">ArrayList、LinkedList、HashMap、ConcurrentHashMap 的底层源码剖析</div>
@@ -250,155 +265,210 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1>ArrayList</h1>
+    <div class="post-body" itemprop="articleBody"><h1 id="arraylist">ArrayList</h1>
 <p><code>ArrayList</code> 的底层是数组队列，相当于动态数组。</p>
 <ul>
 <li>与数组相比，它的容量能动态增长。</li>
-<li>与 Vector 相比，它的底层使用 Object[] 存储，适用于频繁的查找工作，线程不安全</li>
+<li>与 Vector 相比，它的底层使用 Object[]
+存储，适用于频繁的查找工作，线程不安全</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractList</span>&lt;E&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">set</span><span class="params">(<span class="type">int</span>, E)</span>;</span><br><span class="line">    E <span class="title function_">get</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">    E <span class="title function_">remove</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
-<li><code>RandomAccess</code> ：这是一个标志接口，表明实现这个接口的 <code>List</code> 集合是支持 <strong>快速随机访问</strong> ,可以通过元素的序号快速获取元素对象<code>list.get(i)</code>。</li>
-<li><code>Cloneable</code> ：表明它具有拷贝能力，可以进行深拷贝或浅拷贝操作。</li>
-<li><code>Serializable</code> : 表明它可以进行序列化操作，也就是可以将对象转换为字节流进行持久化存储或网络传输，非常方便。</li>
+<li><code>List</code> :
+表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
+<li><code>RandomAccess</code> ：这是一个标志接口，表明实现这个接口的
+<code>List</code> 集合是支持 <strong>快速随机访问</strong>
+,可以通过元素的序号快速获取元素对象<code>list.get(i)</code>。</li>
+<li><code>Cloneable</code>
+：表明它具有拷贝能力，可以进行深拷贝或浅拷贝操作。</li>
+<li><code>Serializable</code> :
+表明它可以进行序列化操作，也就是可以将对象转换为字节流进行持久化存储或网络传输，非常方便。</li>
 </ul>
 <h2 id="扩容机制">扩容机制</h2>
-<p>初始化时默认空数组 <code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>。</p>
-<p>添加元素时，先判断需要扩容的最小扩容量大小（DEFAULT_CAPACITY 默认是 10）</p>
+<p>初始化时默认空数组
+<code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>。</p>
+<p>添加元素时，先判断需要扩容的最小扩容量大小（DEFAULT_CAPACITY 默认是
+10）</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">calculateCapacity</span><span class="params">(Object[] elementData, <span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> minCapacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果需要扩容，就会进入扩容方法 grow()，扩容效果是小于等于 1.5 倍的（因为 int 取整）</p>
+<p>如果需要扩容，就会进入扩容方法 grow()，扩容效果是小于等于 1.5
+倍的（因为 int 取整）</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">grow</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">oldCapacity</span> <span class="operator">=</span> elementData.length;</span><br><span class="line">    <span class="type">int</span> <span class="variable">newCapacity</span> <span class="operator">=</span> oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果扩容长度超过定义的数组的最大长度 <code>MAX_ARRAY_SIZE = Integer.MAX_VALUE-8</code>，就会触发最大值限制，防止 size 溢出</p>
+<p>如果扩容长度超过定义的数组的最大长度
+<code>MAX_ARRAY_SIZE = Integer.MAX_VALUE-8</code>，就会触发最大值限制，防止
+size 溢出</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">hugeCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">OutOfMemoryError</span>();</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>将旧数组移动到新数组</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] copyOf(<span class="type">int</span>[] original, <span class="type">int</span> newLength) &#123;</span><br><span class="line">    <span class="type">int</span>[] copy = <span class="keyword">new</span> <span class="title class_">int</span>[newLength];</span><br><span class="line">    System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>, Math.min(original.length, newLength));</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>手动扩容</strong>，可以在需要插入大量数据前手动扩容</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ensureCapacity</span><span class="params">(<span class="type">int</span> minCapacity)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">minExpand</span> <span class="operator">=</span> (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) ? <span class="number">0</span> : DEFAULT_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &gt; minExpand) &#123;</span><br><span class="line">        ensureExplicitCapacity(minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="与-LinkedList-的异同">与 LinkedList 的异同</h2>
+<h2 id="与-linkedlist-的异同">与 LinkedList 的异同</h2>
 <ul>
-<li>
-<p>都不保证线程安全；</p>
-</li>
-<li>
-<p><code>ArrayList</code> 底层使用的是 <code>Object[]</code> <strong>数组</strong>；<code>LinkedList</code> 底层使用的是 <strong>Node+双向链表</strong> 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环）</p>
-</li>
-<li>
-<p><strong>插入和删除是否受元素位置的影响：</strong></p>
-</li>
-<li>
-<ul>
-<li><code>ArrayList</code> 将指定的元素<strong>追加到此列表的末尾</strong>，时间复杂度 <strong>O(1)</strong>。但是如果要在<strong>指定位置 i 插入和删除元素</strong>的话（<code>add(int index, E element)</code>），时间复杂度 <strong>O(n)</strong>。</li>
-<li><code>LinkedList</code> <strong>头尾插入或者删除</strong>元素不受元素位置的影响（<code>add(E e)</code>、<code>addFirst(E e)</code>、<code>addLast(E e)</code>、<code>removeFirst()</code>、 <code>removeLast()</code>），时间复杂度 <strong>O(1)</strong>；<strong>指定位置 <code>i</code> 插入和删除元素</strong>的话（<code>add(int index, E element)</code>，<code>remove(Object o)</code>,<code>remove(int index)</code>）， 时间复杂度为 <strong>O(n)</strong> 。</li>
+<li><p>都不保证线程安全；</p></li>
+<li><p><code>ArrayList</code> 底层使用的是 <code>Object[]</code>
+<strong>数组</strong>；<code>LinkedList</code> 底层使用的是
+<strong>Node+双向链表</strong> 数据结构（JDK1.6 之前为循环链表，JDK1.7
+取消了循环）</p></li>
+<li><p><strong>插入和删除是否受元素位置的影响：</strong></p></li>
+<li><ul>
+<li><code>ArrayList</code>
+将指定的元素<strong>追加到此列表的末尾</strong>，时间复杂度
+<strong>O(1)</strong>。但是如果要在<strong>指定位置 i
+插入和删除元素</strong>的话（<code>add(int index, E element)</code>），时间复杂度
+<strong>O(n)</strong>。</li>
+<li><code>LinkedList</code>
+<strong>头尾插入或者删除</strong>元素不受元素位置的影响（<code>add(E e)</code>、<code>addFirst(E e)</code>、<code>addLast(E e)</code>、<code>removeFirst()</code>、
+<code>removeLast()</code>），时间复杂度
+<strong>O(1)</strong>；<strong>指定位置 <code>i</code>
+插入和删除元素</strong>的话（<code>add(int index, E element)</code>，<code>remove(Object o)</code>,<code>remove(int index)</code>），
+时间复杂度为 <strong>O(n)</strong> 。</li>
+</ul></li>
+<li><p><strong>是否支持快速随机访问：</strong> <code>LinkedList</code>
+不支持高效的随机元素访问，而 <code>ArrayList</code>（实现了
+<code>RandomAccess</code> 接口） 支持。</p></li>
+<li><p><strong>内存空间占用：</strong> <code>ArrayList</code>
+的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而
+LinkedList 的空间花费则体现在它的每一个元素 Node 都需要消耗比 ArrayList
+更多的空间</p></li>
 </ul>
-</li>
-<li>
-<p><strong>是否支持快速随机访问：</strong> <code>LinkedList</code> 不支持高效的随机元素访问，而 <code>ArrayList</code>（实现了 <code>RandomAccess</code> 接口） 支持。</p>
-</li>
-<li>
-<p><strong>内存空间占用：</strong> <code>ArrayList</code> 的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素 Node 都需要消耗比 ArrayList 更多的空间</p>
-</li>
-</ul>
-<h1>LinkedList</h1>
+<h1 id="linkedlist">LinkedList</h1>
 <blockquote>
-<p>需要用到 <code>LinkedList</code> 的场景几乎都可以使用 <code>ArrayList</code> 来代替，而且性能会更好。头尾插入或者删除元素的时候时间复杂度近似 O(1)，其他情况增删元素的平均时间复杂度都是 O(n) 。</p>
+<p>需要用到 <code>LinkedList</code> 的场景几乎都可以使用
+<code>ArrayList</code>
+来代替，而且性能会更好。头尾插入或者删除元素的时候时间复杂度近似
+O(1)，其他情况增删元素的平均时间复杂度都是 O(n) 。</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LinkedList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractSequentialList</span>&lt;E&gt; </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">List</span>&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;E&gt; &#123;</span><br><span class="line">        E item;</span><br><span class="line">        Node&lt;E&gt; next;</span><br><span class="line">        Node&lt;E&gt; prev;</span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">            <span class="built_in">this</span>.item = element;</span><br><span class="line">            <span class="built_in">this</span>.next = next;</span><br><span class="line">            <span class="built_in">this</span>.prev = prev;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>List</code> : 表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
-<li><code>Deque</code> ：继承自 <code>Queue</code> 接口，具有双端队列的特性，支持从两端插入和删除元素，方便实现栈和队列等数据结构。</li>
+<li><code>List</code> :
+表明它是一个列表，支持添加、删除、查找等操作，并且可以通过下标进行访问。</li>
+<li><code>Deque</code> ：继承自 <code>Queue</code>
+接口，具有双端队列的特性，支持从两端插入和删除元素，方便实现栈和队列等数据结构。</li>
 </ul>
 <h2 id="常用方法">常用方法</h2>
 <ul>
 <li>实现 List 接口
 <ul>
 <li>get、set</li>
-</ul>
-</li>
+</ul></li>
 <li>实现 Collection 接口
 <ul>
 <li>判断是否存在：contains</li>
-</ul>
-</li>
+</ul></li>
 <li>实现 Queue 接口（通过 Deque 接口）
 <ul>
 <li>报错：add、remove、element</li>
 <li>不报错：offer、poll、peek</li>
-</ul>
-</li>
+</ul></li>
 <li>实现 Deque 接口
 <ul>
 <li>addFirst [push]、addLast [add]：无返回，容量超出限制会报错</li>
 <li>offerFirst、offerLast [offer]：返回 Boolean 表示是否加入成功</li>
-<li>removeFirst [remove\pop]、removeLast：队列为空报错</li>
+<li>removeFirst [remove]、removeLast：队列为空报错</li>
 <li>pollFirst [poll]、pollLast：队列为空返回 null</li>
 <li>getFirst [element]、getLast：队列为空报错</li>
 <li>peekFirst [peek]、peekLast：队列为空返回 null
 <ul>
 <li>【注意】队列头部为 null 和队列为空时，都会返回 null</li>
-</ul>
-</li>
+</ul></li>
 <li>removeFirstOccurrence [remove]、removeLastOccurrence</li>
 <li>push、pop、peek：作为栈</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h1>HashMap</h1>
+<h1 id="hashmap">HashMap</h1>
 <blockquote>
-<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8 以后，若Table长度大于 64，会将链表转化为红黑树。</p>
+<p>JDK1.8 之前 HashMap 采用“拉链法”处理冲突，由 数组+链表 组成； JDK1.8
+以后，若Table长度大于 64，会将链表转化为红黑树。</p>
 </blockquote>
-<style>.pkngqeuiheiy{zoom:50%;}</style><img data-src="/JavaDevelop/Java-DataStructure/image-20240425212527868.png" class="pkngqeuiheiy" alt="image-20240425212527868">
+<style>.yhuplpbbpvdi{zoom:50%;}</style>
+<img data-src="/JavaDevelop/Java-DataStructure/image-20240425212527868.png" class="yhuplpbbpvdi" alt="image-20240425212527868">
 <ul>
-<li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为 value 可以有多个</li>
+<li>key 和 value 可以为 null，但 null 作为 key 只能有一个，而 null 作为
+value 可以有多个</li>
 <li>非线程安全的</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">    <span class="comment">// 默认的初始容量是16</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 最大容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line">    <span class="comment">// 默认的负载因子</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数大于等于这个值时会转成红黑树</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="comment">// 当桶上的结点数小于等于这个值时树转链表</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">UNTREEIFY_THRESHOLD</span> <span class="operator">=</span> <span class="number">6</span>;</span><br><span class="line">    <span class="comment">// 桶中结构转化为红黑树对应的 table 的最小容量</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MIN_TREEIFY_CAPACITY</span> <span class="operator">=</span> <span class="number">64</span>;</span><br><span class="line">    <span class="comment">// 存储桶（bin）的数组，永远是 2 的幂次倍</span></span><br><span class="line">    <span class="keyword">transient</span> Node&lt;k,v&gt;[] table;</span><br><span class="line">    <span class="comment">// 一个包含了映射中所有键值对的集合视图</span></span><br><span class="line">    <span class="comment">// 先遍历数组 bin，再通过 Entry.next 遍历每个 bin</span></span><br><span class="line">    <span class="keyword">transient</span> Set&lt;map.entry&lt;k,v&gt;&gt; entrySet;</span><br><span class="line">    <span class="comment">// 存放元素的个数，注意这个不等于数组的长度</span></span><br><span class="line">    <span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line">    <span class="comment">// 阈值=容量*负载因子，当实际大小超过阈值时，会进行扩容</span></span><br><span class="line">    <span class="type">int</span> threshold;</span><br><span class="line">    <span class="comment">// 负载因子</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="comment">// 链表的下一个元素</span></span><br><span class="line">        Node&lt;K,V&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>.Entry&lt;K,V&gt;&#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        TreeNode&lt;K,V&gt; parent;  <span class="comment">// 红黑树链</span></span><br><span class="line">        TreeNode&lt;K,V&gt; left;</span><br><span class="line">        TreeNode&lt;K,V&gt; right;</span><br><span class="line">        TreeNode&lt;K,V&gt; prev;    <span class="comment">// 需要在下次删除时解除链接</span></span><br><span class="line">        <span class="type">boolean</span> red;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>entrySet</code> 通过<code>Node的next属性</code>遍历元素，<code>keySet()</code>、<code>values()</code>基于<code>entrySet</code>实现，用于遍历访问所有 Node 元素，还支持元素的删除操作【不确定，entrySet不存储数据，只是数据对外的操作接口】。</li>
-<li><code>TreeNode</code> 继承了 <code>LinkedHashMap.Entry</code> ，有指向前后节点的指针</li>
+<li><code>entrySet</code>
+通过<code>Node的next属性</code>遍历元素，<code>keySet()</code>、<code>values()</code>基于<code>entrySet</code>实现，用于遍历访问所有
+Node
+元素，还支持元素的删除操作【不确定，entrySet不存储数据，只是数据对外的操作接口】。</li>
+<li><code>TreeNode</code> 继承了 <code>LinkedHashMap.Entry</code>
+，有指向前后节点的指针</li>
 </ul>
 <p>jdk 1.8 <strong>Key 计算 hash 值的方法</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object key)</span> &#123;</span><br><span class="line">    <span class="type">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="literal">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="扩容机制-2">扩容机制</h2>
+<h2 id="扩容机制-1">扩容机制</h2>
 <p><strong>何时触发 <code>resize()</code> 扩容</strong></p>
 <ul>
 <li>要插入数据前，发现<code>table</code> 中的 <code>bin</code> 为空</li>
-<li>要插入数据后，发现<code>HashMap</code>的 <code>size</code> 超过 <code>threshold</code></li>
-<li><code>table</code> 长度小于 <code>MIN_TREEIFY_CAPACITY</code>时，某 <code>Node</code> 上的链长度超过 <code>TREEIFY_THRESHOLD</code></li>
+<li>要插入数据后，发现<code>HashMap</code>的 <code>size</code> 超过
+<code>threshold</code></li>
+<li><code>table</code> 长度小于 <code>MIN_TREEIFY_CAPACITY</code>时，某
+<code>Node</code> 上的链长度超过 <code>TREEIFY_THRESHOLD</code></li>
 </ul>
-<p><code>resize()</code> 扩容，会将 table 中的节点数量 &lt;&lt; 1，并重新 hash 映射所有节点（因为 table 变大了，每个节点对应的 bin 下标发生了变化 <code>newTab[e.hash &amp; (newCap - 1)] = e</code>，<code>newCap</code>为 table 的新大小）</p>
+<p><code>resize()</code> 扩容，会将 table 中的节点数量 &lt;&lt;
+1，并重新 hash 映射所有节点（因为 table 变大了，每个节点对应的 bin
+下标发生了变化
+<code>newTab[e.hash &amp; (newCap - 1)] = e</code>，<code>newCap</code>为
+table 的新大小）</p>
 <p>链表何时变成红黑树？</p>
 <ul>
-<li>该 <code>bin</code> 上的链长度<code>binCount </code>大于等于 <code>TREEIFY_THRESHOLD</code>  且 <code>table</code> 中 <code>bin</code> 数量大于等于 <code>MIN_TREEIFY_CAPACITY</code></li>
+<li>该 <code>bin</code> 上的链长度<code>binCount</code>大于等于
+<code>TREEIFY_THRESHOLD</code> 且 <code>table</code> 中 <code>bin</code>
+数量大于等于 <code>MIN_TREEIFY_CAPACITY</code></li>
 </ul>
 <p>如果链表转红黑树的时候，又有数据要插入，会发生什么？</p>
 <ul>
-<li>线程不安全。在树结构替换链表最终阶段会校验树结构，在此过程中的插入会使该树结构不满足红黑树和双链表的特性，导致报异常 <code>assert checkInvariants(root);</code></li>
+<li>线程不安全。在树结构替换链表最终阶段会校验树结构，在此过程中的插入会使该树结构不满足红黑树和双链表的特性，导致报异常
+<code>assert checkInvariants(root);</code></li>
 </ul>
-<h1>ConcurrentHashMap</h1>
+<h1 id="concurrenthashmap">ConcurrentHashMap</h1>
 <blockquote>
-<p>Java7 中 ConcurrentHashMap 使用的是分段锁，每一个 Segment 上同时只有一个线程可以操作，结构上时 <code>Segment</code> <strong>数组 +</strong> <code>HashEntry</code> <strong>数组 + 链表</strong>。<code>Segment</code> 的个数一旦<strong>初始化就不能改变</strong>，默认 <code>Segment</code> 的个数是 16 个，<code>Segment</code>继承<code>ReentrantLock</code>实现分段锁。</p>
-<p>Java8 中的 ConcurrentHashMap 通过 <strong>Synchronized 锁加 CAS</strong> 保证多线程安全，结构上是 <code>Node</code> <strong>数组</strong> + <strong>链表 / 红黑树</strong>。</p>
+<p>Java7 中 ConcurrentHashMap 使用的是分段锁，每一个 Segment
+上同时只有一个线程可以操作，结构上时 <code>Segment</code> <strong>数组
++</strong> <code>HashEntry</code> <strong>数组 +
+链表</strong>。<code>Segment</code>
+的个数一旦<strong>初始化就不能改变</strong>，默认 <code>Segment</code>
+的个数是 16
+个，<code>Segment</code>继承<code>ReentrantLock</code>实现分段锁。</p>
+<p>Java8 中的 ConcurrentHashMap 通过 <strong>Synchronized 锁加
+CAS</strong> 保证多线程安全，结构上是 <code>Node</code>
+<strong>数组</strong> + <strong>链表 / 红黑树</strong>。</p>
 </blockquote>
 <p>如果链表转红黑树，又有数据要插入，会发生什么。</p>
 <ul>
-<li><code>treeifyBin</code> 通过 <code>synchronized</code> 把 <code>bin</code> 加锁，后续数据插入会因为无法竞争到资源而阻塞</li>
-<li>链表开始转红黑树前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在转换为红黑树，此时会自旋等待转换完成后插入（大概是这样的）</li>
+<li><code>treeifyBin</code> 通过 <code>synchronized</code> 把
+<code>bin</code> 加锁，后续数据插入会因为无法竞争到资源而阻塞</li>
+<li>链表开始转红黑树前，会将 Node 头节点置为
+<code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是
+<code>Moved</code>
+表示正在转换为红黑树，此时会自旋等待转换完成后插入（大概是这样的）</li>
 </ul>
 <p>如果数组扩容，又有数据要插入，会发生什么。</p>
 <ul>
-<li>扩容前，会将 Node 头节点置为 <code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是 <code>Moved</code> 表示正在扩容。</li>
-<li>扩容时，插入数据的线程若发现 hash 值为负，会去协助扩容，扩容完成后再插入数据。</li>
+<li>扩容前，会将 Node 头节点置为
+<code>ForwardingNode</code>，<code>ForwardingNode</code> 的 hash 是
+<code>Moved</code> 表示正在扩容。</li>
+<li>扩容时，插入数据的线程若发现 hash
+值为负，会去协助扩容，扩容完成后再插入数据。</li>
 </ul>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZOKEKAI/article/details/90051567"><strong>什么时候触发扩容？</strong></a></p>
+<p><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/ZOKEKAI/article/details/90051567"><strong>什么时候触发扩容？</strong></a></p>
 <ul>
-<li>在调用 addCount 方法增加集合元素计数后发现当前集合元素个数到达扩容阈值时就会触发扩容</li>
-<li>扩容状态下其他线程对集合进行插入、修改、删除、合并、compute 等操作时遇到 <code>ForwardingNode</code> 节点会触发扩容（帮助扩容）</li>
-<li>putAll 批量插入或者插入节点后发现存在链表长度达到 8 个或以上，但数组长度为 64 以下时会触发扩容  。</li>
+<li>在调用 addCount
+方法增加集合元素计数后发现当前集合元素个数到达扩容阈值时就会触发扩容</li>
+<li>扩容状态下其他线程对集合进行插入、修改、删除、合并、compute
+等操作时遇到 <code>ForwardingNode</code> 节点会触发扩容（帮助扩容）</li>
+<li>putAll 批量插入或者插入节点后发现存在链表长度达到 8
+个或以上，但数组长度为 64 以下时会触发扩容 。</li>
 </ul>
-<p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64 以下时只会触发扩容而不会将链表转为红黑树</p>
-<h1>LinkedHashMap</h1>
-<p><code>LinkedHashMap</code> 内部维护了一个双向链表，确保其迭代顺序是和插入顺序或访问顺序是一致的，通过重写 get、newNode、afterNodeAccess、afterNodeInsertion、afterNodeRemoval 等方法实现，最近插入或访问的节点位于链表尾部。</p>
+<p>同 HashMap：桶上链表长度达到 8 个或者以上，并且数组长度为 64
+以下时只会触发扩容而不会将链表转为红黑树</p>
+<h1 id="linkedhashmap">LinkedHashMap</h1>
+<p><code>LinkedHashMap</code>
+内部维护了一个双向链表，确保其迭代顺序是和插入顺序或访问顺序是一致的，通过重写
+get、newNode、afterNodeAccess、afterNodeInsertion、afterNodeRemoval
+等方法实现，最近插入或访问的节点位于链表尾部。</p>
 <blockquote>
 <p>可以按照插入顺序遍历 entry（accessOrder=false）</p>
 <p>也可以按照访问顺序遍历 entry（accessOrder=true），即 LRU</p>
@@ -406,21 +476,28 @@
 <p>可用于实现 LRU，即 迭代顺序==访问顺序</p>
 <ul>
 <li>每次修改都将元素删除后重新插入</li>
-<li>将 <code>accessOrder</code> 设置为 true 并重写 <code>removeEldestEntry</code> 方法当链表大小超过容量时返回 true</li>
+<li>将 <code>accessOrder</code> 设置为 true 并重写
+<code>removeEldestEntry</code> 方法当链表大小超过容量时返回 true</li>
 </ul>
-<h1>CopyOnWriteList</h1>
+<h1 id="copyonwritelist">CopyOnWriteList</h1>
 <blockquote>
-<p>并发安全的 <code>List</code>，针对读多写少的场景，类比读写锁的思想，实现 <strong>读读不互斥、读写不互斥、写写互斥</strong> 的写时复制 Copy-On-Write 策略。此外还有 <code>Collections.synchronizedList</code> ，可以将任何<code>List</code>包装成一个线程安全的<code>List</code></p>
+<p>并发安全的
+<code>List</code>，针对读多写少的场景，类比读写锁的思想，实现
+<strong>读读不互斥、读写不互斥、写写互斥</strong> 的写时复制
+Copy-On-Write 策略。此外还有 <code>Collections.synchronizedList</code>
+，可以将任何<code>List</code>包装成一个线程安全的<code>List</code></p>
 </blockquote>
-<p>add 方法内部用到了 ReentrantLock 加锁，避免了多线程写的时候会复制出多个副本，导致并发问题</p>
+<p>add 方法内部用到了 ReentrantLock
+加锁，避免了多线程写的时候会复制出多个副本，导致并发问题</p>
 <p><strong>写时复制的缺点</strong></p>
 <ul>
 <li>写操作资源占用多，复制数据时占用内存</li>
 <li>数据一致性问题，修改后需要等到赋值给原数组才能访问到修改</li>
 </ul>
 <p><strong>写多读少的场景下，应该用什么数据结构实现并发数组？</strong></p>
-<p>分段读写锁 ReadWriteLock（由于 Arrays.copyOf() 是操作系统实现，数据量少的话依然可用写时复制）</p>
-<h1>PriorityQueue</h1>
+<p>分段读写锁 ReadWriteLock（由于 Arrays.copyOf()
+是操作系统实现，数据量少的话依然可用写时复制）</p>
+<h1 id="priorityqueue">PriorityQueue</h1>
 
     </div>
 
@@ -429,6 +506,23 @@
     
 
     <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ZheWen Wang
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://yeqiuo.github.io/JavaDevelop/Java-DataStructure/" title="Java 常用数据结构的底层实现">https://yeqiuo.github.io/JavaDevelop/Java-DataStructure/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
           <div class="post-tags">
               <a href="/tags/Java%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># Java数据结构</a>
           </div>
@@ -464,12 +558,28 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2024</span>
+    <span itemprop="copyrightYear">2025</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">ZheWen Wang</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">149k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:15</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
@@ -488,7 +598,6 @@
 
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>

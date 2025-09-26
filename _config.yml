@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 闻
-subtitle: 'Yesterday is history, tomorrow is a mystery but today is a gift.'
-description: '夜色难免黑凉 前行必有曙光'  # Dragon Warrior
+title: Wen
+subtitle: '种一株花'
+description: '慢慢等它发芽 开花 结果'
 keywords:
 author: ZheWen Wang
 language: zh-CN
@@ -14,8 +14,8 @@ timezone: 'Asia/Shanghai'
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://yeqiuo.github.io/
-# permalink: :year/:month/:day/:title/
-permalink: :title/
+root: /
+permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -25,7 +25,7 @@ pretty_urls:
 source_dir: source
 public_dir: public
 tag_dir: tags
-archive_dir: /
+archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
@@ -41,33 +41,33 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
+post_asset_folder: false
+relative_link: false
 future: true
-syntax_highlighter: highlight.js
+
+# 代码高亮
+syntax_highlighter: prismjs
+# syntax_highlighter: highlight.js
 highlight:
-  line_number: false
+  enable: false
+  line_number: true
   auto_detect: false
   tab_replace: ''
   wrap: true
   hljs: false
 prismjs:
+  enable: true
   preprocess: true
   line_number: true
   tab_replace: ''
-
-# 本地图片
-post_asset_folder: true
-relative_link: false
-marked:
-  # prependRoot: true
-  postAsset: true
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
-  path: 'invalid-path'
-  per_page: 10
+  path: ''
+  per_page: 12
   order_by: -date
 
 # Category & Tag
@@ -90,81 +90,43 @@ updated_option: 'mtime'
 
 # Pagination
 ## Set per_page to 0 to disable pagination
-per_page: 20
+per_page: 10
 pagination_dir: page
 
 # Include / Exclude file(s)
 ## include:/exclude: options only apply to the 'source/' folder
-include: 
+include:
 exclude:
-ignore: 
+ignore:
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: hexo-theme-matery
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: 
-    # gitee: https://gitee.com/WActen/wacten.gitee.io.git
-    github: git@github.com:YeQiuO/YeQiuO.github.io.git
-  branch: 
-    github: master
+  # repo: https://gitee.com/WActen/wacten.gitee.io.git    #你的仓库地址+.git
+  repo: https://github.com/YeQiuO/YeQiuO.github.io.git
+  branch: master
 
+# 搜索
 search:
   path: search.xml
   field: post
-  format: html
-  limit: 10000
 
-markdown:
-  preset: "default"
-  render:
-    html: true
-    xhtmlOut: false
-    langPrefix: "language-"
-    breaks: true
-    linkify: true
-    typographer: true
-    quotes: "“”‘’"
-  enable_rules:
-  disable_rules:
-  plugins:
-    - markdown-it-abbr
-    - markdown-it-cjk-breaks
-    - markdown-it-deflist
-    - markdown-it-emoji
-    - markdown-it-footnote
-    - markdown-it-ins
-    - markdown-it-mark
-    - markdown-it-sub
-    - markdown-it-sup
-    # - markdown-it-checkbox
-    # - markdown-it-imsize
-    # - markdown-it-expandable
-    - name: markdown-it-container
-      options: success
-    - name: markdown-it-container
-      options: tips
-    - name: markdown-it-container
-      options: warning
-    - name: markdown-it-container
-      options: danger
-  anchors:
-    level: 2
-    collisionSuffix: ""
-    permalink: false
-    permalinkClass: "header-anchor"
-    permalinkSide: "left"
-    permalinkSymbol: "¶"
-    case: 0
-    separator: "-"
+# 中文链接转拼音
+permalink_pinyin:
+  enable: true
+  separator: '-' # default: '-'
 
-symbols_count_time:
-  symbols: true
-  time: true
-  total_symbols: true
-  total_time: true
+# 文章字数统计插件
+postInfo:
+  date: true
+  update: false
+  wordCount: false # 设置文章字数统计为 true.
+  totalCount: false # 设置站点文章总字数统计为 true.
+  min2read: false # 阅读时长.
+  readCount: false # 阅读次数.
